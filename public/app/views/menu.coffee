@@ -12,4 +12,4 @@ class Bean
 $(document).ready ->
   canvas = document.getElementById "processing"
   
-  processing = new Processing(canvas, coffee_draw)
+  processing = new Processing(canvas, menu)
