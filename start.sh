@@ -1,1 +1,1 @@
-coffee -w -j public/js/game.js
+coffee --watch --compile app/* --join public/js/game.js
