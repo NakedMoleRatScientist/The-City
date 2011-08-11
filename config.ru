@@ -2,6 +2,7 @@ require 'rubygems'
 require 'open-uri'
 require 'sinatra'
 
+mime_type :coffee, "text/coffeescript"
 set :public, File.dirname(__FILE__) + '/public'
 set :root, File.dirname(__FILE__) + '/'
 get '/' do
