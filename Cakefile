@@ -11,9 +11,15 @@ models_target = 'app/models/js'
 controllers_target = 'app/controllers/js'
 
 target_file = "game"
+
 target_views_coffee = "#{views}/#{views_filename.coffee}"
 target_models_coffee = "#{models}/#{models_filename.coffee}"
 target_controllers_coffee = "#{controllers}/#{controllers_filename.coffee}"
+
+target_views_js = "#{views}/#{views_filename.js}"
+target_models_js = "#{models}/#{models_filename.js}"
+target_controllers_js = "#{controllers}/#{controllers_filename.js}"
+
 
 task 'build', 'Build a single javascript file from prod files', ->
   util.log "Building..."
