@@ -20,6 +20,7 @@ target_views_js = "#{views}/#{views_filename.js}"
 target_models_js = "#{models}/#{models_filename.js}"
 target_controllers_js = "#{controllers}/#{controllers_filename.js}"
 
+coffee_opts = "--bare --output #{target_views_js} --compile #{target_views_coffee}"
 
 task 'build', 'Build a single javascript file from prod files', ->
   util.log "Building..."
