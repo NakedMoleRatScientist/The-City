@@ -22,7 +22,7 @@ task 'build', 'Build a single JavaScript file from prod files', ->
   appContents = new Array remaining = js_files.length
   util.log "Appending #{js_files.length} files to #{prodTargetCoffeeFile}"
   for file, index in js_files then do (file, index) ->
-    fs.readFile "#{prodSrcCoffeeDir}/#{file}.coffee"
+    fs.readFile "#{views}/#{file}.coffee"
                 , 'utf8'
                 , (err, fileContents) ->
         util.log err if err
