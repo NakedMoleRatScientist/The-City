@@ -3,24 +3,14 @@ fs = require 'fs'
 util = require 'util'
 
 views = 'app/views/coffee'
-models = 'app/models/coffee'
-controllers = 'app/controllers/coffee'
 
 views_target = 'app/views/js'
-models_target = 'app/models/js'
-controllers_target = 'app/controllers/js'
 
-target_file = "game"
+target_file_name = "game"
+target_coffee_file = "#{views}/#{target_file_name}.coffee"
+target_js_file = "#{views_target}/#{target_file_name}.js"
 
-target_views_coffee = "#{views}/#{views_filename.coffee}"
-target_models_coffee = "#{models}/#{models_filename.coffee}"
-target_controllers_coffee = "#{controllers}/#{controllers_filename.coffee}"
-
-target_views_js = "#{views}/#{views_filename.js}"
-target_models_js = "#{models}/#{models_filename.js}"
-target_controllers_js = "#{controllers}/#{controllers_filename.js}"
-
-coffee_opts = "--bare --output #{choice_js} --compile #{choice_coffee}"
+coffee_opts = "--bare --output #{views_target} --compile #{target_coffee_file}"
 
 task 'build', 'Build a single javascript file from prod files', ->
   util.log "Building..."
