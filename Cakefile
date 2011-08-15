@@ -19,9 +19,9 @@ js_files = [
 
 task 'build', 'Build a single JavaScript file from prod files', ->
   util.log "Building #{prodTargetJsFile}"
-  appContents = new Array remaining = prodCoffeeFiles.length
-  util.log "Appending #{prodCoffeeFiles.length} files to #{prodTargetCoffeeFile}"
-  for file, index in prodCoffeeFiles then do (file, index) ->
+  appContents = new Array remaining = js_files.length
+  util.log "Appending #{js_files.length} files to #{prodTargetCoffeeFile}"
+  for file, index in js_files then do (file, index) ->
     fs.readFile "#{prodSrcCoffeeDir}/#{file}.coffee"
                 , 'utf8'
                 , (err, fileContents) ->
