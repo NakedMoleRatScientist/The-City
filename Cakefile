@@ -13,6 +13,9 @@ target_js_file = "#{views_target}/#{target_file_name}.js"
 coffee_opts = "--bare --output #{views_js} --compile #{target_coffee_file}"
 
 
+js_files = [
+  'menu'
+]
 
 task 'build', 'Build a single JavaScript file from prod files', ->
   util.log "Building #{prodTargetJsFile}"
