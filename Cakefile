@@ -38,7 +38,7 @@ task 'build', 'Build a single JavaScript file from prod files', ->
         , (err) ->
         util.log err if err
 
-        exec "coffee #{prodCoffeeOpts}", (err, stdout, stderr) ->
+        exec "coffee #{coffee_opts}", (err, stdout, stderr) ->
           util.log err if err
           message = "Compiled #{target_js_file}"
           util.log message
