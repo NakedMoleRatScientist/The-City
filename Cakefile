@@ -18,7 +18,7 @@ js_files = [
 ]
 
 task 'build', 'Build a single JavaScript file from prod files', ->
-  util.log "Building #{prodTargetJsFile}"
+  util.log "Building #{target_js_file}"
   appContents = new Array remaining = js_files.length
   util.log "Appending #{js_files.length} files to #{prodTargetCoffeeFile}"
   for file, index in js_files then do (file, index) ->
@@ -40,6 +40,6 @@ task 'build', 'Build a single JavaScript file from prod files', ->
 
         exec "coffee #{prodCoffeeOpts}", (err, stdout, stderr) ->
           util.log err if err
-          message = "Compiled #{prodTargetJsFile}"
+          message = "Compiled #{target_js_file}"
           util.log message
           fs.unlink prodTargetCoffeeFile, (err) -> util.log err if err
