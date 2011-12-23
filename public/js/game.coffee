@@ -21,11 +21,6 @@
       p5.background(p5.frameCount)
 
 
-  # a helper class that will come into play soon
-
-  class Bean
-    constructor: (p5, opts) ->
-
   # wait for the DOM to be ready,
   # create a processing instance...
   $(document).ready ->
