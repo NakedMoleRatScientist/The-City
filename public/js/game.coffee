@@ -6,7 +6,7 @@
     # processing's "init" method:
 
     p5.setup = () ->
-      p5.size($(window).width(), $(window).height())
+      p5.size(1000,1000)
       p5.background(0)
 
     # where the fun stuff happens:
