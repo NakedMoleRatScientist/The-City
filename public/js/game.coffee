@@ -1,4 +1,3 @@
-# /js/coffee_draw.coffee
 
   # Our main sketch object:
   coffee_draw = (p5) ->
@@ -17,4 +16,5 @@
   $(document).ready ->
     canvas = document.getElementById "processing"
 
+    map_draw = new mapDraw(100,100)
     processing = new Processing(canvas, coffee_draw)
