@@ -16,6 +16,10 @@ menu = (p5) ->
     map_draw.draw(p5,@map.result())
     unit_draw = new unitDraw()
     unit_draw.draw(p5,@unit)
+    logic()
+
+  logic: ->
+    @unit.move
 
 $(document).ready ->
   canvas = document.getElementById "processing"
