@@ -1,3 +1,3 @@
 task :concat do
-  sh "coffee -cj public/js/game.js app/models/map.coffee app/views/map.coffee lib/draw.coffee"
+  sh "coffee -cj public/js/game.js app/models/map.coffee app/models/unit.coffee app/views/map.coffee app/views/unit.coffee lib/draw.coffee"
 end
