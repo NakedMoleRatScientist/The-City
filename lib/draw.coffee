@@ -6,8 +6,8 @@ menu = (p5) ->
     p5.background(0)
 
   p5.draw = () ->
-    map = new mapDraw(100,100)
-    map.draw(p5)
+    map_draw = new mapDraw(100,100)
+    map_draw.draw(p5)
 
 $(document).ready ->
   canvas = document.getElementById "processing"
