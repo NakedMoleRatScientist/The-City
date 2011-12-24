@@ -1,3 +1,3 @@
 task :concat do
-  sh "cat app/views/map.coffee > game.coffee"
+  sh "coffee -cj game.coffee app/views/map.coffee lib/draw.coffee"
 end
