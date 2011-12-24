@@ -43,6 +43,24 @@
       this.goal_x = this.x;
       this.goal_y = this.y;
     }
+    Unit.prototype.set_move = function(x, y) {
+      this.goal_x = x;
+      return this.goal_y = y;
+    };
+    Unit.prototype.move = function() {
+      if ((this.x - this.goal_x) < 0) {
+        this.x = this.x + 1;
+        return;
+      } else if ((this.x - this.goal_x) > 0) {
+        this.x = this.x - 1;
+        return;
+      }
+      if ((this.y - this.goal_y) < 0) {
+        this.y = this.y + 1;
+      } else if ((this.y - this.goal_y) > 0) {
+        this.y = this.y - 1;
+      }
+    };
     return Unit;
   })();
   mapDraw = (function() {
@@ -95,14 +113,20 @@
       p5.background(0);
       this.map = new Map(100, 100);
       this.map.generate();
-      return this.unit = new Unit(10, 10, "Miya", 1);
+      this.unit = new Unit(10, 10, "Miya", 1);
+      return this.unit.set_move(20, 1);
+    };
+    p5.logic = function() {
+      return this.unit.move();
     };
     return p5.draw = function() {
       var map_draw, unit_draw;
+      p5.background(0);
       map_draw = new mapDraw(100, 100);
       map_draw.draw(p5, this.map.result());
       unit_draw = new unitDraw();
-      return unit_draw.draw(p5, this.unit);
+      unit_draw.draw(p5, this.unit);
+      return p5.logic();
     };
   };
   $(document).ready(function() {
