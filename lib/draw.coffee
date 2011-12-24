@@ -2,6 +2,7 @@
 menu = (p5) ->
   p5.setup = () ->
     p5.size($(window).width(), $(window).height())
+    p5.frameRate(50)
     p5.background(0)
 
   p5.draw = () ->
