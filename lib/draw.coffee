@@ -12,9 +12,10 @@ menu = (p5) ->
     @unit.set_move(20,1)
 
   p5.logic = () ->
-    @unit.move
+    @unit.move()
 
   p5.draw = () ->
+    p5.background(0)
     map_draw = new mapDraw(100,100)
     map_draw.draw(p5,@map.result())
     unit_draw = new unitDraw()
