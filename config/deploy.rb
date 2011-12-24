@@ -5,4 +5,4 @@ set :scm, :git
 set :use_sudo, false
 set :branch, "master"
 
-server "the-city.kibabase.com", :app, :primary => true
+server "thecity.kibabase.com", :app, :primary => true
