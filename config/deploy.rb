@@ -1,5 +1,5 @@
 set :application, "the-city"
-set :repository,  "git://github.com/kiba/the-city.git"
+set :repository,  "git://github.com/kiba/repos/the-city.git"
 set :deploy_to, "/home/kiba/projects/thecity"
 set :scm, :git
 set :use_sudo, false
