@@ -13,6 +13,8 @@ menu = (p5) ->
   p5.draw = () ->
     map_draw = new mapDraw(100,100)
     map_draw.draw(p5,@map.result())
+    unit_draw = new unitDraw()
+    unit_draw.draw(p5,@unit)
 
 $(document).ready ->
   canvas = document.getElementById "processing"
