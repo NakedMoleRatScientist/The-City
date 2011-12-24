@@ -3,8 +3,8 @@ class Unit
     @goal_x = @x
     @goal_y = @y
   set_move: (x,y) ->
-    @goal_x == x
-    @goal_y == y
-  move: ->
-    if @x - @goal_x < 0
+    @goal_x = x
+    @goal_y = y
+  move: () ->
+    if (@x - @goal_x) < 0
       @x = @x + 1
