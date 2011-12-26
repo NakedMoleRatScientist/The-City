@@ -1,3 +1,4 @@
-void camera_input ->
-  if keyPressed
-    console.log(key)
+class CameraInput
+  input: ->
+    if keyPressed
+      console.log(key)
