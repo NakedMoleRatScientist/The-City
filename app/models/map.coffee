@@ -14,3 +14,6 @@ class Map
           @map[h][w] = 0
   result: ->
     return @map
+  move_camera: (x,y) ->
+    @camera_x += x
+    @camera_y += y
