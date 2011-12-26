@@ -11,6 +11,9 @@ menu = (p5) ->
     @unit = new Unit(10,10,"Miya",1)
     @unit.set_move(20,1)
 
+  p5.keyPressed = () ->
+    console.log(p5.key)
+
   p5.logic = () ->
     @unit.move()
 
@@ -21,6 +24,7 @@ menu = (p5) ->
     unit_draw = new unitDraw()
     unit_draw.draw(p5,@unit)
     p5.logic()
+
 
 
 $(document).ready ->
