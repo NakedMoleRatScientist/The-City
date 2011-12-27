@@ -1,8 +1,10 @@
 (function() {
-  var Map, Unit, mapDraw, menu, unitDraw;
+  var Map, Unit, camera_input, mapDraw, menu, unitDraw;
   Map = (function() {
     function Map(width, height) {
       var h;
+      this.camera_x = 0;
+      this.camera_y = 0;
       this.map = new Array(height);
       for (h = 0; 0 <= height ? h <= height : h >= height; 0 <= height ? h++ : h--) {
         if (h < height) {
@@ -31,6 +33,10 @@
     };
     Map.prototype.result = function() {
       return this.map;
+    };
+    Map.prototype.move_camera = function(x, y) {
+      this.camera_x += x;
+      return this.camera_y += y;
     };
     return Map;
   })();
@@ -69,7 +75,8 @@
       this.height = height;
     }
     mapDraw.prototype.draw = function(p5, map) {
-      var height, width, _ref, _results;
+      var height, results, width, _ref, _results;
+      results = map.map;
       p5.stroke(255);
       _results = [];
       for (height = 0, _ref = this.height; 0 <= _ref ? height <= _ref : height >= _ref; 0 <= _ref ? height++ : height--) {
@@ -79,12 +86,12 @@
             _results2 = [];
             for (width = 0, _ref2 = this.width; 0 <= _ref2 ? width <= _ref2 : width >= _ref2; 0 <= _ref2 ? width++ : width--) {
               if (width < this.width) {
-                if (map[height][width] === 1) {
+                if (results[height][width] === 1) {
                   p5.noFill();
                 } else {
                   p5.fill();
                 }
-                _results2.push(p5.rect(20 * width, 20 * height, 20, 20));
+                _results2.push(p5.rect(20 * (width + map.camera_x), 20 * (height + map.camera_y), 20, 20));
               }
             }
             return _results2;
@@ -97,24 +104,39 @@
   })();
   unitDraw = (function() {
     function unitDraw() {}
-    unitDraw.prototype.draw = function(p5, unit) {
+    unitDraw.prototype.draw = function(p5, unit, map) {
       p5.fill();
       if (unit.type === 1) {
         p5.fill(255, 69, 0);
-        return p5.text("H", unit.x * 20 + 5, unit.y * 20 - 5);
+        return p5.text("H", (unit.x + map.camera_x) * 20 + 5, (unit.y + map.camera_y) * 20 - 5);
       }
     };
     return unitDraw;
   })();
+  camera_input = function(key, map) {
+    console.log(key.code);
+    if (key.code === 97) {
+      return map.move_camera(-1, 0);
+    } else if (key.code === 100) {
+      return map.move_camera(1, 0);
+    } else if (key.code === 115) {
+      return map.move_camera(0, -1);
+    } else if (key.code === 119) {
+      return map.move_camera(0, 1);
+    }
+  };
   menu = function(p5) {
     p5.setup = function() {
-      p5.size($(window).width(), $(window).height());
+      p5.size(800, 600);
       p5.frameRate(50);
       p5.background(0);
       this.map = new Map(100, 100);
       this.map.generate();
       this.unit = new Unit(10, 10, "Miya", 1);
       return this.unit.set_move(20, 1);
+    };
+    p5.keyPressed = function() {
+      return camera_input(p5.key, this.map);
     };
     p5.logic = function() {
       return this.unit.move();
@@ -123,9 +145,9 @@
       var map_draw, unit_draw;
       p5.background(0);
       map_draw = new mapDraw(100, 100);
-      map_draw.draw(p5, this.map.result());
+      map_draw.draw(p5, this.map);
       unit_draw = new unitDraw();
-      unit_draw.draw(p5, this.unit);
+      unit_draw.draw(p5, this.unit, this.map);
       return p5.logic();
     };
   };
