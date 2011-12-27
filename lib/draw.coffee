@@ -12,7 +12,7 @@ menu = (p5) ->
     @unit.set_move(20,1)
 
   p5.keyPressed = () ->
-    console.log(p5.key)
+    camera_input(p5.key,@map)
 
   p5.logic = () ->
     @unit.move()
