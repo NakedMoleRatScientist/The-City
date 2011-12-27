@@ -6,3 +6,5 @@ camera_input = (key, map) ->
     map.move_camera(1,0)
   else if key.code == 115
     map.move_camera(0,1)
+  else if key.code == 119
+    map.move_camera(0,-1)
