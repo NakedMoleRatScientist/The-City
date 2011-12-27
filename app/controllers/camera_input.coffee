@@ -1,3 +1,3 @@
-camera_input = (p5) ->
-  if p5.keyPressed
-    console.log(p5.key)
+camera_input = (key) ->
+  if (key.code == 97)
+    @map.move_camera(-1,0)
