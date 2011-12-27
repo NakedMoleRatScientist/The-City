@@ -20,7 +20,7 @@ menu = (p5) ->
   p5.draw = () ->
     p5.background(0)
     map_draw = new mapDraw(100,100)
-    map_draw.draw(p5,@map.result(),@map.camera_x,@map.camera_y)
+    map_draw.draw(p5,@map)
     unit_draw = new unitDraw()
     unit_draw.draw(p5,@unit)
     p5.logic()
