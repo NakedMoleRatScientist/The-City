@@ -1,5 +1,5 @@
 class unitDraw
-  constructor: () ->
+  constructor: (@p5,@units,@map) ->
   draw: (p5,units,map) ->
     draw_unit unit for unit in units
   draw_unit: (p5,unit) ->
