@@ -9,7 +9,6 @@ menu = (p5) ->
     @map = new Map(100,100)
     @map.generate()
     @unit = new Unit(10,10,"Miya",1)
-    @unit.set_move(20,1)
 
   p5.keyPressed = () ->
     camera_input(p5.key,@map)
