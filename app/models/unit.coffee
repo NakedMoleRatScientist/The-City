@@ -3,7 +3,7 @@ class Unit
     @goal_x = @x
     @goal_y = @y
     @body = generate_body(@type)
-    @status = 0  #0 is friendly. 1 is hostile
+    @hostility = 0  #0 is friendly. 1 is hostile
   set_move: (x,y) ->
     @goal_x = x
     @goal_y = y
