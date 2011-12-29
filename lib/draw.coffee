@@ -11,6 +11,7 @@ menu = (p5) ->
     @units = new Units()
     @units.units.push new Unit(10,10, "Miya",1)
     @units.units.push new Unit(10,20, "John",1)
+    @unit_draw = new unitDraw(p5,@units,@map)
 
   p5.keyPressed = () ->
     camera_input(p5.key,@map)
@@ -22,8 +23,7 @@ menu = (p5) ->
     p5.background(0)
     map_draw = new mapDraw(100,100)
     map_draw.draw(p5,@map)
-    unit_draw = new unitDraw()
-    unit_draw.draw(p5,@units,@map)
+    @unit_draw.draw()
     p5.logic()
 
 
