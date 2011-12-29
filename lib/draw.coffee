@@ -8,7 +8,9 @@ menu = (p5) ->
     p5.background(0)
     @map = new Map(100,100)
     @map.generate()
-    @unit = new Unit(10,10,"Miya",1)
+    @units = new Units()
+    @units.units.push new Unit(10,10, "Miya",1)
+    @units.units.push new Unit(10,20, "John",1)
 
   p5.keyPressed = () ->
     camera_input(p5.key,@map)
