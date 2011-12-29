@@ -23,7 +23,7 @@ menu = (p5) ->
     map_draw = new mapDraw(100,100)
     map_draw.draw(p5,@map)
     unit_draw = new unitDraw()
-    unit_draw.draw(p5,@unit,@map)
+    unit_draw.draw(p5,@units,@map)
     p5.logic()
 
 
