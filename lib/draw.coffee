@@ -11,6 +11,7 @@ menu = (p5) ->
     @units = new Units()
     @units.units.push new Unit(10,10, "Miya",1)
     @units.units.push new Unit(10,20, "John",1)
+    @units.units[1].hostility = 1
     @unit_draw = new unitDraw(p5,@units,@map)
 
   p5.keyPressed = () ->
