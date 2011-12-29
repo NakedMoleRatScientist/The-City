@@ -1,7 +1,7 @@
 class unitDraw
   constructor: (@p5,@units,@map) ->
   draw: (p5,units,map) ->
-    draw_unit unit for unit in @units
+    this.draw_unit(unit) for unit in @units.units
   draw_unit: (unit) ->
     @p5.fill()
     if unit.type == 1
