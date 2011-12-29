@@ -1,6 +1,8 @@
 class unitDraw
   constructor: () ->
-  draw: (p5,unit,map) ->
+  draw: (p5,units,map) ->
+    draw_unit unit for unit in units
+  draw_unit: (p5,unit) ->
     p5.fill()
     if unit.type == 1
       p5.fill(255,69,0)
