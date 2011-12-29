@@ -1,0 +1,3 @@
+class Units
+  constructor: () ->
+    @units = []
