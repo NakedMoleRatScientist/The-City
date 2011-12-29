@@ -24,7 +24,7 @@ class Unit
     if (unit.x + 1) == @x || (unit.x - 1) == @x
       if (unit.y + 1) == @y || (unit.y - 1) == @y
         if Math.random * 10 > 5
-         unit.damage()
+         unit.damage(this)
   damage: (unit) ->
     part = Math.random * @body.parts.size
     @body.parts[part] = 1
