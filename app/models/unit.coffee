@@ -4,6 +4,7 @@ class Unit
     @goal_y = @y
     @body = new Body(@type)
     @hostility = 0  #0 is friendly. 1 is hostile
+    @alive = 1 #1 is alive, 0 is dead.
     @msg = []
   set_move: (x,y) ->
     @goal_x = x
@@ -29,4 +30,5 @@ class Unit
   damage: (unit) ->
     part = Math.random * @body.parts.size
     @body.parts[part] = 1
+    @body.check_death()
     @msg.push(unit.name + " destorys the " @body.parts[part].name + " of " + @name)
