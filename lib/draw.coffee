@@ -16,7 +16,7 @@ menu = (p5) ->
     camera_input(p5.key,@map)
 
   p5.logic = () ->
-    @unit.move()
+    @units.move()
 
   p5.draw = () ->
     p5.background(0)
