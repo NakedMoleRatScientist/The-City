@@ -3,5 +3,7 @@ human_body = () ->
   parts.push part("head")
   parts.push part("hand")
   parts.push part("foot")
+  parts.push part("foot")
+  parts.push part("hand")
   parts.push part("heart")
   return parts
