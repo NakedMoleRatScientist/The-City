@@ -25,3 +25,7 @@ class Unit
       if (unit.y + 1) == @y || (unit.y - 1) == @y
         if Math.random * 10 > 5
          unit.damage()
+  damage: (unit) ->
+    part = Math.random * @body.parts.size
+    @body.parts[part] = 1
+    @msg.push(unit.name + " destorys the " @body.parts[part].name + " of " + @name)
