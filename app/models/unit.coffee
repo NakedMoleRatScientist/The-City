@@ -25,6 +25,8 @@ class Unit
       return
   attack: () ->
     return if @attack == null
+    @goal_x = @attack.x - 1
+    @goal_y = @attack.y - 1
     if (@attack.x + 1) == @x || (@attack.x - 1) == @x
       if (@attack.y + 1) == @y || (@attack.y - 1) == @y
         if Math.random * 10 > 5
