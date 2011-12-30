@@ -29,14 +29,15 @@ class Unit
     @goal_y = @target.y - 1
     if (@target.x + 1) == @x || (@target.x - 1) == @x
       if (@target.y + 1) == @y || (@target.y - 1) == @y
-        if Math.random * 10 > 5
+        if (Math.random() * 10) > 5
          @target.damage(this)
   damage: (unit) ->
-    part = Math.random * @body.parts.size
+    part = Math.floor(Math.random() * @body.parts.length)
     @body.parts[part].status = 1
-    @msg.push(unit.name + " destorys the " + @body.parts[part].name + " of " + @name)
+    @msg.push(unit.name + " destroy the " + @body.parts[part].name + " of " + @name)
     if @body.check_death() == true
       @msg.push(@name + " got killed!")
+      @target = null
    get_msg: () ->
      msg = @msg
      @msg = []
