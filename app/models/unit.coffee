@@ -33,7 +33,7 @@ class Unit
          @target.damage(this)
   damage: (unit) ->
     part = Math.random * @body.parts.size
-    @body.parts[part] = 1
+    @body.parts[part].status = 1
     @msg.push(unit.name + " destorys the " + @body.parts[part].name + " of " + @name)
     if @body.check_death() == true
       @msg.push(@name + " got killed!")
