@@ -23,11 +23,12 @@ class Unit
     else if (@y - @goal_y) > 0
       @y = @y - 1
       return
-  attack: (unit) ->
-    if (unit.x + 1) == @x || (unit.x - 1) == @x
-      if (unit.y + 1) == @y || (unit.y - 1) == @y
+  attack: () ->
+    return if @attack == null
+    if (@attack.x + 1) == @x || (@attack.x - 1) == @x
+      if (@attack.y + 1) == @y || (@attack.y - 1) == @y
         if Math.random * 10 > 5
-         unit.damage(this)
+         @attack.damage(this)
   damage: (unit) ->
     part = Math.random * @body.parts.size
     @body.parts[part] = 1
