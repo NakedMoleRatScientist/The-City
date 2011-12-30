@@ -6,6 +6,5 @@ class Units
     unit.attack() for unit in @units
   clean: () ->
     cleanup = []
-    for unit in @units unless unit.check_death()
-      cleanup.push(unit)
+    cleanup.push(unit) if unit.body.check_death() for unit in @units
     @units = cleanup
