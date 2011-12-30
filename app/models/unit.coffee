@@ -31,13 +31,13 @@ class Unit
       if (@target.y + 1) == @y || (@target.y - 1) == @y
         if (Math.random() * 10) > 5
          @target.damage(this)
+         if @target.body.check_death() == true
+           @msg.push(@name + " got killed!")
+           @target = null
   damage: (unit) ->
     part = Math.floor(Math.random() * @body.parts.length)
     @body.parts[part].status = 1
     @msg.push(unit.name + " destroy the " + @body.parts[part].name + " of " + @name)
-    if @body.check_death() == true
-      @msg.push(@name + " got killed!")
-      @target = null
    get_msg: () ->
      msg = @msg
      @msg = []
