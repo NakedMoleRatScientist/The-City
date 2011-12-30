@@ -3,3 +3,4 @@ class Units
     @units = []
   move: () ->
     unit.move() for unit in @units
+    unit.attack() for unit in @units
