@@ -1,9 +1,9 @@
 human_body = () ->
   parts = []
-  parts.push part("head")
-  parts.push part("hand")
-  parts.push part("foot")
-  parts.push part("foot")
-  parts.push part("hand")
-  parts.push part("heart")
+  parts.push new Part("head")
+  parts.push new Part("hand")
+  parts.push new Part("foot")
+  parts.push new Part("foot")
+  parts.push new Part("hand")
+  parts.push new Part("heart")
   return parts
