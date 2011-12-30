@@ -22,6 +22,7 @@ menu = (p5) ->
   p5.logic = () ->
     @units.move()
     @units.clean()
+    @message.update(@units.units)
 
   p5.draw = () ->
     p5.background(0)
