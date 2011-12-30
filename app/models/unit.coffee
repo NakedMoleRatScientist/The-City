@@ -6,7 +6,7 @@ class Unit
     @hostility = 0  #0 is friendly. 1 is hostile
     @alive = 1 #1 is alive, 0 is dead.
     @msg = []
-    @attack = null
+    @target = null
   set_move: (x,y) ->
     @goal_x = x
     @goal_y = y
@@ -24,13 +24,13 @@ class Unit
       @y = @y - 1
       return
   attack: () ->
-    return if @attack == null
-    @goal_x = @attack.x - 1
-    @goal_y = @attack.y - 1
-    if (@attack.x + 1) == @x || (@attack.x - 1) == @x
-      if (@attack.y + 1) == @y || (@attack.y - 1) == @y
+    return if @target == null
+    @goal_x = @target.x - 1
+    @goal_y = @target.y - 1
+    if (@target.x + 1) == @x || (@target.x - 1) == @x
+      if (@target.y + 1) == @y || (@target.y - 1) == @y
         if Math.random * 10 > 5
-         @attack.damage(this)
+         @target.damage(this)
   damage: (unit) ->
     part = Math.random * @body.parts.size
     @body.parts[part] = 1
