@@ -37,3 +37,7 @@ class Unit
     @msg.push(unit.name + " destorys the " + @body.parts[part].name + " of " + @name)
     if @body.check_death() == true
       @msg.push(@name + " got killed!")
+   msg: () ->
+     msg = @msg
+     @msg = []
+     return msg
