@@ -1,5 +1,5 @@
 (function() {
-  var Map, Unit, camera_input, mapDraw, menu, unitDraw;
+  var Body, Map, Message, Part, Unit, Units, camera_input, human_body, mapDraw, menu, message_draw, unitDraw;
   Map = (function() {
     function Map(width, height) {
       var h;
@@ -40,6 +40,79 @@
     };
     return Map;
   })();
+  Units = (function() {
+    function Units() {
+      this.units = [];
+    }
+    Units.prototype.move = function() {
+      var unit, _i, _j, _len, _len2, _ref, _ref2, _results;
+      _ref = this.units;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        unit = _ref[_i];
+        unit.move();
+      }
+      _ref2 = this.units;
+      _results = [];
+      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+        unit = _ref2[_j];
+        _results.push(unit.attack());
+      }
+      return _results;
+    };
+    Units.prototype.clean = function() {};
+    return Units;
+  })();
+  Body = (function() {
+    function Body(type) {
+      if (type === 1) {
+        this.parts = human_body();
+      }
+    }
+    Body.prototype.check_death = function() {
+      if (this.parts[0].status === 1 || this.parts[5] === 1) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+    return Body;
+  })();
+  Message = (function() {
+    function Message() {
+      this.msg = [];
+    }
+    Message.prototype.update = function(units) {
+      var unit, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = units.length; _i < _len; _i++) {
+        unit = units[_i];
+        _results.push(this.msg.join(unit.get_msg()));
+      }
+      return _results;
+    };
+    return Message;
+  })();
+  message_draw = function(p5, msg) {
+    return p5.text(msg, 780, 0);
+  };
+  human_body = function() {
+    var parts;
+    parts = [];
+    parts.push(new Part("head"));
+    parts.push(new Part("hand"));
+    parts.push(new Part("foot"));
+    parts.push(new Part("foot"));
+    parts.push(new Part("hand"));
+    parts.push(new Part("heart"));
+    return parts;
+  };
+  Part = (function() {
+    function Part(name) {
+      this.name = name;
+      this.status = 0;
+    }
+    return Part;
+  })();
   Unit = (function() {
     function Unit(x, y, name, type) {
       this.x = x;
@@ -48,6 +121,11 @@
       this.type = type;
       this.goal_x = this.x;
       this.goal_y = this.y;
+      this.body = new Body(this.type);
+      this.hostility = 0;
+      this.alive = 1;
+      this.msg = [];
+      this.target = null;
     }
     Unit.prototype.set_move = function(x, y) {
       this.goal_x = x;
@@ -66,6 +144,36 @@
       } else if ((this.y - this.goal_y) > 0) {
         this.y = this.y - 1;
       }
+    };
+    Unit.prototype.attack = function() {
+      if (this.target === null) {
+        return;
+      }
+      this.goal_x = this.target.x - 1;
+      this.goal_y = this.target.y - 1;
+      if ((this.target.x + 1) === this.x || (this.target.x - 1) === this.x) {
+        if ((this.target.y + 1) === this.y || (this.target.y - 1) === this.y) {
+          if ((Math.random() * 10) > 5) {
+            this.target.damage(this);
+            if (this.target.body.check_death() === true) {
+              this.msg.push(this.name + " got killed!");
+              return this.target = null;
+            }
+          }
+        }
+      }
+    };
+    Unit.prototype.damage = function(unit) {
+      var part;
+      part = Math.floor(Math.random() * this.body.parts.length);
+      this.body.parts[part].status = 1;
+      return this.msg.push(unit.name + " destroy the " + this.body.parts[part].name + " of " + this.name);
+    };
+    Unit.prototype.get_msg = function() {
+      var msg;
+      msg = this.msg;
+      this.msg = [];
+      return msg;
     };
     return Unit;
   })();
@@ -103,12 +211,26 @@
     return mapDraw;
   })();
   unitDraw = (function() {
-    function unitDraw() {}
-    unitDraw.prototype.draw = function(p5, unit, map) {
-      p5.fill();
+    function unitDraw(p5, units, map) {
+      this.p5 = p5;
+      this.units = units;
+      this.map = map;
+    }
+    unitDraw.prototype.draw = function(p5, units, map) {
+      var unit, _i, _len, _ref, _results;
+      _ref = this.units.units;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        unit = _ref[_i];
+        _results.push(this.draw_unit(unit));
+      }
+      return _results;
+    };
+    unitDraw.prototype.draw_unit = function(unit) {
+      this.p5.fill();
       if (unit.type === 1) {
-        p5.fill(255, 69, 0);
-        return p5.text("H", (unit.x + map.camera_x) * 20 + 5, (unit.y + map.camera_y) * 20 - 5);
+        this.p5.fill(255, 69, 0);
+        return this.p5.text("H", (unit.x + this.map.camera_x) * 20 + 5, (unit.y + this.map.camera_y) * 20 - 5);
       }
     };
     return unitDraw;
@@ -132,22 +254,29 @@
       p5.background(0);
       this.map = new Map(100, 100);
       this.map.generate();
-      this.unit = new Unit(10, 10, "Miya", 1);
-      return this.unit.set_move(20, 1);
+      this.units = new Units();
+      this.units.units.push(new Unit(10, 10, "Miya", 1));
+      this.units.units.push(new Unit(10, 20, "John", 1));
+      this.units.units[1].hostility = 1;
+      this.units.units[0].target = this.units.units[1];
+      this.unit_draw = new unitDraw(p5, this.units, this.map);
+      return this.message = new Message();
     };
     p5.keyPressed = function() {
       return camera_input(p5.key, this.map);
     };
     p5.logic = function() {
-      return this.unit.move();
+      this.units.move();
+      this.units.clean();
+      return this.message.update(this.units.units);
     };
     return p5.draw = function() {
-      var map_draw, unit_draw;
+      var map_draw;
       p5.background(0);
       map_draw = new mapDraw(100, 100);
       map_draw.draw(p5, this.map);
-      unit_draw = new unitDraw();
-      unit_draw.draw(p5, this.unit, this.map);
+      this.unit_draw.draw();
+      message_draw(p5, this.message.msg[-1]);
       return p5.logic();
     };
   };
