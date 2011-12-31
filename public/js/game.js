@@ -59,7 +59,21 @@
       }
       return _results;
     };
-    Units.prototype.clean = function() {};
+    Units.prototype.clean = function() {
+      var unit;
+      return this.units = (function() {
+        var _i, _len, _ref, _results;
+        _ref = this.units;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          unit = _ref[_i];
+          if (unit.body.check_death() === false) {
+            _results.push(unit);
+          }
+        }
+        return _results;
+      }).call(this);
+    };
     return Units;
   })();
   Body = (function() {
@@ -86,14 +100,14 @@
       _results = [];
       for (_i = 0, _len = units.length; _i < _len; _i++) {
         unit = units[_i];
-        _results.push(this.msg.join(unit.get_msg()));
+        _results.push(this.msg = this.msg.concat(unit.get_msg()));
       }
       return _results;
     };
     return Message;
   })();
   message_draw = function(p5, msg) {
-    return p5.text(msg, 780, 0);
+    return p5.text(msg, 0, 595);
   };
   human_body = function() {
     var parts;
@@ -156,7 +170,7 @@
           if ((Math.random() * 10) > 5) {
             this.target.damage(this);
             if (this.target.body.check_death() === true) {
-              this.msg.push(this.name + " got killed!");
+              this.msg.push(this.target.name + " got killed!");
               return this.target = null;
             }
           }
@@ -167,7 +181,7 @@
       var part;
       part = Math.floor(Math.random() * this.body.parts.length);
       this.body.parts[part].status = 1;
-      return this.msg.push(unit.name + " destroy the " + this.body.parts[part].name + " of " + this.name);
+      return this.msg.push(unit.name + " destroys the " + this.body.parts[part].name + " of " + this.name);
     };
     Unit.prototype.get_msg = function() {
       var msg;
@@ -267,8 +281,8 @@
     };
     p5.logic = function() {
       this.units.move();
-      this.units.clean();
-      return this.message.update(this.units.units);
+      this.message.update(this.units.units);
+      return this.units.clean();
     };
     return p5.draw = function() {
       var map_draw;
@@ -276,7 +290,7 @@
       map_draw = new mapDraw(100, 100);
       map_draw.draw(p5, this.map);
       this.unit_draw.draw();
-      message_draw(p5, this.message.msg[-1]);
+      message_draw(p5, this.message.msg[this.message.msg.length - 1]);
       return p5.logic();
     };
   };
