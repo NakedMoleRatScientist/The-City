@@ -17,6 +17,7 @@ class Torso extends Part
     if @subparts[random].type == 2
       return 2 if this.lung_damage(random)
     else if @subparts[random].type == 1
+      @subparts[random].damage = 1
       return 1
     else
       return 0
