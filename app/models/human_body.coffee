@@ -5,5 +5,5 @@ human_body = () ->
   parts.push new Part("leg")
   parts.push new Part("leg")
   parts.push new Part("arm")
-  parts.push new Part("torso")
+  parts.push new Torso()
   return parts
