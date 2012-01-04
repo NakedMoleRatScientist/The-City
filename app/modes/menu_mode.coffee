@@ -1,2 +1,3 @@
 class MenuMode
   constructor:() ->
+  act:() ->
