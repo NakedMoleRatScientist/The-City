@@ -1,3 +1,3 @@
 class Mode
   constructor: ->
-    @game = new GameMode()
+    @modes = list()
