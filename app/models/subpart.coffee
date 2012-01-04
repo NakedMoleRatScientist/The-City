@@ -1,3 +1,3 @@
 class Subpart
-  constructor: (@name,@type)
+  constructor: (@name,@type) ->
     @damage = 0
