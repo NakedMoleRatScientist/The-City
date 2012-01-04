@@ -8,3 +8,7 @@ class GameMode
   @units.units[1].hostility = 1
   @units.units[0].target = @units.units[1]
   @message = new Message()
+ act: ->
+  @units.move()
+  @message.update(@units.units)
+  @units.clean()

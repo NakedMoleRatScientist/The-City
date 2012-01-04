@@ -10,12 +10,10 @@ menu = (p5) ->
     logic = new Mode()
 
   p5.keyPressed = () ->
-    camera_input(p5.key,@map)
+#    camera_input(p5.key,@map)
 
   p5.logic = () ->
-    @units.move()
-    @message.update(@units.units)
-    @units.clean()
+
 
 
   p5.draw = () ->
