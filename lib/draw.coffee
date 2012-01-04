@@ -6,6 +6,7 @@ menu = (p5) ->
     p5.size(800, 600)
     p5.frameRate(50)
     p5.background(0)
+    @mode = 1
     draw = new ModeDraw(p5)
     logic = new Mode()
 
