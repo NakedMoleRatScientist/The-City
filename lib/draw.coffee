@@ -14,7 +14,8 @@ menu = (p5) ->
 #    camera_input(p5.key,@map)
 
   p5.logic = () ->
-
+    logic.act(@mode)
+    draw.draw(@mode)
 
 
   p5.draw = () ->
