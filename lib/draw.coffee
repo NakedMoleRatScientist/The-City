@@ -17,11 +17,6 @@ menu = (p5) ->
 
 
   p5.draw = () ->
-    p5.background(0)
-    map_draw = new mapDraw(100,100)
-    map_draw.draw(p5,@map)
-    @unit_draw.draw()
-    message_draw(p5,@message.msg[@message.msg.length - 1])
     p5.logic()
 
 
