@@ -1,2 +1,2 @@
 class MenuMode
-  constructor:(@p5) ->
+  constructor:() ->
