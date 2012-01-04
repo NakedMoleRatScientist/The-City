@@ -1,2 +1,2 @@
 class ModeDraw
-  constructor: () ->
+  constructor: (@p5) ->
