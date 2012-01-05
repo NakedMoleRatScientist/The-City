@@ -1,5 +1,5 @@
 (function() {
-  var Body, GameMode, GameModeDraw, GameModeKey, Map, MenuMode, MenuModeDraw, MenuModeKey, Message, Mode, ModeDraw, ModeKey, Part, RadioButton, Subpart, Talk, TextOptions, Torso, Unit, Units, camera_input, circle_collision, human_body, list, listDraw, listKey, mapDraw, menu, message_draw, titleDraw, unitDraw;
+  var Body, GameMode, GameModeDraw, GameModeKey, Map, MenuMode, MenuModeDraw, MenuModeKey, Message, Mode, ModeDraw, ModeKey, Part, RadioButton, Subpart, Talk, TextOptions, Torso, Unit, Units, camera_input, changeMode, circle_collision, human_body, list, listDraw, listKey, mapDraw, menu, message_draw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -71,12 +71,15 @@
       this.texts.add("Test Arena");
     }
     MenuModeDraw.prototype.draw = function() {
+      this.p5.background(0);
       titleDraw(this.p5);
       return this.texts.draw();
     };
     MenuModeDraw.prototype.input = function(result) {
-      if (result === true) {
-        return this.texts.pointer += 1;
+      if (result === "down") {
+        return this.texts.increase();
+      } else if (result === "up") {
+        return this.texts.decrease();
       }
     };
     return MenuModeDraw;
@@ -86,7 +89,9 @@
     MenuModeKey.prototype.key_pressed = function(key) {
       console.log(key.code);
       if (key.code === 115) {
-        return true;
+        return "down";
+      } else if (key.code === 119) {
+        return "up";
       } else {
         return false;
       }
@@ -396,6 +401,11 @@
     };
     return unitDraw;
   })();
+  changeMode = function(result) {
+    if (result === "game_mode") {
+      return 0;
+    }
+  };
   circle_collision = function(x, y, object) {
     var dm, dx, dy;
     dy = y - (object.y + object.diameter / 2);
@@ -514,14 +524,28 @@
       this.x = x;
       this.y = y;
       this.size = size;
-      this.pointer = 1;
+      this.pointer = 0;
       this.texts = [];
     }
     TextOptions.prototype.add = function(text) {
       return this.texts.push(text);
     };
+    TextOptions.prototype.increase = function() {
+      if (this.pointer < this.texts.length - 1) {
+        return this.pointer += 1;
+      } else {
+        return this.pointer = 0;
+      }
+    };
+    TextOptions.prototype.decrease = function() {
+      if (this.pointer === 0) {
+        return this.pointer = this.texts.length - 1;
+      } else {
+        return this.pointer -= 1;
+      }
+    };
     TextOptions.prototype.draw = function() {
-      var data, y, _i, _len, _ref;
+      var data, pointer_y, y, _i, _len, _ref;
       this.p5.textFont("Monospace", this.size);
       y = this.y;
       _ref = this.texts;
@@ -530,7 +554,8 @@
         this.p5.text(data, this.x, y);
         y += this.size;
       }
-      return this.p5.ellipse(this.x - 20, (this.y * this.pointer) - (this.size / 2), 10, 10);
+      pointer_y = this.y + (this.pointer * this.size);
+      return this.p5.ellipse(this.x - 20, pointer_y - (this.size / 2), 10, 10);
     };
     return TextOptions;
   })();
