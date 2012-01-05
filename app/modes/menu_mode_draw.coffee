@@ -8,4 +8,4 @@ class MenuModeDraw
     @texts.draw()
   input: (result) ->
     if result == true
-      @texts.pointer += 1
+      @texts.increase()
