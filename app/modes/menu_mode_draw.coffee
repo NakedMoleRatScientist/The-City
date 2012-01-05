@@ -8,5 +8,5 @@ class MenuModeDraw
     titleDraw(@p5)
     @texts.draw()
   input: (result) ->
-    if result == true
+    if result == "down"
       @texts.increase()
