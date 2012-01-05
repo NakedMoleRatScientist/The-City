@@ -4,6 +4,10 @@ class TextOptions
     @texts = []
   add: (text) ->
     @texts.push(text)
+  increase: () ->
+    @pointer += 1
+    if @pointer > @texts.length
+      @pointer = 1
   draw: () ->
     @p5.textFont("Monospace",@size)
     y = @y
