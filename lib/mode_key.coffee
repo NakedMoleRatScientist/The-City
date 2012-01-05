@@ -1,5 +1,5 @@
 class ModeKey
   constructor: () ->
     @modes = listKey()
-  detect: (n) ->
-    @modes[n].detect()
+  key_pressed: (n,key) ->
+    @modes[n].key_pressed(key)
