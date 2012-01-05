@@ -4,6 +4,7 @@ class MenuModeDraw
     @texts.add("New Game")
     @texts.add("Test Arena")
   draw: () ->
+    @p5.background(0)
     titleDraw(@p5)
     @texts.draw()
   input: (result) ->
