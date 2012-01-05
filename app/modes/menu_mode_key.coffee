@@ -1,5 +1,6 @@
 class MenuModeKey
-  constructor: () ->
+  constructor: (@talk) ->
   key_pressed: (key) ->
-    if key.code == 97
-      console.log("blah")
+    console.log(key.code)
+    if key.code == 115
+      @talk.msg("down")
