@@ -1,5 +1,5 @@
 class ModeKey
-  constructor: (@p5) ->
+  constructor: () ->
     @modes = listKey()
   detect: (n) ->
     @modes[n].detect()
