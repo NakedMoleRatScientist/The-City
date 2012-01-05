@@ -3,4 +3,6 @@ class MenuModeKey
   key_pressed: (key) ->
     console.log(key.code)
     if key.code == 115
-      @talk.msg("down")
+      return true
+    else
+      return false
