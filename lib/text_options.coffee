@@ -9,4 +9,5 @@ class TextOptions
     y = @y
     for data in @texts
       @p5.text(data,@x,y)
+      y += @size
     @p5.ellipse(@x - 20,@y - (@size / 2),10,10)
