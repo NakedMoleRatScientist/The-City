@@ -10,6 +10,7 @@ menu = (p5) ->
     @draw_mode = new ModeDraw(p5)
     @logic_mode = new Mode()
     @key_mode = new ModeKey()
+
   p5.keyPressed = () ->
     @key_mode.key_pressed(@mode,p5.key)
 #    camera_input(p5.key,@map)
