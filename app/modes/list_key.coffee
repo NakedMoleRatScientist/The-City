@@ -1,2 +1,2 @@
-listKey = (@talk) ->
-  [new GameModeKey(), new MenuModeKey(@talk)]
+listKey = () ->
+  [new GameModeKey(), new MenuModeKey()]
