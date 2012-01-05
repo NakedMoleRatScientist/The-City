@@ -1,5 +1,5 @@
 (function() {
-  var Body, GameMode, GameModeDraw, Map, MenuMode, MenuModeDraw, Message, Mode, ModeDraw, Part, Subpart, Torso, Unit, Units, camera_input, human_body, list, listDraw, mapDraw, menu, message_draw, titleDraw, unitDraw;
+  var Body, GameMode, GameModeDraw, GameModeKey, Map, MenuMode, MenuModeDraw, MenuModeKey, Message, Mode, ModeDraw, ModeKey, Part, RadioButton, Subpart, Talk, TextOptions, Torso, Unit, Units, camera_input, circle_collision, human_body, list, listDraw, listKey, mapDraw, menu, message_draw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -39,25 +39,59 @@
     };
     return GameModeDraw;
   })();
+  GameModeKey = (function() {
+    function GameModeKey() {}
+    GameModeKey.prototype.key_pressed = function(key) {
+      if (key.code === 97) {
+        return console.log("BAIL!");
+      }
+    };
+    return GameModeKey;
+  })();
   list = function() {
     return [new GameMode(), new MenuMode()];
   };
   listDraw = function(p5) {
     return [new GameModeDraw(p5), new MenuModeDraw(p5)];
   };
+  listKey = function() {
+    return [new GameModeKey(), new MenuModeKey()];
+  };
   MenuMode = (function() {
     function MenuMode() {}
     MenuMode.prototype.act = function() {};
+    MenuMode.prototype.input = function(result) {};
     return MenuMode;
   })();
   MenuModeDraw = (function() {
     function MenuModeDraw(p5) {
       this.p5 = p5;
+      this.texts = new TextOptions(this.p5, 250, 250, 18);
+      this.texts.add("New Game");
+      this.texts.add("Test Arena");
     }
     MenuModeDraw.prototype.draw = function() {
-      return titleDraw(this.p5);
+      titleDraw(this.p5);
+      return this.texts.draw();
+    };
+    MenuModeDraw.prototype.input = function(result) {
+      if (result === true) {
+        return this.texts.pointer += 1;
+      }
     };
     return MenuModeDraw;
+  })();
+  MenuModeKey = (function() {
+    function MenuModeKey() {}
+    MenuModeKey.prototype.key_pressed = function(key) {
+      console.log(key.code);
+      if (key.code === 115) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+    return MenuModeKey;
   })();
   camera_input = function(key, map) {
     console.log(key.code);
@@ -334,7 +368,8 @@
     return p5.text(msg, 0, 595);
   };
   titleDraw = function(p5) {
-    return p5.text("The City", 400, 300);
+    p5.textFont("monospace", 30);
+    return p5.text("The City", 350, 100);
   };
   unitDraw = (function() {
     function unitDraw(p5, units, map) {
@@ -361,16 +396,35 @@
     };
     return unitDraw;
   })();
+  circle_collision = function(x, y, object) {
+    var dm, dx, dy;
+    dy = y - (object.y + object.diameter / 2);
+    dx = x - (object.x + object.diameter / 2);
+    dm = Math.sqrt(dx * dy + dy * dy);
+    if (dm < object.diameter) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   menu = function(p5) {
     p5.setup = function() {
       p5.size(800, 600);
       p5.frameRate(50);
       p5.background(0);
+      this.talk = new Talk();
       this.mode = 1;
       this.draw_mode = new ModeDraw(p5);
-      return this.logic_mode = new Mode();
+      this.logic_mode = new Mode();
+      return this.key_mode = new ModeKey(this.talk);
     };
-    p5.keyPressed = function() {};
+    p5.keyPressed = function() {
+      return p5.input_result(this.key_mode.key_pressed(this.mode, p5.key));
+    };
+    p5.input_result = function(result) {
+      this.logic_mode.input(this.mode, result);
+      return this.draw_mode.input(this.mode, result);
+    };
     p5.logic = function() {
       this.logic_mode.act(this.mode);
       return this.draw_mode.draw(this.mode);
@@ -391,6 +445,9 @@
     Mode.prototype.act = function(n) {
       return this.modes[n].act();
     };
+    Mode.prototype.input = function(n, result) {
+      return this.modes[n].input(result);
+    };
     return Mode;
   })();
   ModeDraw = (function() {
@@ -401,6 +458,80 @@
     ModeDraw.prototype.draw = function(n) {
       return this.modes[n].draw();
     };
+    ModeDraw.prototype.input = function(n, result) {
+      return this.modes[n].input(result);
+    };
     return ModeDraw;
+  })();
+  ModeKey = (function() {
+    function ModeKey(talk) {
+      this.talk = talk;
+      this.modes = listKey(this.talk);
+    }
+    ModeKey.prototype.key_pressed = function(n, key) {
+      return this.modes[n].key_pressed(key);
+    };
+    return ModeKey;
+  })();
+  RadioButton = (function() {
+    function RadioButton(p5, x, y) {
+      this.p5 = p5;
+      this.x = x;
+      this.y = y;
+      this.height = 10;
+      this.width = 10;
+      this.radius = this.height / 2;
+      this.diameter = this.radius * 2;
+      this.state = false;
+    }
+    RadioButton.prototype.draw = function() {
+      this.p5.noFill();
+      this.p5.stroke(255);
+      this.p5.ellipse(this.x, this.y, this.width, this.height);
+      if (this.state === true) {
+        this.p5.fill();
+        this.p5.stroke(255);
+        return this.p5.ellipse(this.x, this.y, this.width / 2, this.height / 2);
+      }
+    };
+    return RadioButton;
+  })();
+  Talk = (function() {
+    function Talk(info) {
+      this.info = info;
+    }
+    Talk.prototype.msg = function(text) {
+      return this.info.push(text);
+    };
+    Talk.prototype.clean = function() {
+      return this.info = [];
+    };
+    return Talk;
+  })();
+  TextOptions = (function() {
+    function TextOptions(p5, x, y, size) {
+      this.p5 = p5;
+      this.x = x;
+      this.y = y;
+      this.size = size;
+      this.pointer = 1;
+      this.texts = [];
+    }
+    TextOptions.prototype.add = function(text) {
+      return this.texts.push(text);
+    };
+    TextOptions.prototype.draw = function() {
+      var data, y, _i, _len, _ref;
+      this.p5.textFont("Monospace", this.size);
+      y = this.y;
+      _ref = this.texts;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        data = _ref[_i];
+        this.p5.text(data, this.x, y);
+        y += this.size;
+      }
+      return this.p5.ellipse(this.x - 20, (this.y * this.pointer) - (this.size / 2), 10, 10);
+    };
+    return TextOptions;
   })();
 }).call(this);
