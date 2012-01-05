@@ -13,12 +13,12 @@ menu = (p5) ->
     @key_mode = new ModeKey(@talk)
 
   p5.keyPressed = () ->
-    @key_mode.key_pressed(@mode,p5.key)
+    p5.input_result(@key_mode.key_pressed(@mode,p5.key))
 #    camera_input(p5.key,@map)
 
   p5.input_result = (result) ->
-    @logic_mode.input(result)
-    @draw_mode.input(result)
+    @logic_mode.input(@mode,result)
+    @draw_mode.input(@mode,result)
 
   p5.logic = () ->
     @logic_mode.act(@mode)
