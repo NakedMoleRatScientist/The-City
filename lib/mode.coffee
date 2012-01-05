@@ -3,5 +3,5 @@ class Mode
     @modes = list()
   act: (n) ->
     @modes[n].act()
-  input: (@mode,result) ->
+  input: (n,result) ->
     @modes[n].input(result)
