@@ -6,3 +6,6 @@ class MenuModeDraw
   draw: () ->
     titleDraw(@p5)
     @texts.draw()
+  input: (result) ->
+    if result == true
+      @texts.pointer += 1
