@@ -3,3 +3,5 @@ class TextOptions
     @pointer = 0
     @p5.font("Monospace",size)
     @texts = []
+  add: (text) ->
+    @texts.push(text)
