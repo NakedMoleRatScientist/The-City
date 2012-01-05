@@ -9,6 +9,11 @@ class TextOptions
       @pointer += 1
     else
       @pointer = 0
+  decrease: () ->
+    if @pointer == 0
+      @pointer = @texts.length - 1
+    else
+      @pointer -= 1
   draw: () ->
     @p5.textFont("Monospace",@size)
     y = @y
