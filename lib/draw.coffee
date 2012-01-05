@@ -16,6 +16,10 @@ menu = (p5) ->
     @key_mode.key_pressed(@mode,p5.key)
 #    camera_input(p5.key,@map)
 
+  p5.input_result = (result) ->
+    @logic_mode.input(result)
+    @draw_mode.input(result)
+
   p5.logic = () ->
     @logic_mode.act(@mode)
     @draw_mode.draw(@mode)
