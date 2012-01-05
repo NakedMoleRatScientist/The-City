@@ -10,3 +10,5 @@ class MenuModeDraw
   input: (result) ->
     if result == "down"
       @texts.increase()
+    else if result == "up"
+      @texts.decrease()
