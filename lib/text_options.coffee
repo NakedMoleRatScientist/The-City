@@ -1,6 +1,6 @@
 class TextOptions
   constructor: (@p5,@x,@y,@size) ->
-    @pointer = 0
+    @pointer = 1
     @texts = []
   add: (text) ->
     @texts.push(text)
@@ -10,4 +10,4 @@ class TextOptions
     for data in @texts
       @p5.text(data,@x,y)
       y += @size
-    @p5.ellipse(@x - 20,@y - (@size / 2),10,10)
+    @p5.ellipse(@x - 20,(@y * @pointer) - (@size / 2),10,10)
