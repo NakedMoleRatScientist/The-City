@@ -1,5 +1,5 @@
 class RadioButton
-  constructor: (@x,@y) ->
+  constructor: (@p5,@x,@y) ->
     @height = 10
     @width = 10
     @radius = @height / 2
