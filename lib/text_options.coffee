@@ -1,4 +1,4 @@
 class TextOptions
-  constructor: (@p5) ->
+  constructor: (@p5,@x,@y) ->
     @pointer = 0
     @texts = []
