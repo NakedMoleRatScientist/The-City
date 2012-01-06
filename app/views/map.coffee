@@ -1,5 +1,5 @@
 class mapDraw
-  constructor: (@width, @height) ->
+  constructor: (@p5,@width, @height) ->
 
   draw: (p5,map) ->
     results = map.map
