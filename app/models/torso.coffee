@@ -13,7 +13,7 @@ class Torso extends Part
   #2 is to die of Asphyxia
   interact: ->
     super()
-    if @subpar[random].type == 2
+    if @subparts[random].type == 2
       return 2 if this.lung_damage(random)
     else if @subparts[random].type == 1
       @subparts[random].damage = 1
