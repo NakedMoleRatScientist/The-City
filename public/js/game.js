@@ -24,19 +24,30 @@
       this.message.update(this.units.units);
       return this.units.clean();
     };
+    GameMode.prototype.input = function() {};
+    GameMode.prototype.update_draw = function() {
+      return {
+        units: this.units,
+        map: this.map
+      };
+    };
     return GameMode;
   })();
   GameModeDraw = (function() {
     function GameModeDraw(p5) {
       this.p5 = p5;
-      this.unit_draw = new unitDraw(p5, this.units, this.map);
-      this.map_draw = new mapDraw(100, 100);
+      this.unit_draw = new unitDraw(this.p5);
+      this.map_draw = new mapDraw(this.p5, 100, 100);
     }
-    GameModeDraw.prototype.draw = function() {
+    GameModeDraw.prototype.draw = function(object) {
+      var map, units;
+      map = object.map;
+      units = object.units;
       this.p5.background(0);
-      this.map_draw.draw(this.p5);
-      return this.unit_draw.draw();
+      this.map_draw.draw(map);
+      return this.unit_draw.draw(units, map);
     };
+    GameModeDraw.prototype.input = function() {};
     return GameModeDraw;
   })();
   GameModeKey = (function() {
@@ -61,6 +72,7 @@
     function MenuMode() {}
     MenuMode.prototype.act = function() {};
     MenuMode.prototype.input = function(result) {};
+    MenuMode.prototype.update_draw = function() {};
     return MenuMode;
   })();
   MenuModeDraw = (function() {
@@ -339,14 +351,15 @@
     return Unit;
   })();
   mapDraw = (function() {
-    function mapDraw(width, height) {
+    function mapDraw(p5, width, height) {
+      this.p5 = p5;
       this.width = width;
       this.height = height;
     }
-    mapDraw.prototype.draw = function(p5, map) {
+    mapDraw.prototype.draw = function(map) {
       var height, results, width, _ref, _results;
       results = map.map;
-      p5.stroke(255);
+      this.p5.stroke(255);
       _results = [];
       for (height = 0, _ref = this.height; 0 <= _ref ? height <= _ref : height >= _ref; 0 <= _ref ? height++ : height--) {
         if (height < this.height) {
@@ -356,11 +369,11 @@
             for (width = 0, _ref2 = this.width; 0 <= _ref2 ? width <= _ref2 : width >= _ref2; 0 <= _ref2 ? width++ : width--) {
               if (width < this.width) {
                 if (results[height][width] === 1) {
-                  p5.noFill();
+                  this.p5.noFill();
                 } else {
-                  p5.fill();
+                  this.p5.fill();
                 }
-                _results2.push(p5.rect(20 * (width + map.camera_x), 20 * (height + map.camera_y), 20, 20));
+                _results2.push(this.p5.rect(20 * (width + map.camera_x), 20 * (height + map.camera_y), 20, 20));
               }
             }
             return _results2;
@@ -379,27 +392,19 @@
     return p5.text("The City", 350, 100);
   };
   unitDraw = (function() {
-    function unitDraw(p5, units, map) {
+    function unitDraw(p5) {
       this.p5 = p5;
-      this.units = units;
-      this.map = map;
     }
-    unitDraw.prototype.draw = function(p5, units, map) {
+    unitDraw.prototype.draw = function(units, map) {
       var unit, _i, _len, _ref, _results;
-      _ref = this.units.units;
+      _ref = units.units;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         unit = _ref[_i];
-        _results.push(this.draw_unit(unit));
+        this.p5.fill();
+        _results.push(unit.type === 1 ? (this.p5.fill(255, 69, 0), this.p5.text("H", (unit.x + map.camera_x) * 20 + 5, (unit.y + map.camera_y) * 20 - 5)) : void 0);
       }
       return _results;
-    };
-    unitDraw.prototype.draw_unit = function(unit) {
-      this.p5.fill();
-      if (unit.type === 1) {
-        this.p5.fill(255, 69, 0);
-        return this.p5.text("H", (unit.x + this.map.camera_x) * 20 + 5, (unit.y + this.map.camera_y) * 20 - 5);
-      }
     };
     return unitDraw;
   })();
@@ -426,8 +431,8 @@
       p5.background(0);
       this.talk = new Talk();
       this.mode = 1;
-      this.draw_mode = new ModeDraw(p5);
       this.logic_mode = new Mode();
+      this.draw_mode = new ModeDraw(p5);
       return this.key_mode = new ModeKey(this.talk);
     };
     p5.keyPressed = function() {
@@ -436,12 +441,11 @@
     p5.input_result = function(result) {
       this.logic_mode.input(this.mode, result);
       this.draw_mode.input(this.mode, result);
-      this.mode = changeMode(result);
-      return console.log(this.mode);
+      return this.mode = changeMode(result);
     };
     p5.logic = function() {
       this.logic_mode.act(this.mode);
-      return this.draw_mode.draw(this.mode);
+      return this.draw_mode.draw(this.mode, this.logic_mode);
     };
     return p5.draw = function() {
       return p5.logic();
@@ -462,6 +466,9 @@
     Mode.prototype.input = function(n, result) {
       return this.modes[n].input(result);
     };
+    Mode.prototype.update_draw = function(n) {
+      return this.modes[n].update_draw();
+    };
     return Mode;
   })();
   ModeDraw = (function() {
@@ -469,8 +476,8 @@
       this.p5 = p5;
       this.modes = listDraw(this.p5);
     }
-    ModeDraw.prototype.draw = function(n) {
-      return this.modes[n].draw();
+    ModeDraw.prototype.draw = function(n, logic) {
+      return this.modes[n].draw(logic.update_draw(n));
     };
     ModeDraw.prototype.input = function(n, result) {
       return this.modes[n].input(result);
