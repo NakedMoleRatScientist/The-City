@@ -19,7 +19,8 @@ menu = (p5) ->
   p5.input_result = (result) ->
     @logic_mode.input(@mode,result)
     @draw_mode.input(@mode,result)
-    @mode = change_mode(result)
+    @mode = changeMode(result)
+
   p5.logic = () ->
     @logic_mode.act(@mode)
     @draw_mode.draw(@mode)
