@@ -23,7 +23,7 @@ menu = (p5) ->
 
   p5.logic = () ->
     @logic_mode.act(@mode)
-    @draw_mode.draw(@mode)
+    @draw_mode.draw(@mode,@logic)
 
 
   p5.draw = () ->
