@@ -13,7 +13,14 @@ class GameMode
     @message.update(@units.units)
     @units.clean()
   input: (result) ->
-    if result == "up"
-      @map.move_camera(0,-1)
+    switch(result)
+      when "up"
+        @map.move_camera(0,-1)
+      when "down"
+        @map.move_camera(0,1)
+      when "left"
+        @map.move_camera(-1,0)
+      when "right"
+        @map.move_camera(1,0)
   update_draw: () ->
     return (units: @units, map: @map)
