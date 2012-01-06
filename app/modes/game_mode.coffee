@@ -12,3 +12,4 @@ class GameMode
     @units.move()
     @message.update(@units.units)
     @units.clean()
+  input: ->
