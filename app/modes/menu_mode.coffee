@@ -1,5 +1,5 @@
 class MenuMode
   constructor:() ->
   act:() ->
-  input: (result) ->
+  input: (mode, result) ->
   update_draw: () ->
