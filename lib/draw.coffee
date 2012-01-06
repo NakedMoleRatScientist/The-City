@@ -14,7 +14,6 @@ menu = (p5) ->
 
   p5.keyPressed = () ->
     p5.input_result(@key_mode.key_pressed(@mode,p5.key))
-#    camera_input(p5.key,@map)
 
   p5.input_result = (result) ->
     @logic_mode.input(@mode,result)
