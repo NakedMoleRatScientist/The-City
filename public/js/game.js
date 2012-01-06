@@ -92,6 +92,8 @@
         return "down";
       } else if (key.code === 119) {
         return "up";
+      } else if (key.code === 10) {
+        return "game_mode";
       } else {
         return false;
       }
@@ -433,7 +435,9 @@
     };
     p5.input_result = function(result) {
       this.logic_mode.input(this.mode, result);
-      return this.draw_mode.input(this.mode, result);
+      this.draw_mode.input(this.mode, result);
+      this.mode = changeMode(result);
+      return console.log(this.mode);
     };
     p5.logic = function() {
       this.logic_mode.act(this.mode);
