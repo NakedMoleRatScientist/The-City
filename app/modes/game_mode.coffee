@@ -12,6 +12,8 @@ class GameMode
     @units.move()
     @message.update(@units.units)
     @units.clean()
-  input: ->
+  input: (result) ->
+    if result == "up"
+      @map.move_camera(0,-1)
   update_draw: () ->
     return (units: @units, map: @map)
