@@ -1,5 +1,5 @@
 (function() {
-  var Body, GameMode, GameModeDraw, GameModeKey, Map, MenuMode, MenuModeDraw, MenuModeKey, Message, Mode, ModeDraw, ModeKey, Part, RadioButton, Subpart, Talk, TextOptions, Torso, Unit, Units, changeMode, circle_collision, human_body, list, listDraw, listKey, mapDraw, menu, message_draw, titleDraw, unitDraw;
+  var Body, GameMode, GameModeDraw, GameModeKey, Head, Map, MenuMode, MenuModeDraw, MenuModeKey, Message, Mode, ModeDraw, ModeKey, Part, RadioButton, Subpart, Talk, TextOptions, Torso, Unit, Units, changeMode, circle_collision, human_body, list, listDraw, listKey, mapDraw, menu, message_draw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -25,8 +25,15 @@
       return this.units.clean();
     };
     GameMode.prototype.input = function(result) {
-      if (result === "up") {
-        return this.map.move_camera(0, -1);
+      switch (result) {
+        case "up":
+          return this.map.move_camera(0, -1);
+        case "down":
+          return this.map.move_camera(0, 1);
+        case "left":
+          return this.map.move_camera(-1, 0);
+        case "right":
+          return this.map.move_camera(1, 0);
       }
     };
     GameMode.prototype.update_draw = function() {
@@ -173,10 +180,29 @@
     };
     return Body;
   })();
+  Head = (function() {
+    __extends(Head, Part);
+    function Head() {
+      Head.__super__.constructor.call(this, "Head");
+      this.subparts.push(new Subpart("left_eye", 0));
+      this.subparts.push(new Subpart("right_eye", 0));
+      this.subparts.push(new Subpart("nose", 0));
+      this.subparts.push(new Subpart("skull", 1));
+    }
+    Head.prototype.interact = function() {
+      Head.__super__.interact.call(this);
+      if (this.subparts[random].type === 1) {
+        return 1;
+      } else {
+        return 0;
+      }
+    };
+    return Head;
+  })();
   human_body = function() {
     var parts;
     parts = [];
-    parts.push(new Part("head"));
+    parts.push(new Head());
     parts.push(new Part("arm"));
     parts.push(new Part("leg"));
     parts.push(new Part("leg"));
@@ -244,8 +270,15 @@
       this.name = name;
       this.subparts = [];
     }
+    Part.prototype.interact = function() {
+      var random;
+      return random = Math.round(Math.random() * this.subparts.length - 1);
+    };
     return Part;
   })();
+  ({
+    randomHit: function(subparts) {}
+  });
   Subpart = (function() {
     function Subpart(name, type) {
       this.name = name;
@@ -267,13 +300,16 @@
       if (this.subparts[1].damage === 1 && this.subparts[2].damage === 1) {
         return true;
       }
+      return false;
     };
     Torso.prototype.interact = function() {
-      var random;
-      random = Math.round(Math.random() * this.subparts.length - 1);
+      Torso.__super__.interact.call(this);
       if (this.subparts[random].type === 2) {
         if (this.lung_damage(random)) {
-          return 2;
+          return {
+            type: 2,
+            msg: "Asphyxia"
+          };
         }
       } else if (this.subparts[random].type === 1) {
         this.subparts[random].damage = 1;
@@ -335,10 +371,12 @@
       }
     };
     Unit.prototype.damage = function(unit) {
-      var part;
+      var damage, part;
       part = Math.floor(Math.random() * this.body.parts.length);
-      this.body.parts[part].status = 1;
-      return this.msg.push(unit.name + " destroys the " + this.body.parts[part].name + " of " + this.name);
+      damage = this.body.parts[part].interact();
+      if (damage.type === 1) {
+        return this.msg.push(this.name + " dies of " + damage.msg);
+      }
     };
     Unit.prototype.get_msg = function() {
       var msg;
