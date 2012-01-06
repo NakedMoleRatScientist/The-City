@@ -12,8 +12,8 @@ class Torso extends Part
   #1 is to die of heart failure.
   #2 is to die of Asphyxia
   interact: ->
-    random = Math.round(Math.random() * @subparts.length - 1)
-    if @subparts[random].type == 2
+    super()
+    if @subpar[random].type == 2
       return 2 if this.lung_damage(random)
     else if @subparts[random].type == 1
       @subparts[random].damage = 1
