@@ -1,5 +1,5 @@
 class GameModeDraw
-  constructor:(@p5) ->
+  constructor:(@p5,@logic) ->
     @unit_draw = new unitDraw(@p5,@units,@map)
     @map_draw = new mapDraw(@p5,100,100)
   draw: () ->
