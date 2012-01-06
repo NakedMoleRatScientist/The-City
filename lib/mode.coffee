@@ -5,3 +5,5 @@ class Mode
     @modes[n].act()
   input: (n,result) ->
     @modes[n].input(result)
+  get: (n) ->
+    return @modes[n]
