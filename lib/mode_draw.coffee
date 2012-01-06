@@ -1,6 +1,6 @@
 class ModeDraw
-  constructor: (@p5,@logic) ->
-    @modes = listDraw(@p5,@logic)
+  constructor: (@p5) ->
+    @modes = listDraw(@p5)
   draw: (n) ->
     @modes[n].draw()
   input: (n, result) ->
