@@ -10,8 +10,8 @@ class Torso extends Part
       return true
     return false
   #0 means nothing happens.
-  #1 is to die of heart failure.
-  #2 is to die of Asphyxia
+  #1 is death
+  #2 is to suffer a disability
   interact: ->
     super()
     if @subparts[random].type == 2
