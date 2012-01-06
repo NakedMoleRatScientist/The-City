@@ -1,5 +1,5 @@
 class MenuModeDraw
-  constructor: (@p5) ->
+  constructor: (@p5,@logic) ->
     @texts = new TextOptions(@p5,250,250,18)
     @texts.add("New Game")
     @texts.add("Test Arena")
