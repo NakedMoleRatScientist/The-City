@@ -1,7 +1,7 @@
 class mapDraw
   constructor: (@p5,@width, @height) ->
 
-  draw: () ->
+  draw: (map) ->
     results = map.map
     @p5.stroke(255)
     for height in [0..@height] when height < @height
