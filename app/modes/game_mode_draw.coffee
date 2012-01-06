@@ -6,3 +6,4 @@ class GameModeDraw
     @p5.background(0)
     @map_draw.draw()
     @unit_draw.draw()
+  input: () ->
