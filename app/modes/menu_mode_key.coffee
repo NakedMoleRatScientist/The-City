@@ -6,5 +6,7 @@ class MenuModeKey
       return "down"
     else if key.code == 119
       return "up"
+    else if key.code == 10
+      return "game_mode"
     else
       return false
