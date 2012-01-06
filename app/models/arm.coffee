@@ -2,6 +2,8 @@ class Arm extends Part
   constructor: () ->
     super("Arm")
     @subparts.push new Subpart("lower_arm",3)
+    @subparts.push new Subpart("upper_arm",3)
+    @subparts.push new Subpart("hand",3)
   arm_interact: (choice) ->
     @subparts(choice).damage = 1
     for part in @subparts
