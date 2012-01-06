@@ -11,5 +11,4 @@ class MenuModeDraw
     if result == "down"
       @texts.increase()
     else if result == "up"
-      @texts.decrease()b
-  update_draw: () ->
+      @texts.decrease()
