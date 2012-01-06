@@ -8,6 +8,7 @@ class Torso extends Part
     @subparts[choice].damage = 1
     if @subparts[1].damage == 1 && @subparts[2].damage == 1
       return true
+    return false
   #0 means nothing happens.
   #1 is to die of heart failure.
   #2 is to die of Asphyxia
