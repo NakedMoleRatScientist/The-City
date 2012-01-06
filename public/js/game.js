@@ -1,5 +1,5 @@
 (function() {
-  var Body, GameMode, GameModeDraw, GameModeKey, Map, MenuMode, MenuModeDraw, MenuModeKey, Message, Mode, ModeDraw, ModeKey, Part, RadioButton, Subpart, Talk, TextOptions, Torso, Unit, Units, camera_input, changeMode, circle_collision, human_body, list, listDraw, listKey, mapDraw, menu, message_draw, titleDraw, unitDraw;
+  var Body, GameMode, GameModeDraw, GameModeKey, Map, MenuMode, MenuModeDraw, MenuModeKey, Message, Mode, ModeDraw, ModeKey, Part, RadioButton, Subpart, Talk, TextOptions, Torso, Unit, Units, changeMode, circle_collision, human_body, list, listDraw, listKey, mapDraw, menu, message_draw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -24,7 +24,11 @@
       this.message.update(this.units.units);
       return this.units.clean();
     };
-    GameMode.prototype.input = function() {};
+    GameMode.prototype.input = function(result) {
+      if (result === "up") {
+        return this.map.move_camera(0, -1);
+      }
+    };
     GameMode.prototype.update_draw = function() {
       return {
         units: this.units,
@@ -54,7 +58,13 @@
     function GameModeKey() {}
     GameModeKey.prototype.key_pressed = function(key) {
       if (key.code === 97) {
-        return console.log("BAIL!");
+        return "right";
+      } else if (key.code === 100) {
+        return "left";
+      } else if (key.code === 115) {
+        return "up";
+      } else if (key.code === 119) {
+        return "down";
       }
     };
     return GameModeKey;
@@ -112,18 +122,6 @@
     };
     return MenuModeKey;
   })();
-  camera_input = function(key, map) {
-    console.log(key.code);
-    if (key.code === 97) {
-      return map.move_camera(1, 0);
-    } else if (key.code === 100) {
-      return map.move_camera(-1, 0);
-    } else if (key.code === 115) {
-      return map.move_camera(0, -1);
-    } else if (key.code === 119) {
-      return map.move_camera(0, 1);
-    }
-  };
   Units = (function() {
     function Units() {
       this.units = [];
@@ -408,9 +406,11 @@
     };
     return unitDraw;
   })();
-  changeMode = function(result) {
+  changeMode = function(mode, result) {
     if (result === "game_mode") {
       return 0;
+    } else {
+      return mode;
     }
   };
   circle_collision = function(x, y, object) {
@@ -441,7 +441,7 @@
     p5.input_result = function(result) {
       this.logic_mode.input(this.mode, result);
       this.draw_mode.input(this.mode, result);
-      return this.mode = changeMode(result);
+      return this.mode = changeMode(this.mode, result);
     };
     p5.logic = function() {
       this.logic_mode.act(this.mode);
