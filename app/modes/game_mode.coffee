@@ -13,3 +13,5 @@ class GameMode
     @message.update(@units.units)
     @units.clean()
   input: ->
+  update_draw: () ->
+    return @units, @map
