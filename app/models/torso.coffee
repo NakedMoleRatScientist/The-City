@@ -11,13 +11,12 @@ class Torso extends Part
     return false
   #0 means nothing happens.
   #1 is death
-  #2 is to suffer a disability
   interact: ->
     super()
     if @subparts[random].type == 2
-      return {type: 2, msg: "Asphyxia"} if this.lung_damage(random)
+      return {type: 1, msg: "asphyxia"} if this.lung_damage(random)
     else if @subparts[random].type == 1
       @subparts[random].damage = 1
-      return {type: 1}
+      return {type: 1, msg: "heart failure"}
     else
       return {type: 0}
