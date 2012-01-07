@@ -13,5 +13,5 @@ class Arm extends Part
   interact: ->
     super()
     if @subparts[random].type == 3
-      #damage pickup and attack
+      #damage pickup and punching
       return {type: 3, damage: 0}
