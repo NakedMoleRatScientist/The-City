@@ -13,4 +13,4 @@ class Leg extends Part
     super()
     if @subparts[random].type == 3
       #damage walking
-      return {type: 3, damage: 1}
+      return {type: 2, damage: 1}
