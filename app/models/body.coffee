@@ -9,3 +9,6 @@ class Body
       return true
     else
       return false
+  update_ability: (n) ->
+    if n == 0
+      @hand += 1
