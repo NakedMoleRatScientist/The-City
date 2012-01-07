@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, GameMode, GameModeDraw, GameModeKey, Head, Map, MenuMode, MenuModeDraw, MenuModeKey, Message, Mode, ModeDraw, ModeKey, Part, RadioButton, Subpart, Talk, TextOptions, Torso, Unit, Units, changeMode, circle_collision, human_body, list, listDraw, listKey, mapDraw, menu, message_draw, titleDraw, unitDraw;
+  var Arm, Body, GameMode, GameModeDraw, GameModeKey, Head, Leg, Map, MenuMode, MenuModeDraw, MenuModeKey, Message, Mode, ModeDraw, ModeKey, Part, RadioButton, Subpart, Talk, TextOptions, Torso, Unit, Units, changeMode, circle_collision, human_body, list, listDraw, listKey, mapDraw, menu, message_draw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -189,7 +189,7 @@
       Arm.__super__.interact.call(this);
       if (this.subparts[random].type === 3) {
         return {
-          type: 3,
+          type: 2,
           damage: 0
         };
       }
@@ -209,6 +209,11 @@
         return true;
       } else {
         return false;
+      }
+    };
+    Body.prototype.update_ability = function(n) {
+      if (n === 0) {
+        return this.hand += 1;
       }
     };
     return Body;
@@ -237,12 +242,42 @@
     parts = [];
     parts.push(new Head());
     parts.push(new Arm());
-    parts.push(new Part("leg"));
-    parts.push(new Part("leg"));
+    parts.push(new Leg());
+    parts.push(new Leg());
     parts.push(new Arm());
     parts.push(new Torso());
     return parts;
   };
+  Leg = (function() {
+    __extends(Leg, Part);
+    function Leg() {
+      Leg.__super__.constructor.call(this, "Leg");
+      this.subparts.push(new Subpart("lower_leg", 3));
+      this.subparts.push(new Subpart("upper_leg", 3));
+    }
+    Leg.prototype.arm_interact = function(choice) {
+      var part, _i, _len, _ref;
+      this.subparts(choice).damage = 1;
+      _ref = this.subparts;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        part = _ref[_i];
+        if (part.damage === 0) {
+          return false;
+        }
+      }
+      return true;
+    };
+    Leg.prototype.interact = function() {
+      Leg.__super__.interact.call(this);
+      if (this.subparts[random].type === 3) {
+        return {
+          type: 2,
+          damage: 1
+        };
+      }
+    };
+    return Leg;
+  })();
   Map = (function() {
     function Map(width, height) {
       var h;
@@ -337,14 +372,15 @@
       if (this.subparts[random].type === 2) {
         if (this.lung_damage(random)) {
           return {
-            type: 2,
-            msg: "Asphyxia"
+            type: 1,
+            msg: "asphyxia"
           };
         }
       } else if (this.subparts[random].type === 1) {
         this.subparts[random].damage = 1;
         return {
-          type: 1
+          type: 1,
+          msg: "heart failure"
         };
       } else {
         return {
@@ -412,11 +448,11 @@
         case 1:
           this.msg.push(this.name + " dies of " + damage.msg);
           return this.body.death = 1;
-        case 3:
+        case 2:
           if (damage.damage === 0) {
             this.msg.push(this.name + " 's lost all hands function");
           }
-          return this.body.hand += 1;
+          return this.body.update_ability(damage.damage);
       }
     };
     Unit.prototype.get_msg = function() {
