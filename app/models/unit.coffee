@@ -41,7 +41,7 @@ class Unit
       when 1
         @msg.push(@name + " dies of " + damage.msg)
         @body.death = 1
-      when 3
+      when 2
         @msg.push(@name + " 's lost all hands function") if damage.damage == 0
         @body.hand += 1
    get_msg: () ->
