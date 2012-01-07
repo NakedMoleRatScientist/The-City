@@ -15,3 +15,5 @@ class Body
       if @hand == 2
         return "hand_destroy"
       return "hand"
+  check_combat_ability: () ->
+    return true if @hand < 2
