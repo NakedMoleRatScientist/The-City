@@ -40,6 +40,7 @@ class Unit
     switch damage.type
       when 1
         @msg.push(@name + " dies of " + damage.msg)
+        @body.death = 1
    get_msg: () ->
      msg = @msg
      @msg = []
