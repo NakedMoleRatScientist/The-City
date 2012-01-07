@@ -18,6 +18,6 @@ class Torso extends Part
       return {type: 2, msg: "Asphyxia"} if this.lung_damage(random)
     else if @subparts[random].type == 1
       @subparts[random].damage = 1
-      return 1
+      return {:type: 1}
     else
       return 0
