@@ -201,9 +201,11 @@
       if (type === 1) {
         this.parts = human_body();
       }
+      this.death = 0;
+      this.hand = 0;
     }
     Body.prototype.check_death = function() {
-      if (this.parts[0].status === 1 || this.parts[5] === 1) {
+      if (this.death === 1) {
         return true;
       } else {
         return false;
@@ -237,7 +239,7 @@
     parts.push(new Arm());
     parts.push(new Part("leg"));
     parts.push(new Part("leg"));
-    parts.push(new Part("arm"));
+    parts.push(new Arm());
     parts.push(new Torso());
     return parts;
   };
@@ -341,9 +343,13 @@
         }
       } else if (this.subparts[random].type === 1) {
         this.subparts[random].damage = 1;
-        return 1;
+        return {
+          type: 1
+        };
       } else {
-        return 0;
+        return {
+          type: 0
+        };
       }
     };
     return Torso;
@@ -404,7 +410,13 @@
       damage = this.body.parts[part].interact();
       switch (damage.type) {
         case 1:
-          return this.msg.push(this.name + " dies of " + damage.msg);
+          this.msg.push(this.name + " dies of " + damage.msg);
+          return this.body.death = 1;
+        case 3:
+          if (damage.damage === 0) {
+            this.msg.push(this.name + " 's lost all hands function");
+          }
+          return this.body.hand += 1;
       }
     };
     Unit.prototype.get_msg = function() {
