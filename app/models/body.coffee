@@ -17,3 +17,4 @@ class Body
       return "hand"
   check_combat_ability: () ->
     return true if @hand < 2
+    return false
