@@ -44,7 +44,9 @@ class Unit
       when 2
         switch @body.update_ability(damage.damage)
           when "hand"
-            @msg.push(@name + " 's lost all hands function") if damage.damage == 0
+            @msg.push(@name + " suffer hand damage!")
+          when "hand_destroy"
+            @msg.push(@name + " 's lost all hands function")
 
 
    get_msg: () ->
