@@ -1,5 +1,5 @@
 (function() {
-  var Body, GameMode, GameModeDraw, GameModeKey, Head, Map, MenuMode, MenuModeDraw, MenuModeKey, Message, Mode, ModeDraw, ModeKey, Part, RadioButton, Subpart, Talk, TextOptions, Torso, Unit, Units, changeMode, circle_collision, human_body, list, listDraw, listKey, mapDraw, menu, message_draw, titleDraw, unitDraw;
+  var Arm, Body, GameMode, GameModeDraw, GameModeKey, Head, Map, MenuMode, MenuModeDraw, MenuModeKey, Message, Mode, ModeDraw, ModeKey, Part, RadioButton, Subpart, Talk, TextOptions, Torso, Unit, Units, changeMode, circle_collision, human_body, list, listDraw, listKey, mapDraw, menu, message_draw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -165,6 +165,37 @@
     };
     return Units;
   })();
+  Arm = (function() {
+    __extends(Arm, Part);
+    function Arm() {
+      Arm.__super__.constructor.call(this, "Arm");
+      this.subparts.push(new Subpart("lower_arm", 3));
+      this.subparts.push(new Subpart("upper_arm", 3));
+      this.subparts.push(new Subpart("hand", 3));
+    }
+    Arm.prototype.arm_interact = function(choice) {
+      var part, _i, _len, _ref;
+      this.subparts(choice).damage = 1;
+      _ref = this.subparts;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        part = _ref[_i];
+        if (part.damage === 0) {
+          return false;
+        }
+      }
+      return true;
+    };
+    Arm.prototype.interact = function() {
+      Arm.__super__.interact.call(this);
+      if (this.subparts[random].type === 3) {
+        return {
+          type: 3,
+          damage: 0
+        };
+      }
+    };
+    return Arm;
+  })();
   Body = (function() {
     function Body(type) {
       if (type === 1) {
@@ -203,7 +234,7 @@
     var parts;
     parts = [];
     parts.push(new Head());
-    parts.push(new Part("arm"));
+    parts.push(new Arm());
     parts.push(new Part("leg"));
     parts.push(new Part("leg"));
     parts.push(new Part("arm"));
@@ -276,9 +307,6 @@
     };
     return Part;
   })();
-  ({
-    randomHit: function(subparts) {}
-  });
   Subpart = (function() {
     function Subpart(name, type) {
       this.name = name;
@@ -374,8 +402,9 @@
       var damage, part;
       part = Math.floor(Math.random() * this.body.parts.length);
       damage = this.body.parts[part].interact();
-      if (damage.type === 1) {
-        return this.msg.push(this.name + " dies of " + damage.msg);
+      switch (damage.type) {
+        case 1:
+          return this.msg.push(this.name + " dies of " + damage.msg);
       }
     };
     Unit.prototype.get_msg = function() {
