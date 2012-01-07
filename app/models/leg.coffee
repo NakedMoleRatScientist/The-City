@@ -14,3 +14,5 @@ class Leg extends Part
     if @subparts[@random].type == 3
       #damage walking
       return {type: 2, damage: 1}
+    else
+      return {type: 0}
