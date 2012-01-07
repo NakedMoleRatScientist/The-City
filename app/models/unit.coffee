@@ -37,8 +37,9 @@ class Unit
   damage: (unit) ->
     part = Math.floor(Math.random() * @body.parts.length)
     damage = @body.parts[part].interact()
-    if damage.type == 1
-      @msg.push(@name + " dies of " + damage.msg)
+    switch damage.type
+      when 1
+        @msg.push(@name + " dies of " + damage.msg)
    get_msg: () ->
      msg = @msg
      @msg = []
