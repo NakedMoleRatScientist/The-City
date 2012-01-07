@@ -13,4 +13,5 @@ class Body
     if n == 0
       @hand += 1
       if @hand == 2
-        return "hand_destroy"
+        return "arm_destroy"
+      return "arm"
