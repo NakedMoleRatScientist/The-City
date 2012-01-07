@@ -6,8 +6,10 @@ class Arm extends Part
     @subparts.push new Subpart("hand",3)
   interact: ->
     super()
+    console.log("ARM")
+    console.log(@random)
     if @subparts[@random].type == 3
-      @subparts[choice].damage = 1
+      @subparts[@random].damage = 1
       #damage pickup and punching
       return {type: 2, damage: 0}
     else
