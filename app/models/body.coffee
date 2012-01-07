@@ -2,8 +2,9 @@ class Body
   constructor: (type) ->
     if type == 1
       @parts = human_body()
+    @death = 0
   check_death: () ->
-    if @parts[0].status == 1 || @parts[5] == 1
+    if @death == 1
       return true
     else
       return false
