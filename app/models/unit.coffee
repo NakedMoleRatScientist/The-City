@@ -24,7 +24,7 @@ class Unit
       @y = @y - 1
       return
   attack: () ->
-    return if @target == null
+    return if @target == null || !@body.check_combat_ability()
     @goal_x = @target.x - 1
     @goal_y = @target.y - 1
     if (@target.x + 1) == @x || (@target.x - 1) == @x
