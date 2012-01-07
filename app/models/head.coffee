@@ -8,6 +8,6 @@ class Head extends Part
   interact: ->
     super()
     if @subparts[random].type == 1
-      return 1
+      return {type: 1, :msg "skull cavein"}
     else
-      return 0
+      return {type: 0}
