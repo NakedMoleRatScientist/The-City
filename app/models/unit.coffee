@@ -42,8 +42,11 @@ class Unit
         @msg.push(@name + " dies of " + damage.msg)
         @body.death = 1
       when 2
-        @msg.push(@name + " 's lost all hands function") if damage.damage == 0
-        @body.update_ability(damage.damage)
+        switch @body.update_ability(damage.damage)
+          when "hand"
+            @msg.push(@name + " 's lost all hands function") if damage.damage == 0
+
+
    get_msg: () ->
      msg = @msg
      @msg = []
