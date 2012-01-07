@@ -14,4 +14,4 @@ class Arm extends Part
     super()
     if @subparts[random].type == 3
       #damage pickup and punching
-      return {type: 3, damage: 0}
+      return {type: 2, damage: 0}
