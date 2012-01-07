@@ -175,7 +175,7 @@
     }
     Arm.prototype.arm_interact = function(choice) {
       var part, _i, _len, _ref;
-      this.subparts(choice).damage = 1;
+      this.subparts[choice].damage = 1;
       _ref = this.subparts;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         part = _ref[_i];
@@ -188,6 +188,7 @@
     Arm.prototype.interact = function() {
       Arm.__super__.interact.call(this);
       if (this.subparts[random].type === 3) {
+        this.arm_interact(random);
         return {
           type: 2,
           damage: 0
@@ -213,7 +214,11 @@
     };
     Body.prototype.update_ability = function(n) {
       if (n === 0) {
-        return this.hand += 1;
+        this.hand += 1;
+        if (this.hand === 2) {
+          return "hand_destroy";
+        }
+        return "hand";
       }
     };
     return Body;
@@ -230,9 +235,14 @@
     Head.prototype.interact = function() {
       Head.__super__.interact.call(this);
       if (this.subparts[random].type === 1) {
-        return 1;
+        return {
+          type: 1,
+          msg: "skull cavein"
+        };
       } else {
-        return 0;
+        return {
+          type: 0
+        };
       }
     };
     return Head;
@@ -449,10 +459,12 @@
           this.msg.push(this.name + " dies of " + damage.msg);
           return this.body.death = 1;
         case 2:
-          if (damage.damage === 0) {
-            this.msg.push(this.name + " 's lost all hands function");
+          switch (this.body.update_ability(damage.damage)) {
+            case "hand":
+              return this.msg.push(this.name + " suffer hand damage!");
+            case "hand_destroy":
+              return this.msg.push(this.name + " 's lost all hands function");
           }
-          return this.body.update_ability(damage.damage);
       }
     };
     Unit.prototype.get_msg = function() {
