@@ -10,3 +10,5 @@ class Arm extends Part
       @subparts[choice].damage = 1
       #damage pickup and punching
       return {type: 2, damage: 0}
+    else
+      return {type: 0}
