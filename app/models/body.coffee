@@ -12,3 +12,5 @@ class Body
   update_ability: (n) ->
     if n == 0
       @hand += 1
+      if @hand == 2
+        return "hand"
