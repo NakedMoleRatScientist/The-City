@@ -1,0 +1,2 @@
+class MinorModeManager
+  constructor: () ->
