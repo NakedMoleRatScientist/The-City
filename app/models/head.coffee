@@ -10,4 +10,4 @@ class Head extends Part
     if @subparts[@random].type == 1
       return {type: 1, msg: "skull cavein"}
     else
-      return {type: 0}
+      return {type: 0, msg: @subparts[@random].name + " suffered damage"}
