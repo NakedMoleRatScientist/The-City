@@ -9,5 +9,5 @@ class GameModeDraw
     @p5.background(0)
     @map_draw.draw(map)
     @unit_draw.draw(units,map)
-    messageDraw(msgs[msgs.length - 1])
+    messageDraw(@p5,msgs[msgs.length - 1])
   input: () ->
