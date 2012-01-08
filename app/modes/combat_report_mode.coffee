@@ -1,4 +1,4 @@
-class CombatReportMode
+class CombatReportMinorMode
   constructor: ->
   act: ->
   input: (result) ->
