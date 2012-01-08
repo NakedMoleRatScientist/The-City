@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportMinorMode, DrawMode, GameDrawMode, GameMode, GameModeKey, Head, KeyMode, Leg, Map, MenuDrawMode, MenuMode, MenuModeKey, Message, ModeManager, Part, RadioButton, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, human_body, initializeDrawModes, initializeKeyModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
+  var Arm, Body, CombatReportMinorMode, DrawMode, GameDrawMode, GameKeyMode, GameMode, Head, KeyMode, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, Message, MinorModeManager, ModeManager, Part, RadioButton, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, human_body, initializeDrawModes, initializeKeyModes, initializeModes, mapDraw, menu, messageDraw, minorList, modeList, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -33,6 +33,21 @@
     };
     GameDrawMode.prototype.input = function() {};
     return GameDrawMode;
+  })();
+  GameKeyMode = (function() {
+    function GameKeyMode() {}
+    GameKeyMode.prototype.key_pressed = function(key) {
+      if (key.code === 97) {
+        return "right";
+      } else if (key.code === 100) {
+        return "left";
+      } else if (key.code === 115) {
+        return "up";
+      } else if (key.code === 119) {
+        return "down";
+      }
+    };
+    return GameKeyMode;
   })();
   GameMode = (function() {
     function GameMode() {
@@ -71,21 +86,6 @@
     };
     return GameMode;
   })();
-  GameModeKey = (function() {
-    function GameModeKey() {}
-    GameModeKey.prototype.key_pressed = function(key) {
-      if (key.code === 97) {
-        return "right";
-      } else if (key.code === 100) {
-        return "left";
-      } else if (key.code === 115) {
-        return "up";
-      } else if (key.code === 119) {
-        return "down";
-      }
-    };
-    return GameModeKey;
-  })();
   MenuDrawMode = (function() {
     function MenuDrawMode(p5) {
       this.p5 = p5;
@@ -107,16 +107,9 @@
     };
     return MenuDrawMode;
   })();
-  MenuMode = (function() {
-    function MenuMode() {}
-    MenuMode.prototype.act = function() {};
-    MenuMode.prototype.input = function(result) {};
-    MenuMode.prototype.update_draw = function() {};
-    return MenuMode;
-  })();
-  MenuModeKey = (function() {
-    function MenuModeKey() {}
-    MenuModeKey.prototype.key_pressed = function(key) {
+  MenuKeyMode = (function() {
+    function MenuKeyMode() {}
+    MenuKeyMode.prototype.key_pressed = function(key) {
       console.log(key.code);
       if (key.code === 115) {
         return "down";
@@ -128,7 +121,14 @@
         return false;
       }
     };
-    return MenuModeKey;
+    return MenuKeyMode;
+  })();
+  MenuMode = (function() {
+    function MenuMode() {}
+    MenuMode.prototype.act = function() {};
+    MenuMode.prototype.input = function(result) {};
+    MenuMode.prototype.update_draw = function() {};
+    return MenuMode;
   })();
   modeList = function() {
     return ["Game", "Menu"];
@@ -571,11 +571,10 @@
       p5.size(800, 600);
       p5.frameRate(50);
       p5.background(0);
-      this.talk = new Talk();
       this.mode = 1;
       this.logic_mode = new ModeManager();
       this.draw_mode = new DrawMode(p5);
-      return this.key_mode = new ModeKey(this.talk);
+      return this.key_mode = new KeyMode();
     };
     p5.keyPressed = function() {
       return p5.input_result(this.key_mode.key_pressed(this.mode, p5.key));
@@ -628,7 +627,8 @@
     _results = [];
     for (_i = 0, _len = modes.length; _i < _len; _i++) {
       m = modes[_i];
-      _results.push(object = "new " + m + "KeyMode()");
+      object = "new " + m + "KeyMode()";
+      _results.push(eval(object));
     }
     return _results;
   };
@@ -645,12 +645,16 @@
   };
   KeyMode = (function() {
     function KeyMode() {
-      this.modes = listKey();
+      this.modes = initializeKeyModes();
     }
     KeyMode.prototype.key_pressed = function(n, key) {
       return this.modes[n].key_pressed(key);
     };
     return KeyMode;
+  })();
+  MinorModeManager = (function() {
+    function MinorModeManager() {}
+    return MinorModeManager;
   })();
   ModeManager = (function() {
     function ModeManager() {
@@ -731,4 +735,7 @@
     };
     return TextOptions;
   })();
+  minorList = function() {
+    return ["CombatReport"];
+  };
 }).call(this);
