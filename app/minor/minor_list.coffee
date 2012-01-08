@@ -1,0 +1,2 @@
+minorList = () ->
+  ["CombatReport"]
