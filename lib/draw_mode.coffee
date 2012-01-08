@@ -1,4 +1,4 @@
-class ModeDraw
+class DrawMode
   constructor: (@p5) ->
     @modes = listDraw(@p5)
   draw: (n, logic) ->
