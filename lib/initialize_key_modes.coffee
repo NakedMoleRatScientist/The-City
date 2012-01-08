@@ -1,2 +1,4 @@
-listKey = () ->
-  [new GameModeKey(), new MenuModeKey()]
+initializeKeyModes = () ->
+  modes = modeList()
+  for m in modes
+    object = "new "+ m + "KeyMode()"
