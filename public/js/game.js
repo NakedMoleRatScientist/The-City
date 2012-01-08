@@ -165,6 +165,16 @@
     };
     return Units;
   })();
+  Part = (function() {
+    function Part(name) {
+      this.name = name;
+      this.subparts = [];
+    }
+    Part.prototype.interact = function() {
+      return this.random = Math.floor(Math.random() * this.subparts.length);
+    };
+    return Part;
+  })();
   Arm = (function() {
     __extends(Arm, Part);
     function Arm() {
@@ -173,25 +183,17 @@
       this.subparts.push(new Subpart("upper_arm", 3));
       this.subparts.push(new Subpart("hand", 3));
     }
-    Arm.prototype.arm_interact = function(choice) {
-      var part, _i, _len, _ref;
-      this.subparts[choice].damage = 1;
-      _ref = this.subparts;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        part = _ref[_i];
-        if (part.damage === 0) {
-          return false;
-        }
-      }
-      return true;
-    };
     Arm.prototype.interact = function() {
       Arm.__super__.interact.call(this);
-      if (this.subparts[random].type === 3) {
-        this.arm_interact(random);
+      if (this.subparts[this.random].type === 3) {
+        this.subparts[this.random].damage = 1;
         return {
           type: 2,
           damage: 0
+        };
+      } else {
+        return {
+          type: 0
         };
       }
     };
@@ -221,6 +223,12 @@
         return "hand";
       }
     };
+    Body.prototype.check_combat_ability = function() {
+      if (this.hand < 2) {
+        return true;
+      }
+      return false;
+    };
     return Body;
   })();
   Head = (function() {
@@ -234,7 +242,7 @@
     }
     Head.prototype.interact = function() {
       Head.__super__.interact.call(this);
-      if (this.subparts[random].type === 1) {
+      if (this.subparts[this.random].type === 1) {
         return {
           type: 1,
           msg: "skull cavein"
@@ -279,10 +287,14 @@
     };
     Leg.prototype.interact = function() {
       Leg.__super__.interact.call(this);
-      if (this.subparts[random].type === 3) {
+      if (this.subparts[this.random].type === 3) {
         return {
           type: 2,
           damage: 1
+        };
+      } else {
+        return {
+          type: 0
         };
       }
     };
@@ -343,17 +355,6 @@
     };
     return Message;
   })();
-  Part = (function() {
-    function Part(name) {
-      this.name = name;
-      this.subparts = [];
-    }
-    Part.prototype.interact = function() {
-      var random;
-      return random = Math.round(Math.random() * this.subparts.length - 1);
-    };
-    return Part;
-  })();
   Subpart = (function() {
     function Subpart(name, type) {
       this.name = name;
@@ -379,15 +380,19 @@
     };
     Torso.prototype.interact = function() {
       Torso.__super__.interact.call(this);
-      if (this.subparts[random].type === 2) {
-        if (this.lung_damage(random)) {
+      if (this.subparts[this.random].type === 2) {
+        if (this.lung_damage(this.random)) {
           return {
             type: 1,
             msg: "asphyxia"
           };
         }
-      } else if (this.subparts[random].type === 1) {
-        this.subparts[random].damage = 1;
+        return {
+          type: 0,
+          msg: "lung got bruised"
+        };
+      } else if (this.subparts[this.random].type === 1) {
+        this.subparts[this.random].damage = 1;
         return {
           type: 1,
           msg: "heart failure"
@@ -433,7 +438,7 @@
       }
     };
     Unit.prototype.attack = function() {
-      if (this.target === null) {
+      if (this.target === null || !this.body.check_combat_ability()) {
         return;
       }
       this.goal_x = this.target.x - 1;
