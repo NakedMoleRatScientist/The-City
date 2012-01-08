@@ -6,11 +6,10 @@ menu = (p5) ->
     p5.size(800, 600)
     p5.frameRate(50)
     p5.background(0)
-    @talk = new Talk()
     @mode = 1
     @logic_mode = new ModeManager()
     @draw_mode = new DrawMode(p5)
-    @key_mode = new ModeKey(@talk)
+    @key_mode = new KeyMode()
 
   p5.keyPressed = () ->
     p5.input_result(@key_mode.key_pressed(@mode,p5.key))
