@@ -8,7 +8,7 @@ menu = (p5) ->
     p5.background(0)
     @talk = new Talk()
     @mode = 1
-    @logic_mode = new Mode()
+    @logic_mode = new ModeManager()
     @draw_mode = new DrawMode(p5)
     @key_mode = new ModeKey(@talk)
 
