@@ -1,5 +1,6 @@
 initializeMode = () ->
   modes = modeList()
   results = []
-  for i in modes
-    results.push (eval "new " + modes[i] + "Mode()")
+  for m in modes
+    object = "new " + m + "Mode()"
+    results.push (eval(object))
