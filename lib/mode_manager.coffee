@@ -1,4 +1,4 @@
-class Mode
+class ModeManager
   constructor: ->
     @modes = initializeModes()
   act: (n) ->
