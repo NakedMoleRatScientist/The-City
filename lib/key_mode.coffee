@@ -1,4 +1,4 @@
-class ModeKey
+class KeyMode
   constructor: (@talk) ->
     @modes = listKey(@talk)
   key_pressed: (n,key) ->
