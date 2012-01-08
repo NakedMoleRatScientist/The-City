@@ -9,7 +9,7 @@ menu = (p5) ->
     @talk = new Talk()
     @mode = 1
     @logic_mode = new Mode()
-    @draw_mode = new ModeDraw(p5)
+    @draw_mode = new DrawMode(p5)
     @key_mode = new ModeKey(@talk)
 
   p5.keyPressed = () ->
