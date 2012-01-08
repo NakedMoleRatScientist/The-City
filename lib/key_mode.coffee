@@ -1,5 +1,5 @@
 class KeyMode
-  constructor: (@talk) ->
-    @modes = listKey(@talk)
+  constructor: () ->
+    @modes = listKey()
   key_pressed: (n,key) ->
     @modes[n].key_pressed(key)
