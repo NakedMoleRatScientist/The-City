@@ -1,4 +1,4 @@
-class GameModeKey
+class GameKeyMode
   constructor: () ->
   key_pressed: (key) ->
     if key.code == 97
