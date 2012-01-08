@@ -38,6 +38,8 @@ class Unit
     part = Math.floor(Math.random() * @body.parts.length)
     damage = @body.parts[part].interact()
     switch damage.type
+      when 0
+        @msg.push(@name + "'s " + damage.msg)
       when 1
         @msg.push(@name + " dies of " + damage.msg)
         @body.death = 1
