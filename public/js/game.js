@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportMinorMode, DrawMode, GameDrawMode, GameMode, GameModeKey, Head, Leg, Map, MenuDrawMode, MenuMode, MenuModeKey, Message, Mode, ModeKey, Part, RadioButton, Subpart, Talk, TextOptions, Torso, Unit, Units, changeMode, circle_collision, human_body, initializeDrawModes, initializeModes, listKey, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
+  var Arm, Body, CombatReportMinorMode, DrawMode, GameDrawMode, GameMode, GameModeKey, Head, KeyMode, Leg, Map, MenuDrawMode, MenuMode, MenuModeKey, Message, ModeManager, Part, RadioButton, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, human_body, initializeDrawModes, initializeKeyModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -86,9 +86,6 @@
     };
     return GameModeKey;
   })();
-  listKey = function() {
-    return [new GameModeKey(), new MenuModeKey()];
-  };
   MenuDrawMode = (function() {
     function MenuDrawMode(p5) {
       this.p5 = p5;
@@ -576,7 +573,7 @@
       p5.background(0);
       this.talk = new Talk();
       this.mode = 1;
-      this.logic_mode = new Mode();
+      this.logic_mode = new ModeManager();
       this.draw_mode = new DrawMode(p5);
       return this.key_mode = new ModeKey(this.talk);
     };
@@ -625,6 +622,16 @@
     }
     return _results;
   };
+  initializeKeyModes = function() {
+    var m, modes, object, _i, _len, _results;
+    modes = modeList();
+    _results = [];
+    for (_i = 0, _len = modes.length; _i < _len; _i++) {
+      m = modes[_i];
+      _results.push(object = "new " + m + "KeyMode()");
+    }
+    return _results;
+  };
   initializeModes = function() {
     var m, modes, object, _i, _len, _results;
     modes = modeList();
@@ -636,30 +643,29 @@
     }
     return _results;
   };
-  Mode = (function() {
-    function Mode() {
-      this.modes = initializeModes();
+  KeyMode = (function() {
+    function KeyMode() {
+      this.modes = listKey();
     }
-    Mode.prototype.act = function(n) {
-      return this.modes[n].act();
-    };
-    Mode.prototype.input = function(n, result) {
-      return this.modes[n].input(result);
-    };
-    Mode.prototype.update_draw = function(n) {
-      return this.modes[n].update_draw();
-    };
-    return Mode;
-  })();
-  ModeKey = (function() {
-    function ModeKey(talk) {
-      this.talk = talk;
-      this.modes = listKey(this.talk);
-    }
-    ModeKey.prototype.key_pressed = function(n, key) {
+    KeyMode.prototype.key_pressed = function(n, key) {
       return this.modes[n].key_pressed(key);
     };
-    return ModeKey;
+    return KeyMode;
+  })();
+  ModeManager = (function() {
+    function ModeManager() {
+      this.modes = initializeModes();
+    }
+    ModeManager.prototype.act = function(n) {
+      return this.modes[n].act();
+    };
+    ModeManager.prototype.input = function(n, result) {
+      return this.modes[n].input(result);
+    };
+    ModeManager.prototype.update_draw = function(n) {
+      return this.modes[n].update_draw();
+    };
+    return ModeManager;
   })();
   RadioButton = (function() {
     function RadioButton(p5, x, y) {
@@ -683,18 +689,6 @@
       }
     };
     return RadioButton;
-  })();
-  Talk = (function() {
-    function Talk(info) {
-      this.info = info;
-    }
-    Talk.prototype.msg = function(text) {
-      return this.info.push(text);
-    };
-    Talk.prototype.clean = function() {
-      return this.info = [];
-    };
-    return Talk;
   })();
   TextOptions = (function() {
     function TextOptions(p5, x, y, size) {
