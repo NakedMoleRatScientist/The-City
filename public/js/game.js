@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, GameMode, GameModeDraw, GameModeKey, Head, Leg, Map, MenuMode, MenuModeDraw, MenuModeKey, Message, Mode, ModeDraw, ModeKey, Part, RadioButton, Subpart, Talk, TextOptions, Torso, Unit, Units, changeMode, circle_collision, human_body, list, listDraw, listKey, mapDraw, menu, message_draw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportMinorMode, DrawMode, GameDrawMode, GameMode, GameModeKey, Head, Leg, Map, MenuDrawMode, MenuMode, MenuModeKey, Message, Mode, ModeKey, Part, RadioButton, Subpart, Talk, TextOptions, Torso, Unit, Units, changeMode, circle_collision, human_body, initializeDrawModes, initializeModes, listKey, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -8,6 +8,32 @@
     child.__super__ = parent.prototype;
     return child;
   };
+  CombatReportMinorMode = (function() {
+    function CombatReportMinorMode() {}
+    CombatReportMinorMode.prototype.act = function() {};
+    CombatReportMinorMode.prototype.input = function(result) {};
+    CombatReportMinorMode.prototype.update_draw = function() {};
+    return CombatReportMinorMode;
+  })();
+  GameDrawMode = (function() {
+    function GameDrawMode(p5) {
+      this.p5 = p5;
+      this.unit_draw = new unitDraw(this.p5);
+      this.map_draw = new mapDraw(this.p5, 100, 100);
+    }
+    GameDrawMode.prototype.draw = function(object) {
+      var map, msgs, units;
+      map = object.map;
+      units = object.units;
+      msgs = object.msgs;
+      this.p5.background(0);
+      this.map_draw.draw(map);
+      this.unit_draw.draw(units, map);
+      return messageDraw(this.p5, msgs[msgs.length - 1]);
+    };
+    GameDrawMode.prototype.input = function() {};
+    return GameDrawMode;
+  })();
   GameMode = (function() {
     function GameMode() {
       this.map = new Map(100, 100);
@@ -39,27 +65,11 @@
     GameMode.prototype.update_draw = function() {
       return {
         units: this.units,
-        map: this.map
+        map: this.map,
+        msgs: this.message.msg
       };
     };
     return GameMode;
-  })();
-  GameModeDraw = (function() {
-    function GameModeDraw(p5) {
-      this.p5 = p5;
-      this.unit_draw = new unitDraw(this.p5);
-      this.map_draw = new mapDraw(this.p5, 100, 100);
-    }
-    GameModeDraw.prototype.draw = function(object) {
-      var map, units;
-      map = object.map;
-      units = object.units;
-      this.p5.background(0);
-      this.map_draw.draw(map);
-      return this.unit_draw.draw(units, map);
-    };
-    GameModeDraw.prototype.input = function() {};
-    return GameModeDraw;
   })();
   GameModeKey = (function() {
     function GameModeKey() {}
@@ -76,42 +86,36 @@
     };
     return GameModeKey;
   })();
-  list = function() {
-    return [new GameMode(), new MenuMode()];
-  };
-  listDraw = function(p5) {
-    return [new GameModeDraw(p5), new MenuModeDraw(p5)];
-  };
   listKey = function() {
     return [new GameModeKey(), new MenuModeKey()];
   };
-  MenuMode = (function() {
-    function MenuMode() {}
-    MenuMode.prototype.act = function() {};
-    MenuMode.prototype.input = function(result) {};
-    MenuMode.prototype.update_draw = function() {};
-    return MenuMode;
-  })();
-  MenuModeDraw = (function() {
-    function MenuModeDraw(p5) {
+  MenuDrawMode = (function() {
+    function MenuDrawMode(p5) {
       this.p5 = p5;
       this.texts = new TextOptions(this.p5, 250, 250, 18);
       this.texts.add("New Game");
       this.texts.add("Test Arena");
     }
-    MenuModeDraw.prototype.draw = function() {
+    MenuDrawMode.prototype.draw = function() {
       this.p5.background(0);
       titleDraw(this.p5);
       return this.texts.draw();
     };
-    MenuModeDraw.prototype.input = function(result) {
+    MenuDrawMode.prototype.input = function(result) {
       if (result === "down") {
         return this.texts.increase();
       } else if (result === "up") {
         return this.texts.decrease();
       }
     };
-    return MenuModeDraw;
+    return MenuDrawMode;
+  })();
+  MenuMode = (function() {
+    function MenuMode() {}
+    MenuMode.prototype.act = function() {};
+    MenuMode.prototype.input = function(result) {};
+    MenuMode.prototype.update_draw = function() {};
+    return MenuMode;
   })();
   MenuModeKey = (function() {
     function MenuModeKey() {}
@@ -129,6 +133,9 @@
     };
     return MenuModeKey;
   })();
+  modeList = function() {
+    return ["Game", "Menu"];
+  };
   Units = (function() {
     function Units() {
       this.units = [];
@@ -249,7 +256,8 @@
         };
       } else {
         return {
-          type: 0
+          type: 0,
+          msg: this.subparts[this.random].name + " suffered damage"
         };
       }
     };
@@ -460,6 +468,8 @@
       part = Math.floor(Math.random() * this.body.parts.length);
       damage = this.body.parts[part].interact();
       switch (damage.type) {
+        case 0:
+          return this.msg.push(this.name + "'s " + damage.msg);
         case 1:
           this.msg.push(this.name + " dies of " + damage.msg);
           return this.body.death = 1;
@@ -514,8 +524,11 @@
     };
     return mapDraw;
   })();
-  message_draw = function(p5, msg) {
-    return p5.text(msg, 0, 595);
+  messageDraw = function(p5, msg) {
+    p5.fill(0);
+    p5.rect(0, 580, 800, 20);
+    p5.fill(255, 0, 0);
+    return p5.text(msg, 5, 595);
   };
   titleDraw = function(p5) {
     p5.textFont("monospace", 30);
@@ -564,7 +577,7 @@
       this.talk = new Talk();
       this.mode = 1;
       this.logic_mode = new Mode();
-      this.draw_mode = new ModeDraw(p5);
+      this.draw_mode = new DrawMode(p5);
       return this.key_mode = new ModeKey(this.talk);
     };
     p5.keyPressed = function() {
@@ -588,9 +601,44 @@
     canvas = document.getElementById("processing");
     return processing = new Processing(canvas, menu);
   });
+  DrawMode = (function() {
+    function DrawMode(p5) {
+      this.p5 = p5;
+      this.modes = initializeDrawModes(this.p5);
+    }
+    DrawMode.prototype.draw = function(n, logic) {
+      return this.modes[n].draw(logic.update_draw(n));
+    };
+    DrawMode.prototype.input = function(n, result) {
+      return this.modes[n].input(result);
+    };
+    return DrawMode;
+  })();
+  initializeDrawModes = function(p5) {
+    var m, modes, object, _i, _len, _results;
+    modes = modeList();
+    _results = [];
+    for (_i = 0, _len = modes.length; _i < _len; _i++) {
+      m = modes[_i];
+      object = "new " + m + "DrawMode(p5)";
+      _results.push(eval(object));
+    }
+    return _results;
+  };
+  initializeModes = function() {
+    var m, modes, object, _i, _len, _results;
+    modes = modeList();
+    _results = [];
+    for (_i = 0, _len = modes.length; _i < _len; _i++) {
+      m = modes[_i];
+      object = "new " + m + "Mode()";
+      _results.push(eval(object));
+    }
+    return _results;
+  };
   Mode = (function() {
     function Mode() {
-      this.modes = list();
+      this.modes = initializeModes();
     }
     Mode.prototype.act = function(n) {
       return this.modes[n].act();
@@ -602,19 +650,6 @@
       return this.modes[n].update_draw();
     };
     return Mode;
-  })();
-  ModeDraw = (function() {
-    function ModeDraw(p5) {
-      this.p5 = p5;
-      this.modes = listDraw(this.p5);
-    }
-    ModeDraw.prototype.draw = function(n, logic) {
-      return this.modes[n].draw(logic.update_draw(n));
-    };
-    ModeDraw.prototype.input = function(n, result) {
-      return this.modes[n].input(result);
-    };
-    return ModeDraw;
   })();
   ModeKey = (function() {
     function ModeKey(talk) {
