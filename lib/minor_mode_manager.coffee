@@ -1,5 +1,5 @@
 class MinorModeManager
-  constructor: (n) ->
-    @modes = minorModeList(n)
+  constructor: (n,mode) ->
+    @modes = minorModeList(n,mode)
   act: (state) ->
     @modes.act(state)
