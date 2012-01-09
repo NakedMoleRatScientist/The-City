@@ -1,4 +1,4 @@
-class GameMode
+class GameMode extends Mode
   constructor: ->
     @map = new Map(100,100)
     @map.generate()
