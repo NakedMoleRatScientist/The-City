@@ -1,2 +1,3 @@
 class MinorModeManager
   constructor: () ->
+    @modes = []
