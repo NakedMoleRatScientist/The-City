@@ -43,6 +43,7 @@
     return GameKeyMode;
   })();
   GameMode = (function() {
+    __extends(GameMode, Mode);
     function GameMode() {
       this.map = new Map(100, 100);
       this.map.generate();
@@ -56,10 +57,12 @@
     }
     GameMode.prototype.act = function() {
       this.units.move();
-      this.message.update(this.units.units);
-      return this.units.clean();
+      this.messages.update(this.units.units);
+      this.units.clean();
+      return this.minor.act();
     };
     GameMode.prototype.input = function(result) {
+      this.minor.input(result);
       switch (result) {
         case "up":
           return this.map.move_camera(0, -1);
@@ -779,9 +782,13 @@
   CombatReportMinorMode = (function() {
     function CombatReportMinorMode(parent) {
       this.parent = parent;
+      this.msg = [];
     }
     CombatReportMinorMode.prototype.act = function() {};
     CombatReportMinorMode.prototype.input = function(result) {};
+    CombatReportMinorMode.prototype.input_info = function(msg) {
+      this.msg = msg;
+    };
     CombatReportMinorMode.prototype.update_draw = function() {};
     return CombatReportMinorMode;
   })();
