@@ -25,5 +25,6 @@ class GameMode
         @map.move_camera(-1,0)
       when "right"
         @map.move_camera(1,0)
-  update_draw: () ->
-    return (units: @units, map: @map, msgs: @messages.msg)
+  update_draw: (output = 0) ->
+    return (units: @units, map: @map, msgs: @messages.msg) if output == 0
+    return (msgs: @messages.msg) if output == 1
