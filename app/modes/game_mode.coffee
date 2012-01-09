@@ -8,7 +8,7 @@ class GameMode
     @units.units[1].hostility = 1
     @units.units[0].target = @units.units[1]
     @message = new Message()
-    @minor = new MinorModeManager(0)
+    @minor = new MinorModeManager("Game")
   act: ->
     @units.move()
     @message.update(@units.units)
