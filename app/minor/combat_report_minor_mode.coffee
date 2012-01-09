@@ -1,6 +1,5 @@
 class CombatReportMinorMode
-  constructor:(parent) ->
-    @parent = parent
+  constructor:(@parent) ->
   act: ->
   input: (result) ->
   update_draw: () ->
