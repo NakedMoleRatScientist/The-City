@@ -1,6 +1,6 @@
 class CombatReportMinorMode
   constructor:(@parent) ->
-    @messages = new Messages()
+    @msg = []
   act: ->
   input: (result) ->
   update_draw: () ->
