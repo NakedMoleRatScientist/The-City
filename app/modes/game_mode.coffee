@@ -15,6 +15,7 @@ class GameMode
     @units.clean()
     @minor.act()
   input: (result) ->
+    @minor.input(result)
     switch(result)
       when "up"
         @map.move_camera(0,-1)
