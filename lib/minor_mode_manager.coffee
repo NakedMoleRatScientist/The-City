@@ -1,7 +1,7 @@
 class MinorModeManager
   constructor: (name,mode) ->
     @modes = initializeMinorModes(name,mode)
-    @state = 0
+    @state = -1
   act: () ->
     @modes[@state].act()
   input: (result) ->
