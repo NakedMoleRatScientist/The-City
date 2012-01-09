@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportMinorMode, DrawMode, GameDrawMode, GameKeyMode, GameMode, Head, KeyMode, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, Message, MinorModeManager, Mode, ModeManager, Part, RadioButton, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, human_body, initializeDrawModes, initializeKeyModes, initializeModes, mapDraw, menu, messageDraw, minorList, modeList, titleDraw, unitDraw;
+  var Arm, Body, CombatReportMinorMode, DrawMode, GameDrawMode, GameKeyMode, GameMode, Head, KeyMode, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, Message, MinorModeManager, Mode, ModeManager, Part, RadioButton, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawModes, initializeKeyModes, initializeMinorModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -59,7 +59,7 @@
       this.units.units[1].hostility = 1;
       this.units.units[0].target = this.units.units[1];
       this.message = new Message();
-      this.minor = new MinorModeManager(0);
+      this.minor = new MinorModeManager("Game");
     }
     GameMode.prototype.act = function() {
       this.units.move();
@@ -633,6 +633,17 @@
     }
     return _results;
   };
+  initializeMinorModes = function(name) {
+    var m, modes, object, _i, _len, _results;
+    modes = eval(name + "MinorModeList()");
+    _results = [];
+    for (_i = 0, _len = modes.length; _i < _len; _i++) {
+      m = modes[_i];
+      object = "new " + m + "MinorMode()";
+      _results.push(eval(object));
+    }
+    return _results;
+  };
   initializeModes = function() {
     var m, modes, object, _i, _len, _results;
     modes = modeList();
@@ -654,11 +665,15 @@
     return KeyMode;
   })();
   MinorModeManager = (function() {
-    function MinorModeManager(n, mode) {
-      this.modes = minorModeList(n, mode);
+    function MinorModeManager(name) {
+      this.modes = initializeMinorModes(name);
+      this.state = 0;
     }
-    MinorModeManager.prototype.act = function(state) {
-      return this.modes.act(state);
+    MinorModeManager.prototype.act = function() {
+      return this.modes.act(this.state);
+    };
+    MinorModeManager.prototype.input = function(result) {
+      return this.modes.input(this.state);
     };
     return MinorModeManager;
   })();
@@ -751,9 +766,7 @@
     };
     return TextOptions;
   })();
-  minorList = function(n) {
-    if (n === 0) {
-      return ["CombatReport"];
-    }
+  gameMinorModeList = function() {
+    return ["CombatReport"];
   };
 }).call(this);
