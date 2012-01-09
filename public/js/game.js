@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportMinorMode, DrawMode, GameDrawMode, GameKeyMode, GameMode, Head, KeyMode, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, Message, MinorModeManager, Mode, ModeManager, Part, RadioButton, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawModes, initializeKeyModes, initializeMinorModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
+  var Arm, Body, CombatReportMinorMode, DrawMode, GameDrawMode, GameKeyMode, GameMode, Head, KeyMode, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, Messages, MinorModeManager, Mode, ModeManager, Part, RadioButton, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawModes, initializeKeyModes, initializeMinorModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -8,15 +8,6 @@
     child.__super__ = parent.prototype;
     return child;
   };
-  CombatReportMinorMode = (function() {
-    function CombatReportMinorMode(parent) {
-      this.parent = parent;
-    }
-    CombatReportMinorMode.prototype.act = function() {};
-    CombatReportMinorMode.prototype.input = function(result) {};
-    CombatReportMinorMode.prototype.update_draw = function() {};
-    return CombatReportMinorMode;
-  })();
   GameDrawMode = (function() {
     function GameDrawMode(p5) {
       this.p5 = p5;
@@ -60,8 +51,8 @@
       this.units.units.push(new Unit(10, 20, "John", 1));
       this.units.units[1].hostility = 1;
       this.units.units[0].target = this.units.units[1];
-      this.message = new Message();
-      this.minor = new MinorModeManager("Game");
+      this.messages = new Messages();
+      this.minor = new MinorModeManager("game");
     }
     GameMode.prototype.act = function() {
       this.units.move();
@@ -84,7 +75,7 @@
       return {
         units: this.units,
         map: this.map,
-        msgs: this.message.msg
+        msgs: this.messages.msg
       };
     };
     return GameMode;
@@ -348,11 +339,11 @@
     };
     return Map;
   })();
-  Message = (function() {
-    function Message() {
+  Messages = (function() {
+    function Messages() {
       this.msg = [];
     }
-    Message.prototype.update = function(units) {
+    Messages.prototype.update = function(units) {
       var unit, _i, _len, _results;
       _results = [];
       for (_i = 0, _len = units.length; _i < _len; _i++) {
@@ -361,7 +352,7 @@
       }
       return _results;
     };
-    return Message;
+    return Messages;
   })();
   Subpart = (function() {
     function Subpart(name, type) {
@@ -669,15 +660,24 @@
   MinorModeManager = (function() {
     function MinorModeManager(name, mode) {
       this.modes = initializeMinorModes(name, mode);
-      this.state = 0;
+      this.state = -1;
     }
     MinorModeManager.prototype.act = function() {
+      if (this.state === -1) {
+        return;
+      }
       return this.modes[this.state].act();
     };
     MinorModeManager.prototype.input = function(result) {
+      if (this.state === -1) {
+        return;
+      }
       return this.modes[this.state].input(result);
     };
     MinorModeManager.prototype.update_draw = function() {
+      if (this.state === -1) {
+        return;
+      }
       return this.modes[this.state].update_draw();
     };
     return MinorModeManager;
@@ -775,6 +775,15 @@
       return this.p5.ellipse(this.x - 20, pointer_y - (this.size / 2), 10, 10);
     };
     return TextOptions;
+  })();
+  CombatReportMinorMode = (function() {
+    function CombatReportMinorMode(parent) {
+      this.parent = parent;
+    }
+    CombatReportMinorMode.prototype.act = function() {};
+    CombatReportMinorMode.prototype.input = function(result) {};
+    CombatReportMinorMode.prototype.update_draw = function() {};
+    return CombatReportMinorMode;
   })();
   gameMinorModeList = function() {
     return ["CombatReport"];
