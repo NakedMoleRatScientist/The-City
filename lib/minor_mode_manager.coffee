@@ -3,8 +3,8 @@ class MinorModeManager
     @modes = initializeMinorModes(name)
     @state = 0
   act: () ->
-    @modes.act(@state)
+    @modes[@state].act()
   input: (result) ->
-    @modes.input(@state)
+    @modes[@state].input()
   update_draw: () ->
-    return @modes.update_draw(@state)
+    return @modes[@state].update_draw()
