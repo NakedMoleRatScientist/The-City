@@ -9,7 +9,9 @@
     return child;
   };
   CombatReportMinorMode = (function() {
-    function CombatReportMinorMode() {}
+    function CombatReportMinorMode(parent) {
+      this.parent = parent;
+    }
     CombatReportMinorMode.prototype.act = function() {};
     CombatReportMinorMode.prototype.input = function(result) {};
     CombatReportMinorMode.prototype.update_draw = function() {};
@@ -633,9 +635,9 @@
     }
     return _results;
   };
-  initializeMinorModes = function(name) {
+  initializeMinorModes = function(name, mode) {
     var m, modes, object, _i, _len, _results;
-    modes = eval(name + "MinorModeList()");
+    modes = eval(name + "MinorModeList(mode)");
     _results = [];
     for (_i = 0, _len = modes.length; _i < _len; _i++) {
       m = modes[_i];
@@ -665,25 +667,33 @@
     return KeyMode;
   })();
   MinorModeManager = (function() {
-    function MinorModeManager(name) {
-      this.modes = initializeMinorModes(name);
+    function MinorModeManager(name, mode) {
+      this.modes = initializeMinorModes(name, mode);
       this.state = 0;
     }
     MinorModeManager.prototype.act = function() {
-      return this.modes.act(this.state);
+      return this.modes[this.state].act();
     };
     MinorModeManager.prototype.input = function(result) {
-      return this.modes.input(this.state);
+      return this.modes[this.state].input(result);
+    };
+    MinorModeManager.prototype.update_draw = function() {
+      return this.modes[this.state].update_draw();
     };
     return MinorModeManager;
   })();
   Mode = (function() {
     function Mode(n) {
       this.minor = new MinorModeManager(n);
-      this.status = 0;
     }
     Mode.prototype.act = function() {
-      return this.minor.act(this.status);
+      return this.minor.act();
+    };
+    Mode.prototype.input = function() {
+      return this.minor.input(result);
+    };
+    Mode.prototype.update_draw = function() {
+      return this.minor.update_draw();
     };
     return Mode;
   })();
