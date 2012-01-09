@@ -6,3 +6,5 @@ class MinorModeManager
     @modes.act(@state)
   input: (result) ->
     @modes.input(@state)
+  update_draw: () ->
+    return @modes.update_draw(@state)
