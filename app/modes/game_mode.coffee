@@ -7,7 +7,7 @@ class GameMode
     @units.units.push new Unit(10,20, "John",1)
     @units.units[1].hostility = 1
     @units.units[0].target = @units.units[1]
-    @message = new Message()
+    @messages = new Messages()
     @minor = new MinorModeManager("game")
   act: ->
     @units.move()
