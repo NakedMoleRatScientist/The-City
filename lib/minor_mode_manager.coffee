@@ -1,5 +1,3 @@
 class MinorModeManager
-  constructor: () ->
-    @modes = []
-  set_up: (n) ->
+  constructor: (n) ->
     @modes = minorModeList(n)
