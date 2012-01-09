@@ -13,6 +13,7 @@ class GameMode
     @units.move()
     @messages.update(@units.units)
     @units.clean()
+    @minor.act()
   input: (result) ->
     switch(result)
       when "up"
