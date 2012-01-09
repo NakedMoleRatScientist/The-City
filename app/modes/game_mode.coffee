@@ -11,7 +11,7 @@ class GameMode
     @minor = new MinorModeManager("game")
   act: ->
     @units.move()
-    @message.update(@units.units)
+    @messages.update(@units.units)
     @units.clean()
   input: (result) ->
     switch(result)
