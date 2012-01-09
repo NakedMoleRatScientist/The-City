@@ -4,3 +4,5 @@ class MinorModeManager
     @state = 0
   act: () ->
     @modes.act(@state)
+  input: (result) ->
+    @modes.input(@state)
