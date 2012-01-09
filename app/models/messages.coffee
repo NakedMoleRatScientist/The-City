@@ -1,4 +1,4 @@
-class Message
+class Messages
   constructor: () ->
    @msg = []
   update: (units) ->
