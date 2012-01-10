@@ -1,5 +1,5 @@
 class Mode
-  constructor:(name) ->
+  constructor:(name,p5) ->
     @minor = new MinorModeManager(name)
   act: () ->
     @minor.act()
