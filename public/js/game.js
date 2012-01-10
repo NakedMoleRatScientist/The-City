@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, GameDrawMode, GameKeyMode, GameMode, Head, KeyMode, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, Messages, MinorModeManager, Mode, ModeManager, Part, RadioButton, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyModes, initializeMinorModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMode, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, Messages, MinorModeManager, Mode, ModeManager, Part, RadioButton, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyModes, initializeMinorModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -8,11 +8,280 @@
     child.__super__ = parent.prototype;
     return child;
   };
+  changeMode = function(mode, result) {
+    if (result === "game_mode") {
+      return 0;
+    } else {
+      return mode;
+    }
+  };
+  circle_collision = function(x, y, object) {
+    var dm, dx, dy;
+    dy = y - (object.y + object.diameter / 2);
+    dx = x - (object.x + object.diameter / 2);
+    dm = Math.sqrt(dx * dy + dy * dy);
+    if (dm < object.diameter) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  menu = function(p5) {
+    p5.setup = function() {
+      p5.size(800, 600);
+      p5.frameRate(50);
+      p5.background(0);
+      this.mode = 1;
+      this.logic_mode = new ModeManager();
+      this.draw_mode = new DrawModeManager(p5);
+      return this.key_mode = new KeyMode();
+    };
+    p5.keyPressed = function() {
+      return p5.input_result(this.key_mode.key_pressed(this.mode, p5.key));
+    };
+    p5.input_result = function(result) {
+      this.logic_mode.input(this.mode, result);
+      this.draw_mode.input(this.mode, result);
+      return this.mode = changeMode(this.mode, result);
+    };
+    p5.logic = function() {
+      this.logic_mode.act(this.mode);
+      return this.draw_mode.draw(this.mode, this.logic_mode);
+    };
+    return p5.draw = function() {
+      return p5.logic();
+    };
+  };
+  $(document).ready(function() {
+    var canvas, processing;
+    canvas = document.getElementById("processing");
+    return processing = new Processing(canvas, menu);
+  });
+  DrawMinorModeManager = (function() {
+    function DrawMinorModeManager(name, mode, p5) {
+      this.modes = initializeDrawMinorModes(name, p5);
+    }
+    DrawMinorModeManager.prototype.draw = function(n, logic) {
+      return this.modes[n].draw(n, logic.update_draw(n));
+    };
+    DrawMinorModeManager.prototype.input = function(n, result) {
+      return this.modes[n].input(result);
+    };
+    return DrawMinorModeManager;
+  })();
+  DrawMode = (function() {
+    function DrawMode(name, p5) {
+      this.minor_draw = new DrawMinorModeManager(name, p5);
+    }
+    DrawMode.prototype.draw = function(object) {
+      return this.minor_draw.draw(object.state, object);
+    };
+    DrawMode.prototype.input = function(result) {};
+    return DrawMode;
+  })();
+  DrawModeManager = (function() {
+    function DrawModeManager(p5) {
+      this.p5 = p5;
+      this.modes = initializeDrawModes(this.p5);
+    }
+    DrawModeManager.prototype.draw = function(n, logic) {
+      return this.modes[n].draw(logic.update_draw(n));
+    };
+    DrawModeManager.prototype.input = function(n, result) {
+      return this.modes[n].input(result);
+    };
+    return DrawModeManager;
+  })();
+  initializeDrawMinorModes = function(name, p5) {
+    var m, modes, object, _i, _len, _results;
+    modes = eval(name + "MinorModeList()");
+    _results = [];
+    for (_i = 0, _len = modes.length; _i < _len; _i++) {
+      m = modes[_i];
+      object = "new " + m + "DrawMinorMode(p5)";
+      _results.push(eval(object));
+    }
+    return _results;
+  };
+  initializeDrawModes = function(p5) {
+    var m, modes, object, _i, _len, _results;
+    modes = modeList();
+    _results = [];
+    for (_i = 0, _len = modes.length; _i < _len; _i++) {
+      m = modes[_i];
+      object = "new " + m + "DrawMode(p5)";
+      _results.push(eval(object));
+    }
+    return _results;
+  };
+  initializeKeyModes = function() {
+    var m, modes, object, _i, _len, _results;
+    modes = modeList();
+    _results = [];
+    for (_i = 0, _len = modes.length; _i < _len; _i++) {
+      m = modes[_i];
+      object = "new " + m + "KeyMode()";
+      _results.push(eval(object));
+    }
+    return _results;
+  };
+  initializeMinorModes = function(name, mode) {
+    var m, modes, object, _i, _len, _results;
+    modes = eval(name + "MinorModeList()");
+    _results = [];
+    for (_i = 0, _len = modes.length; _i < _len; _i++) {
+      m = modes[_i];
+      object = "new " + m + "MinorMode(mode)";
+      _results.push(eval(object));
+    }
+    return _results;
+  };
+  initializeModes = function() {
+    var m, modes, object, _i, _len, _results;
+    modes = modeList();
+    _results = [];
+    for (_i = 0, _len = modes.length; _i < _len; _i++) {
+      m = modes[_i];
+      object = "new " + m + "Mode()";
+      _results.push(eval(object));
+    }
+    return _results;
+  };
+  KeyMode = (function() {
+    function KeyMode() {
+      this.modes = initializeKeyModes();
+    }
+    KeyMode.prototype.key_pressed = function(n, key) {
+      return this.modes[n].key_pressed(key);
+    };
+    return KeyMode;
+  })();
+  MinorModeManager = (function() {
+    function MinorModeManager(name, mode) {
+      this.modes = initializeMinorModes(name, mode);
+    }
+    MinorModeManager.prototype.act = function(state) {
+      if (state === -1) {
+        return;
+      }
+      return this.modes[state].act();
+    };
+    MinorModeManager.prototype.input = function(result, state) {
+      if (state === -1) {
+        return;
+      }
+      return this.modes[state].input(result);
+    };
+    MinorModeManager.prototype.update_draw = function(state) {
+      if (state === -1) {
+        return;
+      }
+      return this.modes[state].update_draw();
+    };
+    return MinorModeManager;
+  })();
+  Mode = (function() {
+    function Mode(name) {
+      this.state = -1;
+      this.minor = new MinorModeManager(name);
+    }
+    Mode.prototype.act = function() {
+      return this.minor.act(this.state);
+    };
+    Mode.prototype.input = function(result) {
+      return this.minor.input(result, this.state);
+    };
+    Mode.prototype.update_draw = function() {
+      return this.minor.update_draw(this.state);
+    };
+    return Mode;
+  })();
+  ModeManager = (function() {
+    function ModeManager() {
+      this.modes = initializeModes();
+    }
+    ModeManager.prototype.act = function(n) {
+      return this.modes[n].act();
+    };
+    ModeManager.prototype.input = function(n, result) {
+      return this.modes[n].input(result);
+    };
+    ModeManager.prototype.update_draw = function(n) {
+      return this.modes[n].update_draw();
+    };
+    return ModeManager;
+  })();
+  RadioButton = (function() {
+    function RadioButton(p5, x, y) {
+      this.p5 = p5;
+      this.x = x;
+      this.y = y;
+      this.height = 10;
+      this.width = 10;
+      this.radius = this.height / 2;
+      this.diameter = this.radius * 2;
+      this.state = false;
+    }
+    RadioButton.prototype.draw = function() {
+      this.p5.noFill();
+      this.p5.stroke(255);
+      this.p5.ellipse(this.x, this.y, this.width, this.height);
+      if (this.state === true) {
+        this.p5.fill();
+        this.p5.stroke(255);
+        return this.p5.ellipse(this.x, this.y, this.width / 2, this.height / 2);
+      }
+    };
+    return RadioButton;
+  })();
+  TextOptions = (function() {
+    function TextOptions(p5, x, y, size) {
+      this.p5 = p5;
+      this.x = x;
+      this.y = y;
+      this.size = size;
+      this.pointer = 0;
+      this.texts = [];
+    }
+    TextOptions.prototype.add = function(text) {
+      return this.texts.push(text);
+    };
+    TextOptions.prototype.increase = function() {
+      if (this.pointer < this.texts.length - 1) {
+        return this.pointer += 1;
+      } else {
+        return this.pointer = 0;
+      }
+    };
+    TextOptions.prototype.decrease = function() {
+      if (this.pointer === 0) {
+        return this.pointer = this.texts.length - 1;
+      } else {
+        return this.pointer -= 1;
+      }
+    };
+    TextOptions.prototype.draw = function() {
+      var data, pointer_y, y, _i, _len, _ref;
+      this.p5.textFont("Monospace", this.size);
+      y = this.y;
+      _ref = this.texts;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        data = _ref[_i];
+        this.p5.text(data, this.x, y);
+        y += this.size;
+      }
+      pointer_y = this.y + (this.pointer * this.size);
+      return this.p5.ellipse(this.x - 20, pointer_y - (this.size / 2), 10, 10);
+    };
+    return TextOptions;
+  })();
   GameDrawMode = (function() {
+    __extends(GameDrawMode, DrawMode);
     function GameDrawMode(p5) {
       this.p5 = p5;
       this.unit_draw = new unitDraw(this.p5);
       this.map_draw = new mapDraw(this.p5, 100, 100);
+      GameDrawMode.__super__.constructor.call(this, "game", this.p5);
     }
     GameDrawMode.prototype.draw = function(object) {
       var map, msgs, units;
@@ -53,16 +322,15 @@
       this.units.units[1].hostility = 1;
       this.units.units[0].target = this.units.units[1];
       this.messages = new Messages();
-      this.minor = new MinorModeManager("game", this);
+      GameMode.__super__.constructor.call(this, "game");
     }
     GameMode.prototype.act = function() {
       this.units.move();
       this.messages.update(this.units.units);
-      this.units.clean();
-      return this.minor.act();
+      return this.units.clean();
     };
     GameMode.prototype.input = function(result) {
-      this.minor.input(result);
+      GameMode.__super__.input.call(this, result);
       switch (result) {
         case "up":
           return this.map.move_camera(0, -1);
@@ -545,269 +813,15 @@
     };
     return unitDraw;
   })();
-  changeMode = function(mode, result) {
-    if (result === "game_mode") {
-      return 0;
-    } else {
-      return mode;
-    }
-  };
-  circle_collision = function(x, y, object) {
-    var dm, dx, dy;
-    dy = y - (object.y + object.diameter / 2);
-    dx = x - (object.x + object.diameter / 2);
-    dm = Math.sqrt(dx * dy + dy * dy);
-    if (dm < object.diameter) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-  menu = function(p5) {
-    p5.setup = function() {
-      p5.size(800, 600);
-      p5.frameRate(50);
-      p5.background(0);
-      this.mode = 1;
-      this.logic_mode = new ModeManager();
-      this.draw_mode = new DrawMode(p5);
-      return this.key_mode = new KeyMode();
-    };
-    p5.keyPressed = function() {
-      return p5.input_result(this.key_mode.key_pressed(this.mode, p5.key));
-    };
-    p5.input_result = function(result) {
-      this.logic_mode.input(this.mode, result);
-      this.draw_mode.input(this.mode, result);
-      return this.mode = changeMode(this.mode, result);
-    };
-    p5.logic = function() {
-      this.logic_mode.act(this.mode);
-      return this.draw_mode.draw(this.mode, this.logic_mode);
-    };
-    return p5.draw = function() {
-      return p5.logic();
-    };
-  };
-  $(document).ready(function() {
-    var canvas, processing;
-    canvas = document.getElementById("processing");
-    return processing = new Processing(canvas, menu);
-  });
-  DrawMinorModeManager = (function() {
-    function DrawMinorModeManager(name, mode, p5) {
-      this.modes = initializeDrawMinorModes(name, p5);
-    }
-    DrawMinorModeManager.prototype.draw = function(n, logic) {
-      return this.modes[n].draw(n, logic.update_draw(n));
-    };
-    DrawMinorModeManager.prototype.input = function(n, result) {
-      return this.modes[n].input(result);
-    };
-    return DrawMinorModeManager;
-  })();
-  DrawMode = (function() {
-    function DrawMode(p5) {
-      this.p5 = p5;
-      this.modes = initializeDrawModes(this.p5);
-    }
-    DrawMode.prototype.draw = function(n, logic) {
-      return this.modes[n].draw(logic.update_draw(n));
-    };
-    DrawMode.prototype.input = function(n, result) {
-      return this.modes[n].input(result);
-    };
-    return DrawMode;
-  })();
-  initializeDrawMinorModes = function(name, p5) {
-    var m, modes, object, _i, _len, _results;
-    modes = eval(name + "MinorModeList()");
-    _results = [];
-    for (_i = 0, _len = modes.length; _i < _len; _i++) {
-      m = modes[_i];
-      object = "new " + m + "DrawMinorMode(p5)";
-      _results.push(eval(object));
-    }
-    return _results;
-  };
-  initializeDrawModes = function(p5) {
-    var m, modes, object, _i, _len, _results;
-    modes = modeList();
-    _results = [];
-    for (_i = 0, _len = modes.length; _i < _len; _i++) {
-      m = modes[_i];
-      object = "new " + m + "DrawMode(p5)";
-      _results.push(eval(object));
-    }
-    return _results;
-  };
-  initializeKeyModes = function() {
-    var m, modes, object, _i, _len, _results;
-    modes = modeList();
-    _results = [];
-    for (_i = 0, _len = modes.length; _i < _len; _i++) {
-      m = modes[_i];
-      object = "new " + m + "KeyMode()";
-      _results.push(eval(object));
-    }
-    return _results;
-  };
-  initializeMinorModes = function(name, mode) {
-    var m, modes, object, _i, _len, _results;
-    modes = eval(name + "MinorModeList()");
-    _results = [];
-    for (_i = 0, _len = modes.length; _i < _len; _i++) {
-      m = modes[_i];
-      object = "new " + m + "MinorMode(mode)";
-      _results.push(eval(object));
-    }
-    return _results;
-  };
-  initializeModes = function() {
-    var m, modes, object, _i, _len, _results;
-    modes = modeList();
-    _results = [];
-    for (_i = 0, _len = modes.length; _i < _len; _i++) {
-      m = modes[_i];
-      object = "new " + m + "Mode()";
-      _results.push(eval(object));
-    }
-    return _results;
-  };
-  KeyMode = (function() {
-    function KeyMode() {
-      this.modes = initializeKeyModes();
-    }
-    KeyMode.prototype.key_pressed = function(n, key) {
-      return this.modes[n].key_pressed(key);
-    };
-    return KeyMode;
-  })();
-  MinorModeManager = (function() {
-    function MinorModeManager(name, mode) {
-      this.modes = initializeMinorModes(name, mode);
-    }
-    MinorModeManager.prototype.act = function(state) {
-      if (state === -1) {
-        return;
-      }
-      return this.modes[state].act();
-    };
-    MinorModeManager.prototype.input = function(result, state) {
-      if (state === -1) {
-        return;
-      }
-      return this.modes[state].input(result);
-    };
-    MinorModeManager.prototype.update_draw = function(state) {
-      if (state === -1) {
-        return;
-      }
-      return this.modes[state].update_draw();
-    };
-    return MinorModeManager;
-  })();
-  Mode = (function() {
-    function Mode(name, p5) {
-      this.state = -1;
-      this.minor = new MinorModeManager(name);
-      this.minor_draw = new MinorDrawModeManager(name, p5);
-    }
-    Mode.prototype.act = function() {
-      this.minor.act(this.state);
-      return this.minor_draw.draw(this.state, this.minor);
-    };
-    Mode.prototype.input = function(result) {
-      return this.minor.input(result, this.state);
-    };
-    Mode.prototype.update_draw = function() {
-      return this.minor.update_draw(this.state);
-    };
-    return Mode;
-  })();
-  ModeManager = (function() {
-    function ModeManager() {
-      this.modes = initializeModes();
-    }
-    ModeManager.prototype.act = function(n) {
-      return this.modes[n].act();
-    };
-    ModeManager.prototype.input = function(n, result) {
-      return this.modes[n].input(result);
-    };
-    ModeManager.prototype.update_draw = function(n) {
-      return this.modes[n].update_draw();
-    };
-    return ModeManager;
-  })();
-  RadioButton = (function() {
-    function RadioButton(p5, x, y) {
-      this.p5 = p5;
-      this.x = x;
-      this.y = y;
-      this.height = 10;
-      this.width = 10;
-      this.radius = this.height / 2;
-      this.diameter = this.radius * 2;
-      this.state = false;
-    }
-    RadioButton.prototype.draw = function() {
-      this.p5.noFill();
-      this.p5.stroke(255);
-      this.p5.ellipse(this.x, this.y, this.width, this.height);
-      if (this.state === true) {
-        this.p5.fill();
-        this.p5.stroke(255);
-        return this.p5.ellipse(this.x, this.y, this.width / 2, this.height / 2);
-      }
-    };
-    return RadioButton;
-  })();
-  TextOptions = (function() {
-    function TextOptions(p5, x, y, size) {
-      this.p5 = p5;
-      this.x = x;
-      this.y = y;
-      this.size = size;
-      this.pointer = 0;
-      this.texts = [];
-    }
-    TextOptions.prototype.add = function(text) {
-      return this.texts.push(text);
-    };
-    TextOptions.prototype.increase = function() {
-      if (this.pointer < this.texts.length - 1) {
-        return this.pointer += 1;
-      } else {
-        return this.pointer = 0;
-      }
-    };
-    TextOptions.prototype.decrease = function() {
-      if (this.pointer === 0) {
-        return this.pointer = this.texts.length - 1;
-      } else {
-        return this.pointer -= 1;
-      }
-    };
-    TextOptions.prototype.draw = function() {
-      var data, pointer_y, y, _i, _len, _ref;
-      this.p5.textFont("Monospace", this.size);
-      y = this.y;
-      _ref = this.texts;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        data = _ref[_i];
-        this.p5.text(data, this.x, y);
-        y += this.size;
-      }
-      pointer_y = this.y + (this.pointer * this.size);
-      return this.p5.ellipse(this.x - 20, pointer_y - (this.size / 2), 10, 10);
-    };
-    return TextOptions;
-  })();
   CombatReportDrawMinorMode = (function() {
     function CombatReportDrawMinorMode(p5) {
       this.p5 = p5;
     }
+    CombatReportDrawMinorMode.prototype.draw = function(state) {
+      if (state === -1) {
+        ;
+      }
+    };
     return CombatReportDrawMinorMode;
   })();
   CombatReportMinorMode = (function() {
