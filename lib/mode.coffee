@@ -6,6 +6,6 @@ class Mode
   act: () ->
     @minor.act(@state)
   input: (result) ->
-    @minor.input(result)
+    @minor.input(result,@state)
   update_draw: () ->
-    @minor.update_draw()
+    @minor.update_draw(@state)
