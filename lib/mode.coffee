@@ -5,6 +5,7 @@ class Mode
     @minor_draw = new MinorDrawModeManager(name,p5)
   act: () ->
     @minor.act(@state)
+    @minor_draw.draw(@state,@minor)
   input: (result) ->
     @minor.input(result,@state)
   update_draw: () ->
