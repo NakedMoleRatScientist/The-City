@@ -13,7 +13,6 @@ class GameMode extends Mode
     @units.move()
     @messages.update(@units.units)
     @units.clean()
-    @minor.act()
   input: (result) ->
     @minor.input(result)
     switch(result)
