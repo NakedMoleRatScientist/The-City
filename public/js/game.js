@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportMinorMode, DrawMode, GameDrawMode, GameKeyMode, GameMode, Head, KeyMode, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, Messages, MinorModeManager, Mode, ModeManager, Part, RadioButton, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawModes, initializeKeyModes, initializeMinorModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, GameDrawMode, GameKeyMode, GameMode, Head, KeyMode, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, Messages, MinorModeManager, Mode, ModeManager, Part, RadioButton, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyModes, initializeMinorModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -53,7 +53,7 @@
       this.units.units[1].hostility = 1;
       this.units.units[0].target = this.units.units[1];
       this.messages = new Messages();
-      this.minor = new MinorModeManager("game");
+      this.minor = new MinorModeManager("game", this);
     }
     GameMode.prototype.act = function() {
       this.units.move();
@@ -594,6 +594,18 @@
     canvas = document.getElementById("processing");
     return processing = new Processing(canvas, menu);
   });
+  DrawMinorModeManager = (function() {
+    function DrawMinorModeManager(name, mode, p5) {
+      this.modes = initializeDrawMinorModes(name, p5);
+    }
+    DrawMinorModeManager.prototype.draw = function(n) {
+      return this.modes[n].draw();
+    };
+    DrawMinorModeManager.prototype.input = function(n, result) {
+      return this.modes[n].input(result);
+    };
+    return DrawMinorModeManager;
+  })();
   DrawMode = (function() {
     function DrawMode(p5) {
       this.p5 = p5;
@@ -607,6 +619,17 @@
     };
     return DrawMode;
   })();
+  initializeDrawMinorModes = function(name, p5) {
+    var m, modes, object, _i, _len, _results;
+    modes = eval(name + "MinorModeList()");
+    _results = [];
+    for (_i = 0, _len = modes.length; _i < _len; _i++) {
+      m = modes[_i];
+      object = "new " + m + "DrawMinorMode(p5)";
+      _results.push(eval(object));
+    }
+    return _results;
+  };
   initializeDrawModes = function(p5) {
     var m, modes, object, _i, _len, _results;
     modes = modeList();
@@ -631,11 +654,11 @@
   };
   initializeMinorModes = function(name, mode) {
     var m, modes, object, _i, _len, _results;
-    modes = eval(name + "MinorModeList(mode)");
+    modes = eval(name + "MinorModeList()");
     _results = [];
     for (_i = 0, _len = modes.length; _i < _len; _i++) {
       m = modes[_i];
-      object = "new " + m + "MinorMode()";
+      object = "new " + m + "MinorMode(mode)";
       _results.push(eval(object));
     }
     return _results;
@@ -663,31 +686,30 @@
   MinorModeManager = (function() {
     function MinorModeManager(name, mode) {
       this.modes = initializeMinorModes(name, mode);
-      this.state = -1;
     }
-    MinorModeManager.prototype.act = function() {
-      if (this.state === -1) {
+    MinorModeManager.prototype.act = function(state) {
+      if (state === -1) {
         return;
       }
-      return this.modes[this.state].act();
+      return this.modes[state].act();
     };
-    MinorModeManager.prototype.input = function(result) {
-      if (this.state === -1) {
+    MinorModeManager.prototype.input = function(result, state) {
+      if (state === -1) {
         return;
       }
-      return this.modes[this.state].input(result);
+      return this.modes[state].input(result);
     };
-    MinorModeManager.prototype.update_draw = function() {
-      if (this.state === -1) {
+    MinorModeManager.prototype.update_draw = function(state) {
+      if (state === -1) {
         return;
       }
-      return this.modes[this.state].update_draw();
+      return this.modes[state].update_draw();
     };
     return MinorModeManager;
   })();
   Mode = (function() {
-    function Mode(n) {
-      this.minor = new MinorModeManager(n);
+    function Mode(name) {
+      this.minor = new MinorModeManager(name);
     }
     Mode.prototype.act = function() {
       return this.minor.act();
@@ -778,6 +800,12 @@
       return this.p5.ellipse(this.x - 20, pointer_y - (this.size / 2), 10, 10);
     };
     return TextOptions;
+  })();
+  CombatReportDrawMinorMode = (function() {
+    function CombatReportDrawMinorMode(p5) {
+      this.p5 = p5;
+    }
+    return CombatReportDrawMinorMode;
   })();
   CombatReportMinorMode = (function() {
     function CombatReportMinorMode(parent) {
