@@ -1,2 +1,2 @@
 class CombatReportDrawMinorMode
-  constructor: () ->
+  constructor: (@p5) ->
