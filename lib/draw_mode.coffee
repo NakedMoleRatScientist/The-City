@@ -1,0 +1,2 @@
+class DrawMode
+  constructor:(name) ->
