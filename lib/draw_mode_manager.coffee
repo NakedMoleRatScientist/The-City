@@ -1,4 +1,4 @@
-class DrawMode
+class DrawModeManager
   constructor: (@p5) ->
     @modes = initializeDrawModes(@p5)
   draw: (n, logic) ->
