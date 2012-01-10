@@ -14,7 +14,7 @@ class GameMode extends Mode
     @messages.update(@units.units)
     @units.clean()
   input: (result) ->
-    @minor.input(result)
+    super(result)
     switch(result)
       when "up"
         @map.move_camera(0,-1)
