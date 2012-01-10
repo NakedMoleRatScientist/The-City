@@ -1,5 +1,5 @@
 class DrawMode
-  constructor:(name) ->
+  constructor:(name,p5) ->
     @minor_draw = new DrawMinorModeManager(name,p5)
   draw: (object) ->
     @minor_draw.draw(object.state,object)
