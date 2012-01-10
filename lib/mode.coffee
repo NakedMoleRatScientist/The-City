@@ -1,6 +1,6 @@
 class Mode
-  constructor:(n) ->
-    @minor = new MinorModeManager(n)
+  constructor:(name) ->
+    @minor = new MinorModeManager(name)
   act: () ->
     @minor.act()
   input: () ->
