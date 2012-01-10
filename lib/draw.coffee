@@ -8,7 +8,7 @@ menu = (p5) ->
     p5.background(0)
     @mode = 1
     @logic_mode = new ModeManager()
-    @draw_mode = new DrawMode(p5)
+    @draw_mode = new DrawModeManager(p5)
     @key_mode = new KeyMode()
 
   p5.keyPressed = () ->
