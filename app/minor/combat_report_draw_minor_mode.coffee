@@ -1,0 +1,2 @@
+class CombatReportDrawMinorMode
+  constructor: () ->
