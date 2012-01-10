@@ -4,7 +4,7 @@ class Mode
     @minor = new MinorModeManager(name)
     @minor_draw = new MinorDrawModeManager(name,p5)
   act: () ->
-    @minor.act()
+    @minor.act(@state)
   input: (result) ->
     @minor.input(result)
   update_draw: () ->
