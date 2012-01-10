@@ -598,8 +598,8 @@
     function DrawMinorModeManager(name, mode, p5) {
       this.modes = initializeDrawMinorModes(name, p5);
     }
-    DrawMinorModeManager.prototype.draw = function(n) {
-      return this.modes[n].draw();
+    DrawMinorModeManager.prototype.draw = function(n, logic) {
+      return this.modes[n].draw(n, logic.update_draw(n));
     };
     DrawMinorModeManager.prototype.input = function(n, result) {
       return this.modes[n].input(result);
@@ -708,17 +708,20 @@
     return MinorModeManager;
   })();
   Mode = (function() {
-    function Mode(name) {
+    function Mode(name, p5) {
+      this.state = -1;
       this.minor = new MinorModeManager(name);
+      this.minor_draw = new MinorDrawModeManager(name, p5);
     }
     Mode.prototype.act = function() {
-      return this.minor.act();
+      this.minor.act(this.state);
+      return this.minor_draw.draw(this.state, this.minor);
     };
-    Mode.prototype.input = function() {
-      return this.minor.input(result);
+    Mode.prototype.input = function(result) {
+      return this.minor.input(result, this.state);
     };
     Mode.prototype.update_draw = function() {
-      return this.minor.update_draw();
+      return this.minor.update_draw(this.state);
     };
     return Mode;
   })();
