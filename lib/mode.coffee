@@ -1,5 +1,5 @@
 class Mode
-  constructor:(name,p5) ->
+  constructor:(name) ->
     @state = -1
     @minor = new MinorModeManager(name)
     @minor_draw = new DrawMinorModeManager(name,p5)
