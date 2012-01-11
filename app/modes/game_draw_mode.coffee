@@ -11,4 +11,5 @@ class GameDrawMode extends DrawMode
     @map_draw.draw(map)
     @unit_draw.draw(units,map)
     messageDraw(@p5,msgs[msgs.length - 1])
+    super(object)
   input: () ->
