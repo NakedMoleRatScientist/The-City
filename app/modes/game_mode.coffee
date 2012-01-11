@@ -25,4 +25,4 @@ class GameMode extends Mode
       when "right"
         @map.move_camera(1,0)
   update_draw: () ->
-    return (units: @units, map: @map, msgs: @messages.msg)
+    return (units: @units, map: @map, msgs: @messages.msg, minor: @minor.update_draw(@state))
