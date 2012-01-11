@@ -15,13 +15,13 @@ menu = (p5) ->
     p5.input_result(@key_manager.key_pressed(@manager,p5.key))
 
   p5.input_result = (result) ->
-    @logic_manager.input(@manager,result)
-    @draw_manager.input(@manager,result)
-    @manager = changeManager(@manager,result)
+    @logic_manager.input(@mode,result)
+    @draw_manager.input(@mode,result)
+    @mode = changeManager(@mode,result)
 
   p5.logic = () ->
-    @logic_manager.act(@manager)
-    @draw_manager.draw(@manager,@logic_manager)
+    @logic_manager.act(@mode)
+    @draw_manager.draw(@mode,@logic_manager)
 
 
   p5.draw = () ->
