@@ -32,21 +32,21 @@
       p5.frameRate(50);
       p5.background(0);
       this.mode = 1;
-      this.logic_mode = new ModeManager();
-      this.draw_mode = new DrawModeManager(p5);
-      return this.key_mode = new KeyMode();
+      this.logic_manager = new ManagerManager();
+      this.draw_manager = new DrawManagerManager(p5);
+      return this.key_manager = new KeyManager();
     };
     p5.keyPressed = function() {
-      return p5.input_result(this.key_mode.key_pressed(this.mode, p5.key));
+      return p5.input_result(this.key_manager.key_pressed(this.manager, p5.key));
     };
     p5.input_result = function(result) {
-      this.logic_mode.input(this.mode, result);
-      this.draw_mode.input(this.mode, result);
-      return this.mode = changeMode(this.mode, result);
+      this.logic_manager.input(this.mode, result);
+      this.draw_manager.input(this.mode, result);
+      return this.mode = changeManager(this.mode, result);
     };
     p5.logic = function() {
-      this.logic_mode.act(this.mode);
-      return this.draw_mode.draw(this.mode, this.logic_mode);
+      this.logic_manager.act(this.mode);
+      return this.draw_manager.draw(this.mode, this.logic_manager);
     };
     return p5.draw = function() {
       return p5.logic();
@@ -61,8 +61,8 @@
     function DrawMinorModeManager(name, mode, p5) {
       this.modes = initializeDrawMinorModes(name, p5);
     }
-    DrawMinorModeManager.prototype.draw = function(n, logic) {
-      return this.modes[n].draw(n, logic.update_draw(n));
+    DrawMinorModeManager.prototype.draw = function(n, minor) {
+      return this.modes[n].draw(n, minor);
     };
     DrawMinorModeManager.prototype.input = function(n, result) {
       return this.modes[n].input(result);
@@ -291,9 +291,12 @@
       this.p5.background(0);
       this.map_draw.draw(map);
       this.unit_draw.draw(units, map);
-      return messageDraw(this.p5, msgs[msgs.length - 1]);
+      messageDraw(this.p5, msgs[msgs.length - 1]);
+      return GameDrawMode.__super__.draw.call(this, object);
     };
-    GameDrawMode.prototype.input = function() {};
+    GameDrawMode.prototype.input = function(result) {
+      return GameDrawMode.__super__.input.call(this, result);
+    };
     return GameDrawMode;
   })();
   GameKeyMode = (function() {
@@ -303,6 +306,8 @@
         return "right";
       } else if (key.code === 100) {
         return "left";
+      } else if (key.code === 114) {
+        return "report";
       } else if (key.code === 115) {
         return "up";
       } else if (key.code === 119) {
@@ -346,7 +351,8 @@
       return {
         units: this.units,
         map: this.map,
-        msgs: this.messages.msg
+        msgs: this.messages.msg,
+        minor: this.minor.update_draw(this.state)
       };
     };
     return GameMode;
@@ -822,6 +828,7 @@
         ;
       }
     };
+    CombatReportDrawMinorMode.prototype.update_draw = function(n) {};
     return CombatReportDrawMinorMode;
   })();
   CombatReportMinorMode = (function() {
@@ -830,7 +837,11 @@
       this.msg = [];
     }
     CombatReportMinorMode.prototype.act = function() {};
-    CombatReportMinorMode.prototype.input = function(result) {};
+    CombatReportMinorMode.prototype.input = function(result) {
+      if (result === "report") {
+        return this.parent.state = 1;
+      }
+    };
     CombatReportMinorMode.prototype.input_info = function(msg) {
       this.msg = msg;
     };
