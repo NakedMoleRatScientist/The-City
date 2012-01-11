@@ -7,7 +7,7 @@ menu = (p5) ->
     p5.frameRate(50)
     p5.background(0)
     @mode = 1
-    @logic_manager = new ManagerManager()
+    @logic_manager = new ModeManager()
     @draw_manager = new DrawManagerManager(p5)
     @key_manager = new KeyManager()
 
