@@ -15,11 +15,13 @@ class MsgManager
       create_combat_relation(unit_one,unit_two)
       n = @relations.length - 1
     return n
-  append_message: (unit_one,unit_two,msg) ->
+  active_msg: (unit_one,unit_two,msg) ->
     n = find_or_create_combat_relation(unit_one,unit_two)
     @relations[n].add_msg(unit_one,unit_two,msg)
   combat_death: (object) ->
-    append_message(object.actors,object.action)
+    active_msg(object.actors,object.action)
   strike: (object) ->
     msg = "strikes " + object.part
-    append_message(object.actors,msg)
+    active_msg(object.actors,msg)
+    msg = "'s " + object.part + " suffers damage!"
+    passive_msg(object.actors[1],msg)
