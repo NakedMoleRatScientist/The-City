@@ -10,6 +10,6 @@ class Units
   move: () ->
     unit.move() for unit in @units
     unit.attack() for unit in @units
-    unit.nullify_target() for unit in @units
+    @msg_manager.combat_death(unit.nullify_target()) for unit in @units
   clean: () ->
     @units = (unit for unit in @units when unit.body.check_death() == false)
