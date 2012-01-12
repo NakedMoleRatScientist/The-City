@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMode, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, Messages, MinorModeManager, Mode, ModeManager, Part, RadioButton, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyModes, initializeMinorModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMode, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, Messages, MinorModeManager, Mode, ModeManager, Msg, Part, RadioButton, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyModes, initializeMinorModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -32,17 +32,17 @@
       p5.frameRate(50);
       p5.background(0);
       this.mode = 1;
-      this.logic_manager = new ManagerManager();
-      this.draw_manager = new DrawManagerManager(p5);
-      return this.key_manager = new KeyManager();
+      this.logic_manager = new ModeManager();
+      this.draw_manager = new DrawModeManager(p5);
+      return this.key_manager = new KeyMode();
     };
     p5.keyPressed = function() {
-      return p5.input_result(this.key_manager.key_pressed(this.manager, p5.key));
+      return p5.input_result(this.key_manager.key_pressed(this.mode, p5.key));
     };
     p5.input_result = function(result) {
       this.logic_manager.input(this.mode, result);
       this.draw_manager.input(this.mode, result);
-      return this.mode = changeManager(this.mode, result);
+      return this.mode = changeMode(this.mode, result);
     };
     p5.logic = function() {
       this.logic_manager.act(this.mode);
@@ -58,11 +58,11 @@
     return processing = new Processing(canvas, menu);
   });
   DrawMinorModeManager = (function() {
-    function DrawMinorModeManager(name, mode, p5) {
+    function DrawMinorModeManager(name, p5) {
       this.modes = initializeDrawMinorModes(name, p5);
     }
-    DrawMinorModeManager.prototype.draw = function(n, minor) {
-      return this.modes[n].draw(n, minor);
+    DrawMinorModeManager.prototype.draw = function(n, object) {
+      return this.modes[n].draw(object);
     };
     DrawMinorModeManager.prototype.input = function(n, result) {
       return this.modes[n].input(result);
@@ -74,7 +74,10 @@
       this.minor_draw = new DrawMinorModeManager(name, p5);
     }
     DrawMode.prototype.draw = function(object) {
-      return this.minor_draw.draw(object.state, object);
+      if (object.minor === -1) {
+        return;
+      }
+      return this.minor_draw.draw(object.minor, object);
     };
     DrawMode.prototype.input = function(result) {};
     return DrawMode;
@@ -174,7 +177,7 @@
     };
     MinorModeManager.prototype.update_draw = function(state) {
       if (state === -1) {
-        return;
+        return -1;
       }
       return this.modes[state].update_draw();
     };
@@ -285,14 +288,18 @@
     }
     GameDrawMode.prototype.draw = function(object) {
       var map, msgs, units;
-      map = object.map;
-      units = object.units;
-      msgs = object.msgs;
-      this.p5.background(0);
-      this.map_draw.draw(map);
-      this.unit_draw.draw(units, map);
-      messageDraw(this.p5, msgs[msgs.length - 1]);
-      return GameDrawMode.__super__.draw.call(this, object);
+      switch (object.minor) {
+        case -1:
+          map = object.map;
+          units = object.units;
+          msgs = object.msgs;
+          this.p5.background(0);
+          this.map_draw.draw(map);
+          this.unit_draw.draw(units, map);
+          return messageDraw(this.p5, msgs[msgs.length - 1]);
+        case 0:
+          return GameDrawMode.__super__.draw.call(this, object);
+      }
     };
     GameDrawMode.prototype.input = function(result) {
       return GameDrawMode.__super__.input.call(this, result);
@@ -302,16 +309,18 @@
   GameKeyMode = (function() {
     function GameKeyMode() {}
     GameKeyMode.prototype.key_pressed = function(key) {
-      if (key.code === 97) {
-        return "right";
-      } else if (key.code === 100) {
-        return "left";
-      } else if (key.code === 114) {
-        return "report";
-      } else if (key.code === 115) {
-        return "up";
-      } else if (key.code === 119) {
-        return "down";
+      console.log(key.code);
+      switch (key.code) {
+        case 97:
+          return "right";
+        case 100:
+          return "left";
+        case 114:
+          return "report";
+        case 115:
+          return "up";
+        case 119:
+          return "down";
       }
     };
     return GameKeyMode;
@@ -345,6 +354,8 @@
           return this.map.move_camera(-1, 0);
         case "right":
           return this.map.move_camera(1, 0);
+        case "report":
+          return this.state = 0;
       }
     };
     GameMode.prototype.update_draw = function() {
@@ -481,6 +492,7 @@
       }
       this.death = 0;
       this.hand = 0;
+      this.leg = 0;
     }
     Body.prototype.check_death = function() {
       if (this.death === 1) {
@@ -490,12 +502,19 @@
       }
     };
     Body.prototype.update_ability = function(n) {
-      if (n === 0) {
-        this.hand += 1;
-        if (this.hand === 2) {
-          return "hand_destroy";
-        }
-        return "hand";
+      switch (n) {
+        case 0:
+          this.hand += 1;
+          if (this.hand === 2) {
+            return "hand_destroy";
+          }
+          return "hand";
+        case 1:
+          this.leg += 1;
+          if (this.leg === 2) {
+            return "leg_destroy";
+          }
+          return "leg";
       }
     };
     Body.prototype.check_combat_ability = function() {
@@ -631,6 +650,13 @@
     };
     return Messages;
   })();
+  Msg = (function() {
+    function Msg(belongs, info) {
+      this.belongs = belongs;
+      this.info = info;
+    }
+    return Msg;
+  })();
   Subpart = (function() {
     function Subpart(name, type) {
       this.name = name;
@@ -744,9 +770,11 @@
         case 2:
           switch (this.body.update_ability(damage.damage)) {
             case "hand":
-              return this.msg.push(this.name + " suffer hand damage!");
+              return this.msg.push(this.name + " suffers hand damage!");
             case "hand_destroy":
               return this.msg.push(this.name + " 's lost all hands function");
+            case "leg":
+              return this.msg.push(this.name + " suffers leg damage!");
           }
       }
     };
@@ -823,12 +851,18 @@
     function CombatReportDrawMinorMode(p5) {
       this.p5 = p5;
     }
-    CombatReportDrawMinorMode.prototype.draw = function(state) {
-      if (state === -1) {
-        ;
+    CombatReportDrawMinorMode.prototype.draw = function(object) {
+      var m, msgs, y, _i, _len, _results;
+      this.p5.background(0);
+      msgs = object.msgs;
+      y = 0;
+      _results = [];
+      for (_i = 0, _len = msgs.length; _i < _len; _i++) {
+        m = msgs[_i];
+        _results.push(this.p5.text(m, 5, y += 12));
       }
+      return _results;
     };
-    CombatReportDrawMinorMode.prototype.update_draw = function(n) {};
     return CombatReportDrawMinorMode;
   })();
   CombatReportMinorMode = (function() {
@@ -837,15 +871,13 @@
       this.msg = [];
     }
     CombatReportMinorMode.prototype.act = function() {};
-    CombatReportMinorMode.prototype.input = function(result) {
-      if (result === "report") {
-        return this.parent.state = 1;
-      }
-    };
+    CombatReportMinorMode.prototype.input = function(result) {};
     CombatReportMinorMode.prototype.input_info = function(msg) {
       this.msg = msg;
     };
-    CombatReportMinorMode.prototype.update_draw = function() {};
+    CombatReportMinorMode.prototype.update_draw = function() {
+      return 0;
+    };
     return CombatReportMinorMode;
   })();
   gameMinorModeList = function() {
