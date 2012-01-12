@@ -20,3 +20,6 @@ class MsgManager
     @relations[n].add_msg(unit_one,unit_two,msg)
   combat_death: (object) ->
     append_message(object.actors,object.action)
+  strike: (object) ->
+    msg = "strikes " + object.part
+    append_message(object.actors,msg)
