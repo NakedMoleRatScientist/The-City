@@ -19,6 +19,8 @@ class MsgManager
     n = find_or_create_combat_relation(unit_one,unit_two)
     @relations[n].add_msg(unit_one,unit_two,msg)
   combat_death: (object) ->
+    return if object == false
+    console.log(object)
     active_msg(object.actors,object.action)
   strike: (object) ->
     msg = "strikes " + object.part
