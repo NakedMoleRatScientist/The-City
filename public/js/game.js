@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMode, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, Messages, MinorModeManager, Mode, ModeManager, Msg, Part, RadioButton, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyModes, initializeMinorModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMode, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, Messages, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyModes, initializeMinorModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -415,6 +415,17 @@
   modeList = function() {
     return ["Game", "Menu"];
   };
+  MsgManager = (function() {
+    function MsgManager() {
+      this.relations = [];
+    }
+    MsgManager.prototype.combat_relation = function(unit_one, unit_two) {
+      var msg;
+      msg = "engaged in mortal combat with";
+      return this.relations.push(new Relation(unit_one, unit_two, msg));
+    };
+    return MsgManager;
+  })();
   Units = (function() {
     function Units() {
       this.units = [];
@@ -650,12 +661,14 @@
     };
     return Messages;
   })();
-  Msg = (function() {
-    function Msg(belongs, info) {
-      this.belongs = belongs;
-      this.info = info;
+  Relation = (function() {
+    function Relation(actor_one, actor_two, action) {
+      this.actor_one = actor_one;
+      this.actor_two = actor_two;
+      this.action = action;
+      this.msg = [];
     }
-    return Msg;
+    return Relation;
   })();
   Subpart = (function() {
     function Subpart(name, type) {
@@ -719,6 +732,7 @@
       this.hostility = 0;
       this.alive = 1;
       this.msg = [];
+      this.msg_manager = new MsgManager();
       this.target = null;
     }
     Unit.prototype.set_move = function(x, y) {
