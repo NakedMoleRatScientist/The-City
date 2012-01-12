@@ -1,2 +1,2 @@
 class Msg
-  constructor: () ->
+  constructor: (@belongs,@info) ->
