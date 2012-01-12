@@ -4,6 +4,7 @@ class Body
       @parts = human_body()
     @death = 0
     @hand = 0 #0 for operational hands. #1 means he only have one hand. #2 means that he lost all his hand functionality
+    @leg = 0
   check_death: () ->
     if @death == 1
       return true
