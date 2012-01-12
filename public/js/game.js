@@ -335,7 +335,7 @@
     function GameMode() {
       this.map = new Map(100, 100);
       this.map.generate();
-      this.units = new Units("Game");
+      this.units = new Units("game");
       this.messages = new Messages();
       GameMode.__super__.constructor.call(this, "game");
     }
@@ -445,6 +445,9 @@
       }
       return this.relations[n].add_msg(unit_one, unit_two);
     };
+    MsgManager.prototype.combat_death = function(object) {
+      return append_message(object.actors, object.action);
+    };
     return MsgManager;
   })();
   Units = (function() {
@@ -452,24 +455,29 @@
       this.units = [];
       this.msg_manager = new MsgManager();
       if (scenario === "game") {
-        this.units.units.push(new Unit(10, 10, "Miya", 1));
-        this.units.units.push(new Unit(10, 20, "John", 1));
-        this.units.units[1].hostility = 1;
-        this.units.units[0].target = this.units.units[1];
+        this.units.push(new Unit(10, 10, "Miya", 1));
+        this.units.push(new Unit(10, 20, "John", 1));
+        this.units[1].hostility = 1;
+        this.units[0].target = this.units[1];
       }
     }
     Units.prototype.move = function() {
-      var unit, _i, _j, _len, _len2, _ref, _ref2, _results;
+      var unit, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _ref3, _results;
       _ref = this.units;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         unit = _ref[_i];
         unit.move();
       }
       _ref2 = this.units;
-      _results = [];
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
         unit = _ref2[_j];
-        _results.push(unit.attack());
+        unit.attack();
+      }
+      _ref3 = this.units;
+      _results = [];
+      for (_k = 0, _len3 = _ref3.length; _k < _len3; _k++) {
+        unit = _ref3[_k];
+        _results.push(unit.nullify_target());
       }
       return _results;
     };
@@ -782,22 +790,38 @@
         this.y = this.y - 1;
       }
     };
-    Unit.prototype.attack = function() {
-      if (this.target === null || !this.body.check_combat_ability()) {
-        return;
-      }
+    Unit.prototype.attack_chance = function() {
       this.goal_x = this.target.x - 1;
       this.goal_y = this.target.y - 1;
       if ((this.target.x + 1) === this.x || (this.target.x - 1) === this.x) {
         if ((this.target.y + 1) === this.y || (this.target.y - 1) === this.y) {
           if ((Math.random() * 10) > 5) {
-            this.target.damage(this);
-            if (this.target.body.check_death() === true) {
-              this.msg.push(this.target.name + " got killed!");
-              return this.target = null;
-            }
+            return true;
           }
         }
+      }
+      return false;
+    };
+    Unit.prototype.attack = function() {
+      if (this.target === null || !this.body.check_combat_ability()) {
+        return;
+      }
+      if (this.attack_chance()) {
+        return this.target.damage(this);
+      }
+    };
+    Unit.prototype.nullify_target = function() {
+      var target;
+      if (this.target === null) {
+        return;
+      }
+      if (this.target.body.check_death() === true) {
+        target = this.target;
+        this.target = null;
+        return {
+          actors: [self.name, taget.name],
+          action: "killed"
+        };
       }
     };
     Unit.prototype.damage = function(unit) {
