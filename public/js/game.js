@@ -7,6 +7,11 @@
     child.prototype = new ctor;
     child.__super__ = parent.prototype;
     return child;
+  }, __indexOf = Array.prototype.indexOf || function(item) {
+    for (var i = 0, l = this.length; i < l; i++) {
+      if (this[i] === item) return i;
+    }
+    return -1;
   };
   changeMode = function(mode, result) {
     if (result === "game_mode") {
@@ -419,10 +424,30 @@
     function MsgManager() {
       this.relations = [];
     }
-    MsgManager.prototype.combat_relation = function(unit_one, unit_two) {
+    MsgManager.prototype.create_combat_relation = function(unit_one, unit_two) {
       var msg;
       msg = "engaged in mortal combat with";
-      return this.relations.push(new Relation(unit_one, unit_two, msg));
+      return this.relations.push(new Relation([unit_one, unit_two], msg));
+    };
+    MsgManager.prototype.find_combat_relation = function(unit_one, unit_two) {
+      var r, _i, _len, _ref;
+      _ref = this.relations;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        r = _ref[_i];
+        if (__indexOf.call(r.actors, unit_one) >= 0 && __indexOf.call(r.actors, unit_two) >= 0) {
+          return r;
+        }
+      }
+      return false;
+    };
+    MsgManager.prototype.append_message = function(unit_one, unit_two, msg) {
+      var n;
+      n = find_combat_relation(unit_one, unit_two);
+      if (n === false) {
+        create_combat_relation(unit_one, unit_two);
+        n = this.relations.length - 1;
+      }
+      return this.relations[n].add_msg(unit_one, unit_two);
     };
     return MsgManager;
   })();
@@ -662,12 +687,14 @@
     return Messages;
   })();
   Relation = (function() {
-    function Relation(actor_one, actor_two, action) {
-      this.actor_one = actor_one;
-      this.actor_two = actor_two;
+    function Relation(actors, action) {
+      this.actors = actors;
       this.action = action;
-      this.msg = [];
+      this.msgs = [];
     }
+    Relation.prototype.add_msg = function(unit_one, unit_two, act) {
+      return this.msgs.push(unit_one + act + unit_two);
+    };
     return Relation;
   })();
   Subpart = (function() {
