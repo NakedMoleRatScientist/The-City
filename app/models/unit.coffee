@@ -34,6 +34,12 @@ class Unit
          if @target.body.check_death() == true
            @msg.push(@target.name + " got killed!")
            @target = null
+  nullify_target: () ->
+    return if @target == null
+    if @target.body.check_death() == true
+      target = @target
+      @target = null
+      return ([self.name,taget.name],"killed")
   damage: (unit) ->
     part = Math.floor(Math.random() * @body.parts.length)
     damage = @body.parts[part].interact()
