@@ -36,7 +36,7 @@ class Unit
     if this.attack_chance()
       @target.damage(this)
   nullify_target: () ->
-    return if @target == null
+    return false if @target == null
     if @target.body.check_death() == true
       target = @target
       @target = null
