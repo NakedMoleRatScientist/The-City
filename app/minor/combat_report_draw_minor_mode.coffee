@@ -1,4 +1,4 @@
 class CombatReportDrawMinorMode
   constructor: (@p5) ->
-  draw: (state) ->
+  draw: (state,minor) ->
     return if state == -1
