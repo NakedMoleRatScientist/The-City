@@ -1,5 +1,5 @@
 class Unit
-  constructor: (@x, @y, @name, @type) ->
+  constructor: (@x, @y, @name, @type,@msg) ->
     @goal_x = @x
     @goal_y = @y
     @body = new Body(@type)
