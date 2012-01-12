@@ -14,6 +14,6 @@ class MsgManager
     if n == false
       create_combat_relation(unit_one,unit_two)
       n = @relations.length - 1
-    @relations[n].add_msg(unit_one,unit_two)
+    @relations[n].add_msg(unit_one,unit_two,msg)
   combat_death: (object) ->
     append_message(object.actors,object.action)
