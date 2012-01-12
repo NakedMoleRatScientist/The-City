@@ -10,11 +10,12 @@ class Body
     else
       return false
   update_ability: (n) ->
-    if n == 0
-      @hand += 1
-      if @hand == 2
-        return "hand_destroy"
-      return "hand"
+    switch(n)
+      when 0
+        @hand += 1
+        if @hand == 2
+          return "hand_destroy"
+        return "hand"
   check_combat_ability: () ->
     return true if @hand < 2
     return false
