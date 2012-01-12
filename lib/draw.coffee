@@ -8,16 +8,16 @@ menu = (p5) ->
     p5.background(0)
     @mode = 1
     @logic_manager = new ModeManager()
-    @draw_manager = new DrawManagerManager(p5)
-    @key_manager = new KeyManager()
+    @draw_manager = new DrawModeManager(p5)
+    @key_manager = new KeyMode()
 
   p5.keyPressed = () ->
-    p5.input_result(@key_manager.key_pressed(@manager,p5.key))
+    p5.input_result(@key_manager.key_pressed(@mode,p5.key))
 
   p5.input_result = (result) ->
     @logic_manager.input(@mode,result)
     @draw_manager.input(@mode,result)
-    @mode = changeManager(@mode,result)
+    @mode = changeMode(@mode,result)
 
   p5.logic = () ->
     @logic_manager.act(@mode)
