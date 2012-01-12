@@ -41,6 +41,7 @@ class Unit
       target = @target
       @target = null
       return (actors: [self.name,target.name],action: "killed")
+    return false
   damage: (unit) ->
     part = Math.floor(Math.random() * @body.parts.length)
     damage = @body.parts[part].interact()
