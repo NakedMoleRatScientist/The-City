@@ -1,2 +1,3 @@
 class MsgManager
   constructor: () ->
+    @relations = []
