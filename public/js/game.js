@@ -335,11 +335,7 @@
     function GameMode() {
       this.map = new Map(100, 100);
       this.map.generate();
-      this.units = new Units();
-      this.units.units.push(new Unit(10, 10, "Miya", 1));
-      this.units.units.push(new Unit(10, 20, "John", 1));
-      this.units.units[1].hostility = 1;
-      this.units.units[0].target = this.units.units[1];
+      this.units = new Units("Game");
       this.messages = new Messages();
       GameMode.__super__.constructor.call(this, "game");
     }
@@ -452,8 +448,15 @@
     return MsgManager;
   })();
   Units = (function() {
-    function Units() {
+    function Units(scenario) {
       this.units = [];
+      this.msg_manager = new MsgManager();
+      if (scenario === "game") {
+        this.units.units.push(new Unit(10, 10, "Miya", 1));
+        this.units.units.push(new Unit(10, 20, "John", 1));
+        this.units.units[1].hostility = 1;
+        this.units.units[0].target = this.units.units[1];
+      }
     }
     Units.prototype.move = function() {
       var unit, _i, _j, _len, _len2, _ref, _ref2, _results;
@@ -759,7 +762,6 @@
       this.hostility = 0;
       this.alive = 1;
       this.msg = [];
-      this.msg_manager = new MsgManager();
       this.target = null;
     }
     Unit.prototype.set_move = function(x, y) {
