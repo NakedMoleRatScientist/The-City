@@ -1,2 +1,2 @@
 class CombatMsg
-  constructor: (@belongs,@info) ->
+  constructor: (@attacker,@viticm) ->
