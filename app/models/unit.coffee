@@ -40,7 +40,7 @@ class Unit
     if @target.body.check_death() == true
       target = @target
       @target = null
-      return (actors: [self.name,taget.name],action: "killed")
+      return (actors: [self.name,target.name],action: "killed")
   damage: (unit) ->
     part = Math.floor(Math.random() * @body.parts.length)
     damage = @body.parts[part].interact()
