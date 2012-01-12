@@ -23,14 +23,18 @@ class Unit
     else if (@y - @goal_y) > 0
       @y = @y - 1
       return
-  attack: () ->
-    return if @target == null || !@body.check_combat_ability()
+  attack_chance: () ->
     @goal_x = @target.x - 1
     @goal_y = @target.y - 1
     if (@target.x + 1) == @x || (@target.x - 1) == @x
       if (@target.y + 1) == @y || (@target.y - 1) == @y
         if (Math.random() * 10) > 5
-         @target.damage(this)
+          return true
+    return false
+  attack: () ->
+    return if @target == null || !@body.check_combat_ability()
+    if this.attack_chance()
+      @target.damage(this)
   nullify_target: () ->
     return if @target == null
     if @target.body.check_death() == true
