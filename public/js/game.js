@@ -438,25 +438,30 @@
     };
     MsgManager.prototype.find_or_create_combat_relation = function(unit_one, unit_two) {
       var n;
-      n = find_relation(unit_one, unit_two);
+      n = this.find_relation(unit_one, unit_two);
       if (n === false) {
-        create_combat_relation(unit_one, unit_two);
+        this.create_combat_relation(unit_one, unit_two);
         n = this.relations.length - 1;
       }
       return n;
     };
-    MsgManager.prototype.append_message = function(unit_one, unit_two, msg) {
+    MsgManager.prototype.active_msg = function(unit_one, unit_two, msg) {
       var n;
-      n = find_or_create_combat_relation(unit_one, unit_two);
+      n = this.find_or_create_combat_relation(unit_one, unit_two);
       return this.relations[n].add_msg(unit_one, unit_two, msg);
     };
     MsgManager.prototype.combat_death = function(object) {
-      return append_message(object.actors, object.action);
+      if (object === false) {
+        return;
+      }
+      return this.active_msg(object.actors, object.action);
     };
     MsgManager.prototype.strike = function(object) {
       var msg;
       msg = "strikes " + object.part;
-      return append_message(object.actors, msg);
+      this.active_msg(object.actors, msg);
+      msg = "'s " + object.part + " suffers damage!";
+      return this.passive_msg(object.actors[1], msg);
     };
     return MsgManager;
   })();
@@ -487,7 +492,7 @@
       _results = [];
       for (_k = 0, _len3 = _ref3.length; _k < _len3; _k++) {
         unit = _ref3[_k];
-        _results.push(unit.nullify_target());
+        _results.push(this.msg_manager.combat_death(unit.nullify_target()));
       }
       return _results;
     };
@@ -823,16 +828,17 @@
     Unit.prototype.nullify_target = function() {
       var target;
       if (this.target === null) {
-        return;
+        return false;
       }
       if (this.target.body.check_death() === true) {
         target = this.target;
         this.target = null;
         return {
-          actors: [self.name, taget.name],
+          actors: [self.name, target.name],
           action: "killed"
         };
       }
+      return false;
     };
     Unit.prototype.damage = function(unit) {
       var damage, part;
