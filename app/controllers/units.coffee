@@ -1,6 +1,7 @@
 class Units
   constructor: () ->
     @units = []
+    @msg = new MsgManager()
   move: () ->
     unit.move() for unit in @units
     unit.attack() for unit in @units
