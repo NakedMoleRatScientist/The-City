@@ -49,6 +49,8 @@ class Unit
             @msg.push(@name + " suffers hand damage!")
           when "hand_destroy"
             @msg.push(@name + " 's lost all hands function")
+          when "leg"
+            @msg.push(@name + " suffers leg damage!")
 
 
    get_msg: () ->
