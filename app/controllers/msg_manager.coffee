@@ -16,7 +16,7 @@ class MsgManager
       n = @relations.length - 1
     return n
   active_msg: (unit_one,unit_two,msg) ->
-    n = find_or_create_combat_relation(unit_one,unit_two)
+    n = this.find_or_create_combat_relation(unit_one,unit_two)
     @relations[n].add_msg(unit_one,unit_two,msg)
   combat_death: (object) ->
     return if object == false
