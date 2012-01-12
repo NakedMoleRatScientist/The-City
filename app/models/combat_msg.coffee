@@ -1,2 +1,2 @@
-class Msg
+class CombatMsg
   constructor: (@belongs,@info) ->
