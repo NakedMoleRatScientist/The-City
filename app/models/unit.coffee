@@ -31,9 +31,6 @@ class Unit
       if (@target.y + 1) == @y || (@target.y - 1) == @y
         if (Math.random() * 10) > 5
          @target.damage(this)
-         if @target.body.check_death() == true
-           @msg.push(@target.name + " got killed!")
-           @target = null
   nullify_target: () ->
     return if @target == null
     if @target.body.check_death() == true
