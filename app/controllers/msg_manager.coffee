@@ -10,7 +10,7 @@ class MsgManager
         return r
     return false
   append_message: (unit_one,unit_two,msg) ->
-    n = find_combat_relation()
+    n = find_combat_relation(unit_one,unit_two)
     if n == false
       create_combat_relation(unit_one,unit_two)
       n = @relations.length - 1
