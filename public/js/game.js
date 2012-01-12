@@ -425,7 +425,7 @@
       msg = "engaged in mortal combat with";
       return this.relations.push(new Relation([unit_one, unit_two], msg));
     };
-    MsgManager.prototype.find_combat_relation = function(unit_one, unit_two) {
+    MsgManager.prototype.find_relation = function(unit_one, unit_two) {
       var r, _i, _len, _ref;
       _ref = this.relations;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -436,17 +436,27 @@
       }
       return false;
     };
-    MsgManager.prototype.append_message = function(unit_one, unit_two, msg) {
+    MsgManager.prototype.find_or_create_combat_relation = function(unit_one, unit_two) {
       var n;
-      n = find_combat_relation(unit_one, unit_two);
+      n = find_relation(unit_one, unit_two);
       if (n === false) {
         create_combat_relation(unit_one, unit_two);
         n = this.relations.length - 1;
       }
-      return this.relations[n].add_msg(unit_one, unit_two);
+      return n;
+    };
+    MsgManager.prototype.append_message = function(unit_one, unit_two, msg) {
+      var n;
+      n = find_or_create_combat_relation(unit_one, unit_two);
+      return this.relations[n].add_msg(unit_one, unit_two, msg);
     };
     MsgManager.prototype.combat_death = function(object) {
       return append_message(object.actors, object.action);
+    };
+    MsgManager.prototype.strike = function(object) {
+      var msg;
+      msg = "strikes " + object.part;
+      return append_message(object.actors, msg);
     };
     return MsgManager;
   })();
@@ -591,7 +601,7 @@
       } else {
         return {
           type: 0,
-          msg: this.subparts[this.random].name + " suffered damage"
+          msg: this.subparts[this.random].name
         };
       }
     };
@@ -830,10 +840,13 @@
       damage = this.body.parts[part].interact();
       switch (damage.type) {
         case 0:
-          return this.msg.push(this.name + "'s " + damage.msg);
+          return {
+            actors: [unit.name, this.name],
+            part: damage.msg
+          };
         case 1:
-          this.msg.push(this.name + " dies of " + damage.msg);
-          return this.body.death = 1;
+          this.body.death = 1;
+          return this.msg.push(this.name + " dies of " + damage.msg);
         case 2:
           switch (this.body.update_ability(damage.damage)) {
             case "hand":
