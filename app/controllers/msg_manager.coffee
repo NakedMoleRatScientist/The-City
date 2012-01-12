@@ -12,7 +12,7 @@ class MsgManager
   find_or_create_combat_relation: (unit_one,unit_two) ->
     n = find_relation(unit_one,unit_two)
     if n == false
-      create_combat_relation(unit_one,unit_two)
+      this.create_combat_relation(unit_one,unit_two)
       n = @relations.length - 1
     return n
   active_msg: (unit_one,unit_two,msg) ->
@@ -20,10 +20,9 @@ class MsgManager
     @relations[n].add_msg(unit_one,unit_two,msg)
   combat_death: (object) ->
     return if object == false
-    console.log(object)
-    active_msg(object.actors,object.action)
+    this.active_msg(object.actors,object.action)
   strike: (object) ->
     msg = "strikes " + object.part
-    active_msg(object.actors,msg)
+    this.active_msg(object.actors,msg)
     msg = "'s " + object.part + " suffers damage!"
-    passive_msg(object.actors[1],msg)
+    this.passive_msg(object.actors[1],msg)
