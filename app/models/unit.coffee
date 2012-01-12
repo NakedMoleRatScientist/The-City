@@ -48,8 +48,8 @@ class Unit
       when 0
         @msg.push(@name + "'s " + damage.msg)
       when 1
-        @msg.push(@name + " dies of " + damage.msg)
         @body.death = 1
+        @msg.push(@name + " dies of " + damage.msg)
       when 2
         switch @body.update_ability(damage.damage)
           when "hand"
