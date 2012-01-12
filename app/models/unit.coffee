@@ -6,6 +6,7 @@ class Unit
     @hostility = 0  #0 is friendly. 1 is hostile
     @alive = 1 #1 is alive, 0 is dead.
     @msg = []
+    @msg_manager = new MsgManager()
     @target = null
   set_move: (x,y) ->
     @goal_x = x
