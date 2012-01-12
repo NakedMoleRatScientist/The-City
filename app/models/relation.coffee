@@ -1,3 +1,3 @@
 class Relation
-  constructor: (@actor,@object,@action) ->
+  constructor: (@actor_one,@actor_two,@action) ->
     @msg = []
