@@ -2,7 +2,7 @@ class GameMode extends Mode
   constructor: ->
     @map = new Map(100,100)
     @map.generate()
-    @units = new Units("Game")
+    @units = new Units("game")
     @messages = new Messages()
     super("game")
   act: ->
