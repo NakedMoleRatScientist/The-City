@@ -1,7 +1,7 @@
 class DrawMinorModeManager
-  constructor: (name,mode,p5) ->
+  constructor: (name,p5) ->
     @modes = initializeDrawMinorModes(name,p5)
-  draw: (n,object) ->
-    @modes[n].draw(object)
+  draw: (n) ->
+    @modes[n].draw(n)
   input: (n,result) ->
     @modes[n].input(result)
