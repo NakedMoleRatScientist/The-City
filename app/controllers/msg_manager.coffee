@@ -21,6 +21,8 @@ class MsgManager
     @relations[n].add_msg(unit_one,unit_two,msg)
     @last_status = n
     return n
+  get_last_update: () ->
+    return @relations[n].last
   combat_death: (object) ->
     return if object == false
     this.active_msg(object.actors,object.action)
