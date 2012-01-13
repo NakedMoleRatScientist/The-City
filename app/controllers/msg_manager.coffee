@@ -18,6 +18,7 @@ class MsgManager
   active_msg: (unit_one,unit_two,msg) ->
     n = this.find_or_create_combat_relation(unit_one,unit_two)
     @relations[n].add_msg(unit_one,unit_two,msg)
+    return n
   combat_death: (object) ->
     return if object == false
     this.active_msg(object.actors,object.action)
