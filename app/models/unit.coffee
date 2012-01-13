@@ -45,9 +45,10 @@ class Unit
   damage: (unit) ->
     part = Math.floor(Math.random() * @body.parts.length)
     damage = @body.parts[part].interact()
+    object = (actors: actors, part: damage.msg, type: null)
     switch damage.type
       when 0
-        return (actors:[unit.name,@name],part: damage.msg, type: 0 )
+        object.type = 0
       when 1
         @body.death = 1
         @msg.push(@name + " dies of " + damage.msg)
