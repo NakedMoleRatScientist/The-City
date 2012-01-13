@@ -1,7 +1,7 @@
 class MsgManager
   constructor: () ->
     @relations = []
-    @last_status = 0
+    @last_status = -1
   create_combat_relation: (unit_one,unit_two) ->
     msg = "engaged in mortal combat with"
     @relations.push new Relation([unit_one,unit_two],msg)
