@@ -47,7 +47,7 @@ class Unit
     damage = @body.parts[part].interact()
     switch damage.type
       when 0
-        return (actors:[unit.name,@name],part: damage.msg )
+        return (actors:[unit.name,@name],part: damage.msg, type: 0 )
       when 1
         @body.death = 1
         @msg.push(@name + " dies of " + damage.msg)
