@@ -61,7 +61,7 @@ class Unit
             object.type = 3
           when "leg"
             object.type = 4
-
+    return object
 
    get_msg: () ->
      msg = @msg
