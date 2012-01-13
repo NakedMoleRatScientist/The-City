@@ -34,7 +34,7 @@ class Unit
   attack: () ->
     return if @target == null || !@body.check_combat_ability()
     if this.attack_chance()
-      @target.damage(this)
+      return @target.damage(this)
   nullify_target: () ->
     return false if @target == null
     if @target.body.check_death() == true
