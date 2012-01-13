@@ -58,8 +58,3 @@ class Unit
           when "leg"
             object.special = 2
     return object
-
-   get_msg: () ->
-     msg = @msg
-     @msg = []
-     return msg
