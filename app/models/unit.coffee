@@ -49,12 +49,6 @@ class Unit
     if damage.type == 1
       @body.death = 1
     switch damage.type
-      when 0
-        object.type = 0
-      when 1
-        @body.death = 1
-        object.type = 1
-        @msg.push(@name + " dies of " + damage.msg)
       when 2
         switch @body.update_ability(damage.damage)
           when "hand"
