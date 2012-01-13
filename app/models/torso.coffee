@@ -14,8 +14,8 @@ class Torso extends Part
   interact: ->
     super()
     if @subparts[@random].type == 2
-      return {type: 1, msg: "asphyxia"} if this.lung_damage(@random)
-      return {type: 0, msg: "lung got bruised"}
+      return {type: 1, cause: "asphyxia"} if this.lung_damage(@random)
+      return {type: 0, cause: "lung got bruised"}
     else if @subparts[@random].type == 1
       @subparts[@random].damage = 1
       return {type: 1, msg: "heart failure"}
