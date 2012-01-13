@@ -8,6 +8,6 @@ class Head extends Part
   interact: ->
     super()
     if @subparts[@random].type == 1
-      return {type: 1, msg: "skull cavein"}
+      return {type: 1, cause: "skull cavein"}
     else
       return {type: 0, part: @subparts[@random].name}
