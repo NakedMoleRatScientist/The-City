@@ -21,6 +21,10 @@ class MsgManager
     @relations[n].add_msg(unit_one,unit_two,msg)
     @last_status = n
     return n
+  passive_msg: (unit_one,unit_two) ->
+    n = this.find_or_create_combat_relation(unit_one,unit_two)
+    @relations[n].add_passive_msg(unit_two, msg)
+    @last_status = n
   get_last_update: () ->
     return -1 if @last_status == -1
     @relations[@last_status].last()
