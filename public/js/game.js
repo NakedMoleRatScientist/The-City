@@ -292,16 +292,19 @@
       GameDrawMode.__super__.constructor.call(this, "game", this.p5);
     }
     GameDrawMode.prototype.draw = function(object) {
-      var map, msgs, units;
+      var map, msg, units;
       switch (object.minor) {
         case -1:
           map = object.map;
           units = object.units;
-          msgs = object.msgs;
+          msg = object.msg;
           this.p5.background(0);
           this.map_draw.draw(map);
           this.unit_draw.draw(units, map);
-          return messageDraw(this.p5, msgs[msgs.length - 1]);
+          if (msg !== -1) {
+            return messageDraw(this.p5, msg);
+          }
+          break;
         case 0:
           return GameDrawMode.__super__.draw.call(this, object);
       }
@@ -363,7 +366,8 @@
       return {
         units: this.units,
         map: this.map,
-        msgs: this.messages.msg,
+        msg: this.units.msg_manager.get_last_update(),
+        msgs: this.messages.msgs,
         minor: this.minor.update_draw(this.state)
       };
     };
@@ -419,6 +423,7 @@
   MsgManager = (function() {
     function MsgManager() {
       this.relations = [];
+      this.last_status = -1;
     }
     MsgManager.prototype.create_combat_relation = function(unit_one, unit_two) {
       var msg;
@@ -448,20 +453,34 @@
     MsgManager.prototype.active_msg = function(unit_one, unit_two, msg) {
       var n;
       n = this.find_or_create_combat_relation(unit_one, unit_two);
-      return this.relations[n].add_msg(unit_one, unit_two, msg);
+      this.relations[n].add_msg(unit_one, unit_two, msg);
+      this.last_status = n;
+      return n;
+    };
+    MsgManager.prototype.passive_msg = function(unit_one, unit_two) {
+      var n;
+      n = this.find_or_create_combat_relation(unit_one, unit_two);
+      this.relations[n].add_passive_msg(unit_two, msg);
+      return this.last_status = n;
+    };
+    MsgManager.prototype.get_last_update = function() {
+      if (this.last_status === -1) {
+        return -1;
+      }
+      return this.relations[this.last_status].last();
     };
     MsgManager.prototype.combat_death = function(object) {
       if (object === false) {
         return;
       }
-      return this.active_msg(object.actors, object.action);
+      return this.active_msg(object.actors[0], object.actors[1], object.action);
     };
     MsgManager.prototype.strike = function(object) {
       var msg;
       msg = "strikes " + object.part;
-      this.active_msg(object.actors, msg);
+      this.active_msg(object.actors[0], object.actors[1], msg);
       msg = "'s " + object.part + " suffers damage!";
-      return this.passive_msg(object.actors[1], msg);
+      return this.passive_msg(object.actors[0], object.actors[1], msg);
     };
     return MsgManager;
   })();
@@ -719,7 +738,10 @@
       this.msgs = [];
     }
     Relation.prototype.add_msg = function(unit_one, unit_two, act) {
-      return this.msgs.push(unit_one + act + unit_two);
+      return this.msgs.push(unit_one + " " + act + " " + unit_two + "!");
+    };
+    Relation.prototype.last = function() {
+      return this.msgs[this.msgs.length - 1];
     };
     return Relation;
   })();
@@ -834,7 +856,7 @@
         target = this.target;
         this.target = null;
         return {
-          actors: [self.name, target.name],
+          actors: [this.name, target.name],
           action: "killed"
         };
       }
