@@ -35,4 +35,4 @@ class MsgManager
     msg = "strikes " + object.part
     this.active_msg(object.actors[0],object.actors[1],msg)
     msg = "'s " + object.part + " suffers damage!"
-    this.passive_msg(object.actors[1],msg)
+    this.passive_msg(object.actors[0],object.actors[1],msg)
