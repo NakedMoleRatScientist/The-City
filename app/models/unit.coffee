@@ -56,11 +56,11 @@ class Unit
       when 2
         switch @body.update_ability(damage.damage)
           when "hand"
-            @msg.push(@name + " suffers hand damage!")
+            object.type = 2
           when "hand_destroy"
-            @msg.push(@name + " 's lost all hands function")
+            object.type = 3
           when "leg"
-            @msg.push(@name + " suffers leg damage!")
+            object.type = 4
 
 
    get_msg: () ->
