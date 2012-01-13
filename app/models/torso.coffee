@@ -15,7 +15,7 @@ class Torso extends Part
     super()
     if part.type == 2
       return {type: 1, cause: "asphyxia"} if this.lung_damage(@random)
-      return {type: 0, part: "lung got bruised"}
+      return {type: 0, part: part}
     else if part.type == 1
       part.damage = 1
       return {type: 1, msg: "heart failure"}
