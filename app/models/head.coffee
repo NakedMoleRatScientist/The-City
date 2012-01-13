@@ -7,7 +7,7 @@ class Head extends Part
     @subparts.push new Subpart("skull",1)
   interact: ->
     super()
-    if @subparts[@random].type == 1
+    if part.type == 1
       return {type: 1, cause: "skull cavein"}
     else
-      return {type: 0, part: @subparts[@random].name}
+      return {type: 0, part: part.name}
