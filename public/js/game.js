@@ -476,10 +476,11 @@
       return this.active_msg(object.actors[0], object.actors[1], object.action);
     };
     MsgManager.prototype.strike = function(object) {
-      var msg;
-      msg = "strikes " + object.part;
+      var msg, part;
+      part = object.part;
+      msg = "strikes " + part;
       this.active_msg(object.actors[0], object.actors[1], msg);
-      msg = "'s " + object.part + " suffers damage!";
+      msg = "'s " + part + " suffers damage!";
       return this.passive_msg(object.actors[0], object.actors[1], msg);
     };
     return MsgManager;
@@ -505,7 +506,7 @@
       _ref2 = this.units;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
         unit = _ref2[_j];
-        unit.attack();
+        this.msg_manager.strike(unit.attack());
       }
       _ref3 = this.units;
       _results = [];
@@ -538,7 +539,9 @@
       this.subparts = [];
     }
     Part.prototype.interact = function() {
-      return this.random = Math.floor(Math.random() * this.subparts.length);
+      var part, random;
+      random = Math.floor(Math.random() * this.subparts.length);
+      return part = this.subparts[random];
     };
     return Part;
   })();
@@ -552,10 +555,11 @@
     }
     Arm.prototype.interact = function() {
       Arm.__super__.interact.call(this);
-      if (this.subparts[this.random].type === 3) {
-        this.subparts[this.random].damage = 1;
+      if (part.type === 3) {
+        part.damage = 1;
         return {
           type: 2,
+          part: part,
           damage: 0
         };
       } else {
@@ -617,15 +621,15 @@
     }
     Head.prototype.interact = function() {
       Head.__super__.interact.call(this);
-      if (this.subparts[this.random].type === 1) {
+      if (part.type === 1) {
         return {
           type: 1,
-          msg: "skull cavein"
+          cause: "skull cavein"
         };
       } else {
         return {
           type: 0,
-          msg: this.subparts[this.random].name
+          part: part.name
         };
       }
     };
@@ -663,9 +667,10 @@
     };
     Leg.prototype.interact = function() {
       Leg.__super__.interact.call(this);
-      if (this.subparts[this.random].type === 3) {
+      if (part.type === 3) {
         return {
           type: 2,
+          part: part,
           damage: 1
         };
       } else {
@@ -740,6 +745,9 @@
     Relation.prototype.add_msg = function(unit_one, unit_two, act) {
       return this.msgs.push(unit_one + " " + act + " " + unit_two + "!");
     };
+    Relation.prototype.add_passive_msg = function(unit_two, msg) {
+      return this.msgs.push(unit_two + msg);
+    };
     Relation.prototype.last = function() {
       return this.msgs[this.msgs.length - 1];
     };
@@ -770,22 +778,22 @@
     };
     Torso.prototype.interact = function() {
       Torso.__super__.interact.call(this);
-      if (this.subparts[this.random].type === 2) {
+      if (part.type === 2) {
         if (this.lung_damage(this.random)) {
           return {
             type: 1,
-            msg: "asphyxia"
+            cause: "asphyxia"
           };
         }
         return {
           type: 0,
-          msg: "lung got bruised"
+          part: part
         };
-      } else if (this.subparts[this.random].type === 1) {
-        this.subparts[this.random].damage = 1;
+      } else if (part.type === 1) {
+        part.damage = 1;
         return {
           type: 1,
-          msg: "heart failure"
+          cause: "heart failure"
         };
       } else {
         return {
@@ -863,28 +871,36 @@
       return false;
     };
     Unit.prototype.damage = function(unit) {
-      var damage, part;
+      var damage, object, part;
       part = Math.floor(Math.random() * this.body.parts.length);
       damage = this.body.parts[part].interact();
+      object = {
+        actors: actors,
+        part: damage.msg,
+        type: null
+      };
       switch (damage.type) {
         case 0:
-          return {
-            actors: [unit.name, this.name],
-            part: damage.msg
-          };
+          object.type = 0;
+          break;
         case 1:
           this.body.death = 1;
-          return this.msg.push(this.name + " dies of " + damage.msg);
+          object.type = 1;
+          this.msg.push(this.name + " dies of " + damage.msg);
+          break;
         case 2:
           switch (this.body.update_ability(damage.damage)) {
             case "hand":
-              return this.msg.push(this.name + " suffers hand damage!");
+              object.type = 2;
+              break;
             case "hand_destroy":
-              return this.msg.push(this.name + " 's lost all hands function");
+              object.type = 3;
+              break;
             case "leg":
-              return this.msg.push(this.name + " suffers leg damage!");
+              object.type = 4;
           }
       }
+      return object;
     };
     Unit.prototype.get_msg = function() {
       var msg;
