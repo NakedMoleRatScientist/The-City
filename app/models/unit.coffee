@@ -45,7 +45,7 @@ class Unit
   damage: (unit) ->
     part = Math.floor(Math.random() * @body.parts.length)
     damage = @body.parts[part].interact()
-    object = (actors: actors, part: damage.part, type: object.type)
+    object = (actors: actors, part: damage.part, type: object.type, special: null)
     if damage.type == 1
       @body.death = 1
     switch damage.type
