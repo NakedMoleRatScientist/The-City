@@ -11,8 +11,8 @@ class Leg extends Part
     return true
   interact: ->
     super()
-    if @subparts[@random].type == 3
+    if part.type == 3
       #damage walking
-      return {type: 2, damage: 1}
+      return {type: 2, part: part, damage: 1}
     else
       return {type: 0}
