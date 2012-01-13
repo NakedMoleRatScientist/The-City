@@ -8,11 +8,12 @@ class GameDrawMode extends DrawMode
       when -1
         map = object.map
         units = object.units
-        msgs = object.msgs
+        msg = object.msg
         @p5.background(0)
         @map_draw.draw(map)
         @unit_draw.draw(units,map)
-        messageDraw(@p5,msgs[msgs.length - 1])
+        if msg != -1
+          messageDraw(@p5,msg)
       when 0
         super(object)
 
