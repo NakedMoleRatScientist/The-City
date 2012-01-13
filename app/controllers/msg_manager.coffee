@@ -23,7 +23,7 @@ class MsgManager
     return n
   get_last_update: () ->
     return -1 if @last_status == -1
-    @relations[@last_status].last
+    @relations[@last_status].last()
   combat_death: (object) ->
     return if object == false
     this.active_msg(object.actors,object.action)
