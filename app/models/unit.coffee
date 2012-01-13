@@ -52,11 +52,11 @@ class Unit
       when 2
         switch @body.update_ability(damage.damage)
           when "hand"
-            object.type = 2
+            object.special = 0
           when "hand_destroy"
-            object.type = 3
+            object.special = 1
           when "leg"
-            object.type = 4
+            object.special = 2
     return object
 
    get_msg: () ->
