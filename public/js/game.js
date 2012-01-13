@@ -875,38 +875,28 @@
       part = Math.floor(Math.random() * this.body.parts.length);
       damage = this.body.parts[part].interact();
       object = {
-        actors: actors,
-        part: damage.msg,
-        type: null
+        actors: [unit, this],
+        part: damage.part,
+        type: object.type,
+        special: null
       };
       switch (damage.type) {
-        case 0:
-          object.type = 0;
-          break;
         case 1:
           this.body.death = 1;
-          object.type = 1;
-          this.msg.push(this.name + " dies of " + damage.msg);
           break;
         case 2:
           switch (this.body.update_ability(damage.damage)) {
             case "hand":
-              object.type = 2;
+              object.special = 0;
               break;
             case "hand_destroy":
-              object.type = 3;
+              object.special = 1;
               break;
             case "leg":
-              object.type = 4;
+              object.special = 2;
           }
       }
       return object;
-    };
-    Unit.prototype.get_msg = function() {
-      var msg;
-      msg = this.msg;
-      this.msg = [];
-      return msg;
     };
     return Unit;
   })();
