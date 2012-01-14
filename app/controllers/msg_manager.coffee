@@ -5,7 +5,7 @@ class MsgManager
   create_combat_relation: (unit_one,unit_two) ->
     msg = "engaged in mortal combat with"
     @relations.push new Relation([unit_one,unit_two],msg)
-    return @relations[@relations.length - 1]
+    return (@relations.length - 1)
   find_relation: (unit_one,unit_two) ->
     n = 0
     for r in @relations
@@ -14,9 +14,9 @@ class MsgManager
         return n
     return false
   find_or_create_combat_relation: (unit_one,unit_two) ->
-    relation = this.find_relation(unit_one,unit_two)
-    if relation == false
-      return this.create_combat_relation(unit_one,unit_two)
+    n = this.find_relation(unit_one,unit_two)
+    if n == false
+      this.create_combat_relation(unit_one,unit_two)
     return relation
   active_msg: (unit_one,unit_two,msg) ->
     n = this.find_or_create_combat_relation(unit_one,unit_two)
