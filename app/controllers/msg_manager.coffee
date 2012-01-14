@@ -32,6 +32,7 @@ class MsgManager
     return if object == false
     this.active_msg(object.actors[0],object.actors[1],object.action)
   strike: (object) ->
+    return if object == -1
     part = object.part
     msg = "strikes " + part
     this.active_msg(object.actors[0],object.actors[1],msg)
