@@ -14,7 +14,7 @@ class TextOptions
   draw: (texts) ->
     @p5.textFont("Monospace",@size)
     y = @y
-    for data in @texts
+    for data in texts
       @p5.text(data,@x,y)
       y += @size
     pointer_y = @y + (@pointer * @size)
