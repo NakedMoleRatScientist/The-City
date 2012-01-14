@@ -1,5 +1,5 @@
 class Relation
-  constructor: (@actors,@action) ->
+  constructor: (@actors) ->
     @msgs = []
   add_msg: (unit_one,unit_two,act) ->
     @msgs.push(unit_one + " " + act + " " + unit_two + "!")
