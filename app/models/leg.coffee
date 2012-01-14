@@ -8,6 +8,6 @@ class Leg extends Part
     if part.type == 3
       part.damage = 1
       #damage walking
-      return {type: 2, part: part, damage: 1}
+      return {type: 2, part: part.name, damage: 1}
     else
       return {type: 0}
