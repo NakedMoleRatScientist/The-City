@@ -17,7 +17,7 @@ class MsgManager
     n = this.find_relation(unit_one,unit_two)
     if n == false
       this.create_combat_relation(unit_one,unit_two)
-    return relation
+    return n
   active_msg: (unit_one,unit_two,msg) ->
     n = this.find_or_create_combat_relation(unit_one,unit_two)
     @relations[n].add_msg(unit_one,unit_two,msg)
