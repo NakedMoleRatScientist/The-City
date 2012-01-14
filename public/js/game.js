@@ -434,10 +434,10 @@
       _ref = this.relations;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         r = _ref[_i];
-        n += 1;
         if (__indexOf.call(r.actors, unit_one) >= 0 && __indexOf.call(r.actors, unit_two) >= 0) {
           return n;
         }
+        n += 1;
       }
       return false;
     };
@@ -445,9 +445,9 @@
       var n;
       n = this.find_relation(unit_one, unit_two);
       if (n === false) {
-        this.create_combat_relation(unit_one, unit_two);
+        return this.create_combat_relation(unit_one, unit_two);
       }
-      return relation;
+      return n;
     };
     MsgManager.prototype.active_msg = function(unit_one, unit_two, msg) {
       var n;
@@ -541,9 +541,8 @@
       this.subparts = [];
     }
     Part.prototype.interact = function() {
-      var random;
-      random = Math.floor(Math.random() * this.subparts.length);
-      return this.subparts[random];
+      this.random = Math.floor(Math.random() * this.subparts.length);
+      return this.subparts[this.random];
     };
     return Part;
   })();
@@ -657,22 +656,11 @@
       this.subparts.push(new Subpart("lower_leg", 3));
       this.subparts.push(new Subpart("upper_leg", 3));
     }
-    Leg.prototype.arm_interact = function(choice) {
-      var part, _i, _len, _ref;
-      this.subparts(choice).damage = 1;
-      _ref = this.subparts;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        part = _ref[_i];
-        if (part.damage === 0) {
-          return false;
-        }
-      }
-      return true;
-    };
     Leg.prototype.interact = function() {
       var part;
       part = Leg.__super__.interact.call(this);
       if (part.type === 3) {
+        part.damage = 1;
         return {
           type: 2,
           part: part,
