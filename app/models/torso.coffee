@@ -14,8 +14,8 @@ class Torso extends Part
   interact: ->
     part = super()
     if part.type == 2
-      return {type: 1, cause: "asphyxia"} if this.lung_damage(@random)
-      return {type: 0, part: part}
+      return {type: 1, part: part.name, cause: "asphyxia"} if this.lung_damage(@random)
+      return {type: 0, part: part.name}
     else if part.type == 1
       part.damage = 1
       return {type: 1, cause: "heart failure"}
