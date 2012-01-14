@@ -17,13 +17,13 @@ class MsgManager
       return this.create_combat_relation(unit_one,unit_two)
     return relation
   active_msg: (unit_one,unit_two,msg) ->
-    relation = this.find_or_create_combat_relation(unit_one,unit_two)
-    relation.add_msg(unit_one,unit_two,msg)
+    n = this.find_or_create_combat_relation(unit_one,unit_two)
+    @relations[n].add_msg(unit_one,unit_two,msg)
     @last_status = n
     return n
   passive_msg: (unit_one,unit_two,msg) ->
-    relation = this.find_or_create_combat_relation(unit_one,unit_two)
-    relation.add_passive_msg(unit_two, msg)
+    n = this.find_or_create_combat_relation(unit_one,unit_two)
+    @relations[n].add_passive_msg(unit_two, msg)
     @last_status = n
   get_last_update: () ->
     return -1 if @last_status == -1
