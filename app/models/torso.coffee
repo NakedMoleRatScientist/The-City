@@ -12,7 +12,7 @@ class Torso extends Part
   #0 means nothing happens.
   #1 is death
   interact: ->
-    super()
+    part = super()
     if part.type == 2
       return {type: 1, cause: "asphyxia"} if this.lung_damage(@random)
       return {type: 0, part: part}
