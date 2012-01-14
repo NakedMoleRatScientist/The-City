@@ -6,7 +6,7 @@ class Head extends Part
     @subparts.push new Subpart("nose",0)
     @subparts.push new Subpart("skull",1)
   interact: ->
-    super()
+    part = super()
     if part.type == 1
       return {type: 1, cause: "skull cavein"}
     else
