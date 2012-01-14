@@ -7,9 +7,11 @@ class MsgManager
     @relations.push new Relation([unit_one,unit_two],msg)
     return @relations[@relations.length - 1]
   find_relation: (unit_one,unit_two) ->
+    n = 0
     for r in @relations
+      n += 1
       if unit_one in r.actors && unit_two in r.actors
-        return r
+        return n
     return false
   find_or_create_combat_relation: (unit_one,unit_two) ->
     relation = this.find_relation(unit_one,unit_two)
