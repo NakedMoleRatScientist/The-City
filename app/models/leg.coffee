@@ -3,7 +3,7 @@ class Leg extends Part
     super("Leg")
     @subparts.push new Subpart("lower_leg",3)
     @subparts.push new Subpart("upper_leg",3)
-  arm_interact: (choice) ->
+  leg_interact: (choice) ->
     @subparts[choice].damage = 1
     for part in @subparts
       if part.damage == 0
