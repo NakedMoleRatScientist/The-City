@@ -5,7 +5,7 @@ class Arm extends Part
     @subparts.push new Subpart("upper_arm",3)
     @subparts.push new Subpart("hand",3)
   interact: ->
-    super()
+    part = super()
     if part.type == 3
       part.damage = 1
       #damage pickup and punching
