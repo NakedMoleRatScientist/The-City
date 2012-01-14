@@ -32,9 +32,10 @@ class Unit
           return true
     return false
   attack: () ->
-    return if @target == null || !@body.check_combat_ability()
+    return -1 if @target == null || !@body.check_combat_ability()
     if this.attack_chance()
       return @target.damage(this)
+    return -1
   nullify_target: () ->
     return false if @target == null
     if @target.body.check_death() == true
