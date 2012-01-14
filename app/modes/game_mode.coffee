@@ -3,7 +3,6 @@ class GameMode extends Mode
     @map = new Map(100,100)
     @map.generate()
     @units = new Units("game")
-    @messages = new Messages()
     super("game")
   act: ->
     @units.move()
