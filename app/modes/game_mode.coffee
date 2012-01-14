@@ -7,7 +7,6 @@ class GameMode extends Mode
     super("game")
   act: ->
     @units.move()
-    @messages.update(@units.units)
     @units.clean()
   input: (result) ->
     super(result)
