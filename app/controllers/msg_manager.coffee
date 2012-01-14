@@ -9,9 +9,9 @@ class MsgManager
   find_relation: (unit_one,unit_two) ->
     n = 0
     for r in @relations
-      n += 1
       if unit_one in r.actors && unit_two in r.actors
         return n
+      n += 1
     return false
   find_or_create_combat_relation: (unit_one,unit_two) ->
     n = this.find_relation(unit_one,unit_two)
