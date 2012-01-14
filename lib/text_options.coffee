@@ -1,9 +1,6 @@
 class TextOptions
   constructor: (@p5,@x,@y,@size) ->
     @pointer = 0
-    @texts = []
-  add: (text) ->
-    @texts.push(text)
   increase: () ->
     if @pointer < @texts.length - 1
       @pointer += 1
