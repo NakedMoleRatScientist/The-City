@@ -249,11 +249,7 @@
       this.y = y;
       this.size = size;
       this.pointer = 0;
-      this.texts = [];
     }
-    TextOptions.prototype.add = function(text) {
-      return this.texts.push(text);
-    };
     TextOptions.prototype.increase = function() {
       if (this.pointer < this.texts.length - 1) {
         return this.pointer += 1;
@@ -268,13 +264,12 @@
         return this.pointer -= 1;
       }
     };
-    TextOptions.prototype.draw = function() {
-      var data, pointer_y, y, _i, _len, _ref;
+    TextOptions.prototype.draw = function(texts) {
+      var data, pointer_y, y, _i, _len;
       this.p5.textFont("Monospace", this.size);
       y = this.y;
-      _ref = this.texts;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        data = _ref[_i];
+      for (_i = 0, _len = texts.length; _i < _len; _i++) {
+        data = texts[_i];
         this.p5.text(data, this.x, y);
         y += this.size;
       }
@@ -364,6 +359,7 @@
       return {
         units: this.units,
         map: this.map,
+        relations: this.units.msg_manager.relations,
         msg: this.units.msg_manager.get_last_update(),
         minor: this.minor.update_draw(this.state)
       };
@@ -374,8 +370,8 @@
     function MenuDrawMode(p5) {
       this.p5 = p5;
       this.texts = new TextOptions(this.p5, 250, 250, 18);
-      this.texts.add("New Game");
-      this.texts.add("Test Arena");
+      this.size = 0;
+      this.texts = ["New Game", "Test Arena"];
     }
     MenuDrawMode.prototype.draw = function() {
       this.p5.background(0);
@@ -423,9 +419,7 @@
       this.last_status = -1;
     }
     MsgManager.prototype.create_combat_relation = function(unit_one, unit_two) {
-      var msg;
-      msg = "engaged in mortal combat with";
-      this.relations.push(new Relation([unit_one, unit_two], msg));
+      this.relations.push(new Relation([unit_one, unit_two]));
       return this.relations.length - 1;
     };
     MsgManager.prototype.find_relation = function(unit_one, unit_two) {
@@ -561,7 +555,7 @@
         part.damage = 1;
         return {
           type: 2,
-          part: part,
+          part: part.name,
           damage: 0
         };
       } else {
@@ -627,6 +621,7 @@
       if (part.type === 1) {
         return {
           type: 1,
+          part: part.name,
           cause: "skull cavein"
         };
       } else {
@@ -663,7 +658,7 @@
         part.damage = 1;
         return {
           type: 2,
-          part: part,
+          part: part.name,
           damage: 1
         };
       } else {
@@ -715,9 +710,8 @@
     return Map;
   })();
   Relation = (function() {
-    function Relation(actors, action) {
+    function Relation(actors) {
       this.actors = actors;
-      this.action = action;
       this.msgs = [];
     }
     Relation.prototype.add_msg = function(unit_one, unit_two, act) {
@@ -728,6 +722,9 @@
     };
     Relation.prototype.last = function() {
       return this.msgs[this.msgs.length - 1];
+    };
+    Relation.prototype.summary = function() {
+      return this.actors[0] + " and " + this.actors[1] + " are engaged in mortal combat!";
     };
     return Relation;
   })();
@@ -761,17 +758,19 @@
         if (this.lung_damage(this.random)) {
           return {
             type: 1,
+            part: part.name,
             cause: "asphyxia"
           };
         }
         return {
           type: 0,
-          part: part
+          part: part.name
         };
       } else if (part.type === 1) {
         part.damage = 1;
         return {
           type: 1,
+          part: part.name,
           cause: "heart failure"
         };
       } else {
@@ -855,7 +854,7 @@
       part = Math.floor(Math.random() * this.body.parts.length);
       damage = this.body.parts[part].interact();
       object = {
-        actors: [unit, this],
+        actors: [unit.name, this.name],
         part: damage.part,
         type: damage.type,
         special: null
@@ -944,16 +943,17 @@
   CombatReportDrawMinorMode = (function() {
     function CombatReportDrawMinorMode(p5) {
       this.p5 = p5;
+      this.texts = new TextOptions(this.p5, 5, 0, 12);
     }
     CombatReportDrawMinorMode.prototype.draw = function(object) {
-      var m, msgs, y, _i, _len, _results;
+      var r, relations, y, _i, _len, _results;
       this.p5.background(0);
-      msgs = object.msgs;
+      relations = object.relations;
       y = 0;
       _results = [];
-      for (_i = 0, _len = msgs.length; _i < _len; _i++) {
-        m = msgs[_i];
-        _results.push(this.p5.text(m, 5, y += 12));
+      for (_i = 0, _len = relations.length; _i < _len; _i++) {
+        r = relations[_i];
+        _results.push(this.p5.text(r.summary(), 5, y += 12));
       }
       return _results;
     };
