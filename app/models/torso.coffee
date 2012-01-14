@@ -18,6 +18,6 @@ class Torso extends Part
       return {type: 0, part: part.name}
     else if part.type == 1
       part.damage = 1
-      return {type: 1, cause: "heart failure"}
+      return {type: 1, part: part.name, cause: "heart failure"}
     else
       return {type: 0}
