@@ -8,4 +8,4 @@ class Relation
   last: () ->
     @msgs[@msgs.length - 1]
   summary: () ->
-    @actors[0] + " and " @actors[1] + " are engaged in mortal combat!"
+    @actors[0] + " and " + @actors[1] + " are engaged in mortal combat!"
