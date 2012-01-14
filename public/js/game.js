@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMode, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, Messages, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyModes, initializeMinorModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMode, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyModes, initializeMinorModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -339,12 +339,10 @@
       this.map = new Map(100, 100);
       this.map.generate();
       this.units = new Units("game");
-      this.messages = new Messages();
       GameMode.__super__.constructor.call(this, "game");
     }
     GameMode.prototype.act = function() {
       this.units.move();
-      this.messages.update(this.units.units);
       return this.units.clean();
     };
     GameMode.prototype.input = function(result) {
@@ -367,7 +365,6 @@
         units: this.units,
         map: this.map,
         msg: this.units.msg_manager.get_last_update(),
-        msgs: this.messages.msgs,
         minor: this.minor.update_draw(this.state)
       };
     };
@@ -428,15 +425,18 @@
     MsgManager.prototype.create_combat_relation = function(unit_one, unit_two) {
       var msg;
       msg = "engaged in mortal combat with";
-      return this.relations.push(new Relation([unit_one, unit_two], msg));
+      this.relations.push(new Relation([unit_one, unit_two], msg));
+      return this.relations.length - 1;
     };
     MsgManager.prototype.find_relation = function(unit_one, unit_two) {
-      var r, _i, _len, _ref;
+      var n, r, _i, _len, _ref;
+      n = 0;
       _ref = this.relations;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         r = _ref[_i];
+        n += 1;
         if (__indexOf.call(r.actors, unit_one) >= 0 && __indexOf.call(r.actors, unit_two) >= 0) {
-          return r;
+          return n;
         }
       }
       return false;
@@ -446,9 +446,8 @@
       n = this.find_relation(unit_one, unit_two);
       if (n === false) {
         this.create_combat_relation(unit_one, unit_two);
-        n = this.relations.length - 1;
       }
-      return n;
+      return relation;
     };
     MsgManager.prototype.active_msg = function(unit_one, unit_two, msg) {
       var n;
@@ -457,7 +456,7 @@
       this.last_status = n;
       return n;
     };
-    MsgManager.prototype.passive_msg = function(unit_one, unit_two) {
+    MsgManager.prototype.passive_msg = function(unit_one, unit_two, msg) {
       var n;
       n = this.find_or_create_combat_relation(unit_one, unit_two);
       this.relations[n].add_passive_msg(unit_two, msg);
@@ -477,6 +476,9 @@
     };
     MsgManager.prototype.strike = function(object) {
       var msg, part;
+      if (object === -1) {
+        return;
+      }
       part = object.part;
       msg = "strikes " + part;
       this.active_msg(object.actors[0], object.actors[1], msg);
@@ -539,9 +541,9 @@
       this.subparts = [];
     }
     Part.prototype.interact = function() {
-      var part, random;
+      var random;
       random = Math.floor(Math.random() * this.subparts.length);
-      return part = this.subparts[random];
+      return this.subparts[random];
     };
     return Part;
   })();
@@ -554,7 +556,8 @@
       this.subparts.push(new Subpart("hand", 3));
     }
     Arm.prototype.interact = function() {
-      Arm.__super__.interact.call(this);
+      var part;
+      part = Arm.__super__.interact.call(this);
       if (part.type === 3) {
         part.damage = 1;
         return {
@@ -620,7 +623,8 @@
       this.subparts.push(new Subpart("skull", 1));
     }
     Head.prototype.interact = function() {
-      Head.__super__.interact.call(this);
+      var part;
+      part = Head.__super__.interact.call(this);
       if (part.type === 1) {
         return {
           type: 1,
@@ -666,7 +670,8 @@
       return true;
     };
     Leg.prototype.interact = function() {
-      Leg.__super__.interact.call(this);
+      var part;
+      part = Leg.__super__.interact.call(this);
       if (part.type === 3) {
         return {
           type: 2,
@@ -721,21 +726,6 @@
     };
     return Map;
   })();
-  Messages = (function() {
-    function Messages() {
-      this.msg = [];
-    }
-    Messages.prototype.update = function(units) {
-      var unit, _i, _len, _results;
-      _results = [];
-      for (_i = 0, _len = units.length; _i < _len; _i++) {
-        unit = units[_i];
-        _results.push(this.msg = this.msg.concat(unit.get_msg()));
-      }
-      return _results;
-    };
-    return Messages;
-  })();
   Relation = (function() {
     function Relation(actors, action) {
       this.actors = actors;
@@ -777,7 +767,8 @@
       return false;
     };
     Torso.prototype.interact = function() {
-      Torso.__super__.interact.call(this);
+      var part;
+      part = Torso.__super__.interact.call(this);
       if (part.type === 2) {
         if (this.lung_damage(this.random)) {
           return {
@@ -849,11 +840,12 @@
     };
     Unit.prototype.attack = function() {
       if (this.target === null || !this.body.check_combat_ability()) {
-        return;
+        return -1;
       }
       if (this.attack_chance()) {
         return this.target.damage(this);
       }
+      return -1;
     };
     Unit.prototype.nullify_target = function() {
       var target;
@@ -877,7 +869,7 @@
       object = {
         actors: [unit, this],
         part: damage.part,
-        type: object.type,
+        type: damage.type,
         special: null
       };
       switch (damage.type) {
