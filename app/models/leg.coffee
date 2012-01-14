@@ -6,6 +6,7 @@ class Leg extends Part
   interact: ->
     part = super()
     if part.type == 3
+      part.damage = 1
       #damage walking
       return {type: 2, part: part, damage: 1}
     else
