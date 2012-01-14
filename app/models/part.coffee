@@ -3,4 +3,4 @@ class Part
     @subparts = []
   interact: ->
     random = Math.floor(Math.random() * @subparts.length)
-    part = @subparts[random]
+    @subparts[random]
