@@ -9,6 +9,6 @@ class Arm extends Part
     if part.type == 3
       part.damage = 1
       #damage pickup and punching
-      return {type: 2, part: part, damage: 0}
+      return {type: 2, part: part.name, damage: 0}
     else
       return {type: 0}
