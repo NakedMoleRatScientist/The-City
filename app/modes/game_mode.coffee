@@ -22,4 +22,4 @@ class GameMode extends Mode
       when "report"
         @state = 0
   update_draw: () ->
-    return (units: @units, map: @map, msg: @units.msg_manager.get_last_update(), msgs: @messages.msgs, minor: @minor.update_draw(@state))
+    return (units: @units, map: @map, msg: @units.msg_manager.get_last_update(), minor: @minor.update_draw(@state))
