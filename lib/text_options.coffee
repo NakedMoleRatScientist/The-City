@@ -1,6 +1,7 @@
 class TextOptions
   constructor: (@p5,@x,@y,@size) ->
     @pointer = 0
+    @length = 0
   increase: () ->
     if @pointer < @texts.length - 1
       @pointer += 1
