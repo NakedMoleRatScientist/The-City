@@ -1,6 +1,6 @@
 class GameKeyMode extends KeyMode
   constructor: () ->
-    super("Game")
+    super("game")
   key_pressed: (key,minor) ->
     switch(minor)
       when -1
