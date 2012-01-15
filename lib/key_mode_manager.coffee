@@ -1,5 +1,5 @@
 class KeyModeManager
-  constructor: () ->
+  constructor: (@p5) ->
     @modes = initializeKeyModes()
   key_pressed: (n,key,logic) ->
     minor = (logic.update_draw(n)).minor
