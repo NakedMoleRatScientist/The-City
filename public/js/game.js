@@ -249,9 +249,10 @@
       this.y = y;
       this.size = size;
       this.pointer = 0;
+      this.length = 0;
     }
     TextOptions.prototype.increase = function() {
-      if (this.pointer < this.texts.length - 1) {
+      if (this.pointer < this.length) {
         return this.pointer += 1;
       } else {
         return this.pointer = 0;
@@ -259,13 +260,14 @@
     };
     TextOptions.prototype.decrease = function() {
       if (this.pointer === 0) {
-        return this.pointer = this.texts.length - 1;
+        return this.pointer = this.length;
       } else {
         return this.pointer -= 1;
       }
     };
     TextOptions.prototype.draw = function(texts) {
       var data, pointer_y, y, _i, _len;
+      this.length = texts.length;
       this.p5.textFont("Monospace", this.size);
       y = this.y;
       for (_i = 0, _len = texts.length; _i < _len; _i++) {
@@ -371,12 +373,12 @@
       this.p5 = p5;
       this.texts = new TextOptions(this.p5, 250, 250, 18);
       this.size = 0;
-      this.texts = ["New Game", "Test Arena"];
+      this.options = ["New Game", "Test Arena"];
     }
     MenuDrawMode.prototype.draw = function() {
       this.p5.background(0);
       titleDraw(this.p5);
-      return this.texts.draw();
+      return this.texts.draw(this.options);
     };
     MenuDrawMode.prototype.input = function(result) {
       if (result === "down") {
@@ -946,14 +948,14 @@
       this.texts = new TextOptions(this.p5, 5, 0, 12);
     }
     CombatReportDrawMinorMode.prototype.draw = function(object) {
-      var r, relations, y, _i, _len, _results;
+      var r, relations, reports, _i, _len, _results;
       this.p5.background(0);
       relations = object.relations;
-      y = 0;
+      reports = [];
       _results = [];
       for (_i = 0, _len = relations.length; _i < _len; _i++) {
         r = relations[_i];
-        _results.push(this.p5.text(r.summary(), 5, y += 12));
+        _results.push(reports.push(r.summary()));
       }
       return _results;
     };
