@@ -9,7 +9,7 @@ menu = (p5) ->
     @mode = 1
     @logic_manager = new ModeManager()
     @draw_manager = new DrawModeManager(p5)
-    @key_manager = new KeyModeManager()
+    @key_manager = new KeyModeManager(p5)
 
   p5.keyPressed = () ->
     p5.input_result(@key_manager.key_pressed(@mode,p5.key,@logic_manager))
