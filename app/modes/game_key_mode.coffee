@@ -1,7 +1,7 @@
 class GameKeyMode extends KeyMode
   constructor: (@p5) ->
     super("game")
-  key_pressed: (key,minor) ->
+  key_pressed: (minor) ->
     switch(minor)
       when -1
         console.log(key.code)
