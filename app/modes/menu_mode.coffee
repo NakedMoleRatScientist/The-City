@@ -3,3 +3,4 @@ class MenuMode
   act:() ->
   input: (result) ->
   update_draw: () ->
+    return -1
