@@ -170,7 +170,9 @@
     function KeyMinorModeManager(name) {
       this.modes = initializeKeyMinorModes(name);
     }
-    KeyMinorModeManager.prototype.key_pressed = function(key) {};
+    KeyMinorModeManager.prototype.key_pressed = function(key, minor) {
+      return this.modes[minor].key_pressed(key);
+    };
     return KeyMinorModeManager;
   })();
   KeyMode = (function() {
@@ -1004,7 +1006,9 @@
   })();
   CombatReportKeyMinorMode = (function() {
     function CombatReportKeyMinorMode() {}
-    CombatReportKeyMinorMode.prototype.key_pressed = function(key) {};
+    CombatReportKeyMinorMode.prototype.key_pressed = function(key) {
+      return console.log(key.code);
+    };
     return CombatReportKeyMinorMode;
   })();
   CombatReportMinorMode = (function() {
