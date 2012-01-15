@@ -12,7 +12,7 @@ menu = (p5) ->
     @key_manager = new KeyModeManager()
 
   p5.keyPressed = () ->
-    p5.input_result(@key_manager.key_pressed(@mode,p5.key))
+    p5.input_result(@key_manager.key_pressed(@mode,p5.key,@logic_manager))
 
   p5.input_result = (result) ->
     @logic_manager.input(@mode,result)
