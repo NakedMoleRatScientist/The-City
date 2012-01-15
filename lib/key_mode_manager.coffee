@@ -1,4 +1,4 @@
-class KeyMode
+class KeyModeManager
   constructor: () ->
     @modes = initializeKeyModes()
   key_pressed: (n,key) ->
