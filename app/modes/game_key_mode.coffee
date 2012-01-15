@@ -4,7 +4,7 @@ class GameKeyMode extends KeyMode
   key_pressed: (minor) ->
     switch(minor)
       when -1
-        console.log(key.code)
+        console.log(@p5.key.code)
         switch(key.code)
           when 97
             return "right"
@@ -17,4 +17,4 @@ class GameKeyMode extends KeyMode
           when 119
             return "down"
       when 0
-        super(key,minor)
+        super(minor)
