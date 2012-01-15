@@ -7,3 +7,4 @@ class CombatReportDrawMinorMode
     reports = []
     for r in relations
       reports.push(r.summary())
+    @texts.draw(reports)
