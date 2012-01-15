@@ -3,13 +3,13 @@ class TextOptions
     @pointer = 0
     @length = 0
   increase: () ->
-    if @pointer < @texts.length - 1
+    if @pointer < @length
       @pointer += 1
     else
       @pointer = 0
   decrease: () ->
     if @pointer == 0
-      @pointer = @texts.length - 1
+      @pointer = @length
     else
       @pointer -= 1
   draw: (texts) ->
