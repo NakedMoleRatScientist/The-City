@@ -1,3 +1,3 @@
 class KeyMode
   constructor: (name) ->
-    @modes = new KeyModeManager(name)
+    @minor_key = new KeyMinorModeManager(name)
