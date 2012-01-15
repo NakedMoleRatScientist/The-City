@@ -39,3 +39,8 @@ class MsgManager
     this.active_msg(object.actors[0],object.actors[1],msg)
     msg = "'s " + part + " suffers damage!"
     this.passive_msg(object.actors[0],object.actors[1],msg)
+  get_summary: () ->
+    data = []
+    for r in relations
+      data.push(r.summary())
+    return data
