@@ -6,7 +6,7 @@ class MenuDrawMode
   draw: () ->
     @p5.background(0)
     titleDraw(@p5)
-    @texts.draw()
+    @texts.draw(@options)
   input: (result) ->
     if result == "down"
       @texts.increase()
