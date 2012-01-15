@@ -1,5 +1,6 @@
 class GameKeyMode extends KeyMode
   constructor: () ->
+    super("Game")
   key_pressed: (key) ->
     console.log(key.code)
     switch(key.code)
