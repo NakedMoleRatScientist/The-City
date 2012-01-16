@@ -4,6 +4,8 @@ class MinorModeManager
   act: (state) ->
     return if state == -1
     @modes[state].act()
+  update: (state) ->
+    @modes[state].update()
   input: (result,state) ->
     return if state == -1
     @modes[state].input(result)
