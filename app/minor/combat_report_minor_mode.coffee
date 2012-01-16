@@ -15,7 +15,7 @@ class CombatReportMinorMode
       when "down"
         @options.increase()
       when "select"
-        @options.pointer
+        @state = @options.pointer
   input_info: (@msg) ->
   update_draw: () ->
     return (summaries: @options.options, pointer: @pointer, state: @parent.state)
