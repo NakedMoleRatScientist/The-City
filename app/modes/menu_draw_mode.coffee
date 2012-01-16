@@ -7,7 +7,3 @@ class MenuDrawMode
     titleDraw(@p5)
     @texts.draw(@options)
   input: (result) ->
-    if result == "down"
-      @texts.increase()
-    else if result == "up"
-      @texts.decrease()
