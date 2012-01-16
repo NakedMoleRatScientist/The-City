@@ -1,6 +1,6 @@
 class MenuDrawMode
   constructor: (@p5) ->
-    @texts = new TextOptions(@p5,250,250,18)
+    @texts = new TextOptionsDraw(@p5,250,250,18)
     @size = 0
   draw: (object) ->
     @p5.background(0)
