@@ -1,12 +1,12 @@
 class MenuKeyMode
   constructor: (@p5) ->
-  key_pressed: (key) ->
-    console.log(key.code)
-    if key.code == 115
+  key_pressed: () ->
+    console.log(@p5.key.code)
+    if @p5.key.code == 115
       return "down"
-    else if key.code == 119
+    else if @p5.key.code == 119
       return "up"
-    else if key.code == 10
+    else if @p5.key.code == 10
       return "game_mode"
     else
       return false
