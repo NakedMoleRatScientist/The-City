@@ -6,4 +6,4 @@ class CombatReportMinorMode
   input: (result) ->
   input_info: (@msg) ->
   update_draw: () ->
-    return 0
+    return (relations: @relations, pointer: @pointer)
