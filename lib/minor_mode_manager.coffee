@@ -2,14 +2,14 @@ class MinorModeManager
   constructor: (name,@parent) ->
     @modes = initializeMinorModes(name,@parent)
     @state = @parent.state
-  act: (@state) ->
+  act: () ->
     return if @state == -1
     @modes[@state].act()
-  update: (@state) ->
+  update: () ->
     @modes[@state].update()
-  input: (result,@state) ->
+  input: (result) ->
     return if @state == -1
     @modes[@state].input(result)
-  update_draw: (@state) ->
+  update_draw: () ->
     return -1 if @state == -1
     return @modes[@state].update_draw()
