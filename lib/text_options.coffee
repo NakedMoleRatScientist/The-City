@@ -17,3 +17,5 @@ class TextOptions
       @pointer = @length
     else
       @pointer -= 1
+  clean: () ->
+    @options.clean()
