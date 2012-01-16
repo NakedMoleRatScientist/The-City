@@ -20,5 +20,7 @@ class GameMode extends Mode
         @map.move_camera(1,0)
       when "report"
         @state = 0
+      when "back"
+        @state = 0
   update_draw: () ->
     return (units: @units, map: @map, relations: @units.msg_manager.relations, msg: @units.msg_manager.get_last_update(), minor: @minor.update_draw(@state))
