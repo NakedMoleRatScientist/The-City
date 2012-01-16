@@ -79,10 +79,10 @@
       this.minor_draw = new DrawMinorModeManager(name, p5);
     }
     DrawMode.prototype.draw = function(object) {
-      if (object.minor === -1) {
+      if (object.state === -1) {
         return;
       }
-      return this.minor_draw.draw(object.minor, object);
+      return this.minor_draw.draw(object.state, object);
     };
     DrawMode.prototype.input = function(result) {};
     return DrawMode;
@@ -181,8 +181,8 @@
       this.p5 = p5;
       this.minor_key = new KeyMinorModeManager(name, this.p5);
     }
-    KeyMode.prototype.key_pressed = function(minor) {
-      return this.minor_key.key_pressed(minor);
+    KeyMode.prototype.key_pressed = function(state) {
+      return this.minor_key.key_pressed(state);
     };
     return KeyMode;
   })();
@@ -192,9 +192,9 @@
       this.modes = initializeKeyModes(this.p5);
     }
     KeyModeManager.prototype.key_pressed = function(n, logic) {
-      var minor;
-      minor = (logic.update_draw(n)).minor;
-      return this.modes[n].key_pressed(minor);
+      var state;
+      state = (logic.update_draw(n)).state;
+      return this.modes[n].key_pressed(state);
     };
     return KeyModeManager;
   })();
@@ -324,7 +324,7 @@
     }
     GameDrawMode.prototype.draw = function(object) {
       var map, msg, units;
-      switch (object.minor) {
+      switch (object.state) {
         case -1:
           map = object.map;
           units = object.units;
@@ -351,8 +351,8 @@
       this.p5 = p5;
       GameKeyMode.__super__.constructor.call(this, "game", this.p5);
     }
-    GameKeyMode.prototype.key_pressed = function(minor) {
-      switch (minor) {
+    GameKeyMode.prototype.key_pressed = function(state) {
+      switch (state) {
         case -1:
           console.log(this.p5.key.code);
           switch (this.p5.key.code) {
@@ -369,7 +369,7 @@
           }
           break;
         case 0:
-          return GameKeyMode.__super__.key_pressed.call(this, minor);
+          return GameKeyMode.__super__.key_pressed.call(this, state);
       }
     };
     return GameKeyMode;
@@ -408,7 +408,8 @@
         return {
           units: this.units,
           map: this.map,
-          msg: this.units.msg_manager.get_last_update()
+          msg: this.units.msg_manager.get_last_update(),
+          state: -1
         };
       }
       return GameMode.__super__.update_draw.call(this);
@@ -1041,7 +1042,8 @@
     CombatReportMinorMode.prototype.update_draw = function() {
       return {
         relations: this.relations,
-        pointer: this.pointer
+        pointer: this.pointer,
+        state: this.parent.state
       };
     };
     return CombatReportMinorMode;
