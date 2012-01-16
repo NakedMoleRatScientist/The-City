@@ -1,4 +1,4 @@
 class CombatReportKeyMinorMode
   constructor: (@p5) ->
-  key_pressed: (key) ->
-    console.log(key.code)
+  key_pressed: () ->
+    console.log(@p5.key.code)
