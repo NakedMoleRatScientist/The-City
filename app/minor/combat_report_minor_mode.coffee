@@ -7,6 +7,9 @@ class CombatReportMinorMode
     @options.clean()
     for r in @parent.units.msg_manager.relations
       @options.add_text([r.summary()])
+  get_relation_msgs: () ->
+    @options.clean()
+    @options.add_text(@parent.units.msg_manager.relations[@state].msgs)
   act: ->
   input: (result) ->
     switch(@state)
