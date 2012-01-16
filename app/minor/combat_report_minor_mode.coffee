@@ -9,13 +9,16 @@ class CombatReportMinorMode
       @options.add_text([r.summary()])
   act: ->
   input: (result) ->
-    switch(result)
-      when "up"
-        @options.decrease()
-      when "down"
-        @options.increase()
-      when "select"
-        @state = @options.pointer
+    switch(@state)
+      switch(result)
+        when "up"
+          @options.decrease()
+        when "down"
+          @options.increase()
+        when "select"
+          if @state == null
+            @state = @options.pointer
+
   input_info: (@msg) ->
   update_draw: () ->
     if @state == null
