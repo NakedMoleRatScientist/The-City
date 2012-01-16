@@ -1,7 +1,6 @@
 class TextOptionsDraw
   constructor: (@p5,@x,@y,@size) ->
   draw: (texts,pointer) ->
-    @length = texts.length
     @p5.textFont("Monospace",@size)
     y = @y
     for data in texts
