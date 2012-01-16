@@ -3,8 +3,8 @@ class Mode
     @state = -1
     @minor = new MinorModeManager(name,this)
   act: () ->
-    @minor.act(@state)
+    @minor.act()
   input: (result) ->
-    @minor.input(result,@state)
+    @minor.input(result)
   update_draw: () ->
-    @minor.update_draw(@state)
+    @minor.update_draw()
