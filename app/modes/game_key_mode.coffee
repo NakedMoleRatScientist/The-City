@@ -5,7 +5,7 @@ class GameKeyMode extends KeyMode
     switch(minor)
       when -1
         console.log(@p5.key.code)
-        switch(key.code)
+        switch(@p5.key.code)
           when 97
             return "right"
           when 100
