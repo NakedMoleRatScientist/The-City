@@ -1044,6 +1044,10 @@
           return "back";
         case 10:
           return "select";
+        case 119:
+          return "up";
+        case 115:
+          return "down";
       }
     };
     return CombatReportKeyMinorMode;
@@ -1053,17 +1057,22 @@
       this.parent = parent;
       this.msg = [];
       this.options = new TextOptions();
+      this.state = null;
     }
     CombatReportMinorMode.prototype.update = function() {
       var r, _i, _len, _ref, _results;
       this.options.clean();
-      _ref = this.parent.units.msg_manager.relations;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        r = _ref[_i];
-        _results.push(this.options.add_text([r.summary()]));
+      if (this.state === null) {
+        _ref = this.parent.units.msg_manager.relations;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          r = _ref[_i];
+          _results.push(this.options.add_text([r.summary()]));
+        }
+        return _results;
+      } else {
+        return this.options.add_text(this.parent.units.msg_manager.relations[this.state].msgs);
       }
-      return _results;
     };
     CombatReportMinorMode.prototype.act = function() {};
     CombatReportMinorMode.prototype.input = function(result) {
@@ -1072,17 +1081,28 @@
           return this.options.decrease();
         case "down":
           return this.options.increase();
+        case "select":
+          if (this.state === null) {
+            this.state = this.options.pointer;
+            return this.update();
+          }
       }
     };
     CombatReportMinorMode.prototype.input_info = function(msg) {
       this.msg = msg;
     };
     CombatReportMinorMode.prototype.update_draw = function() {
-      return {
-        summaries: this.options.options,
-        pointer: this.pointer,
-        state: this.parent.state
-      };
+      if (this.state === null) {
+        return {
+          summaries: this.options.options,
+          pointer: this.pointer,
+          state: this.parent.state
+        };
+      } else {
+        return {
+          relation: this.parents.units.msg_manager.relations[this.state]
+        };
+      }
     };
     return CombatReportMinorMode;
   })();
