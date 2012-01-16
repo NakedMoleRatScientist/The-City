@@ -2,7 +2,9 @@ class CombatReportMinorMode
   constructor:(@parent) ->
     @msg = []
     @options = new TextOptions()
-    @relations = @parent.units.msg_manager.relations
+    @options.add_text()
+    for r in @parent.unit.msg_manager.relations
+      @options.add_text(r.summary())
 
   act: ->
   input: (result) ->
