@@ -1,7 +1,7 @@
 class Mode
   constructor:(name) ->
     @state = -1
-    @minor = new MinorModeManager(name)
+    @minor = new MinorModeManager(name,this)
   act: () ->
     @minor.act(@state)
   input: (result) ->
