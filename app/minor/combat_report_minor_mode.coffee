@@ -2,7 +2,7 @@ class CombatReportMinorMode
   constructor:(@parent) ->
     @msg = []
     @options = new TextOptions()
-    @state = 0
+    @state = null
   update: () ->
     @options.clean()
     for r in @parent.units.msg_manager.relations
