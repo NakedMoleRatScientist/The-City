@@ -5,3 +5,5 @@ class CombatReportKeyMinorMode
     switch (@p5.key.code)
       when 113
         return "back"
+      when 10
+        return "select"
