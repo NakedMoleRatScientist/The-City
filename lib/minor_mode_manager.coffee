@@ -1,6 +1,6 @@
 class MinorModeManager
-  constructor: (name,@mode) ->
-    @modes = initializeMinorModes(name,@mode)
+  constructor: (name,@parent) ->
+    @modes = initializeMinorModes(name,@parent)
   act: (state) ->
     return if state == -1
     @modes[state].act()
