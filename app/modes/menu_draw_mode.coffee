@@ -5,5 +5,5 @@ class MenuDrawMode
   draw: (object) ->
     @p5.background(0)
     titleDraw(@p5)
-    @texts.draw(@options)
+    @texts.draw(object.options,object.pointer)
   input: (result) ->
