@@ -39,10 +39,10 @@
       this.mode = 1;
       this.logic_manager = new ModeManager();
       this.draw_manager = new DrawModeManager(p5);
-      return this.key_manager = new KeyModeManager();
+      return this.key_manager = new KeyModeManager(p5);
     };
     p5.keyPressed = function() {
-      return p5.input_result(this.key_manager.key_pressed(this.mode, p5.key, this.logic_manager));
+      return p5.input_result(this.key_manager.key_pressed(this.mode, this.logic_manager));
     };
     p5.input_result = function(result) {
       this.logic_manager.input(this.mode, result);
@@ -122,24 +122,24 @@
     }
     return _results;
   };
-  initializeKeyMinorModes = function(name) {
+  initializeKeyMinorModes = function(name, p5) {
     var m, modes, object, _i, _len, _results;
     modes = eval(name + "MinorModeList()");
     _results = [];
     for (_i = 0, _len = modes.length; _i < _len; _i++) {
       m = modes[_i];
-      object = "new " + m + "KeyMinorMode()";
+      object = "new " + m + "KeyMinorMode(p5)";
       _results.push(eval(object));
     }
     return _results;
   };
-  initializeKeyModes = function() {
+  initializeKeyModes = function(p5) {
     var m, modes, object, _i, _len, _results;
     modes = modeList();
     _results = [];
     for (_i = 0, _len = modes.length; _i < _len; _i++) {
       m = modes[_i];
-      object = "new " + m + "KeyMode()";
+      object = "new " + m + "KeyMode(p5)";
       _results.push(eval(object));
     }
     return _results;
@@ -167,31 +167,34 @@
     return _results;
   };
   KeyMinorModeManager = (function() {
-    function KeyMinorModeManager(name) {
-      this.modes = initializeKeyMinorModes(name);
+    function KeyMinorModeManager(name, p5) {
+      this.p5 = p5;
+      this.modes = initializeKeyMinorModes(name, this.p5);
     }
-    KeyMinorModeManager.prototype.key_pressed = function(key, minor) {
-      return this.modes[minor].key_pressed(key);
+    KeyMinorModeManager.prototype.key_pressed = function(minor) {
+      return this.modes[minor].key_pressed();
     };
     return KeyMinorModeManager;
   })();
   KeyMode = (function() {
-    function KeyMode(name) {
-      this.minor_key = new KeyMinorModeManager(name);
+    function KeyMode(name, p5) {
+      this.p5 = p5;
+      this.minor_key = new KeyMinorModeManager(name, this.p5);
     }
-    KeyMode.prototype.key_pressed = function(key, minor) {
-      return this.minor_key.key_pressed(key, minor);
+    KeyMode.prototype.key_pressed = function(minor) {
+      return this.minor_key.key_pressed(minor);
     };
     return KeyMode;
   })();
   KeyModeManager = (function() {
-    function KeyModeManager() {
-      this.modes = initializeKeyModes();
+    function KeyModeManager(p5) {
+      this.p5 = p5;
+      this.modes = initializeKeyModes(this.p5);
     }
-    KeyModeManager.prototype.key_pressed = function(n, key, logic) {
+    KeyModeManager.prototype.key_pressed = function(n, logic) {
       var minor;
       minor = (logic.update_draw(n)).minor;
-      return this.modes[n].key_pressed(key, minor);
+      return this.modes[n].key_pressed(minor);
     };
     return KeyModeManager;
   })();
@@ -344,14 +347,15 @@
   })();
   GameKeyMode = (function() {
     __extends(GameKeyMode, KeyMode);
-    function GameKeyMode() {
-      GameKeyMode.__super__.constructor.call(this, "game");
+    function GameKeyMode(p5) {
+      this.p5 = p5;
+      GameKeyMode.__super__.constructor.call(this, "game", this.p5);
     }
-    GameKeyMode.prototype.key_pressed = function(key, minor) {
+    GameKeyMode.prototype.key_pressed = function(minor) {
       switch (minor) {
         case -1:
-          console.log(key.code);
-          switch (key.code) {
+          console.log(this.p5.key.code);
+          switch (this.p5.key.code) {
             case 97:
               return "right";
             case 100:
@@ -365,7 +369,7 @@
           }
           break;
         case 0:
-          return GameKeyMode.__super__.key_pressed.call(this, key, minor);
+          return GameKeyMode.__super__.key_pressed.call(this, minor);
       }
     };
     return GameKeyMode;
@@ -395,6 +399,8 @@
           return this.map.move_camera(1, 0);
         case "report":
           return this.state = 0;
+        case "back":
+          return this.state = -1;
       }
     };
     GameMode.prototype.update_draw = function() {
@@ -430,17 +436,20 @@
     return MenuDrawMode;
   })();
   MenuKeyMode = (function() {
-    function MenuKeyMode() {}
-    MenuKeyMode.prototype.key_pressed = function(key) {
-      console.log(key.code);
-      if (key.code === 115) {
-        return "down";
-      } else if (key.code === 119) {
-        return "up";
-      } else if (key.code === 10) {
-        return "game_mode";
-      } else {
-        return false;
+    function MenuKeyMode(p5) {
+      this.p5 = p5;
+    }
+    MenuKeyMode.prototype.key_pressed = function() {
+      console.log(this.p5.key.code);
+      switch (this.p5.key.code) {
+        case 115:
+          return "down";
+        case 119:
+          return "up";
+        case 10:
+          return "game_mode";
+        default:
+          return false;
       }
     };
     return MenuKeyMode;
@@ -1005,9 +1014,15 @@
     return CombatReportDrawMinorMode;
   })();
   CombatReportKeyMinorMode = (function() {
-    function CombatReportKeyMinorMode() {}
-    CombatReportKeyMinorMode.prototype.key_pressed = function(key) {
-      return console.log(key.code);
+    function CombatReportKeyMinorMode(p5) {
+      this.p5 = p5;
+    }
+    CombatReportKeyMinorMode.prototype.key_pressed = function() {
+      console.log(this.p5.key.code);
+      switch (this.p5.key.code) {
+        case 113:
+          return "back";
+      }
     };
     return CombatReportKeyMinorMode;
   })();
