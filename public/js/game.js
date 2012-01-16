@@ -144,13 +144,13 @@
     }
     return _results;
   };
-  initializeMinorModes = function(name, mode) {
+  initializeMinorModes = function(name, host_mode) {
     var m, modes, object, _i, _len, _results;
     modes = eval(name + "MinorModeList()");
     _results = [];
     for (_i = 0, _len = modes.length; _i < _len; _i++) {
       m = modes[_i];
-      object = "new " + m + "MinorMode(mode)";
+      object = "new " + m + "MinorMode(host_mode)";
       _results.push(eval(object));
     }
     return _results;
@@ -199,26 +199,31 @@
     return KeyModeManager;
   })();
   MinorModeManager = (function() {
-    function MinorModeManager(name, mode) {
-      this.modes = initializeMinorModes(name);
+    function MinorModeManager(name, parent) {
+      this.parent = parent;
+      this.modes = initializeMinorModes(name, this.parent);
+      this.state = this.parent.state;
     }
-    MinorModeManager.prototype.act = function(state) {
-      if (state === -1) {
+    MinorModeManager.prototype.act = function() {
+      if (this.state === -1) {
         return;
       }
-      return this.modes[state].act();
+      return this.modes[this.state].act();
     };
-    MinorModeManager.prototype.input = function(result, state) {
-      if (state === -1) {
+    MinorModeManager.prototype.update = function() {
+      return this.modes[this.state].update();
+    };
+    MinorModeManager.prototype.input = function(result) {
+      if (this.state === -1) {
         return;
       }
-      return this.modes[state].input(result);
+      return this.modes[this.state].input(result);
     };
-    MinorModeManager.prototype.update_draw = function(state) {
-      if (state === -1) {
+    MinorModeManager.prototype.update_draw = function() {
+      if (this.state === -1) {
         return -1;
       }
-      return this.modes[state].update_draw();
+      return this.modes[this.state].update_draw();
     };
     return MinorModeManager;
   })();
@@ -411,7 +416,8 @@
         case "right":
           return this.map.move_camera(1, 0);
         case "report":
-          return this.state = 0;
+          this.state = 0;
+          return this.minor.update(this.state);
         case "back":
           return this.state = -1;
       }
@@ -1042,16 +1048,20 @@
   })();
   CombatReportMinorMode = (function() {
     function CombatReportMinorMode(parent) {
-      var r, _i, _len, _ref;
       this.parent = parent;
       this.msg = [];
       this.options = new TextOptions();
+    }
+    CombatReportMinorMode.prototype.update = function() {
+      var r, _i, _len, _ref, _results;
       _ref = this.parent.units.msg_manager.relations;
+      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         r = _ref[_i];
-        this.options.add_text([r.summary()]);
+        _results.push(this.options.add_text([r.summary()]));
       }
-    }
+      return _results;
+    };
     CombatReportMinorMode.prototype.act = function() {};
     CombatReportMinorMode.prototype.input = function(result) {};
     CombatReportMinorMode.prototype.input_info = function(msg) {
