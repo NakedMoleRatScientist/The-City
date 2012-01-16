@@ -3,6 +3,10 @@ class TextOptions
     @options = []
     @pointer = 0
     @length = 0
+  add_text: (text) ->
+    for t in text
+      @options.push t
+    @length = @options.length
   increase: () ->
     if @pointer < @length
       @pointer += 1
