@@ -1,17 +1,5 @@
 class TextOptions
   constructor: (@p5,@x,@y,@size) ->
-    @pointer = 0
-    @length = 0
-  increase: () ->
-    if @pointer < @length
-      @pointer += 1
-    else
-      @pointer = 0
-  decrease: () ->
-    if @pointer == 0
-      @pointer = @length
-    else
-      @pointer -= 1
   draw: (texts,pointer) ->
     @length = texts.length
     @p5.textFont("Monospace",@size)
