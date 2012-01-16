@@ -1,5 +1,5 @@
 class MenuKeyMode
-  constructor: () ->
+  constructor: (@p5) ->
   key_pressed: (key) ->
     console.log(key.code)
     if key.code == 115
