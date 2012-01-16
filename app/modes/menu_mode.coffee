@@ -11,4 +11,4 @@ class MenuMode
         @options.increase()
 
   update_draw: (n) ->
-    return -1
+    return (options:  @options.options, pointer: @options.pointer)
