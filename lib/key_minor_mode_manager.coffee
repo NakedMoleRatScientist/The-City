@@ -1,5 +1,5 @@
 class KeyMinorModeManager
-  constructor: (name) ->
-    @modes = initializeKeyMinorModes(name)
+  constructor: (name,@p5) ->
+    @modes = initializeKeyMinorModes(name,@p5)
   key_pressed: (minor) ->
     @modes[minor].key_pressed()
