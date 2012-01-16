@@ -18,4 +18,7 @@ class CombatReportMinorMode
         @state = @options.pointer
   input_info: (@msg) ->
   update_draw: () ->
-    return (summaries: @options.options, pointer: @pointer, state: @parent.state)
+    if @state == null
+      return (summaries: @options.options, pointer: @pointer, state: @parent.state)
+    else
+      return (relation: @parents.units.msg_manager.relations[@state])
