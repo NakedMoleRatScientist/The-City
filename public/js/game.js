@@ -1,5 +1,18 @@
 (function() {
-  var DrawMinorModeManager, changeMode, circle_collision, menu;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
+  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+    for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
+    function ctor() { this.constructor = child; }
+    ctor.prototype = parent.prototype;
+    child.prototype = new ctor;
+    child.__super__ = parent.prototype;
+    return child;
+  }, __indexOf = Array.prototype.indexOf || function(item) {
+    for (var i = 0, l = this.length; i < l; i++) {
+      if (this[i] === item) return i;
+    }
+    return -1;
+  };
   changeMode = function(mode, result) {
     if (result === "game_mode") {
       return 0;
@@ -29,40 +42,6 @@
       return this.key_manager = new KeyModeManager(p5);
     };
     p5.keyPressed = function() {
-      return p5.input_result(this.key_manager.key_pressed(this.mode, this.logic_manager));
-    };
-    p5.input_result = function(result) {
-      this.logic_manager.input(this.mode, result);
-      this.draw_manager.input(this.mode, result);
-      return this.mode = changeMode(this.mode, result);
-    };
-    p5.logic = function() {
-      this.logic_manager.act(this.mode);
-      return this.draw_manager.draw(this.mode, this.logic_manager);
-    };
-    return p5.draw = function() {
-      return p5.logic();
-    };
-  };
-  $(document).ready(function() {
-    var canvas, processing;
-    canvas = document.getElementById("processing");
-    return processing = new Processing(canvas, menu);
-  });
-  DrawMinorModeManager = (function() {
-    function DrawMinorModeManager(name, p5) {
-      this.modes = initializeDrawMinorModes(name, p5);
-    }
-    DrawMinorModeManager.prototype.draw = function(n, object) {
-      return this.modes[n].draw(object);
-    };
-    DrawMinorModeManager.prototype.input = function(n, result) {
-      return this.modes[n].input(result);
-    };
-    return DrawMinorModeManager;
-  })();
-}).call(this);
-ed = function() {
       return p5.input_result(this.key_manager.key_pressed(this.mode, this.logic_manager));
     };
     p5.input_result = function(result) {
@@ -221,7 +200,7 @@ ed = function() {
   })();
   MinorModeManager = (function() {
     function MinorModeManager(name, mode) {
-      this.modes = initializeMinorModes(name, mode);
+      this.modes = initializeMinorModes(name);
     }
     MinorModeManager.prototype.act = function(state) {
       if (state === -1) {
@@ -453,7 +432,7 @@ ed = function() {
   MenuDrawMode = (function() {
     function MenuDrawMode(p5) {
       this.p5 = p5;
-      this.texts = new TextOptions(this.p5, 250, 250, 18);
+      this.texts = new TextOptionsDraw(this.p5, 250, 250, 18);
       this.size = 0;
     }
     MenuDrawMode.prototype.draw = function(object) {
@@ -498,7 +477,10 @@ ed = function() {
       }
     };
     MenuMode.prototype.update_draw = function(n) {
-      return -1;
+      return {
+        options: this.options.options,
+        pointer: this.options.pointer
+      };
     };
     return MenuMode;
   })();
@@ -1035,18 +1017,11 @@ ed = function() {
   CombatReportDrawMinorMode = (function() {
     function CombatReportDrawMinorMode(p5) {
       this.p5 = p5;
-      this.texts = new TextOptions(this.p5, 30, 12, 12);
+      this.texts = new TextOptionsDraw(this.p5, 30, 12, 12);
     }
     CombatReportDrawMinorMode.prototype.draw = function(object) {
-      var r, relations, reports, _i, _len;
       this.p5.background(0);
-      relations = object.relations;
-      reports = [];
-      for (_i = 0, _len = relations.length; _i < _len; _i++) {
-        r = relations[_i];
-        reports.push(r.summary());
-      }
-      return this.texts.draw(reports);
+      return this.texts.draw(object.summaries, object.pointer);
     };
     return CombatReportDrawMinorMode;
   })();
@@ -1067,9 +1042,15 @@ ed = function() {
   })();
   CombatReportMinorMode = (function() {
     function CombatReportMinorMode(parent) {
+      var r, _i, _len, _ref;
       this.parent = parent;
       this.msg = [];
-      this.relations = this.parent.units.msg_manager.relations;
+      this.options = new TextOptions();
+      _ref = this.parent.units.msg_manager.relations;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        r = _ref[_i];
+        this.options.add_text([r.summary()]);
+      }
     }
     CombatReportMinorMode.prototype.act = function() {};
     CombatReportMinorMode.prototype.input = function(result) {};
@@ -1078,7 +1059,7 @@ ed = function() {
     };
     CombatReportMinorMode.prototype.update_draw = function() {
       return {
-        relations: this.relations,
+        options: this.options.options,
         pointer: this.pointer,
         state: this.parent.state
       };
