@@ -303,6 +303,14 @@ ed = function() {
       this.pointer = 0;
       this.length = 0;
     }
+    TextOptions.prototype.add_text = function(text) {
+      var t, _i, _len;
+      for (_i = 0, _len = text.length; _i < _len; _i++) {
+        t = text[_i];
+        this.options.push(t);
+      }
+      return this.length = this.options.length;
+    };
     TextOptions.prototype.increase = function() {
       if (this.pointer < this.length) {
         return this.pointer += 1;
@@ -328,7 +336,6 @@ ed = function() {
     }
     TextOptionsDraw.prototype.draw = function(texts, pointer) {
       var data, pointer_y, y, _i, _len;
-      this.length = texts.length;
       this.p5.textFont("Monospace", this.size);
       y = this.y;
       for (_i = 0, _len = texts.length; _i < _len; _i++) {
@@ -449,18 +456,12 @@ ed = function() {
       this.texts = new TextOptions(this.p5, 250, 250, 18);
       this.size = 0;
     }
-    MenuDrawMode.prototype.draw = function() {
+    MenuDrawMode.prototype.draw = function(object) {
       this.p5.background(0);
       titleDraw(this.p5);
-      return this.texts.draw(this.options);
+      return this.texts.draw(object.options, object.pointer);
     };
-    MenuDrawMode.prototype.input = function(result) {
-      if (result === "down") {
-        return this.texts.increase();
-      } else if (result === "up") {
-        return this.texts.decrease();
-      }
-    };
+    MenuDrawMode.prototype.input = function(result) {};
     return MenuDrawMode;
   })();
   MenuKeyMode = (function() {
@@ -484,11 +485,18 @@ ed = function() {
   })();
   MenuMode = (function() {
     function MenuMode() {
-      this.options = ["New Game", "Test Arena"];
-      this.pointer = 0;
+      this.options = new TextOptions();
+      this.options.add_text(["New Game", "Test Arena"]);
     }
     MenuMode.prototype.act = function() {};
-    MenuMode.prototype.input = function(result) {};
+    MenuMode.prototype.input = function(result) {
+      switch (result) {
+        case "up":
+          return this.options.decrease();
+        case "down":
+          return this.options.increase();
+      }
+    };
     MenuMode.prototype.update_draw = function(n) {
       return -1;
     };
