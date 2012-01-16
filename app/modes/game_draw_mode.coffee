@@ -4,7 +4,7 @@ class GameDrawMode extends DrawMode
     @map_draw = new mapDraw(@p5,100,100)
     super("game",@p5)
   draw: (object) ->
-    switch (object.minor)
+    switch (object.state)
       when -1
         map = object.map
         units = object.units
