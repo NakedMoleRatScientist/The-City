@@ -12,16 +12,15 @@ class CombatReportMinorMode
       @options.add_text(@parent.units.msg_manager.relations[@state].msgs)
   act: ->
   input: (result) ->
-    switch(@state)
-      switch(result)
-        when "up"
-          @options.decrease()
-        when "down"
-          @options.increase()
-        when "select"
-          if @state == null
-            @state = @options.pointer
-            this.update()
+    switch(result)
+      when "up"
+        @options.decrease()
+      when "down"
+        @options.increase()
+      when "select"
+        if @state == null
+          @state = @options.pointer
+          this.update()
 
   input_info: (@msg) ->
   update_draw: () ->
