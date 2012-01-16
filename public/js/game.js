@@ -1,18 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, Subpart, TextOptions, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
-  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
-    for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
-    function ctor() { this.constructor = child; }
-    ctor.prototype = parent.prototype;
-    child.prototype = new ctor;
-    child.__super__ = parent.prototype;
-    return child;
-  }, __indexOf = Array.prototype.indexOf || function(item) {
-    for (var i = 0, l = this.length; i < l; i++) {
-      if (this[i] === item) return i;
-    }
-    return -1;
-  };
+  var DrawMinorModeManager, changeMode, circle_collision, menu;
   changeMode = function(mode, result) {
     if (result === "game_mode") {
       return 0;
@@ -42,6 +29,40 @@
       return this.key_manager = new KeyModeManager(p5);
     };
     p5.keyPressed = function() {
+      return p5.input_result(this.key_manager.key_pressed(this.mode, this.logic_manager));
+    };
+    p5.input_result = function(result) {
+      this.logic_manager.input(this.mode, result);
+      this.draw_manager.input(this.mode, result);
+      return this.mode = changeMode(this.mode, result);
+    };
+    p5.logic = function() {
+      this.logic_manager.act(this.mode);
+      return this.draw_manager.draw(this.mode, this.logic_manager);
+    };
+    return p5.draw = function() {
+      return p5.logic();
+    };
+  };
+  $(document).ready(function() {
+    var canvas, processing;
+    canvas = document.getElementById("processing");
+    return processing = new Processing(canvas, menu);
+  });
+  DrawMinorModeManager = (function() {
+    function DrawMinorModeManager(name, p5) {
+      this.modes = initializeDrawMinorModes(name, p5);
+    }
+    DrawMinorModeManager.prototype.draw = function(n, object) {
+      return this.modes[n].draw(object);
+    };
+    DrawMinorModeManager.prototype.input = function(n, result) {
+      return this.modes[n].input(result);
+    };
+    return DrawMinorModeManager;
+  })();
+}).call(this);
+ed = function() {
       return p5.input_result(this.key_manager.key_pressed(this.mode, this.logic_manager));
     };
     p5.input_result = function(result) {
@@ -277,11 +298,8 @@
     return RadioButton;
   })();
   TextOptions = (function() {
-    function TextOptions(p5, x, y, size) {
-      this.p5 = p5;
-      this.x = x;
-      this.y = y;
-      this.size = size;
+    function TextOptions() {
+      this.options = [];
       this.pointer = 0;
       this.length = 0;
     }
@@ -299,7 +317,16 @@
         return this.pointer -= 1;
       }
     };
-    TextOptions.prototype.draw = function(texts) {
+    return TextOptions;
+  })();
+  TextOptionsDraw = (function() {
+    function TextOptionsDraw(p5, x, y, size) {
+      this.p5 = p5;
+      this.x = x;
+      this.y = y;
+      this.size = size;
+    }
+    TextOptionsDraw.prototype.draw = function(texts, pointer) {
       var data, pointer_y, y, _i, _len;
       this.length = texts.length;
       this.p5.textFont("Monospace", this.size);
@@ -309,10 +336,10 @@
         this.p5.text(data, this.x, y);
         y += this.size;
       }
-      pointer_y = this.y + (this.pointer * this.size);
+      pointer_y = this.y + (pointer * this.size);
       return this.p5.ellipse(this.x - 20, pointer_y - (this.size / 2), 10, 10);
     };
-    return TextOptions;
+    return TextOptionsDraw;
   })();
   GameDrawMode = (function() {
     __extends(GameDrawMode, DrawMode);
@@ -421,7 +448,6 @@
       this.p5 = p5;
       this.texts = new TextOptions(this.p5, 250, 250, 18);
       this.size = 0;
-      this.options = ["New Game", "Test Arena"];
     }
     MenuDrawMode.prototype.draw = function() {
       this.p5.background(0);
@@ -457,7 +483,10 @@
     return MenuKeyMode;
   })();
   MenuMode = (function() {
-    function MenuMode() {}
+    function MenuMode() {
+      this.options = ["New Game", "Test Arena"];
+      this.pointer = 0;
+    }
     MenuMode.prototype.act = function() {};
     MenuMode.prototype.input = function(result) {};
     MenuMode.prototype.update_draw = function(n) {
