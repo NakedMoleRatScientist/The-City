@@ -7,3 +7,7 @@ class CombatReportKeyMinorMode
         return "back"
       when 10
         return "select"
+      when 119
+        return "up"
+      when 115
+        return "down"
