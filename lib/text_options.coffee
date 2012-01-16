@@ -18,4 +18,4 @@ class TextOptions
     else
       @pointer -= 1
   clean: () ->
-    @options.clean()
+    @options = []
