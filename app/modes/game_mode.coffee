@@ -20,7 +20,7 @@ class GameMode extends Mode
         @map.move_camera(1,0)
       when "report"
         @state = 0
-        @minor.update(@state)
+        @minor.update()
       when "back"
         @state = -1
   update_draw: () ->
