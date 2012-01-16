@@ -23,4 +23,4 @@ class GameMode extends Mode
       when "back"
         @state = -1
   update_draw: () ->
-    return (units: @units, map: @map, msg: @units.msg_manager.get_last_update(), minor: @minor.update_draw(@state))
+    return (units: @units, map: @map, msg: @units.msg_manager.get_last_update(), minor: @minor.update_draw(@state)) if @state == -1
