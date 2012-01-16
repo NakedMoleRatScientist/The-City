@@ -3,6 +3,7 @@ class CombatReportMinorMode
     @msg = []
     @options = new TextOptions()
   update: () ->
+    @options.clean()
     for r in @parent.units.msg_manager.relations
       @options.add_text([r.summary()])
   act: ->
