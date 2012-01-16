@@ -225,7 +225,7 @@
   Mode = (function() {
     function Mode(name) {
       this.state = -1;
-      this.minor = new MinorModeManager(name);
+      this.minor = new MinorModeManager(name, this);
     }
     Mode.prototype.act = function() {
       return this.minor.act(this.state);
@@ -404,13 +404,14 @@
       }
     };
     GameMode.prototype.update_draw = function() {
-      return {
-        units: this.units,
-        map: this.map,
-        relations: this.units.msg_manager.relations,
-        msg: this.units.msg_manager.get_last_update(),
-        minor: this.minor.update_draw(this.state)
-      };
+      if (this.state === -1) {
+        return {
+          units: this.units,
+          map: this.map,
+          msg: this.units.msg_manager.get_last_update()
+        };
+      }
+      return GameMode.__super__.update_draw.call(this);
     };
     return GameMode;
   })();
@@ -459,9 +460,7 @@
     MenuMode.prototype.act = function() {};
     MenuMode.prototype.input = function(result) {};
     MenuMode.prototype.update_draw = function(n) {
-      return {
-        minor: -1
-      };
+      return -1;
     };
     return MenuMode;
   })();
@@ -1022,6 +1021,8 @@
       switch (this.p5.key.code) {
         case 113:
           return "back";
+        case 10:
+          return "select";
       }
     };
     return CombatReportKeyMinorMode;
@@ -1030,6 +1031,7 @@
     function CombatReportMinorMode(parent) {
       this.parent = parent;
       this.msg = [];
+      this.relations = this.parent.units.msg_manager.relations;
     }
     CombatReportMinorMode.prototype.act = function() {};
     CombatReportMinorMode.prototype.input = function(result) {};
@@ -1037,7 +1039,10 @@
       this.msg = msg;
     };
     CombatReportMinorMode.prototype.update_draw = function() {
-      return 0;
+      return {
+        relations: this.relations,
+        pointer: this.pointer
+      };
     };
     return CombatReportMinorMode;
   })();
