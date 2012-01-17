@@ -8,7 +8,7 @@ class TextOptions
       @options.push t
     @length = @options.length
   increase: () ->
-    if @pointer < @length
+    if @pointer < (@length - 1)
       @pointer += 1
     else
       @pointer = 0
