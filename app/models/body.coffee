@@ -14,14 +14,14 @@ class Body
 
     switch(n)
       when 0
-        if @parts[1].disability && @parts[4].disability
+        if (@parts[1].disabled == true) && (@parts[4].disabled == true)
           return "hand_destroy"
-        else if @parts[1].disability || @parts[4].disability
+        else if (@parts[1].disabled == true) || (@parts[4].disabled == true)
           return "hand"
       when 1
-        if @parts[2].disability && @parts[3].disability
+        if (@parts[2].disabled == true) && (@parts[3].disabled == true)
           return "leg_destroy"
-        else if @parts[2].disability || @parts[3].disability
+        else if (@parts[2].disabled == true) || (@parts[3].disabled == true)
           return "leg"
   check_combat_ability: () ->
     return true if @hand < 2
