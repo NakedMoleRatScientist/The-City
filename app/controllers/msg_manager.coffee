@@ -39,3 +39,15 @@ class MsgManager
     if object.type == 1
       msg = object.actors[1] + " dies of " + object.cause
       this.msg(object.actors[0],object.actors[1],msg)
+    switch(object.special)
+      when 0
+        msg = object.actors[1] + " lost some hand functionality"
+        this.msg(object.actors[0],object.actors[1],msg)
+      when 1
+        msg = object.actors[1] + " suffer hand disability"
+        this.msg(object.actors[0],object.actors[1],msg)
+      when 2
+        msg = object.actors[1] + " lost some leg functionality"
+        this.msg(object.actors[0],object.actors[1],msg)
+      when 3
+        msg = object.actors[1] + " lost all leg functionality"
