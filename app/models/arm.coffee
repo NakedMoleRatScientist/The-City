@@ -11,6 +11,6 @@ class Arm extends Part
       part.damage = 1
       #damage pickup and punching
       @disabled = 1
-      return {type: 2, part: part.name, damage: 0}
+      return {type: 2, part: @side + " " + part.name, damage: 0}
     else
       return {type: 0}
