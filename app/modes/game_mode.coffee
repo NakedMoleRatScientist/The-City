@@ -9,7 +9,7 @@ class GameMode extends Mode
     @units.clean()
   input: (result) ->
     super(result)
-    if @state != -1
+    if @state == -1
       switch(result)
         when "up"
           @map.move_camera(0,-1)
