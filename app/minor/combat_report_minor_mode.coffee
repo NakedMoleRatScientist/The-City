@@ -21,6 +21,8 @@ class CombatReportMinorMode
         if @state == null
           @state = @options.pointer
           this.update()
+      when "back"
+        @parent.state = -1
 
   input_info: (@msg) ->
   update_draw: () ->
