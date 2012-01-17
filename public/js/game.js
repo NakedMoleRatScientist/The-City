@@ -557,7 +557,24 @@
       msg = object.actors[0] + " strikes " + object.actors[1] + "'s " + part + "!";
       this.msg(object.actors[0], object.actors[1], msg);
       msg = object.actors[1] + "'s " + part + " suffers damage!";
-      return this.msg(object.actors[0], object.actors[1], msg);
+      this.msg(object.actors[0], object.actors[1], msg);
+      if (object.type === 1) {
+        msg = object.actors[1] + " dies of " + object.cause;
+        this.msg(object.actors[0], object.actors[1], msg);
+      }
+      switch (object.special) {
+        case 0:
+          msg = object.actors[1] + " lost some hand functionality";
+          return this.msg(object.actors[0], object.actors[1], msg);
+        case 1:
+          msg = object.actors[1] + " suffer hand disability";
+          return this.msg(object.actors[0], object.actors[1], msg);
+        case 2:
+          msg = object.actors[1] + " lost some leg functionality";
+          return this.msg(object.actors[0], object.actors[1], msg);
+        case 3:
+          return msg = object.actors[1] + " lost all leg functionality";
+      }
     };
     return MsgManager;
   })();
@@ -702,7 +719,7 @@
         return {
           type: 1,
           part: part.name,
-          cause: "skull cavein"
+          cause: "head trauma"
         };
       } else {
         return {
@@ -937,6 +954,7 @@
         actors: [unit.name, this.name],
         part: damage.part,
         type: damage.type,
+        cause: damage.cause,
         special: null
       };
       switch (damage.type) {
@@ -953,6 +971,9 @@
               break;
             case "leg":
               object.special = 2;
+              break;
+            case "leg_destroy":
+              object.special = 3;
           }
       }
       return object;
@@ -1061,12 +1082,12 @@
       this.parent = parent;
       this.msg = [];
       this.options = new TextOptions();
-      this.state = null;
+      this.state = -1;
     }
     CombatReportMinorMode.prototype.update = function() {
       var r, _i, _len, _ref, _results;
       this.options.clean();
-      if (this.state === null) {
+      if (this.state === -1) {
         _ref = this.parent.units.msg_manager.relations;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -1086,7 +1107,7 @@
         case "down":
           return this.options.increase();
         case "select":
-          if (this.state === null) {
+          if (this.state === -1) {
             this.state = this.options.pointer;
             return this.update();
           }
@@ -1094,14 +1115,16 @@
         case "back":
           return this.parent.state = -1;
         case "previous":
-          return this.state = null;
+          this.state = -1;
+          this.options.pointer = 0;
+          return this.update();
       }
     };
     CombatReportMinorMode.prototype.input_info = function(msg) {
       this.msg = msg;
     };
     CombatReportMinorMode.prototype.update_draw = function() {
-      if (this.state === null) {
+      if (this.state === -1) {
         return {
           summaries: this.options.options,
           pointer: this.options.pointer,
