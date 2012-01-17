@@ -564,16 +564,17 @@
       }
       switch (object.special) {
         case 0:
-          msg = object.actors[1] + " lost some hand functionality";
+          msg = object.actors[1] + " losts some hand functionality";
           return this.msg(object.actors[0], object.actors[1], msg);
         case 1:
-          msg = object.actors[1] + " suffer hand disability";
+          msg = object.actors[1] + " suffers hand disability";
           return this.msg(object.actors[0], object.actors[1], msg);
         case 2:
-          msg = object.actors[1] + " lost some leg functionality";
+          msg = object.actors[1] + " losts some leg functionality";
           return this.msg(object.actors[0], object.actors[1], msg);
         case 3:
-          return msg = object.actors[1] + " lost all leg functionality";
+          msg = object.actors[1] + " losts all leg functionality";
+          return this.msg(object.actors[0], object.actors[1], msg);
       }
     };
     return MsgManager;
@@ -639,20 +640,23 @@
   })();
   Arm = (function() {
     __extends(Arm, Part);
-    function Arm() {
+    function Arm(side) {
+      this.side = side;
       Arm.__super__.constructor.call(this, "Arm");
       this.subparts.push(new Subpart("lower_arm", 3));
       this.subparts.push(new Subpart("upper_arm", 3));
       this.subparts.push(new Subpart("hand", 3));
+      this.disabled = false;
     }
     Arm.prototype.interact = function() {
       var part;
       part = Arm.__super__.interact.call(this);
       if (part.type === 3) {
         part.damage = 1;
+        this.disabled = true;
         return {
           type: 2,
-          part: part.name,
+          part: this.side + " " + part.name,
           damage: 0
         };
       } else {
@@ -682,17 +686,18 @@
     Body.prototype.update_ability = function(n) {
       switch (n) {
         case 0:
-          this.hand += 1;
-          if (this.hand === 2) {
+          if ((this.parts[1].disabled === true) && (this.parts[4].disabled === true)) {
             return "hand_destroy";
+          } else if ((this.parts[1].disabled === true) || (this.parts[4].disabled === true)) {
+            return "hand";
           }
-          return "hand";
+          break;
         case 1:
-          this.leg += 1;
-          if (this.leg === 2) {
+          if ((this.parts[2].disabled === true) && (this.parts[3].disabled === true)) {
             return "leg_destroy";
+          } else if ((this.parts[2].disabled === true) || (this.parts[3].disabled === true)) {
+            return "leg";
           }
-          return "leg";
       }
     };
     Body.prototype.check_combat_ability = function() {
@@ -734,28 +739,31 @@
     var parts;
     parts = [];
     parts.push(new Head());
-    parts.push(new Arm());
-    parts.push(new Leg());
-    parts.push(new Leg());
-    parts.push(new Arm());
+    parts.push(new Arm("left"));
+    parts.push(new Leg("left"));
+    parts.push(new Leg("right"));
+    parts.push(new Arm("right"));
     parts.push(new Torso());
     return parts;
   };
   Leg = (function() {
     __extends(Leg, Part);
-    function Leg() {
+    function Leg(side) {
+      this.side = side;
       Leg.__super__.constructor.call(this, "Leg");
       this.subparts.push(new Subpart("lower_leg", 3));
       this.subparts.push(new Subpart("upper_leg", 3));
+      this.disabled = false;
     }
     Leg.prototype.interact = function() {
       var part;
       part = Leg.__super__.interact.call(this);
       if (part.type === 3) {
         part.damage = 1;
+        this.disabled = true;
         return {
           type: 2,
-          part: part.name,
+          part: this.side + " " + part.name,
           damage: 1
         };
       } else {
@@ -889,8 +897,8 @@
       this.body = new Body(this.type);
       this.hostility = 0;
       this.alive = 1;
-      this.msg = [];
       this.target = null;
+      this.kills = [];
     }
     Unit.prototype.set_move = function(x, y) {
       this.goal_x = x;
@@ -939,6 +947,7 @@
       if (this.target.body.check_death() === true) {
         target = this.target;
         this.target = null;
+        this.kills.push(target.name);
         return {
           actors: [this.name, target.name],
           action: "killed"
