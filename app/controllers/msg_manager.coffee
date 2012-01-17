@@ -19,7 +19,7 @@ class MsgManager
     return n
   msg: (unit_one,unit_two,msg) ->
     n = this.find_or_create_combat_relation(unit_one,unit_two)
-    @relations[n].add_msg(unit_one,unit_two,msg)
+    @relations[n].add_msg(msg)
     @last_status = n
     return n
   passive_msg: (unit_one,unit_two,msg) ->
