@@ -295,7 +295,7 @@
       return this.length = this.options.length;
     };
     TextOptions.prototype.increase = function() {
-      if (this.pointer < this.length) {
+      if (this.pointer < (this.length - 1)) {
         return this.pointer += 1;
       } else {
         return this.pointer = 0;
@@ -303,7 +303,7 @@
     };
     TextOptions.prototype.decrease = function() {
       if (this.pointer === 0) {
-        return this.pointer = this.length;
+        return this.pointer = this.length - 1;
       } else {
         return this.pointer -= 1;
       }
@@ -410,7 +410,7 @@
     };
     GameMode.prototype.input = function(result) {
       GameMode.__super__.input.call(this, result);
-      if (this.state !== -1) {
+      if (this.state === -1) {
         switch (result) {
           case "up":
             return this.map.move_camera(0, -1);
@@ -423,8 +423,6 @@
           case "report":
             this.state = 0;
             return this.minor.update();
-          case "back":
-            return this.state = -1;
         }
       }
     };
@@ -536,12 +534,6 @@
       this.last_status = n;
       return n;
     };
-    MsgManager.prototype.passive_msg = function(unit_one, unit_two, msg) {
-      var n;
-      n = this.find_or_create_combat_relation(unit_one, unit_two);
-      this.relations[n].add_passive_msg(unit_two, msg);
-      return this.last_status = n;
-    };
     MsgManager.prototype.get_last_update = function() {
       if (this.last_status === -1) {
         return -1;
@@ -549,10 +541,12 @@
       return this.relations[this.last_status].last();
     };
     MsgManager.prototype.combat_death = function(object) {
+      var msg;
       if (object === false) {
         return;
       }
-      return this.active_msg(object.actors[0], object.actors[1], object.action);
+      msg = object.actors[0] + " " + object.action + " " + object.actors[1];
+      return this.msg(object.actors[0], object.actors[1], msg);
     };
     MsgManager.prototype.strike = function(object) {
       var msg, part;
@@ -1056,6 +1050,8 @@
           return "up";
         case 115:
           return "down";
+        case 97:
+          return "previous";
       }
     };
     return CombatReportKeyMinorMode;
@@ -1094,6 +1090,11 @@
             this.state = this.options.pointer;
             return this.update();
           }
+          break;
+        case "back":
+          return this.parent.state = -1;
+        case "previous":
+          return this.state = null;
       }
     };
     CombatReportMinorMode.prototype.input_info = function(msg) {
