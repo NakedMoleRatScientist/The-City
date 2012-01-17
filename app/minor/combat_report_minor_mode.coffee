@@ -27,4 +27,4 @@ class CombatReportMinorMode
     if @state == null
       return (summaries: @options.options, pointer: @pointer, state: @parent.state)
     else
-      return (relation: @parent.units.msg_manager.relations[@state])
+      return (log: @options.option)
