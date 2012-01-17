@@ -8,6 +8,6 @@ class Head extends Part
   interact: ->
     part = super()
     if part.type == 1
-      return {type: 1, part: part.name ,cause: "skull cavein"}
+      return {type: 1, part: part.name ,cause: "head trauma"}
     else
       return {type: 0, part: part.name}
