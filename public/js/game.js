@@ -1031,7 +1031,7 @@
     }
     CombatReportDrawMinorMode.prototype.draw = function(object) {
       this.p5.background(0);
-      if (type === 0) {
+      if (object.type === 0) {
         return this.texts.draw(object.summaries, object.pointer);
       } else {
         return this.texts.draw(object.log, object.pointer);
@@ -1107,7 +1107,7 @@
         };
       } else {
         return {
-          log: this.options.option,
+          log: this.options.options,
           pointer: this.options.pointer,
           state: this.parent.state,
           type: 1
