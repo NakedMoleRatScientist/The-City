@@ -11,3 +11,5 @@ class CombatReportKeyMinorMode
         return "up"
       when 115
         return "down"
+      when 97
+        return "previous"
