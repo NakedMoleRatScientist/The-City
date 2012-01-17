@@ -18,7 +18,7 @@ class MsgManager
       return this.create_combat_relation(unit_one,unit_two)
     return n
   msg: (unit_one,unit_two,msg) ->
-    n = this.find_or_create_combat_relation(unit_one,unit_two)
+
     @relations[n].add_msg(msg)
     @last_status = n
     return n
@@ -36,3 +36,6 @@ class MsgManager
     this.msg(object.actors[0],object.actors[1],msg)
     msg = object.actors[1] + "'s " + part + " suffers damage!"
     this.msg(object.actors[0],object.actors[1],msg)
+    if object.type == 1
+      msg = object.actors[1] + " dies of " + object.cause
+      this.msg(object.actors[0],object.actors[1],msg)
