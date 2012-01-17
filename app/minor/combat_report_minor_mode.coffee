@@ -2,7 +2,7 @@ class CombatReportMinorMode
   constructor:(@parent) ->
     @msg = []
     @options = new TextOptions()
-    @state = null
+    @state = -1
   update: () ->
     @options.clean()
     if @state == -1
@@ -24,6 +24,7 @@ class CombatReportMinorMode
       when "back"
         @parent.state = -1
       when "previous"
+        console.log("EEE")
         @state = -1
 
   input_info: (@msg) ->
