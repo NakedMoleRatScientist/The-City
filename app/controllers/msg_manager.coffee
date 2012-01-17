@@ -31,7 +31,8 @@ class MsgManager
     @relations[@last_status].last()
   combat_death: (object) ->
     return if object == false
-    this.active_msg(object.actors[0],object.actors[1],object.action)
+    msg = object.actors[0] + " " + object.action + " " + object.actors[1]
+    this.msg(object.actors[0],object.actors[1],msg)
   strike: (object) ->
     return if object == -1
     part = object.part
