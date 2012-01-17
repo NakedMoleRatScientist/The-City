@@ -20,9 +20,9 @@ class Body
           return "hand"
       when 1
         if @parts[2].disability && @parts[3].disability
-          return "hand_destroy"
+          return "leg_destroy"
         else if @parts[2].disability || @parts[3].disability
-          return "hand"
+          return "leg"
   check_combat_ability: () ->
     return true if @hand < 2
     return false
