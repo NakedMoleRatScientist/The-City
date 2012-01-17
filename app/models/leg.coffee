@@ -1,5 +1,5 @@
 class Leg extends Part
-  constructor: () ->
+  constructor: (@side) ->
     super("Leg")
     @subparts.push new Subpart("lower_leg",3)
     @subparts.push new Subpart("upper_leg",3)
