@@ -5,7 +5,7 @@ class CombatReportMinorMode
     @state = null
   update: () ->
     @options.clean()
-    if @state == null
+    if @state == -1
       for r in @parent.units.msg_manager.relations
         @options.add_text([r.summary()])
     else
@@ -18,17 +18,17 @@ class CombatReportMinorMode
       when "down"
         @options.increase()
       when "select"
-        if @state == null
+        if @state == -1
           @state = @options.pointer
           this.update()
       when "back"
         @parent.state = -1
       when "previous"
-        @state = null
+        @state = -1
 
   input_info: (@msg) ->
   update_draw: () ->
-    if @state == null
+    if @state == -1
       return (summaries: @options.options, pointer: @options.pointer, state: @parent.state, type: 0)
     else
       return (log: @options.options, pointer: @options.pointer, state: @parent.state, type: 1)
