@@ -36,6 +36,6 @@ class MsgManager
     return if object == -1
     part = object.part
     msg = object.actors[0] + " strikes " + object.actor[1] + "'s " + part + "!"
-    this.active_msg(object.actors[0],object.actors[1],msg)
+    this.msg(object.actors[0],object.actors[1],msg)
     msg = "'s " + part + " suffers damage!"
     this.passive_msg(object.actors[0],object.actors[1],msg)
