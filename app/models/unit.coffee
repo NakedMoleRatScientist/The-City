@@ -5,7 +5,6 @@ class Unit
     @body = new Body(@type)
     @hostility = 0  #0 is friendly. 1 is hostile
     @alive = 1 #1 is alive, 0 is dead.
-    @msg = []
     @target = null
   set_move: (x,y) ->
     @goal_x = x
