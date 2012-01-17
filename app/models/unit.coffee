@@ -41,6 +41,7 @@ class Unit
     if @target.body.check_death() == true
       target = @target
       @target = null
+      @kills.push(target.name)
       return (actors: [this.name,target.name],action: "killed")
     return false
   damage: (unit) ->
