@@ -27,4 +27,4 @@ class CombatReportMinorMode
     if @state == null
       return (summaries: @options.options, pointer: @options.pointer, state: @parent.state, type: 0)
     else
-      return (log: @options.option, pointer: @options.pointer, state: @parent.state, type: 1)
+      return (log: @options.options, pointer: @options.pointer, state: @parent.state, type: 1)
