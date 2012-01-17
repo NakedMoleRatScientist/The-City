@@ -9,20 +9,21 @@ class GameMode extends Mode
     @units.clean()
   input: (result) ->
     super(result)
-    switch(result)
-      when "up"
-        @map.move_camera(0,-1)
-      when "down"
-        @map.move_camera(0,1)
-      when "left"
-        @map.move_camera(-1,0)
-      when "right"
-        @map.move_camera(1,0)
-      when "report"
-        @state = 0
-        @minor.update()
-      when "back"
-        @state = -1
+    if @state != -1
+      switch(result)
+        when "up"
+          @map.move_camera(0,-1)
+        when "down"
+          @map.move_camera(0,1)
+        when "left"
+          @map.move_camera(-1,0)
+        when "right"
+          @map.move_camera(1,0)
+        when "report"
+          @state = 0
+          @minor.update()
+        when "back"
+          @state = -1
   update_draw: () ->
     return (units: @units, map: @map, msg: @units.msg_manager.get_last_update(), state: -1) if @state == -1
     super()
