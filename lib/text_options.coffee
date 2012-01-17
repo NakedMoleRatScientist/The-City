@@ -14,7 +14,7 @@ class TextOptions
       @pointer = 0
   decrease: () ->
     if @pointer == 0
-      @pointer = @length
+      @pointer = (@length - 1)
     else
       @pointer -= 1
   clean: () ->
