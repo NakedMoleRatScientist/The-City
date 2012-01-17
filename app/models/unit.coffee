@@ -58,4 +58,6 @@ class Unit
             object.special = 1
           when "leg"
             object.special = 2
+          when "leg_destroy"
+            object.special = 3
     return object
