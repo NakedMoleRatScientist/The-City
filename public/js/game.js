@@ -330,7 +330,9 @@
         y += this.size;
       }
       pointer_y = this.y + (pointer * this.size);
-      return this.p5.ellipse(this.x - 20, pointer_y - (this.size / 2), 10, 10);
+      if (texts.length > 0) {
+        return this.p5.ellipse(this.x - 20, pointer_y - (this.size / 2), 10, 10);
+      }
     };
     return TextOptionsDraw;
   })();
@@ -1029,7 +1031,11 @@
     }
     CombatReportDrawMinorMode.prototype.draw = function(object) {
       this.p5.background(0);
-      return this.texts.draw(object.summaries, object.pointer);
+      if (type === 0) {
+        return this.texts.draw(object.summaries, object.pointer);
+      } else {
+        return this.texts.draw(object.log, object.pointer);
+      }
     };
     return CombatReportDrawMinorMode;
   })();
@@ -1095,12 +1101,16 @@
       if (this.state === null) {
         return {
           summaries: this.options.options,
-          pointer: this.pointer,
-          state: this.parent.state
+          pointer: this.options.pointer,
+          state: this.parent.state,
+          type: 0
         };
       } else {
         return {
-          relation: this.parents.units.msg_manager.relations[this.state]
+          log: this.options.option,
+          pointer: this.options.pointer,
+          state: this.parent.state,
+          type: 1
         };
       }
     };
