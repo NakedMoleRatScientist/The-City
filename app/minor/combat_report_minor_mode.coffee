@@ -23,6 +23,8 @@ class CombatReportMinorMode
           this.update()
       when "back"
         @parent.state = -1
+      when "previous"
+        @state = null
 
   input_info: (@msg) ->
   update_draw: () ->
