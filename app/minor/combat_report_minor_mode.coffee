@@ -24,8 +24,9 @@ class CombatReportMinorMode
       when "back"
         @parent.state = -1
       when "previous"
-        console.log("EEE")
         @state = -1
+        @options.pointer = 0
+        this.update()
 
   input_info: (@msg) ->
   update_draw: () ->
