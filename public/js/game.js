@@ -410,20 +410,22 @@
     };
     GameMode.prototype.input = function(result) {
       GameMode.__super__.input.call(this, result);
-      switch (result) {
-        case "up":
-          return this.map.move_camera(0, -1);
-        case "down":
-          return this.map.move_camera(0, 1);
-        case "left":
-          return this.map.move_camera(-1, 0);
-        case "right":
-          return this.map.move_camera(1, 0);
-        case "report":
-          this.state = 0;
-          return this.minor.update();
-        case "back":
-          return this.state = -1;
+      if (this.state !== -1) {
+        switch (result) {
+          case "up":
+            return this.map.move_camera(0, -1);
+          case "down":
+            return this.map.move_camera(0, 1);
+          case "left":
+            return this.map.move_camera(-1, 0);
+          case "right":
+            return this.map.move_camera(1, 0);
+          case "report":
+            this.state = 0;
+            return this.minor.update();
+          case "back":
+            return this.state = -1;
+        }
       }
     };
     GameMode.prototype.update_draw = function() {
@@ -527,10 +529,10 @@
       }
       return n;
     };
-    MsgManager.prototype.active_msg = function(unit_one, unit_two, msg) {
+    MsgManager.prototype.msg = function(unit_one, unit_two, msg) {
       var n;
       n = this.find_or_create_combat_relation(unit_one, unit_two);
-      this.relations[n].add_msg(unit_one, unit_two, msg);
+      this.relations[n].add_msg(msg);
       this.last_status = n;
       return n;
     };
@@ -558,10 +560,10 @@
         return;
       }
       part = object.part;
-      msg = "strikes " + part;
-      this.active_msg(object.actors[0], object.actors[1], msg);
-      msg = "'s " + part + " suffers damage!";
-      return this.passive_msg(object.actors[0], object.actors[1], msg);
+      msg = object.actors[0] + " strikes " + object.actors[1] + "'s " + part + "!";
+      this.msg(object.actors[0], object.actors[1], msg);
+      msg = object.actors[1] + "'s " + part + " suffers damage!";
+      return this.msg(object.actors[0], object.actors[1], msg);
     };
     return MsgManager;
   })();
@@ -798,8 +800,8 @@
       this.actors = actors;
       this.msgs = [];
     }
-    Relation.prototype.add_msg = function(unit_one, unit_two, act) {
-      return this.msgs.push(unit_one + " " + act + " " + unit_two + "!");
+    Relation.prototype.add_msg = function(msg) {
+      return this.msgs.push(msg);
     };
     Relation.prototype.add_passive_msg = function(unit_two, msg) {
       return this.msgs.push(unit_two + msg);
