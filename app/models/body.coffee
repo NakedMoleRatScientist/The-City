@@ -11,12 +11,13 @@ class Body
     else
       return false
   update_ability: (n) ->
+
     switch(n)
       when 0
-        @hand += 1
-        if @hand == 2
+        if @parts[1].disability && @parts[4].disability
           return "hand_destroy"
-        return "hand"
+        else if @parts[1].disability || @parts[4].disability
+          return "hand"
       when 1
         @leg += 1
         if @leg == 2
