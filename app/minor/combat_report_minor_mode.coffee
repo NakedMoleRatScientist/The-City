@@ -28,7 +28,7 @@ class CombatReportMinorMode
         @options.pointer = 0
         this.update()
       when "kills"
-        @state = 2
+        @state = 1
         @options.pointer = 0
         this.update()
 
