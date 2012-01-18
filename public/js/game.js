@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -625,6 +625,19 @@
         return _results;
       }).call(this);
     };
+    Units.prototype.kills = function() {
+      var k, u, _i, _len, _ref, _results;
+      k = 0;
+      _ref = this.units;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        u = _ref[_i];
+        if (u.hostility === 0) {
+          _results.push(k += u.kills.length);
+        }
+      }
+      return _results;
+    };
     return Units;
   })();
   Part = (function() {
@@ -896,7 +909,6 @@
       this.goal_y = this.y;
       this.body = new Body(this.type);
       this.hostility = 0;
-      this.alive = 1;
       this.target = null;
       this.kills = [];
     }
@@ -989,6 +1001,11 @@
     };
     return Unit;
   })();
+  killsDraw = function(kills, p5) {
+    this.p5 = p5;
+    this.p5.textFont("Monospace", 12);
+    return this.p5.text("Kills by Colonists Thus Far: " + kills, 400, 12);
+  };
   mapDraw = (function() {
     function mapDraw(p5, width, height) {
       this.p5 = p5;
@@ -1058,7 +1075,9 @@
     CombatReportDrawMinorMode.prototype.draw = function(object) {
       this.p5.background(0);
       if (object.type === 0) {
-        return this.texts.draw(object.summaries, object.pointer);
+        this.texts.draw(object.summaries, object.pointer);
+        killsDraw(object.kills, this.p5);
+        return combatMenuDraw(this.p5);
       } else {
         return this.texts.draw(object.log, object.pointer);
       }
@@ -1138,7 +1157,8 @@
           summaries: this.options.options,
           pointer: this.options.pointer,
           state: this.parent.state,
-          type: 0
+          type: 0,
+          kills: this.parent.units.kills()
         };
       } else {
         return {
