@@ -17,3 +17,7 @@ class Units
     k = 0
     for u in @units when u.hostility == 0
       k += u.kills.length
+  killers: () ->
+    killers = []
+    for u in @units when u.hostility == 0
+      killers.push(u.name + ": " + u.kills.length)
