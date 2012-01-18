@@ -31,6 +31,6 @@ class CombatReportMinorMode
   input_info: (@msg) ->
   update_draw: () ->
     if @state == -1
-      return (summaries: @options.options, pointer: @options.pointer, state: @parent.state, type: 0)
+      return (summaries: @options.options, pointer: @options.pointer, state: @parent.state, type: 0, kills: @parent.units.kills())
     else
       return (log: @options.options, pointer: @options.pointer, state: @parent.state, type: 1)
