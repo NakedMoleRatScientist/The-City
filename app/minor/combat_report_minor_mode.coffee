@@ -27,6 +27,10 @@ class CombatReportMinorMode
         @state = -1
         @options.pointer = 0
         this.update()
+      when "kills"
+        @state = 2
+        @options.pointer = 0
+        this.update()
 
   input_info: (@msg) ->
   update_draw: () ->
