@@ -13,3 +13,7 @@ class Units
     @msg_manager.combat_death(unit.nullify_target()) for unit in @units
   clean: () ->
     @units = (unit for unit in @units when unit.body.check_death() == false)
+  kills: () ->
+    k = 0
+    for u in @units when u.hostility == 0
+      k += u.kills.length
