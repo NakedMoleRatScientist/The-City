@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, changeMode, circle_collision, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, changeMode, circle_collision, combatMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -638,6 +638,19 @@
       }
       return _results;
     };
+    Units.prototype.killers = function() {
+      var killers, u, _i, _len, _ref, _results;
+      killers = [];
+      _ref = this.units;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        u = _ref[_i];
+        if (u.hostility === 0) {
+          _results.push(killers.push(u.name + ": " + u.kills.length));
+        }
+      }
+      return _results;
+    };
     return Units;
   })();
   Part = (function() {
@@ -1001,6 +1014,14 @@
     };
     return Unit;
   })();
+  combatMenuDraw = function(p5) {
+    this.p5 = p5;
+    this.p5.textFont("Monospace", 12);
+    this.p5.text("s - scroll down", 0, 580);
+    this.p5.text("w - scroll up", 100, 580);
+    this.p5.text("k - kill lists", 200, 580);
+    return this.p5.text("return/enter - select", 300, 580);
+  };
   killsDraw = function(kills, p5) {
     this.p5 = p5;
     this.p5.textFont("Monospace", 12);
@@ -1074,12 +1095,15 @@
     }
     CombatReportDrawMinorMode.prototype.draw = function(object) {
       this.p5.background(0);
-      if (object.type === 0) {
-        this.texts.draw(object.summaries, object.pointer);
-        killsDraw(object.kills, this.p5);
-        return combatMenuDraw(this.p5);
-      } else {
-        return this.texts.draw(object.log, object.pointer);
+      switch (object.type) {
+        case 0:
+          this.texts.draw(object.summaries, object.pointer);
+          killsDraw(object.kills, this.p5);
+          return combatMenuDraw(this.p5);
+        case 1:
+          return this.texts.draw(object.log, object.pointer);
+        case 2:
+          return this.texts.draw(object.killers, object.pointer);
       }
     };
     return CombatReportDrawMinorMode;
@@ -1123,8 +1147,10 @@
           _results.push(this.options.add_text([r.summary()]));
         }
         return _results;
-      } else {
+      } else if (this.state === 0) {
         return this.options.add_text(this.parent.units.msg_manager.relations[this.state].msgs);
+      } else if (this.state === 1) {
+        return this.options.add_text(this.parents.units.killers());
       }
     };
     CombatReportMinorMode.prototype.act = function() {};
@@ -1146,6 +1172,10 @@
           this.state = -1;
           this.options.pointer = 0;
           return this.update();
+        case "kills":
+          this.state = 1;
+          this.options.pointer = 0;
+          return this.update();
       }
     };
     CombatReportMinorMode.prototype.input_info = function(msg) {
@@ -1160,12 +1190,18 @@
           type: 0,
           kills: this.parent.units.kills()
         };
-      } else {
+      } else if (this.state === 0) {
         return {
           log: this.options.options,
           pointer: this.options.pointer,
           state: this.parent.state,
           type: 1
+        };
+      } else if (this.state === 1) {
+        return {
+          killers: this.options.options,
+          pointer: this.options.pointer,
+          type: 2
         };
       }
     };
