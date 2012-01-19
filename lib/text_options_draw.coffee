@@ -3,7 +3,8 @@ class TextOptionsDraw
     @offset_y = 0
   draw: (texts,pointer) ->
     @p5.textFont("Monospace",@size)
-    y = @y
+    y = @y + @offset_y
+    @offset_y = 0
     for data in texts
       @p5.text(data,@x,y)
       y += @size
