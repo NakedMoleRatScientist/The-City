@@ -22,3 +22,7 @@ class Units
     for u in @units when u.hostility == 0
       killers.push(name: u.name, kills: u.kills.length)
     return killers
+  find_killer: (name) ->
+    for u in @units when u.hostility == 0
+      if u.name == name
+        return u
