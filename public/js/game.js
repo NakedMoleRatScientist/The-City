@@ -639,17 +639,19 @@
       return _results;
     };
     Units.prototype.killers = function() {
-      var killers, u, _i, _len, _ref, _results;
+      var killers, u, _i, _len, _ref;
       killers = [];
       _ref = this.units;
-      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         u = _ref[_i];
         if (u.hostility === 0) {
-          _results.push(killers.push(u.name + ": " + u.kills.length));
+          killers.push({
+            name: u.name,
+            kills: u.kills.length
+          });
         }
       }
-      return _results;
+      return killers;
     };
     return Units;
   })();
@@ -1094,6 +1096,7 @@
       this.texts = new TextOptionsDraw(this.p5, 30, 12, 12);
     }
     CombatReportDrawMinorMode.prototype.draw = function(object) {
+      var k, msg, _i, _len, _ref;
       this.p5.background(0);
       switch (object.type) {
         case 0:
@@ -1103,7 +1106,13 @@
         case 1:
           return this.texts.draw(object.log, object.pointer);
         case 2:
-          return this.texts.draw(object.killers, object.pointer);
+          msg = [];
+          _ref = object.killers;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            k = _ref[_i];
+            msg.push(k.name + ": " + k.kills);
+          }
+          return this.texts.draw(msg, object.pointer);
       }
     };
     return CombatReportDrawMinorMode;
@@ -1125,6 +1134,8 @@
           return "down";
         case 97:
           return "previous";
+        case 107:
+          return "kills";
       }
     };
     return CombatReportKeyMinorMode;
@@ -1148,9 +1159,9 @@
         }
         return _results;
       } else if (this.state === 0) {
-        return this.options.add_text(this.parent.units.msg_manager.relations[this.state].msgs);
+        return this.options.add_text(this.parent.units.msg_manager.relations[this.unit].msgs);
       } else if (this.state === 1) {
-        return this.options.add_text(this.parents.units.killers());
+        return this.options.add_text(this.parent.units.killers());
       }
     };
     CombatReportMinorMode.prototype.act = function() {};
@@ -1162,7 +1173,8 @@
           return this.options.increase();
         case "select":
           if (this.state === -1) {
-            this.state = this.options.pointer;
+            this.state = 0;
+            this.unit = this.options.pointer;
             return this.update();
           }
           break;
@@ -1182,27 +1194,29 @@
       this.msg = msg;
     };
     CombatReportMinorMode.prototype.update_draw = function() {
-      if (this.state === -1) {
-        return {
-          summaries: this.options.options,
-          pointer: this.options.pointer,
-          state: this.parent.state,
-          type: 0,
-          kills: this.parent.units.kills()
-        };
-      } else if (this.state === 0) {
-        return {
-          log: this.options.options,
-          pointer: this.options.pointer,
-          state: this.parent.state,
-          type: 1
-        };
-      } else if (this.state === 1) {
-        return {
-          killers: this.options.options,
-          pointer: this.options.pointer,
-          type: 2
-        };
+      switch (this.state) {
+        case -1:
+          return {
+            summaries: this.options.options,
+            pointer: this.options.pointer,
+            state: this.parent.state,
+            type: 0,
+            kills: this.parent.units.kills()
+          };
+        case 0:
+          return {
+            log: this.options.options,
+            pointer: this.options.pointer,
+            state: this.parent.state,
+            type: 1
+          };
+        case 1:
+          return {
+            killers: this.options.options,
+            pointer: this.options.pointer,
+            state: this.parent.state,
+            type: 2
+          };
       }
     };
     return CombatReportMinorMode;
