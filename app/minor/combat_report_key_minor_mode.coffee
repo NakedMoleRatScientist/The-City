@@ -13,3 +13,5 @@ class CombatReportKeyMinorMode
         return "down"
       when 97
         return "previous"
+      when 107
+        return "kills"
