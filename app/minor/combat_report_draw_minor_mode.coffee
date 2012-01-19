@@ -19,4 +19,5 @@ class CombatReportDrawMinorMode
         msg = []
         for name in object.kills
           msg.push(name)
+        @texts.offset_y = 30
         @texts.draw(msg,object.pointer)
