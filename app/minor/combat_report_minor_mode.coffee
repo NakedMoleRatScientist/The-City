@@ -13,6 +13,8 @@ class CombatReportMinorMode
         @options.add_text(@parent.units.msg_manager.relations[@unit].msgs)
       when 1
         @options.add_text(@parent.units.killers())
+      when 2
+        @options.add_text(@parent.units.killer(@unit))
   act: ->
   input: (result) ->
     switch(result)
