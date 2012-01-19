@@ -319,20 +319,22 @@
       this.x = x;
       this.y = y;
       this.size = size;
+      this.offset_y = 0;
     }
     TextOptionsDraw.prototype.draw = function(texts, pointer) {
       var data, pointer_y, y, _i, _len;
       this.p5.textFont("Monospace", this.size);
-      y = this.y;
+      y = this.y + this.offset_y;
       for (_i = 0, _len = texts.length; _i < _len; _i++) {
         data = texts[_i];
         this.p5.text(data, this.x, y);
         y += this.size;
       }
-      pointer_y = this.y + (pointer * this.size);
+      pointer_y = this.y + this.offset_y + (pointer * this.size);
       if (texts.length > 0) {
-        return this.p5.ellipse(this.x - 20, pointer_y - (this.size / 2), 10, 10);
+        this.p5.ellipse(this.x - 20, pointer_y - (this.size / 2), 10, 10);
       }
+      return this.offset_y = 0;
     };
     return TextOptionsDraw;
   })();
@@ -1127,11 +1129,14 @@
           return this.texts.draw(msg, object.pointer);
         case 3:
           msg = [];
+          this.p5.text(object.name + " killed about " + object.kills + "beings", 20, 12);
+          this.p5.text("Kill list:", 25, 20);
           _ref2 = object.kills;
           for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
             name = _ref2[_j];
             msg.push(name);
           }
+          this.texts.offset_y = 30;
           return this.texts.draw(msg, object.pointer);
       }
     };
@@ -1185,7 +1190,7 @@
         case 1:
           return this.options.add_text(this.parent.units.killers());
         case 2:
-          return this.options.add_text(this.parent.units.find_killer(this.name).kills);
+          return this.options.add_text(this.parent.units.find_killer(this.name));
       }
     };
     CombatReportMinorMode.prototype.act = function() {};
@@ -1210,7 +1215,11 @@
         case "back":
           return this.parent.state = -1;
         case "previous":
-          this.state = -1;
+          if (this.state === 0 || this.state === 1) {
+            this.state = -1;
+          } else if (this.state === 2) {
+            this.state = 1;
+          }
           this.options.pointer = 0;
           return this.update();
         case "kills":
@@ -1248,6 +1257,7 @@
           };
         case 2:
           return {
+            name: this.name,
             kills: this.options.options,
             pointer: this.options.pointer,
             state: this.parent.state,
