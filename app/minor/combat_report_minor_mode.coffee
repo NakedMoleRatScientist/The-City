@@ -9,7 +9,7 @@ class CombatReportMinorMode
       for r in @parent.units.msg_manager.relations
         @options.add_text([r.summary()])
     else if @state == 0
-      @options.add_text(@parent.units.msg_manager.relations[@state].msgs)
+      @options.add_text(@parent.units.msg_manager.relations[@unit].msgs)
     else if @state == 1
       @options.add_text(@parent.units.killers())
   act: ->
