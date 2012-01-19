@@ -21,3 +21,4 @@ class Units
     killers = []
     for u in @units when u.hostility == 0
       killers.push(u.name + ": " + u.kills.length)
+    return killers
