@@ -21,8 +21,10 @@ class CombatReportMinorMode
         @options.increase()
       when "select"
         if @state == -1
-          @state = @options.pointer
+          @state = 0
+          @unit = @options.pointer
           this.update()
+
       when "back"
         @parent.state = -1
       when "previous"
