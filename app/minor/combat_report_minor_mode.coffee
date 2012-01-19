@@ -53,3 +53,5 @@ class CombatReportMinorMode
         return (log: @options.options, pointer: @options.pointer, state: @parent.state, type: 1)
       when 1
         return (killers: @options.options, pointer: @options.pointer, state: @parent.state, type: 2)
+      when 2
+        return (killer: @options.options, pointer: @options.pointer, state: @parent.state, type: 3)
