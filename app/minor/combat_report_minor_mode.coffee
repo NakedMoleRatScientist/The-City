@@ -35,8 +35,10 @@ class CombatReportMinorMode
       when "back"
         @parent.state = -1
       when "previous"
-
-        @state = -1
+        if @state == 0 || @state == 1
+          @state = -1
+        else if @state == 2
+          @state = 1
         @options.pointer = 0
         this.update()
       when "kills"
