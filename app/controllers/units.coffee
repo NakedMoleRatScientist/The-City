@@ -25,4 +25,4 @@ class Units
   find_killer: (name) ->
     for u in @units when u.hostility == 0
       if u.name == name
-        return u.kills
+        return (name: u.name, kills: u.kills)
