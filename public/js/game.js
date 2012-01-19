@@ -660,10 +660,7 @@
         u = _ref[_i];
         if (u.hostility === 0) {
           if (u.name === name) {
-            return {
-              name: u.name,
-              kills: u.kills
-            };
+            return u.kills;
           }
         }
       }
@@ -1111,7 +1108,7 @@
       this.texts = new TextOptionsDraw(this.p5, 30, 12, 12);
     }
     CombatReportDrawMinorMode.prototype.draw = function(object) {
-      var k, msg, _i, _len, _ref;
+      var k, msg, name, _i, _j, _len, _len2, _ref, _ref2;
       this.p5.background(0);
       switch (object.type) {
         case 0:
@@ -1126,6 +1123,14 @@
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             k = _ref[_i];
             msg.push(k.name + ": " + k.kills);
+          }
+          return this.texts.draw(msg, object.pointer);
+        case 3:
+          msg = [];
+          _ref2 = object.kills;
+          for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+            name = _ref2[_j];
+            msg.push(name);
           }
           return this.texts.draw(msg, object.pointer);
       }
@@ -1163,7 +1168,7 @@
       this.state = -1;
     }
     CombatReportMinorMode.prototype.update = function() {
-      var name, r, _i, _len, _ref, _results;
+      var r, _i, _len, _ref, _results;
       this.options.clean();
       switch (this.state) {
         case -1:
@@ -1180,8 +1185,7 @@
         case 1:
           return this.options.add_text(this.parent.units.killers());
         case 2:
-          name = this.options.options[this.unit].name;
-          return this.options.add_text(this.parent.units.find_killer(name));
+          return this.options.add_text(this.parent.units.find_killer(this.name).kills);
       }
     };
     CombatReportMinorMode.prototype.act = function() {};
@@ -1199,7 +1203,7 @@
               return this.update();
             case 1:
               this.state = 2;
-              this.unit = this.options.pointer;
+              this.name = this.options.options[this.options.pointer].name;
               return this.update();
           }
           break;
@@ -1244,7 +1248,7 @@
           };
         case 2:
           return {
-            killer: this.options.options,
+            kills: this.options.options,
             pointer: this.options.pointer,
             state: this.parent.state,
             type: 3
