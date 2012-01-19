@@ -14,7 +14,6 @@ class CombatReportMinorMode
       when 1
         @options.add_text(@parent.units.killers())
       when 2
-        name = @options.options[@unit].name
         @options.add_text(@parent.units.find_killer(@name))
   act: ->
   input: (result) ->
