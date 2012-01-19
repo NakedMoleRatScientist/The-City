@@ -653,6 +653,21 @@
       }
       return killers;
     };
+    Units.prototype.find_killer = function(name) {
+      var u, _i, _len, _ref;
+      _ref = this.units;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        u = _ref[_i];
+        if (u.hostility === 0) {
+          if (u.name === name) {
+            return {
+              name: u.name,
+              kills: u.kills
+            };
+          }
+        }
+      }
+    };
     return Units;
   })();
   Part = (function() {
@@ -1148,20 +1163,25 @@
       this.state = -1;
     }
     CombatReportMinorMode.prototype.update = function() {
-      var r, _i, _len, _ref, _results;
+      var name, r, _i, _len, _ref, _results;
       this.options.clean();
-      if (this.state === -1) {
-        _ref = this.parent.units.msg_manager.relations;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          r = _ref[_i];
-          _results.push(this.options.add_text([r.summary()]));
-        }
-        return _results;
-      } else if (this.state === 0) {
-        return this.options.add_text(this.parent.units.msg_manager.relations[this.unit].msgs);
-      } else if (this.state === 1) {
-        return this.options.add_text(this.parent.units.killers());
+      switch (this.state) {
+        case -1:
+          _ref = this.parent.units.msg_manager.relations;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            r = _ref[_i];
+            _results.push(this.options.add_text([r.summary()]));
+          }
+          return _results;
+          break;
+        case 0:
+          return this.options.add_text(this.parent.units.msg_manager.relations[this.unit].msgs);
+        case 1:
+          return this.options.add_text(this.parent.units.killers());
+        case 2:
+          name = this.options.options[this.unit].name;
+          return this.options.add_text(this.parent.units.find_killer(name));
       }
     };
     CombatReportMinorMode.prototype.act = function() {};
@@ -1172,10 +1192,15 @@
         case "down":
           return this.options.increase();
         case "select":
-          if (this.state === -1) {
-            this.state = 0;
-            this.unit = this.options.pointer;
-            return this.update();
+          switch (this.state) {
+            case -1:
+              this.state = 0;
+              this.unit = this.options.pointer;
+              return this.update();
+            case 1:
+              this.state = 2;
+              this.unit = this.options.pointer;
+              return this.update();
           }
           break;
         case "back":
@@ -1216,6 +1241,13 @@
             pointer: this.options.pointer,
             state: this.parent.state,
             type: 2
+          };
+        case 2:
+          return {
+            killer: this.options.options,
+            pointer: this.options.pointer,
+            state: this.parent.state,
+            type: 3
           };
       }
     };
