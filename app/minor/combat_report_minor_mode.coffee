@@ -41,4 +41,4 @@ class CombatReportMinorMode
     else if @state == 0
       return (log: @options.options, pointer: @options.pointer, state: @parent.state, type: 1)
     else if @state == 1
-      return (killers: @options.options, pointer: @options.pointer, type: 2)
+      return (killers: @options.options, pointer: @options.pointer, state: @parent.state, type: 2)
