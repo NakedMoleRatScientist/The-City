@@ -24,7 +24,6 @@ class CombatReportMinorMode
           @state = 0
           @unit = @options.pointer
           this.update()
-
       when "back"
         @parent.state = -1
       when "previous"
@@ -38,9 +37,10 @@ class CombatReportMinorMode
 
   input_info: (@msg) ->
   update_draw: () ->
-    if @state == -1
-      return (summaries: @options.options, pointer: @options.pointer, state: @parent.state, type: 0, kills: @parent.units.kills())
-    else if @state == 0
-      return (log: @options.options, pointer: @options.pointer, state: @parent.state, type: 1)
-    else if @state == 1
-      return (killers: @options.options, pointer: @options.pointer, state: @parent.state, type: 2)
+    switch(@state)
+      when -1
+        return (summaries: @options.options, pointer: @options.pointer, state: @parent.state, type: 0, kills: @parent.units.kills())
+      when 0
+        return (log: @options.options, pointer: @options.pointer, state: @parent.state, type: 1)
+      when 1
+        return (killers: @options.options, pointer: @options.pointer, state: @parent.state, type: 2)
