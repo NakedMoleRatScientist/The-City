@@ -14,7 +14,7 @@ class CombatReportMinorMode
       when 1
         @options.add_text(@parent.units.killers())
       when 2
-        @options.add_text(@parent.units.find_killer(@name).kills)
+        @options.add_text(@parent.units.find_killer(@name))
   act: ->
   input: (result) ->
     switch(result)
@@ -35,6 +35,7 @@ class CombatReportMinorMode
       when "back"
         @parent.state = -1
       when "previous"
+
         @state = -1
         @options.pointer = 0
         this.update()
