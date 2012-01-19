@@ -31,7 +31,6 @@ class CombatReportMinorMode
             this.update()
           when 1
             @state = 2
-            o = @options.options
             @name = @options.options[@options.pointer].name
             console.log(@name)
             this.update()
