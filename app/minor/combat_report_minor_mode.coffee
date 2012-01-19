@@ -15,7 +15,7 @@ class CombatReportMinorMode
         @options.add_text(@parent.units.killers())
       when 2
         name = @options.options[@unit].name
-        @options.add_text(@parent.units.find_killer(name))
+        @options.add_text(@parent.units.find_killer(@name))
   act: ->
   input: (result) ->
     switch(result)
@@ -31,7 +31,9 @@ class CombatReportMinorMode
             this.update()
           when 1
             @state = 2
-            @unit = @options.pointer
+            o = @options.options
+            @name = @options.options[@options.pointer].name
+            console.log(@name)
             this.update()
       when "back"
         @parent.state = -1
