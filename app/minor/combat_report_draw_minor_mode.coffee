@@ -15,3 +15,8 @@ class CombatReportDrawMinorMode
         for k in object.killers
           msg.push(k.name + ": " + k.kills)
         @texts.draw(msg,object.pointer)
+      when 3
+        msg = []
+        for name in object.killer.kills
+          msg.push(name)
+        @texts.draw(msg,object.pointer)
