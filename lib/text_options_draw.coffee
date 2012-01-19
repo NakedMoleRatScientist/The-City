@@ -1,5 +1,6 @@
 class TextOptionsDraw
   constructor: (@p5,@x,@y,@size) ->
+    @offset_y = 0
   draw: (texts,pointer) ->
     @p5.textFont("Monospace",@size)
     y = @y
