@@ -8,6 +8,7 @@ class CombatReportDrawMinorMode
         @texts.draw(object.summaries,object.pointer)
         killsDraw(object.kills, @p5)
         combatMainMenuDraw(@p5)
+        @p5.text("Colonists Dead Thus Far: " + object.fatalities,400,25)
       when 1
         @texts.draw(object.log,object.pointer)
       when 2
