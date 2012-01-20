@@ -50,7 +50,7 @@ class CombatReportMinorMode
   update_draw: () ->
     switch(@state)
       when -1
-        return (summaries: @options.options, pointer: @options.pointer, state: @parent.state, type: 0, kills: @parent.units.kills(), fatalities: @parent.fatalities)
+        return (summaries: @options.options, pointer: @options.pointer, state: @parent.state, type: 0, kills: @parent.units.kills(), fatalities: @parent.units.fatalities)
       when 0
         return (log: @options.options, pointer: @options.pointer, state: @parent.state, type: 1)
       when 1
