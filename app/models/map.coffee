@@ -12,6 +12,10 @@ class Map
           @map[h][w] = 1
         else
           @map[h][w] = 0
+    for i in [0..10] when i < 10
+      x = Math.floor(Math.random() * 100)
+      y = Math.floor(Math.random() * 100)
+      @map[x][y] = new CrystalTree()
   result: ->
     return @map
   move_camera: (x,y) ->
