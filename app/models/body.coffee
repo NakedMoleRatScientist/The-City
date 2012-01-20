@@ -27,6 +27,3 @@ class Body
         else if (@parts[2].disabled == true) || (@parts[3].disabled == true)
           @leg = 1
           return "leg"
-  check_combat_ability: () ->
-    return true if @hand < 2
-    return false
