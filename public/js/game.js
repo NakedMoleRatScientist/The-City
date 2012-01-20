@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuMinorModeList, messageDraw, modeList, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuMinorModeList, messageDraw, modeList, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -254,7 +254,7 @@
     ModeManager.prototype.update_mode = function(n) {
       var object;
       object = this.modes[n].update_mode(n);
-      if (object === 0) {
+      if (object === 0 || object === 1 || object === 2) {
         return object;
       } else {
         this.game_mode(object.name);
@@ -559,6 +559,7 @@
     function ScenarioMode() {
       this.options = new TextOptions();
       this.options.add_text(scenarioList());
+      this.mode = -1;
     }
     ScenarioMode.prototype.act = function() {};
     ScenarioMode.prototype.input = function(result) {
@@ -567,6 +568,8 @@
           return this.options.decrease();
         case "down":
           return this.options.increase();
+        case "select":
+          return this.mode = 0;
       }
     };
     ScenarioMode.prototype.update_draw = function() {
@@ -574,6 +577,16 @@
         options: this.options.options,
         pointer: this.options.pointer
       };
+    };
+    ScenarioMode.prototype.update_mode = function(n) {
+      if (this.mode === -1) {
+        return ScenarioMode.__super__.update_mode.call(this, n);
+      } else {
+        return {
+          mode: this.mode,
+          name: this.options.options[this.options.pointer]
+        };
+      }
     };
     return ScenarioMode;
   })();
@@ -671,6 +684,10 @@
           this.units.push(new Unit(10, 10, "Miya", 1));
           this.units.push(new Unit(10, 20, "John", 1));
           return this.units[0].target = this.units[1];
+        case "leg_disability":
+          this.units.push(new Unit(10, 10, "Can'tWalk", 1));
+          this.units[0].body.leg = 2;
+          return this.units[0].set_move(20, 20);
       }
     };
     Units.prototype.move = function() {
@@ -817,26 +834,37 @@
       switch (n) {
         case 0:
           if ((this.parts[1].disabled === true) && (this.parts[4].disabled === true)) {
+            this.hand = 2;
             return "hand_destroy";
           } else if ((this.parts[1].disabled === true) || (this.parts[4].disabled === true)) {
+            this.hand = 1;
             return "hand";
           }
           break;
         case 1:
           if ((this.parts[2].disabled === true) && (this.parts[3].disabled === true)) {
+            this.leg = 2;
             return "leg_destroy";
           } else if ((this.parts[2].disabled === true) || (this.parts[3].disabled === true)) {
+            this.leg = 1;
             return "leg";
           }
       }
     };
-    Body.prototype.check_combat_ability = function() {
-      if (this.hand < 2) {
-        return true;
-      }
-      return false;
-    };
     return Body;
+  })();
+  CrystalTree = (function() {
+    function CrystalTree() {
+      this.pile = 50;
+      this.type = 1;
+    }
+    return CrystalTree;
+  })();
+  Floor = (function() {
+    function Floor() {
+      this.type = 0;
+    }
+    return Floor;
   })();
   Head = (function() {
     __extends(Head, Part);
@@ -917,20 +945,26 @@
       }
     }
     Map.prototype.generate = function() {
-      var h, w, _ref, _results;
-      _results = [];
+      var h, i, w, x, y, _ref, _ref2, _results;
       for (h = 0, _ref = this.map.length; 0 <= _ref ? h <= _ref : h >= _ref; 0 <= _ref ? h++ : h--) {
         if (h < this.map.length) {
-          _results.push((function() {
-            var _ref2, _results2;
-            _results2 = [];
-            for (w = 0, _ref2 = this.map[h].length; 0 <= _ref2 ? w <= _ref2 : w >= _ref2; 0 <= _ref2 ? w++ : w--) {
-              if (w < this.map[h].length) {
-                _results2.push((Math.random() * 10) > 5 ? this.map[h][w] = 1 : this.map[h][w] = 0);
+          for (w = 0, _ref2 = this.map[h].length; 0 <= _ref2 ? w <= _ref2 : w >= _ref2; 0 <= _ref2 ? w++ : w--) {
+            if (w < this.map[h].length) {
+              if ((Math.random() * 10) > 5) {
+                this.map[h][w] = new Floor();
+              } else {
+                this.map[h][w] = null;
               }
             }
-            return _results2;
-          }).call(this));
+          }
+        }
+      }
+      _results = [];
+      for (i = 0; i <= 10; i++) {
+        if (i < 10) {
+          x = Math.floor(Math.random() * 100);
+          y = Math.floor(Math.random() * 100);
+          _results.push(this.map[x][y] = new CrystalTree());
         }
       }
       return _results;
@@ -966,6 +1000,15 @@
   scenarioList = function() {
     return ["combat", "hand_disability", "leg_disability"];
   };
+  Stockpile = (function() {
+    function Stockpile(x, y, type) {
+      this.x = x;
+      this.y = y;
+      this.type = type;
+      this.pile = 0;
+    }
+    return Stockpile;
+  })();
   Subpart = (function() {
     function Subpart(name, type) {
       this.name = name;
@@ -1037,6 +1080,9 @@
       return this.goal_y = y;
     };
     Unit.prototype.move = function() {
+      if (this.body.leg === 2) {
+        return;
+      }
       if ((this.x - this.goal_x) < 0) {
         this.x = this.x + 1;
         return;
@@ -1063,7 +1109,7 @@
       return false;
     };
     Unit.prototype.attack = function() {
-      if (this.target === null || !this.body.check_combat_ability()) {
+      if (this.target === null || (this.body.hand === 2)) {
         return -1;
       }
       if (this.attack_chance()) {
@@ -1143,7 +1189,7 @@
       this.height = height;
     }
     mapDraw.prototype.draw = function(map) {
-      var height, results, width, _ref, _results;
+      var height, object, results, width, _ref, _results;
       results = map.map;
       this.p5.stroke(255);
       _results = [];
@@ -1154,10 +1200,17 @@
             _results2 = [];
             for (width = 0, _ref2 = this.width; 0 <= _ref2 ? width <= _ref2 : width >= _ref2; 0 <= _ref2 ? width++ : width--) {
               if (width < this.width) {
-                if (results[height][width] === 1) {
+                object = result[height][width];
+                if (object === null) {
                   this.p5.noFill();
                 } else {
-                  this.p5.fill();
+                  switch (object.type) {
+                    case 0:
+                      this.p5.fill();
+                      break;
+                    case 1:
+                      this.p5.fill(0, 0, 255);
+                  }
                 }
                 _results2.push(this.p5.rect(20 * (width + map.camera_x), 20 * (height + map.camera_y), 20, 20));
               }
