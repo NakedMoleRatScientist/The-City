@@ -9,7 +9,8 @@ class ModeManager
     return @modes[n].update_draw()
   update_mode: (n) ->
     object = @modes[n].update_mode(n)
-    if object == 0
+   #Need to clean up eventually
+    if object == 0 || object == -1
       return object
     else
       this.game_mode(object.name)
