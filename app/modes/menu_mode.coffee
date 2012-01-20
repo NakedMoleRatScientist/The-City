@@ -1,4 +1,4 @@
-class MenuMode
+class MenuMode extends Mode
   constructor:() ->
     @options = new TextOptions()
     @options.add_text(["New Game", "Test Arena"])
