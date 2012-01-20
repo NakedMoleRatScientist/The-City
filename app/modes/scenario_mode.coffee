@@ -5,3 +5,4 @@ class ScenarioMode extends Mode
   act: ->
   input: (result) ->
   update_draw: () ->
+    return (options: @options.options, pointer: @options.pointer)
