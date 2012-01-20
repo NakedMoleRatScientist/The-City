@@ -8,4 +8,4 @@ class ModeManager
   update_draw: (n) ->
     return @modes[n].update_draw()
   update_mode: (n) ->
-    return @modes[n].update_mode()
+    return @modes[n].update_mode(n)
