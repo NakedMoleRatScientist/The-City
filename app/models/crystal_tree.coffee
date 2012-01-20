@@ -1,4 +1,4 @@
 class CrystalTree
-  constructor: (@x,@y) ->
+  constructor: () ->
     @pile = 50
     @type = 1
