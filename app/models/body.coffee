@@ -15,8 +15,10 @@ class Body
     switch(n)
       when 0
         if (@parts[1].disabled == true) && (@parts[4].disabled == true)
+          @hand = 2
           return "hand_destroy"
         else if (@parts[1].disabled == true) || (@parts[4].disabled == true)
+          @hand = 1
           return "hand"
       when 1
         if (@parts[2].disabled == true) && (@parts[3].disabled == true)
