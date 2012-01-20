@@ -1,0 +1,2 @@
+menuMinorModeList = () ->
+  return []
