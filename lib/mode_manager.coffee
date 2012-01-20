@@ -8,6 +8,11 @@ class ModeManager
   update_draw: (n) ->
     return @modes[n].update_draw()
   update_mode: (n) ->
-    return @modes[n].update_mode(n)
+    object = @modes[n].update_mode(n)
+    if object == 0
+      return object
+    else
+      this.game_mode(object.name)
+      return object.mode
   game_mode: (name) ->
     @modes[0].units.initialize_scenario(name)
