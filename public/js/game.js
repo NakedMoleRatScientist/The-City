@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, changeMode, circle_collision, combatMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, messageDraw, modeList, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, changeMode, circle_collision, combatMainMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, messageDraw, modeList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -1030,13 +1030,11 @@
     };
     return Unit;
   })();
-  combatMenuDraw = function(p5) {
+  combatMainMenuDraw = function(p5) {
     this.p5 = p5;
     this.p5.textFont("Monospace", 12);
-    this.p5.text("s - scroll down", 0, 580);
-    this.p5.text("w - scroll up", 100, 580);
-    this.p5.text("k - kill lists", 200, 580);
-    return this.p5.text("return/enter - select", 300, 580);
+    scrollDraw(this.p5);
+    return this.p5.text("k - kill lists", 300, 580);
   };
   killsDraw = function(kills, p5) {
     this.p5 = p5;
@@ -1083,6 +1081,14 @@
     p5.fill(255, 0, 0);
     return p5.text(msg, 5, 595);
   };
+  scrollDraw = function(p5, select) {
+    this.p5 = p5;
+    this.p5.text("s - scroll down", 0, 580);
+    this.p5.text("w - scroll up", 100, 580);
+    if (select === true) {
+      return this.p5.text("return/enter - select", 200, 580);
+    }
+  };
   titleDraw = function(p5) {
     p5.textFont("monospace", 30);
     return p5.text("The City", 350, 100);
@@ -1116,7 +1122,7 @@
         case 0:
           this.texts.draw(object.summaries, object.pointer);
           killsDraw(object.kills, this.p5);
-          return combatMenuDraw(this.p5);
+          return combatMainMenuDraw(this.p5);
         case 1:
           return this.texts.draw(object.log, object.pointer);
         case 2:
