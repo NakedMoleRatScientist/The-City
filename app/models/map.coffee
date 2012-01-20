@@ -9,9 +9,9 @@ class Map
     for h in [0..@map.length] when h < @map.length
       for w in [0..@map[h].length] when w < @map[h].length
         if (Math.random() * 10) > 5
-          @map[h][w] = 1
+          @map[h][w] = new Wall()
         else
-          @map[h][w] = 0
+          @map[h][w] = null
     for i in [0..10] when i < 10
       x = Math.floor(Math.random() * 100)
       y = Math.floor(Math.random() * 100)
