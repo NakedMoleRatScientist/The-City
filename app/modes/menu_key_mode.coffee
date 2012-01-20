@@ -8,6 +8,6 @@ class MenuKeyMode
       when 119
         return "up"
       when 10
-        return "game_mode"
+        return "select"
       else
         return false
