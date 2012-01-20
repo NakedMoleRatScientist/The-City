@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, changeMode, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, messageDraw, modeList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioMode, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, changeMode, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, messageDraw, modeList, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -497,8 +497,34 @@
     return MenuMode;
   })();
   modeList = function() {
-    return ["Game", "Menu"];
+    return ["Game", "Menu", "Scenario"];
   };
+  ScenarioDrawMode = (function() {
+    __extends(ScenarioDrawMode, DrawMode);
+    function ScenarioDrawMode(p5) {
+      this.p5 = p5;
+      this.texts = new TextOptionsDraw(this.p5, 30, 12, 12);
+    }
+    ScenarioDrawMode.prototype.draw = function(object) {};
+    ScenarioDrawMode.prototype.input = function(result) {};
+    return ScenarioDrawMode;
+  })();
+  ScenarioMode = (function() {
+    __extends(ScenarioMode, Mode);
+    function ScenarioMode() {
+      this.options = new TextOptions();
+      this.options.add_text(scenarioList());
+    }
+    ScenarioMode.prototype.act = function() {};
+    ScenarioMode.prototype.input = function(result) {};
+    ScenarioMode.prototype.update_draw = function() {
+      return {
+        options: this.options.options,
+        pointer: this.options.pointer
+      };
+    };
+    return ScenarioMode;
+  })();
   MsgManager = (function() {
     function MsgManager() {
       this.relations = [];
@@ -882,6 +908,9 @@
     };
     return Relation;
   })();
+  scenarioList = function() {
+    return ["combat", "hand_disability", "leg_disability"];
+  };
   Subpart = (function() {
     function Subpart(name, type) {
       this.name = name;
