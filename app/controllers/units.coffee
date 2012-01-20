@@ -12,6 +12,9 @@ class Units
     @msg_manager.strike(unit.attack()) for unit in @units
     @msg_manager.combat_death(unit.nullify_target()) for unit in @units
   clean: () ->
+    for unit in @units
+      if unit.body.check_death() == true && unit.hostility == 0
+        @fatalities += 1
     @units = (unit for unit in @units when unit.body.check_death() == false)
   kills: () ->
     k = 0
