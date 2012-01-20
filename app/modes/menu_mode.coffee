@@ -2,6 +2,7 @@ class MenuMode
   constructor:() ->
     @options = new TextOptions()
     @options.add_text(["New Game", "Test Arena"])
+    @mode = -1
   act:() ->
   input: (result) ->
     switch(result)
