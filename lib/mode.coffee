@@ -8,3 +8,5 @@ class Mode
     @minor.input(result)
   update_draw: () ->
     @minor.update_draw()
+  update_mode:(n) ->
+    return n
