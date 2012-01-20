@@ -9,6 +9,11 @@ class MenuMode
         @options.decrease()
       when "down"
         @options.increase()
+      when "return"
+        if @options.pointer == 0
+          @mode = 0
+        else
+          @mode = 2
 
   update_draw: (n) ->
     return (options:  @options.options, pointer: @options.pointer)
