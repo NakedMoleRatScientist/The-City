@@ -7,7 +7,7 @@ class CombatReportDrawMinorMode
       when 0
         @texts.draw(object.summaries,object.pointer)
         killsDraw(object.kills, @p5)
-        combatMenuDraw(@p5)
+        combatMainMenuDraw(@p5)
       when 1
         @texts.draw(object.log,object.pointer)
       when 2
