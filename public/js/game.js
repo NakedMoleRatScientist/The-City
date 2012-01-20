@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioMode, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, changeMode, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, messageDraw, modeList, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, messageDraw, modeList, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -12,13 +12,6 @@
       if (this[i] === item) return i;
     }
     return -1;
-  };
-  changeMode = function(mode, result) {
-    if (result === "game_mode") {
-      return 0;
-    } else {
-      return mode;
-    }
   };
   circle_collision = function(x, y, object) {
     var dm, dx, dy;
@@ -47,7 +40,7 @@
     p5.input_result = function(result) {
       this.logic_manager.input(this.mode, result);
       this.draw_manager.input(this.mode, result);
-      return this.mode = changeMode(this.mode, result);
+      return this.mode = this.logic_manager.update_mode();
     };
     p5.logic = function() {
       this.logic_manager.act(this.mode);
@@ -240,6 +233,9 @@
     Mode.prototype.update_draw = function() {
       return this.minor.update_draw();
     };
+    Mode.prototype.update_mode = function(n) {
+      return n;
+    };
     return Mode;
   })();
   ModeManager = (function() {
@@ -254,6 +250,9 @@
     };
     ModeManager.prototype.update_draw = function(n) {
       return this.modes[n].update_draw();
+    };
+    ModeManager.prototype.update_mode = function(n) {
+      return this.modes[n].update_mode();
     };
     return ModeManager;
   })();
@@ -467,7 +466,7 @@
         case 119:
           return "up";
         case 10:
-          return "game_mode";
+          return "select";
         default:
           return false;
       }
@@ -478,6 +477,7 @@
     function MenuMode() {
       this.options = new TextOptions();
       this.options.add_text(["New Game", "Test Arena"]);
+      this.mode = -1;
     }
     MenuMode.prototype.act = function() {};
     MenuMode.prototype.input = function(result) {
@@ -486,6 +486,12 @@
           return this.options.decrease();
         case "down":
           return this.options.increase();
+        case "return":
+          if (this.options.pointer === 0) {
+            return this.mode = 0;
+          } else {
+            return this.mode = 2;
+          }
       }
     };
     MenuMode.prototype.update_draw = function(n) {
@@ -508,6 +514,16 @@
     ScenarioDrawMode.prototype.draw = function(object) {};
     ScenarioDrawMode.prototype.input = function(result) {};
     return ScenarioDrawMode;
+  })();
+  ScenarioKeyMode = (function() {
+    __extends(ScenarioKeyMode, KeyMode);
+    function ScenarioKeyMode(p5) {
+      this.p5 = p5;
+    }
+    ScenarioKeyMode.prototype.key_pressed = function(state) {
+      return console.log(this.p5.key.code);
+    };
+    return ScenarioKeyMode;
   })();
   ScenarioMode = (function() {
     __extends(ScenarioMode, Mode);
