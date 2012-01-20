@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, changeMode, circle_collision, combatMainMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, messageDraw, modeList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, DrawMinorModeManager, DrawMode, DrawModeManager, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, changeMode, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, messageDraw, modeList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -588,9 +588,9 @@
       if (scenario === "game") {
         this.units.push(new Unit(10, 10, "Miya", 1));
         this.units.push(new Unit(10, 20, "John", 1));
-        this.units[1].hostility = 1;
         this.units[0].target = this.units[1];
       }
+      this.fatalities = 0;
     }
     Units.prototype.move = function() {
       var unit, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _ref3, _results;
@@ -613,13 +613,20 @@
       return _results;
     };
     Units.prototype.clean = function() {
-      var unit;
+      var unit, _i, _len, _ref;
+      _ref = this.units;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        unit = _ref[_i];
+        if (unit.body.check_death() === true && unit.hostility === 0) {
+          this.fatalities += 1;
+        }
+      }
       return this.units = (function() {
-        var _i, _len, _ref, _results;
-        _ref = this.units;
+        var _j, _len2, _ref2, _results;
+        _ref2 = this.units;
         _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          unit = _ref[_i];
+        for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+          unit = _ref2[_j];
           if (unit.body.check_death() === false) {
             _results.push(unit);
           }
@@ -1030,10 +1037,14 @@
     };
     return Unit;
   })();
+  combatLogMenuDraw = function(p5) {
+    this.p5 = p5;
+    return scrollDraw(this.p5, false);
+  };
   combatMainMenuDraw = function(p5) {
     this.p5 = p5;
     this.p5.textFont("Monospace", 12);
-    scrollDraw(this.p5);
+    scrollDraw(this.p5, true);
     return this.p5.text("k - kill lists", 300, 580);
   };
   killsDraw = function(kills, p5) {
@@ -1122,7 +1133,8 @@
         case 0:
           this.texts.draw(object.summaries, object.pointer);
           killsDraw(object.kills, this.p5);
-          return combatMainMenuDraw(this.p5);
+          combatMainMenuDraw(this.p5);
+          return this.p5.text("Colonists Dead Thus Far: " + object.fatalities, 400, 25);
         case 1:
           return this.texts.draw(object.log, object.pointer);
         case 2:
@@ -1135,8 +1147,8 @@
           return this.texts.draw(msg, object.pointer);
         case 3:
           msg = [];
-          this.p5.text(object.name + " killed about " + object.kills + "beings", 20, 12);
-          this.p5.text("Kill list:", 25, 20);
+          this.p5.text(object.name + " killed about " + object.kills.length + "beings", 20, 12);
+          this.p5.text("Kill list:", 30, 20);
           _ref2 = object.kills;
           for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
             name = _ref2[_j];
@@ -1245,7 +1257,8 @@
             pointer: this.options.pointer,
             state: this.parent.state,
             type: 0,
-            kills: this.parent.units.kills()
+            kills: this.parent.units.kills(),
+            fatalities: this.parent.units.fatalities
           };
         case 0:
           return {
