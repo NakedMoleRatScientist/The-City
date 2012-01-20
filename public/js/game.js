@@ -252,7 +252,17 @@
       return this.modes[n].update_draw();
     };
     ModeManager.prototype.update_mode = function(n) {
-      return this.modes[n].update_mode(n);
+      var object;
+      object = this.modes[n].update_mode(n);
+      if (object === 0) {
+        return object;
+      } else {
+        this.game_mode(object.name);
+        return object.mode;
+      }
+    };
+    ModeManager.prototype.game_mode = function(name) {
+      return this.modes[0].units.initialize_scenario(name);
     };
     return ModeManager;
   })();
@@ -521,7 +531,8 @@
       this.texts = new TextOptionsDraw(this.p5, 30, 12, 12);
     }
     ScenarioDrawMode.prototype.draw = function(object) {
-      return this.texts.draw(object.options, object.pointers);
+      this.p5.background(0);
+      return this.texts.draw(object.options, object.pointer);
     };
     ScenarioDrawMode.prototype.input = function(result) {};
     return ScenarioDrawMode;
@@ -532,7 +543,14 @@
       this.p5 = p5;
     }
     ScenarioKeyMode.prototype.key_pressed = function(state) {
-      return console.log(this.p5.key.code);
+      switch (this.p5.key.code) {
+        case 115:
+          return "down";
+        case 119:
+          return "up";
+        case 10:
+          return "select";
+      }
     };
     return ScenarioKeyMode;
   })();
@@ -543,7 +561,14 @@
       this.options.add_text(scenarioList());
     }
     ScenarioMode.prototype.act = function() {};
-    ScenarioMode.prototype.input = function(result) {};
+    ScenarioMode.prototype.input = function(result) {
+      switch (result) {
+        case "up":
+          return this.options.decrease();
+        case "down":
+          return this.options.increase();
+      }
+    };
     ScenarioMode.prototype.update_draw = function() {
       return {
         options: this.options.options,
@@ -638,13 +663,16 @@
     function Units(scenario) {
       this.units = [];
       this.msg_manager = new MsgManager();
-      if (scenario === "game") {
-        this.units.push(new Unit(10, 10, "Miya", 1));
-        this.units.push(new Unit(10, 20, "John", 1));
-        this.units[0].target = this.units[1];
-      }
       this.fatalities = 0;
     }
+    Units.prototype.initialize_scenario = function(name) {
+      switch (name) {
+        case "combat":
+          this.units.push(new Unit(10, 10, "Miya", 1));
+          this.units.push(new Unit(10, 20, "John", 1));
+          return this.units[0].target = this.units[1];
+      }
+    };
     Units.prototype.move = function() {
       var unit, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _ref3, _results;
       _ref = this.units;
