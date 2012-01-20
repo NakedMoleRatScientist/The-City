@@ -11,7 +11,7 @@ class MenuMode extends Mode
         @options.decrease()
       when "down"
         @options.increase()
-      when "return"
+      when "select"
         if @options.pointer == 0
           @mode = 0
         else
@@ -23,4 +23,5 @@ class MenuMode extends Mode
     if @mode == -1
       return super(n)
     else
+      console.log(@mode)
       return @mode
