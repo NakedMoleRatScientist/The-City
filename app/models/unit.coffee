@@ -32,7 +32,7 @@ class Unit
           return true
     return false
   attack: () ->
-    return -1 if @target == null || !@body.check_combat_ability()
+    return -1 if @target == null || !(@body.hand == 2)
     if this.attack_chance()
       return @target.damage(this)
     return -1
