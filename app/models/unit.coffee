@@ -10,6 +10,7 @@ class Unit
     @goal_x = x
     @goal_y = y
   move: () ->
+     return if @body.leg == 2
     if (@x - @goal_x) < 0
       @x = @x + 1
       return
