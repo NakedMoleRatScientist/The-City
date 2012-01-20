@@ -23,5 +23,4 @@ class MenuMode extends Mode
     if @mode == -1
       return super(n)
     else
-      console.log(@mode)
       return @mode
