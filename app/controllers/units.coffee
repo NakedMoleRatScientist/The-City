@@ -9,6 +9,9 @@ class Units
         @units.push new Unit(10,10, "Miya",1)
         @units.push new Unit(10,20, "John",1)
         @units[0].target = @units[1]
+      when "leg_disability"
+        @units.push new Unit(10,10, "Can'tWalk",1)
+        @units[0].set_move(20,20)
   move: () ->
     unit.move() for unit in @units
     @msg_manager.strike(unit.attack()) for unit in @units
