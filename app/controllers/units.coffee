@@ -11,6 +11,7 @@ class Units
         @units[0].target = @units[1]
       when "leg_disability"
         @units.push new Unit(10,10, "Can'tWalk",1)
+        @units[0].body.leg = 2
         @units[0].set_move(20,20)
   move: () ->
     unit.move() for unit in @units
