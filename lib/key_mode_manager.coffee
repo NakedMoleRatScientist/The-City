@@ -4,4 +4,5 @@ class KeyModeManager
   key_pressed: (n,logic) ->
     state = (logic.update_draw(n)).state
     if state == null
-      @modes[n].key_pressed()
+      return @modes[n].key_pressed()
+    @modes[n].key_pressed(state)
