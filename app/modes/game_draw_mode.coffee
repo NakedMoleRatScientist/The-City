@@ -12,7 +12,8 @@ class GameDrawMode extends DrawMode
         @p5.background(0)
         @map_draw.draw(map)
         @unit_draw.draw(units,map)
-        menuDraw(@p5)
+        if object.menu != -1
+          menuDraw(@p5)
         switch(object.menu)
           when 0
             gameMenuDraw(@p5)
