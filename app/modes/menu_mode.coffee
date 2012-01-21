@@ -18,7 +18,7 @@ class MenuMode extends Mode
           @mode = 2
 
   update_draw: (n) ->
-    return (options:  @options.options, pointer: @options.pointer)
+    return (options:  @options.options, pointer: @options.pointer, state: null)
   update_mode: (n) ->
     if @mode == -1
       return super(n)
