@@ -12,6 +12,7 @@ class GameDrawMode extends DrawMode
         @p5.background(0)
         @map_draw.draw(map)
         @unit_draw.draw(units,map)
+        gameMenuDraw(@p5)
         buildMenudraw(@p5)
         if msg != -1
           messageDraw(@p5,msg)
