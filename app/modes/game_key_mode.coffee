@@ -16,5 +16,7 @@ class GameKeyMode extends KeyMode
             return "up"
           when 119
             return "down"
+          else
+            return false
       when 0
         super(state)
