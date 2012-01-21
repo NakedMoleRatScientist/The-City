@@ -23,6 +23,8 @@ class GameMode extends Mode
         when "report"
           @state = 0
           @minor.update()
+        when "menu"
+          @menu += 1
 
   update_draw: () ->
     return (units: @units, map: @map, msg: @units.msg_manager.get_last_update(), state: -1) if @state == -1
