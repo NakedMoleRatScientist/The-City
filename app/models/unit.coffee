@@ -7,6 +7,7 @@ class Unit
     @target = null
     @kills = []
     @inventory = []
+    @job = null
   set_move: (x,y) ->
     @goal_x = x
     @goal_y = y
