@@ -24,7 +24,7 @@ class GameMode extends Mode
           @state = 0
           @minor.update()
         when "build"
-          if menu == 0
+          if @menu == 0
             @menu = 1
         when "menu"
           if @menu == 0
