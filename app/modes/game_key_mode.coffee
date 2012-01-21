@@ -8,6 +8,8 @@ class GameKeyMode extends KeyMode
         switch(@p5.key.code)
           when 97
             return "right"
+          when 98
+            return "build"
           when 100
             return "left"
           when 114
