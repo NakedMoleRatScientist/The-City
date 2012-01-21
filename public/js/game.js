@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuMinorModeList, messageDraw, modeList, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuMinorModeList, messageDraw, modeList, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -187,6 +187,9 @@
     KeyModeManager.prototype.key_pressed = function(n, logic) {
       var state;
       state = (logic.update_draw(n)).state;
+      if (state === null) {
+        return this.modes[n].key_pressed();
+      }
       return this.modes[n].key_pressed(state);
     };
     return KeyModeManager;
@@ -399,11 +402,14 @@
               return "up";
             case 119:
               return "down";
+            default:
+              return false;
           }
           break;
         case 0:
-          return GameKeyMode.__super__.key_pressed.call(this, state);
+          GameKeyMode.__super__.key_pressed.call(this, state);
       }
+      return false;
     };
     return GameKeyMode;
   })();
@@ -509,7 +515,8 @@
     MenuMode.prototype.update_draw = function(n) {
       return {
         options: this.options.options,
-        pointer: this.options.pointer
+        pointer: this.options.pointer,
+        state: null
       };
     };
     MenuMode.prototype.update_mode = function(n) {
@@ -1074,6 +1081,8 @@
       this.hostility = 0;
       this.target = null;
       this.kills = [];
+      this.inventory = [];
+      this.job = null;
     }
     Unit.prototype.set_move = function(x, y) {
       this.goal_x = x;
@@ -1167,6 +1176,9 @@
     };
     return Unit;
   })();
+  buildMenuDraw = function(p5) {
+    this.p5 = p5;
+  };
   combatLogMenuDraw = function(p5) {
     this.p5 = p5;
     return scrollDraw(this.p5, false);
@@ -1200,7 +1212,7 @@
             _results2 = [];
             for (width = 0, _ref2 = this.width; 0 <= _ref2 ? width <= _ref2 : width >= _ref2; 0 <= _ref2 ? width++ : width--) {
               if (width < this.width) {
-                object = result[height][width];
+                object = results[height][width];
                 if (object === null) {
                   this.p5.noFill();
                 } else {
