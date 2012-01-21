@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuMinorModeList, messageDraw, modeList, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -368,8 +368,16 @@
           this.p5.background(0);
           this.map_draw.draw(map);
           this.unit_draw.draw(units, map);
-          gameMenuDraw(this.p5);
-          buildMenudraw(this.p5);
+          if (object.menu !== -1) {
+            menuDraw(this.p5);
+          }
+          switch (object.menu) {
+            case 0:
+              gameMenuDraw(this.p5);
+              break;
+            case 1:
+              buildMenuDraw(this.p5);
+          }
           if (msg !== -1) {
             return messageDraw(this.p5, msg);
           }
@@ -396,6 +404,8 @@
           switch (this.p5.key.code) {
             case 97:
               return "right";
+            case 98:
+              return "build";
             case 100:
               return "left";
             case 114:
@@ -404,6 +414,8 @@
               return "up";
             case 119:
               return "down";
+            case 109:
+              return "menu";
             default:
               return false;
           }
@@ -421,6 +433,7 @@
       this.map = new Map(100, 100);
       this.map.generate();
       this.units = new Units("game");
+      this.menu = -1;
       GameMode.__super__.constructor.call(this, "game");
     }
     GameMode.prototype.act = function() {
@@ -442,6 +455,17 @@
           case "report":
             this.state = 0;
             return this.minor.update();
+          case "build":
+            if (this.menu === 0) {
+              return this.menu = 1;
+            }
+            break;
+          case "menu":
+            if (this.menu === 0) {
+              return this.menu = -1;
+            } else if (this.menu === -1) {
+              return this.menu = 0;
+            }
         }
       }
     };
@@ -451,7 +475,8 @@
           units: this.units,
           map: this.map,
           msg: this.units.msg_manager.get_last_update(),
-          state: -1
+          state: -1,
+          menu: this.menu
         };
       }
       return GameMode.__super__.update_draw.call(this);
@@ -1183,7 +1208,10 @@
   })();
   buildMenuDraw = function(p5) {
     this.p5 = p5;
-    return this.p5.text("c - crystal pile", 500, 200);
+    this.p5.fill(255, 0, 0);
+    this.p5.text("Build Menu", 715, 115);
+    this.p5.fill(255, 255, 0);
+    return this.p5.text("c - crystal pile", 705, 140);
   };
   combatLogMenuDraw = function(p5) {
     this.p5 = p5;
@@ -1197,7 +1225,10 @@
   };
   gameMenuDraw = function(p5) {
     this.p5 = p5;
-    return this.p5.rect(500, 200, 100, 400);
+    this.p5.fill(255, 0, 0);
+    this.p5.text("Game Menu", 715, 115);
+    this.p5.fill(255, 255, 0);
+    return this.p5.text("b - build", 705, 140);
   };
   killsDraw = function(kills, p5) {
     this.p5 = p5;
@@ -1245,6 +1276,12 @@
     };
     return mapDraw;
   })();
+  menuDraw = function(p5) {
+    this.p5 = p5;
+    this.p5.fill(0, 0, 0);
+    this.p5.stroke(255, 255, 0);
+    return this.p5.rect(700, 100, 100, 400);
+  };
   messageDraw = function(p5, msg) {
     p5.fill(0);
     p5.rect(0, 580, 800, 20);
