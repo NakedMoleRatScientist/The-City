@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuMinorModeList, messageDraw, modeList, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuMinorModeList, messageDraw, modeList, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -368,6 +368,8 @@
           this.p5.background(0);
           this.map_draw.draw(map);
           this.unit_draw.draw(units, map);
+          gameMenuDraw(this.p5);
+          buildMenudraw(this.p5);
           if (msg !== -1) {
             return messageDraw(this.p5, msg);
           }
@@ -695,6 +697,9 @@
           this.units.push(new Unit(10, 10, "Can'tWalk", 1));
           this.units[0].body.leg = 2;
           return this.units[0].set_move(20, 20);
+        default:
+          this.units.push(new Unit(10, 10, "Killy", 1));
+          return this.units.push(new Unit(12, 10, "Cibo", 1));
       }
     };
     Units.prototype.move = function() {
@@ -1178,6 +1183,7 @@
   })();
   buildMenuDraw = function(p5) {
     this.p5 = p5;
+    return this.p5.text("c - crystal pile", 500, 200);
   };
   combatLogMenuDraw = function(p5) {
     this.p5 = p5;
@@ -1188,6 +1194,10 @@
     this.p5.textFont("Monospace", 12);
     scrollDraw(this.p5, true);
     return this.p5.text("k - kill lists", 300, 580);
+  };
+  gameMenuDraw = function(p5) {
+    this.p5 = p5;
+    return this.p5.rect(500, 200, 100, 400);
   };
   killsDraw = function(kills, p5) {
     this.p5 = p5;
