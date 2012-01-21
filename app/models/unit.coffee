@@ -6,6 +6,7 @@ class Unit
     @hostility = 0  #0 is friendly. 1 is hostile
     @target = null
     @kills = []
+    @inventory = []
   set_move: (x,y) ->
     @goal_x = x
     @goal_y = y
