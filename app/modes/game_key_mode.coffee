@@ -20,3 +20,4 @@ class GameKeyMode extends KeyMode
             return false
       when 0
         super(state)
+    return false
