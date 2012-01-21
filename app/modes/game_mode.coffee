@@ -29,7 +29,7 @@ class GameMode extends Mode
         when "menu"
           if @menu == 0
             @menu = -1
-          else
+          else if @menu == -1
             @menu = 0
 
   update_draw: () ->
