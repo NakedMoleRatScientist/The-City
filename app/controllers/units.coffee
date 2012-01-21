@@ -15,7 +15,7 @@ class Units
         @units[0].set_move(20,20)
       else
         @units.push new Unit(10,10, "Killy",1)
-        @units.push new Unit(10,10, "Cibo",1)
+        @units.push new Unit(12,10, "Cibo",1)
   move: () ->
     unit.move() for unit in @units
     @msg_manager.strike(unit.attack()) for unit in @units
