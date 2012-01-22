@@ -21,7 +21,7 @@ class GameMode extends Mode
         when "right"
           @map.move_camera(1,0)
         when "crystal"
-          @mouse.mode == 1
+          @mouse.mode = 1
           @mouse.build("crystal")
         when "report"
           @state = 0
