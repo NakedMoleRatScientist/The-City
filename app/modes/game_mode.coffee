@@ -27,7 +27,7 @@ class GameMode extends Mode
           if @menu == 0
             @menu = 1
         when "menu"
-          if @menu == 0
+          if @menu != -1
             @menu = -1
           else if @menu == -1
             @menu = 0
