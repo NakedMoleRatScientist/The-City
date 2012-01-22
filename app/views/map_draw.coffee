@@ -13,6 +13,8 @@ class mapDraw
           switch (object.type)
             when 0
               @p5.fill()
-            when 1
+            when 1 #Crystal tree
               @p5.fill(0,0,255)
+            when 2 #Crystal stockpile
+              @p5.fill(135,206,255)
         @p5.rect(20 * (width + map.camera_x),20 * (height + map.camera_y),20,20)
