@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -36,6 +36,9 @@
     };
     p5.keyPressed = function() {
       return p5.input_result(this.key_manager.key_pressed(this.mode, this.logic_manager));
+    };
+    p5.mousePressed = function() {
+      return this.logic_manager.mouse_input(this.mode);
     };
     p5.input_result = function(result) {
       this.logic_manager.input(this.mode, result);
@@ -236,6 +239,7 @@
     Mode.prototype.update_draw = function() {
       return this.minor.update_draw();
     };
+    Mode.prototype.mouse_input = function() {};
     Mode.prototype.update_mode = function(n) {
       return n;
     };
@@ -452,6 +456,9 @@
             return this.map.move_camera(-1, 0);
           case "right":
             return this.map.move_camera(1, 0);
+          case "crystal":
+            this.mouse.mode = 1;
+            return this.mouse.build = "crystal";
           case "report":
             this.state = 0;
             return this.minor.update();
@@ -461,7 +468,7 @@
             }
             break;
           case "menu":
-            if (this.menu === 0) {
+            if (this.menu !== -1) {
               return this.menu = -1;
             } else if (this.menu === -1) {
               return this.menu = 0;
@@ -1015,6 +1022,13 @@
     };
     return Map;
   })();
+  Mouse = (function() {
+    function Mouse() {
+      this.mode = 0;
+      this.build = null;
+    }
+    return Mouse;
+  })();
   Relation = (function() {
     function Relation(actors) {
       this.actors = actors;
@@ -1263,6 +1277,9 @@
                       break;
                     case 1:
                       this.p5.fill(0, 0, 255);
+                      break;
+                    case 2:
+                      this.p5.fill(135, 206, 255);
                   }
                 }
                 _results2.push(this.p5.rect(20 * (width + map.camera_x), 20 * (height + map.camera_y), 20, 20));
@@ -1287,6 +1304,16 @@
     p5.rect(0, 580, 800, 20);
     p5.fill(255, 0, 0);
     return p5.text(msg, 5, 595);
+  };
+  mouseDraw = function(p5, object) {
+    var x, y;
+    this.p5 = p5;
+    x = this.p5.mouseX;
+    y = this.p5.mouseY;
+    switch (object.type) {
+      case 1:
+        return this.p5.text("B", x, y);
+    }
   };
   scrollDraw = function(p5, select) {
     this.p5 = p5;
