@@ -1,3 +1,3 @@
 class Stockpile
-  constructor: (@x,@y,@type) ->
+  constructor: () ->
     @pile = 0
