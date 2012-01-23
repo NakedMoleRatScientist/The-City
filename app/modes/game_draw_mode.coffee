@@ -21,6 +21,7 @@ class GameDrawMode extends DrawMode
             buildMenuDraw(@p5)
         if msg != -1
           messageDraw(@p5,msg)
+        mouseDraw(@p5,object.mouse)
       when 0
         super(object)
 
