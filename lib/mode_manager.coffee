@@ -17,4 +17,5 @@ class ModeManager
       return object.mode
   game_mode: (name) ->
     @modes[0].units.initialize_scenario(name)
-  mouse_input: (n) ->
+  mouse_input:(n,result) ->
+    @modes[n].input(result)
