@@ -27,3 +27,7 @@ class GameKeyMode extends KeyMode
       when 0
         super(state)
     return false
+  mouse_input: (state) ->
+    switch(state)
+      when -1
+      console.log("BEEP")
