@@ -1,4 +1,4 @@
-mouseDraw = (@p5,object) ->
+mouseDraw = (@p5,object,camera_x,camera_y) ->
   x = @p5.mouseX
   y = @p5.mouseY
   location_x = Math.floor(x / 20)
@@ -6,4 +6,5 @@ mouseDraw = (@p5,object) ->
   switch(object.mode)
     when 1 #build
       @p5.text("B",x,y)
+
       @p5.rect(location_x,location_y,20,20)
