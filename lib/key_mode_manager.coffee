@@ -6,7 +6,7 @@ class KeyModeManager
     if state == null
       return @modes[n].key_pressed()
     @modes[n].key_pressed(state)
-  mouse_input: (n,logic) ->
+  mouse_pressed: (n,logic) ->
     state = (logic.update_draw(n)).state
     if state == null
       return @modes[n].mouse_input()
