@@ -36,7 +36,13 @@ class GameMode extends Mode
             @menu = -1
           else if @menu == -1
             @menu = 0
-
+  mouse_input: (result) ->
+    if @state == -1
+      switch(result)
+        when "click"
+          if @menu == 1
+            @mouse.x = @p5.mouseX
+            @mouse.y = @p5.mouseY
   update_draw: () ->
     return (units: @units, map: @map, msg: @units.msg_manager.get_last_update(), state: -1, menu: @menu, mouse: @mouse) if @state == -1
     super()
