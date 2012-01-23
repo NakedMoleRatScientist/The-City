@@ -38,5 +38,5 @@ class GameMode extends Mode
             @menu = 0
 
   update_draw: () ->
-    return (units: @units, map: @map, msg: @units.msg_manager.get_last_update(), state: -1, menu: @menu) if @state == -1
+    return (units: @units, map: @map, msg: @units.msg_manager.get_last_update(), state: -1, menu: @menu, mouse: @mouse) if @state == -1
     super()
