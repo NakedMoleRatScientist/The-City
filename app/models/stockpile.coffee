@@ -1,4 +1,4 @@
 class Stockpile
   constructor: () ->
     @pile = 0
-    @type = 2
+    @type = "crystal_stockpile"
