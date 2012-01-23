@@ -10,6 +10,8 @@ class GameKeyMode extends KeyMode
             return "right"
           when 98
             return "build"
+          when 99
+            return "crystal"
           when 100
             return "left"
           when 114
