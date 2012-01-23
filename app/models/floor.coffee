@@ -1,3 +1,3 @@
 class Floor
   constructor: () ->
-    @type = 0
+    @type = "floor"
