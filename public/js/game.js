@@ -38,6 +38,9 @@
       return p5.input_result(this.key_manager.key_pressed(this.mode, this.logic_manager));
     };
     p5.mousePressed = function() {
+      return p5.mouse_input(this.key_manager.mouse_pressed(this.mode, this.logic_manager));
+    };
+    p5.mouse_input = function(result) {
       return this.logic_manager.mouse_input(this.mode);
     };
     p5.input_result = function(result) {
@@ -180,6 +183,7 @@
     KeyMode.prototype.key_pressed = function(state) {
       return this.minor_key.key_pressed(state);
     };
+    KeyMode.prototype.mouse_input = function(state) {};
     return KeyMode;
   })();
   KeyModeManager = (function() {
@@ -194,6 +198,14 @@
         return this.modes[n].key_pressed();
       }
       return this.modes[n].key_pressed(state);
+    };
+    KeyModeManager.prototype.mouse_pressed = function(n, logic) {
+      var state;
+      state = (logic.update_draw(n)).state;
+      if (state === null) {
+        return this.modes[n].mouse_input();
+      }
+      return this.modes[n].mouse_input(state);
     };
     return KeyModeManager;
   })();
@@ -271,7 +283,9 @@
     ModeManager.prototype.game_mode = function(name) {
       return this.modes[0].units.initialize_scenario(name);
     };
-    ModeManager.prototype.mouse_input = function(n) {};
+    ModeManager.prototype.mouse_input = function(n, result) {
+      return this.modes[n].input(result);
+    };
     return ModeManager;
   })();
   RadioButton = (function() {
@@ -431,6 +445,12 @@
           GameKeyMode.__super__.key_pressed.call(this, state);
       }
       return false;
+    };
+    GameKeyMode.prototype.mouse_input = function(state) {
+      switch (state) {
+        case -1:
+          return console.log("BEEP");
+      }
     };
     return GameKeyMode;
   })();
