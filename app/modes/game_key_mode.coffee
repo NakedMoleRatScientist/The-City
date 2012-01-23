@@ -30,4 +30,4 @@ class GameKeyMode extends KeyMode
   mouse_pressed: (state) ->
     switch(state)
       when -1
-        console.log("BEEP")
+        return "click"
