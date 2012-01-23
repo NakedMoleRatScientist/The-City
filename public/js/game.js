@@ -271,6 +271,7 @@
     ModeManager.prototype.game_mode = function(name) {
       return this.modes[0].units.initialize_scenario(name);
     };
+    ModeManager.prototype.mouse_input = function(n) {};
     return ModeManager;
   })();
   RadioButton = (function() {
@@ -383,9 +384,9 @@
               buildMenuDraw(this.p5);
           }
           if (msg !== -1) {
-            return messageDraw(this.p5, msg);
+            messageDraw(this.p5, msg);
           }
-          break;
+          return mouseDraw(this.p5, object.mouse);
         case 0:
           return GameDrawMode.__super__.draw.call(this, object);
       }
@@ -410,6 +411,8 @@
               return "right";
             case 98:
               return "build";
+            case 99:
+              return "crystal";
             case 100:
               return "left";
             case 114:
@@ -438,6 +441,7 @@
       this.map.generate();
       this.units = new Units("game");
       this.menu = -1;
+      this.mouse = new Mouse();
       GameMode.__super__.constructor.call(this, "game");
     }
     GameMode.prototype.act = function() {
@@ -457,8 +461,11 @@
           case "right":
             return this.map.move_camera(1, 0);
           case "crystal":
-            this.mouse.mode = 1;
-            return this.mouse.build = "crystal";
+            if (this.menu === 1) {
+              this.mouse.mode = 1;
+              return this.mouse.build = "crystal";
+            }
+            break;
           case "report":
             this.state = 0;
             return this.minor.update();
@@ -483,7 +490,8 @@
           map: this.map,
           msg: this.units.msg_manager.get_last_update(),
           state: -1,
-          menu: this.menu
+          menu: this.menu,
+          mouse: this.mouse
         };
       }
       return GameMode.__super__.update_draw.call(this);
@@ -1306,11 +1314,13 @@
     return p5.text(msg, 5, 595);
   };
   mouseDraw = function(p5, object) {
-    var x, y;
+    var location_x, location_y, x, y;
     this.p5 = p5;
     x = this.p5.mouseX;
     y = this.p5.mouseY;
-    switch (object.type) {
+    location_x = Math.floor(x / 20);
+    location_y = Math.floor(y / 20);
+    switch (object.mode) {
       case 1:
         return this.p5.text("B", x, y);
     }
