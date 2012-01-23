@@ -386,7 +386,7 @@
           if (msg !== -1) {
             messageDraw(this.p5, msg);
           }
-          return mouseDraw(this.p5, object.mouse);
+          return mouseDraw(this.p5, object.mouse, map.camera_x, map.camera_y);
         case 0:
           return GameDrawMode.__super__.draw.call(this, object);
       }
@@ -1313,16 +1313,20 @@
     p5.fill(255, 0, 0);
     return p5.text(msg, 5, 595);
   };
-  mouseDraw = function(p5, object) {
+  mouseDraw = function(p5, object, camera_x, camera_y) {
     var location_x, location_y, x, y;
     this.p5 = p5;
     x = this.p5.mouseX;
     y = this.p5.mouseY;
-    location_x = Math.floor(x / 20);
-    location_y = Math.floor(y / 20);
+    location_x = Math.floor(x / 20) * 20;
+    location_y = Math.floor(y / 20) * 20;
     switch (object.mode) {
       case 1:
-        return this.p5.text("B", x, y);
+        this.p5.noStroke();
+        this.p5.fill(128, 128, 128);
+        this.p5.rect(location_x + camera_x, location_y + camera_y, 20, 20);
+        this.p5.fill(255, 0, 0);
+        return this.p5.text("Crystal Pile", x - 5, y - 5);
     }
   };
   scrollDraw = function(p5, select) {
