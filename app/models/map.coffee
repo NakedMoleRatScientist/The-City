@@ -18,6 +18,16 @@ class Map
       @map[x][y] = new CrystalTree()
   result: ->
     return @map
+  add_stockpile:() ->
+    x = Math.floor(@mouse.x / 20)
+    y = Math.floor(@mouse.y / 20)
+    x += @camera_x
+    y += @camera_y
+    if @map[x][y].collide() == true
+      return false
+    else
+      @map[x][y] = new CrystalPile()
+
   move_camera: (x,y) ->
     @camera_x += x
     @camera_y += y
