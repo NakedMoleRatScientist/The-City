@@ -4,6 +4,7 @@ class GameMode extends Mode
     @map.generate()
     @units = new Units("game")
     @menu = -1
+    @mouse = new Mouse()
     super("game")
   act: ->
     @units.move()
