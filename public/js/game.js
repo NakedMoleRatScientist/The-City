@@ -446,7 +446,7 @@
       }
       return false;
     };
-    GameKeyMode.prototype.mouse_input = function(state) {
+    GameKeyMode.prototype.mouse_pressed = function(state) {
       switch (state) {
         case -1:
           return console.log("BEEP");
