@@ -38,6 +38,7 @@ class GameMode extends Mode
         when "menu"
           if @menu != -1
             @menu = -1
+            @mouse.mode = 0
           else if @menu == -1
             @menu = 0
   mouse_input: (result) ->
