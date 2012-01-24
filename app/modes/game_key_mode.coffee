@@ -30,4 +30,4 @@ class GameKeyMode extends KeyMode
   mouse_pressed: (state) ->
     switch(state)
       when -1
-        return "click"
+        return (x: @p5.mouse.x,y: @p5.mouse_y]
