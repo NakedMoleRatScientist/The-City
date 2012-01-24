@@ -9,5 +9,5 @@ class KeyModeManager
   mouse_pressed: (n,logic) ->
     state = (logic.update_draw(n)).state
     if state == null
-      return @modes[n].mouse_input()
-    @modes[n].mouse_input(state)
+      return @modes[n].mouse_pressed()
+    @modes[n].mouse_pressed(state)
