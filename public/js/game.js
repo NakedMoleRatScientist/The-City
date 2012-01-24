@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalPile, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -183,7 +183,7 @@
     KeyMode.prototype.key_pressed = function(state) {
       return this.minor_key.key_pressed(state);
     };
-    KeyMode.prototype.mouse_input = function(state) {};
+    KeyMode.prototype.mouse_pressed = function(state) {};
     return KeyMode;
   })();
   KeyModeManager = (function() {
@@ -203,9 +203,9 @@
       var state;
       state = (logic.update_draw(n)).state;
       if (state === null) {
-        return this.modes[n].mouse_input();
+        return this.modes[n].mouse_pressed();
       }
-      return this.modes[n].mouse_input(state);
+      return this.modes[n].mouse_pressed(state);
     };
     return KeyModeManager;
   })();
@@ -449,7 +449,7 @@
     GameKeyMode.prototype.mouse_pressed = function(state) {
       switch (state) {
         case -1:
-          return console.log("BEEP");
+          return "click";
       }
     };
     return GameKeyMode;
@@ -503,6 +503,18 @@
         }
       }
     };
+    GameMode.prototype.mouse_input = function(result) {
+      if (this.state === -1) {
+        switch (result) {
+          case "click":
+            if (this.menu === 1) {
+              this.mouse.x = this.p5.mouseX;
+              this.mouse.y = this.p5.mouseY;
+              return this.map.add_stockpile(this.mouse);
+            }
+        }
+      }
+    };
     GameMode.prototype.update_draw = function() {
       if (this.state === -1) {
         return {
@@ -549,6 +561,7 @@
           return false;
       }
     };
+    MenuKeyMode.prototype.mouse_pressed = function(state) {};
     return MenuKeyMode;
   })();
   MenuMode = (function() {
@@ -857,6 +870,13 @@
     };
     return Part;
   })();
+  Stockpile = (function() {
+    function Stockpile() {
+      this.pile = 0;
+      this.type = "crystal_stockpile";
+    }
+    return Stockpile;
+  })();
   Arm = (function() {
     __extends(Arm, Part);
     function Arm(side) {
@@ -925,16 +945,24 @@
     };
     return Body;
   })();
+  CrystalPile = (function() {
+    __extends(CrystalPile, Stockpile);
+    function CrystalPile() {
+      CrystalPile.__super__.constructor.call(this);
+      this.name = "CrystalPile";
+    }
+    return CrystalPile;
+  })();
   CrystalTree = (function() {
     function CrystalTree() {
       this.pile = 50;
-      this.type = 1;
+      this.type = "crystal_tree";
     }
     return CrystalTree;
   })();
   Floor = (function() {
     function Floor() {
-      this.type = 0;
+      this.type = "floor";
     }
     return Floor;
   })();
@@ -1044,6 +1072,18 @@
     Map.prototype.result = function() {
       return this.map;
     };
+    Map.prototype.add_stockpile = function() {
+      var x, y;
+      x = Math.floor(this.mouse.x / 20);
+      y = Math.floor(this.mouse.y / 20);
+      x += this.camera_x;
+      y += this.camera_y;
+      if (this.map[x][y].collide() === true) {
+        return false;
+      } else {
+        return this.map[x][y] = new CrystalPile();
+      }
+    };
     Map.prototype.move_camera = function(x, y) {
       this.camera_x += x;
       return this.camera_y += y;
@@ -1054,6 +1094,8 @@
     function Mouse() {
       this.mode = 0;
       this.build = null;
+      this.x = 0;
+      this.y = 0;
     }
     return Mouse;
   })();
@@ -1079,15 +1121,6 @@
   scenarioList = function() {
     return ["combat", "hand_disability", "leg_disability"];
   };
-  Stockpile = (function() {
-    function Stockpile(x, y, type) {
-      this.x = x;
-      this.y = y;
-      this.type = type;
-      this.pile = 0;
-    }
-    return Stockpile;
-  })();
   Subpart = (function() {
     function Subpart(name, type) {
       this.name = name;
@@ -1300,13 +1333,13 @@
                   this.p5.noFill();
                 } else {
                   switch (object.type) {
-                    case 0:
+                    case "floor":
                       this.p5.fill();
                       break;
-                    case 1:
+                    case "crystal_tree":
                       this.p5.fill(0, 0, 255);
                       break;
-                    case 2:
+                    case "crystal_stockpile":
                       this.p5.fill(135, 206, 255);
                   }
                 }
