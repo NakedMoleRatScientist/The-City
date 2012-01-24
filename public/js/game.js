@@ -473,13 +473,17 @@
       if (this.state === -1) {
         switch (result) {
           case "up":
-            return this.map.move_camera(0, -1);
+            this.map.move_camera(0, -1);
+            return this.mouse.offset(0, -1);
           case "down":
-            return this.map.move_camera(0, 1);
+            this.map.move_camera(0, 1);
+            return this.mouse.offset(0, 1);
           case "left":
-            return this.map.move_camera(-1, 0);
+            this.map.move_camera(-1, 0);
+            return this.mouse.offset(-1, 0);
           case "right":
-            return this.map.move_camera(1, 0);
+            this.map.move_camera(1, 0);
+            return this.mouse.offset(1, 0);
           case "crystal":
             if (this.menu === 1) {
               this.mouse.mode = 1;
@@ -496,7 +500,8 @@
             break;
           case "menu":
             if (this.menu !== -1) {
-              return this.menu = -1;
+              this.menu = -1;
+              return this.mouse.mode = 0;
             } else if (this.menu === -1) {
               return this.menu = 0;
             }
@@ -1097,6 +1102,10 @@
       this.x = 0;
       this.y = 0;
     }
+    Mouse.prototype.offset = function(x, y) {
+      this.x += x;
+      return this.y += y;
+    };
     return Mouse;
   })();
   Relation = (function() {
@@ -1371,13 +1380,13 @@
     this.p5 = p5;
     x = this.p5.mouseX;
     y = this.p5.mouseY;
-    location_x = Math.floor(x / 20) * 20;
-    location_y = Math.floor(y / 20) * 20;
+    location_x = Math.floor(x / 20);
+    location_y = Math.floor(y / 20);
     switch (object.mode) {
       case 1:
         this.p5.noStroke();
         this.p5.fill(128, 128, 128);
-        this.p5.rect(location_x + camera_x, location_y + camera_y, 20, 20);
+        this.p5.rect(location_x * 20, location_y * 20, 20, 20);
         this.p5.fill(255, 0, 0);
         return this.p5.text("Crystal Pile", x - 5, y - 5);
     }
