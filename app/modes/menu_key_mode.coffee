@@ -1,4 +1,4 @@
-class MenuKeyMode
+class MenuKeyMode extends KeyMode
   constructor: (@p5) ->
   key_pressed: () ->
     console.log(@p5.key.code)
