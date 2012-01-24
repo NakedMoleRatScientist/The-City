@@ -1,4 +1,4 @@
-class MenuKeyMode extends KeyMode
+class MenuKeyMode
   constructor: (@p5) ->
   key_pressed: () ->
     console.log(@p5.key.code)
@@ -11,3 +11,4 @@ class MenuKeyMode extends KeyMode
         return "select"
       else
         return false
+  mouse_pressed: (state) ->
