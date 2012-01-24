@@ -41,7 +41,7 @@
       return p5.mouse_input(this.key_manager.mouse_pressed(this.mode, this.logic_manager));
     };
     p5.mouse_input = function(result) {
-      return this.logic_manager.mouse_input(this.mode);
+      return this.logic_manager.mouse_input(this.mode, result);
     };
     p5.input_result = function(result) {
       this.logic_manager.input(this.mode, result);
@@ -284,7 +284,7 @@
       return this.modes[0].units.initialize_scenario(name);
     };
     ModeManager.prototype.mouse_input = function(n, result) {
-      return this.modes[n].input(result);
+      return this.modes[n].mouse_input(result);
     };
     return ModeManager;
   })();
@@ -449,7 +449,10 @@
     GameKeyMode.prototype.mouse_pressed = function(state) {
       switch (state) {
         case -1:
-          return "click";
+          return {
+            x: this.p5.mouseX,
+            y: this.p5.mouseY
+          };
       }
     };
     return GameKeyMode;
@@ -510,14 +513,9 @@
     };
     GameMode.prototype.mouse_input = function(result) {
       if (this.state === -1) {
-        switch (result) {
-          case "click":
-            if (this.menu === 1) {
-              this.mouse.x = this.p5.mouseX;
-              this.mouse.y = this.p5.mouseY;
-              return this.map.add_stockpile(this.mouse);
-            }
-        }
+        this.mouse.x = result.x;
+        this.mouse.y = result.y;
+        return this.map.add_stockpile(this.mouse);
       }
     };
     GameMode.prototype.update_draw = function() {
@@ -963,12 +961,18 @@
       this.pile = 50;
       this.type = "crystal_tree";
     }
+    CrystalTree.prototype.collide = function() {
+      return true;
+    };
     return CrystalTree;
   })();
   Floor = (function() {
     function Floor() {
       this.type = "floor";
     }
+    Floor.prototype.collide = function() {
+      return false;
+    };
     return Floor;
   })();
   Head = (function() {
@@ -1077,10 +1081,10 @@
     Map.prototype.result = function() {
       return this.map;
     };
-    Map.prototype.add_stockpile = function() {
+    Map.prototype.add_stockpile = function(mouse) {
       var x, y;
-      x = Math.floor(this.mouse.x / 20);
-      y = Math.floor(this.mouse.y / 20);
+      x = Math.floor(mouse.x / 20);
+      y = Math.floor(mouse.y / 20);
       x += this.camera_x;
       y += this.camera_y;
       if (this.map[x][y].collide() === true) {
