@@ -46,8 +46,6 @@ class GameMode extends Mode
       switch(result)
         when "click"
           if @menu == 1
-            @mouse.x = @p5.mouseX
-            @mouse.y = @p5.mouseY
             @map.add_stockpile(@mouse)
   update_draw: () ->
     return (units: @units, map: @map, msg: @units.msg_manager.get_last_update(), state: -1, menu: @menu, mouse: @mouse) if @state == -1
