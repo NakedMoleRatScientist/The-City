@@ -19,6 +19,6 @@ class mapDraw
               @p5.fill(0,0,255)
             when "crystal_stockpile" #Crystal stockpile
               @p5.fill(135,206,255)
-              @p5.ellipse(width,height,2,2)
+              @p5.ellipse(x,y,2,2)
 
         @p5.rect(x,y,20,20)
