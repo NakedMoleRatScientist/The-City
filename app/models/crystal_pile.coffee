@@ -3,6 +3,7 @@ class CrystalPile extends Stockpile
     super()
     @name = "CrystalPile"
     @persons = []
+    @priority = 4
   collide: () ->
     return true
   diameter: () ->
