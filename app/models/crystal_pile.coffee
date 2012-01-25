@@ -8,3 +8,7 @@ class CrystalPile extends Stockpile
     return true
   diameter: () ->
     return 5
+  check_assign: () ->
+    if @persons.length == 0
+      return false
+    return true
