@@ -23,9 +23,9 @@ class Map
     y = Math.floor(mouse.y / 20)
     x += @camera_x
     y += @camera_y
-    if @map[x][y] == null
-      @map[x][y] = new CrystalPile()
-    if @map[x][y].collide() == true
+    if @map[y][x] == null
+      @map[y][x] = new CrystalPile()
+    if @map[y][x].collide() == true
       return false
     else
       @map[x][y] = new CrystalPile()
