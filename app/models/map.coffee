@@ -30,7 +30,9 @@ class Map
         @stockpoints.push @map[y][x]
   collision_detect: (x,y) ->
     for pile in @stockpoints
-      circle_collision(x,y,pile)
+      if circle_collision(x,y,pile) == false
+        return false
+    return true
   move_camera: (x,y) ->
     @camera_x += x
     @camera_y += y
