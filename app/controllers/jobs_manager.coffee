@@ -2,6 +2,7 @@ class JobsManager
   constructor: () ->
     @queue = []
   run: (units) ->
+    return -1 if @queue.length == 0
     for u in units
       if u.job == null
         u.job = @queue[0]
