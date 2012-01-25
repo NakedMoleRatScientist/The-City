@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalPile, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalPile, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -274,6 +274,9 @@
       var object;
       object = this.modes[n].update_mode(n);
       if (object === 0 || object === 1 || object === 2) {
+        if (object === 0) {
+          this.game_mode(null);
+        }
         return object;
       } else {
         this.game_mode(object.name);
@@ -675,6 +678,35 @@
     };
     return ScenarioMode;
   })();
+  JobsManager = (function() {
+    function JobsManager() {
+      this.queue = [];
+    }
+    JobsManager.prototype.run = function(units) {
+      var u, _i, _len, _results;
+      if (this.queue.length === 0) {
+        return -1;
+      }
+      _results = [];
+      for (_i = 0, _len = units.length; _i < _len; _i++) {
+        u = units[_i];
+        _results.push(u.job === null ? (u.job = this.queue[0], this.queue = this.queue.slice(0, 0)) : void 0);
+      }
+      return _results;
+    };
+    JobsManager.prototype.assign_queue = function(map) {
+      var s, _i, _len, _ref, _results;
+      this.map = map;
+      _ref = this.map.stockpoints;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        s = _ref[_i];
+        _results.push(s.check_assign() === false ? this.queue.push(s) : void 0);
+      }
+      return _results;
+    };
+    return JobsManager;
+  })();
   MsgManager = (function() {
     function MsgManager() {
       this.relations = [];
@@ -950,12 +982,28 @@
   })();
   CrystalPile = (function() {
     __extends(CrystalPile, Stockpile);
-    function CrystalPile() {
+    function CrystalPile(x, y) {
+      this.x = x;
+      this.y = y;
       CrystalPile.__super__.constructor.call(this);
       this.name = "CrystalPile";
+      this.persons = [];
+      this.priority = 4;
     }
     CrystalPile.prototype.collide = function() {
       return true;
+    };
+    CrystalPile.prototype.diameter = function() {
+      return 5;
+    };
+    CrystalPile.prototype.check_assign = function() {
+      if (this.persons.length === 0) {
+        return false;
+      }
+      return true;
+    };
+    CrystalPile.prototype.job = function() {
+      return "gather_crystals";
     };
     return CrystalPile;
   })();
@@ -1055,6 +1103,7 @@
           this.map[h] = new Array(width);
         }
       }
+      this.stockpoints = [];
     }
     Map.prototype.generate = function() {
       var h, i, w, x, y, _ref, _ref2, _results;
@@ -1086,13 +1135,27 @@
     };
     Map.prototype.add_stockpile = function(mouse) {
       var x, y;
-      x = mouse.x + this.camera_x;
-      y = mouse.y + this.camera_y;
-      x = Math.floor(x / 20);
-      y = Math.floor(y / 20);
+      x = mouse.x;
+      y = mouse.y;
+      x = Math.floor(x / 20) - this.camera_x;
+      y = Math.floor(y / 20) - this.camera_y;
       if (this.map[y][x] === null || this.map[y][x].collide() === false) {
-        return this.map[y][x] = new CrystalPile();
+        if (this.collision_detect(x, y) === false) {
+          this.map[y][x] = new CrystalPile(x, y);
+          return this.stockpoints.push(this.map[y][x]);
+        }
       }
+    };
+    Map.prototype.collision_detect = function(x, y) {
+      var pile, _i, _len, _ref;
+      _ref = this.stockpoints;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        pile = _ref[_i];
+        if (circle_collision(x, y, pile) === true) {
+          return true;
+        }
+      }
+      return false;
     };
     Map.prototype.move_camera = function(x, y) {
       this.camera_x += x;
@@ -1331,7 +1394,7 @@
       this.height = height;
     }
     mapDraw.prototype.draw = function(map) {
-      var height, object, results, width, _ref, _results;
+      var height, object, results, width, x, y, _ref, _results;
       results = map.map;
       this.p5.stroke(255);
       _results = [];
@@ -1342,7 +1405,10 @@
             _results2 = [];
             for (width = 0, _ref2 = this.width; 0 <= _ref2 ? width <= _ref2 : width >= _ref2; 0 <= _ref2 ? width++ : width--) {
               if (width < this.width) {
+                x = 20 * (width + map.camera_x);
+                y = 20 * (height + map.camera_y);
                 object = results[height][width];
+                this.p5.stroke(255, 255, 255);
                 if (object === null) {
                   this.p5.noFill();
                 } else {
@@ -1354,10 +1420,13 @@
                       this.p5.fill(0, 0, 255);
                       break;
                     case "crystal_stockpile":
+                      this.p5.noFill();
+                      this.p5.stroke(135, 206, 255);
+                      this.p5.ellipse(x + 10, y + 10, 100, 100);
                       this.p5.fill(135, 206, 255);
                   }
                 }
-                _results2.push(this.p5.rect(20 * (width + map.camera_x), 20 * (height + map.camera_y), 20, 20));
+                _results2.push(this.p5.rect(x, y, 20, 20));
               }
             }
             return _results2;
