@@ -19,10 +19,10 @@ class Map
   result: ->
     return @map
   add_stockpile:(mouse) ->
-    x = mouse.x + @camera_x
-    y = mouse.y + @camera_y
-    x = Math.floor(x / 20)
-    y = Math.floor(y / 20)
+    x = mouse.x
+    y = mouse.y
+    x = Math.floor(x / 20) - @camera_x
+    y = Math.floor(y / 20) - @camera_y
     if @map[y][x] == null || @map[y][x].collide() == false
       @map[y][x] = new CrystalPile()
 
