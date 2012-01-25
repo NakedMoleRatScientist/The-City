@@ -9,9 +9,9 @@ class mapDraw
         x = 20 * (width + map.camera_x)
         y = 20 * (height + map.camera_y)
         object = results[height][width]
+        @p5.stroke(255,255,255)
         if object == null
           @p5.noFill()
-          @p5.stroke(255,255,255)
         else
           switch (object.type)
             when "floor"
