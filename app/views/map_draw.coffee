@@ -11,6 +11,7 @@ class mapDraw
         object = results[height][width]
         if object == null
           @p5.noFill()
+          @p5.stroke(255,255,255)
         else
           switch (object.type)
             when "floor"
@@ -20,7 +21,7 @@ class mapDraw
             when "crystal_stockpile" #Crystal stockpile
               @p5.noFill()
               @p5.stroke(135,206,255)
-              @p5.ellipse(x,y,2,2)
+              @p5.ellipse(x,y,20,20)
               @p5.fill(135,206,255)
 
         @p5.rect(x,y,20,20)
