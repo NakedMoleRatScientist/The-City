@@ -954,6 +954,9 @@
       CrystalPile.__super__.constructor.call(this);
       this.name = "CrystalPile";
     }
+    CrystalPile.prototype.collide = function() {
+      return true;
+    };
     return CrystalPile;
   })();
   CrystalTree = (function() {
@@ -1073,7 +1076,7 @@
         if (i < 10) {
           x = Math.floor(Math.random() * 100);
           y = Math.floor(Math.random() * 100);
-          _results.push(this.map[x][y] = new CrystalTree());
+          _results.push(this.map[y][x] = new CrystalTree());
         }
       }
       return _results;
@@ -1083,14 +1086,12 @@
     };
     Map.prototype.add_stockpile = function(mouse) {
       var x, y;
-      x = Math.floor(mouse.x / 20);
-      y = Math.floor(mouse.y / 20);
-      x += this.camera_x;
-      y += this.camera_y;
-      if (this.map[x][y].collide() === true) {
-        return false;
-      } else {
-        return this.map[x][y] = new CrystalPile();
+      x = mouse.x + this.camera_x;
+      y = mouse.y + this.camera_y;
+      x = Math.floor(x / 20);
+      y = Math.floor(y / 20);
+      if (this.map[y][x] === null || this.map[y][x].collide() === false) {
+        return this.map[y][x] = new CrystalPile();
       }
     };
     Map.prototype.move_camera = function(x, y) {
