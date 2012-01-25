@@ -11,6 +11,8 @@ class ModeManager
     object = @modes[n].update_mode(n)
    #Need to clean up eventually
     if object == 0 || object == 1 || object == 2
+      if object == 0
+        this.game_mode(null)
       return object
     else
       this.game_mode(object.name)
