@@ -23,6 +23,8 @@ class Map
     y = Math.floor(mouse.y / 20)
     x += @camera_x
     y += @camera_y
+    if @map[x][y] == null
+      return false
     if @map[x][y].collide() == true
       return false
     else
