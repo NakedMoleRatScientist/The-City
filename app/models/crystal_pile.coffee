@@ -12,3 +12,5 @@ class CrystalPile extends Stockpile
     if @persons.length == 0
       return false
     return true
+  job: () ->
+    "gather_crystals"
