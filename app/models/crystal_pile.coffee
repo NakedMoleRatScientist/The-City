@@ -1,5 +1,5 @@
 class CrystalPile extends Stockpile
-  constructor: () ->
+  constructor: (@x,@y) ->
     super()
     @name = "CrystalPile"
   collide: () ->
