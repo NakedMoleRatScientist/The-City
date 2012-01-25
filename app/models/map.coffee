@@ -25,7 +25,7 @@ class Map
     x = Math.floor(x / 20) - @camera_x
     y = Math.floor(y / 20) - @camera_y
     if @map[y][x] == null || @map[y][x].collide() == false
-      @map[y][x] = new CrystalPile()
+      @map[y][x] = new CrystalPile(x,y)
 
   move_camera: (x,y) ->
     @camera_x += x
