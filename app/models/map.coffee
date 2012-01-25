@@ -24,7 +24,7 @@ class Map
     x += @camera_x
     y += @camera_y
     if @map[x][y] == null
-      return false
+      @map[x][y] = new CrystalPile()
     if @map[x][y].collide() == true
       return false
     else
