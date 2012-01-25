@@ -4,5 +4,5 @@ class CrystalPile extends Stockpile
     @name = "CrystalPile"
   collide: () ->
     return true
-  radius: () ->
-    return 2
+  diameter: () ->
+    return 5
