@@ -28,7 +28,7 @@ class Map
     if @map[y][x].collide() == true
       return false
     else
-      @map[x][y] = new CrystalPile()
+      @map[y][x] = new CrystalPile()
 
   move_camera: (x,y) ->
     @camera_x += x
