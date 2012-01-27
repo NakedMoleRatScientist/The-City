@@ -10,8 +10,9 @@ class JobsManager
         @queue = @queue.shift()
   queuing: () ->
     for s in @map.stockpoints
-      if s.check_assign() == false
+      if s.check_assign() == false && s.queue == false
         i = 0
+        s.queue = true
         length = @queue.length
         for q in @queue
           if q.priority < s.priority
