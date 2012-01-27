@@ -6,6 +6,7 @@ class CrystalPile extends Stockpile
     @priority = 4
     @diameter = 3
     @size = 10
+    @queue = false
   collide: () ->
     return true
   check_assign: () ->
