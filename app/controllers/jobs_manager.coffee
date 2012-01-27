@@ -1,5 +1,5 @@
 class JobsManager
-  constructor: (@map) ->
+  constructor: (@map,@units) ->
     @queue = []
   run: (units) ->
     return -1 if @queue.length == 0
