@@ -28,12 +28,12 @@ class Map
       if this.collision_detect(x,y) == false
         @map[y][x] = new CrystalPile(x,y)
         @stockpoints.push @map[y][x]
-  collision_detect: (x,y) ->
-    return false if @stockpoints.length == 0
-    for pile in @stockpoints
-      if circle_collision(x,y,pile) == true
-        return true
-    return false
+  # collision_detect: (x,y) ->
+  #   return false if @stockpoints.length == 0
+  #   for pile in @stockpoints
+  #     if circle_collision(x,y,pile) == true
+  #       return true
+  #   return false
   move_camera: (x,y) ->
     @camera_x += x
     @camera_y += y
