@@ -5,6 +5,7 @@ class GameMode extends Mode
     @units = new Units("game")
     @menu = -1
     @mouse = new Mouse()
+    @jobs = new JobManager(@map,@units.units)
     super("game")
   act: ->
     @units.move()
