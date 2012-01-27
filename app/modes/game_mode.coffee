@@ -10,6 +10,7 @@ class GameMode extends Mode
   act: ->
     @units.move()
     @units.clean()
+    @jobs.queuing()
   input: (result) ->
     super(result)
     if @state == -1
