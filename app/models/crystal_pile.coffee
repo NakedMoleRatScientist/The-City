@@ -4,7 +4,8 @@ class CrystalPile extends Stockpile
     @name = "CrystalPile"
     @persons = []
     @priority = 4
-    @diameter = 5
+    @diameter = 3
+    @size = 10
   collide: () ->
     return true
   check_assign: () ->
