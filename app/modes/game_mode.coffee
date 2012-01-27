@@ -11,6 +11,7 @@ class GameMode extends Mode
     @units.move()
     @units.clean()
     @jobs.queuing()
+    @jobs.assigns()
   input: (result) ->
     super(result)
     if @state == -1
