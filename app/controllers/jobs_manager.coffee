@@ -6,6 +6,7 @@ class JobsManager
     for u in @units
       if u.job == null
         u.job = @queue[0].job()
+        @queue[0].persons.push(u)
         @queue = @queue.shift()
   queuing: () ->
     for s in @map.stockpoints
