@@ -1,3 +1,4 @@
+#point-circle collision
 circle_collision = (x,y,object) ->
   dy = y - (object.y + object.diameter / 2);
   dx = x - (object.x + object.diameter / 2);
