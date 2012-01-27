@@ -18,5 +18,5 @@ class JobsManager
           if q.priority < s.priority
             @queue.splice(i,0,s)
             i += 1
-        if @queue.length == @queue.length
+        if @queue.length == length
           @queue.push(s)
