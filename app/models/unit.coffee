@@ -9,7 +9,7 @@ class Unit
     @inventory = []
     @job = null
     @queue = []
-    @order = 0
+    @order = null
   set_job: (job) ->
     @job = job
     @queue = @queue.orders
