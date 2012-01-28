@@ -8,6 +8,8 @@ class JobsManager
         u.job = @queue[0].job()
         @queue[0].persons.push(u)
         @queue = @queue.shift()
+        if @queue.length == 0
+          break
   queuing: () ->
     for s in @map.stockpoints
       if s.check_assign() == false && s.queue == false
