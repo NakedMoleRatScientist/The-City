@@ -14,12 +14,13 @@ class Unit
     @job = job
     @queue = @queue.orders
   find_crystal: () ->
-  set_action: () ->
+  set_action: (map) ->
     switch(@queue[@order])
       when "move_to_drop"
         this.set_move(@job.x,@job.y)
       when "crystal_move"
-        this.find_crystal()
+        object = map.calculate_nearest_tree()
+        this.set_move(object.x,object.y)
   set_move: (x,y) ->
     @goal_x = x
     @goal_y = y
