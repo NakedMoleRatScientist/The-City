@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalPile, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, point_circle_collision, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalPile, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, distance_between_two_points, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, point_circle_collision, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -14,14 +14,8 @@
     return -1;
   };
   circle_to_circle_collision = function(one, two) {
-    var combined_radii, distance, one_radius, square_x, square_y, substract_x, substract_y, two_radius, x, y;
-    substract_x = one.x - two.x;
-    substract_y = one.y - two.y;
-    square_x = substract_x * substract_x;
-    square_y = substract_y * substract_y;
-    x = Math.sqrt(square_x);
-    y = Math.sqrt(square_y);
-    distance = Math.sqrt(x + y);
+    var combined_radii, distance, one_radius, two_radius;
+    distance = distance_between_two_points(one, two);
     one_radius = one.diameter / 2;
     two_radius = two.diameter / 2;
     combined_radii = one_radius + two_radius;
@@ -29,6 +23,14 @@
       return true;
     }
     return false;
+  };
+  distance_between_two_points = function(one, two) {
+    var square_x, square_y, substract_x, substract_y;
+    substract_x = one.x - two.x;
+    substract_y = one.y - two.y;
+    square_x = substract_x * substract_x;
+    square_y = substract_y * substract_y;
+    return Math.sqrt(square_x + square_y);
   };
   menu = function(p5) {
     p5.setup = function() {
@@ -482,7 +484,7 @@
     function GameMode() {
       this.map = new Map(100, 100);
       this.map.generate();
-      this.units = new Units("game");
+      this.units = new Units(this.map);
       this.menu = -1;
       this.mouse = new Mouse();
       this.jobs = new JobsManager(this.map, this.units.units);
@@ -837,7 +839,8 @@
     return MsgManager;
   })();
   Units = (function() {
-    function Units(scenario) {
+    function Units(map) {
+      this.map = map;
       this.units = [];
       this.msg_manager = new MsgManager();
       this.fatalities = 0;
@@ -862,6 +865,10 @@
       _ref = this.units;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         unit = _ref[_i];
+        if (unit.order === null) {
+          unit.order = 0;
+          unit.set_action(this.map);
+        }
         unit.move();
       }
       _ref2 = this.units;
@@ -1150,6 +1157,7 @@
         }
       }
       this.stockpoints = [];
+      this.trees = [];
     }
     Map.prototype.generate = function() {
       var h, i, w, x, y, _ref, _ref2, _results;
@@ -1206,6 +1214,21 @@
         }
       }
       return false;
+    };
+    Map.prototype.calculate_nearest_tree = function(object) {
+      var distance, shortest, t, target, _i, _len, _ref;
+      shortest = 1000;
+      target = null;
+      _ref = this.trees;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        t = _ref[_i];
+        distance = distance_between_two_points(object, t);
+        if (distance < shortest) {
+          shortest = distance;
+          target = t;
+        }
+      }
+      return target;
     };
     Map.prototype.move_camera = function(x, y) {
       this.camera_x += x;
@@ -1316,16 +1339,25 @@
       this.inventory = [];
       this.job = null;
       this.queue = [];
-      this.order = 0;
+      this.order = null;
+      this.perform = null;
     }
     Unit.prototype.set_job = function(job) {
       this.job = job;
       return this.queue = this.queue.orders;
     };
-    Unit.prototype.set_action = function() {
+    Unit.prototype.find_crystal = function() {};
+    Unit.prototype.set_action = function(map) {
+      var object;
+      if (this.perform === this.order) {
+        return;
+      }
       switch (this.queue[this.order]) {
         case "move_to_drop":
           return this.set_move(this.job.x, this.job.y);
+        case "crystal_move":
+          object = map.calculate_nearest_tree();
+          return this.set_move(object.x, object.y);
       }
     };
     Unit.prototype.set_move = function(x, y) {
@@ -1345,8 +1377,15 @@
       }
       if ((this.y - this.goal_y) < 0) {
         this.y = this.y + 1;
+        return;
       } else if ((this.y - this.goal_y) > 0) {
         this.y = this.y - 1;
+        return;
+      }
+      if (this.y - this.goal_y === 0 && this.x - this.goal_x === 0) {
+        if (this.order !== null) {
+          return this.order += 1;
+        }
       }
     };
     Unit.prototype.attack_chance = function() {
