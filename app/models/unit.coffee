@@ -10,6 +10,9 @@ class Unit
     @job = null
     @queue = []
     @order = 0
+  set_job: (job) ->
+    @job = job
+    @queue = @queue.orders
   set_action: () ->
     switch(@queue[@order])
       when "crystal_move"
