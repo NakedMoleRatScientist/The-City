@@ -1,4 +1,4 @@
-distance_between_two_points = (one,two)
+distance_between_two_points = (one,two) ->
   substract_x = (one.x - two.x)
   substract_y = (one.y - two.y)
   square_x = substract_x * substract_x
