@@ -1,5 +1,5 @@
 class Units
-  constructor: (scenario,@map) ->
+  constructor: (@map) ->
     @units = []
     @msg_manager = new MsgManager()
     @fatalities = 0
