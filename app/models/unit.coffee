@@ -13,6 +13,7 @@ class Unit
   set_job: (job) ->
     @job = job
     @queue = @queue.orders
+  find_crystal: () ->
   set_action: () ->
     switch(@queue[@order])
       when "move_to_drop"
