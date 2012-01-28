@@ -38,10 +38,13 @@ class Map
     return false
   calculate_nearest_tree: (object) ->
     shortest = 1000
+    target = null
     for t in @trees
       distance = distance_between_two_points(object,t)
       if distance < shortest
         shortest = distance
+        target = t
+    return target
   move_camera: (x,y) ->
     @camera_x += x
     @camera_y += y
