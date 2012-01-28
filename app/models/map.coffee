@@ -36,6 +36,12 @@ class Map
       if circle_to_circle_collision(newpile,pile) == true
         return true
     return false
+  calculate_nearest_tree: (object) ->
+    shortest = 1000
+    for t in @trees
+      distance = distance_between_two_points(object,t)
+      if distance < shortest
+        shortest = distance
   move_camera: (x,y) ->
     @camera_x += x
     @camera_y += y
