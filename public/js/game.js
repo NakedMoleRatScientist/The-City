@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalPile, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, combatLogMenuDraw, combatMainMenuDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, point_circle_collision, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalPile, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, point_circle_collision, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -12,6 +12,23 @@
       if (this[i] === item) return i;
     }
     return -1;
+  };
+  circle_to_circle_collision = function(one, two) {
+    var combined_radii, distance, one_radius, square_x, square_y, substract_x, substract_y, two_radius, x, y;
+    substract_x = one.x - two.x;
+    substract_y = one.y - two.y;
+    square_x = substract_x * substract_x;
+    square_y = substract_y * substract_y;
+    x = Math.sqrt(square_x);
+    y = Math.sqrt(square_y);
+    distance = Math.sqrt(x + y);
+    one_radius = one.diameter / 2;
+    two_radius = two.diameter / 2;
+    combined_radii = one_radius + two_radius;
+    if (distance < combined_radii) {
+      return true;
+    }
+    return false;
   };
   menu = function(p5) {
     p5.setup = function() {
@@ -1163,15 +1180,32 @@
       return this.map;
     };
     Map.prototype.add_stockpile = function(mouse) {
-      var x, y;
+      var newpile, x, y;
       x = mouse.x;
       y = mouse.y;
       x = Math.floor(x / 20) - this.camera_x;
       y = Math.floor(y / 20) - this.camera_y;
       if (this.map[y][x] === null || this.map[y][x].collide() === false) {
-        this.map[y][x] = new CrystalPile(x, y);
-        return this.stockpoints.push(this.map[y][x]);
+        newpile = new CrystalPile(x, y);
+        if (this.collision_detect(newpile) === false) {
+          this.map[y][x] = newpile;
+          return this.stockpoints.push(this.map[y][x]);
+        }
       }
+    };
+    Map.prototype.collision_detect = function(newpile) {
+      var pile, _i, _len, _ref;
+      if (this.stockpoints.length === 0) {
+        return false;
+      }
+      _ref = this.stockpoints;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        pile = _ref[_i];
+        if (circle_to_circle_collision(newpile, pile) === true) {
+          return true;
+        }
+      }
+      return false;
     };
     Map.prototype.move_camera = function(x, y) {
       this.camera_x += x;
