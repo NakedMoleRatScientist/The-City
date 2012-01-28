@@ -7,7 +7,7 @@ class JobsManager
       if u.job == null
         u.job = @queue[0].job()
         @queue[0].persons.push(u)
-        @queue = @queue.shift()
+        @queue.shift()
         if @queue.length == 0
           break
   queuing: () ->
