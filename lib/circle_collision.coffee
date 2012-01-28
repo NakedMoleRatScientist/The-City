@@ -1,5 +1,5 @@
 #point-circle collision
-circle_collision = (x,y,object) ->
+point_circle_collision = (x,y,object) ->
   dy = y - (object.y + object.diameter / 2);
   dx = x - (object.x + object.diameter / 2);
   dm = Math.sqrt(dx * dx + dy * dy)
