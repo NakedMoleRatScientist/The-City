@@ -4,7 +4,7 @@ class CrystalPile extends Stockpile
     @name = "CrystalPile"
     @persons = []
     @priority = 4
-    @diameter = 3
+    @diameter = 5
     @size = 10
     @queue = false
     @orders = ["crystal_move","crystal_gather","move_to_drop"]
