@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalPile, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_collision, combatLogMenuDraw, combatMainMenuDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalPile, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, combatLogMenuDraw, combatMainMenuDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, point_circle_collision, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -12,17 +12,6 @@
       if (this[i] === item) return i;
     }
     return -1;
-  };
-  circle_collision = function(x, y, object) {
-    var dm, dx, dy;
-    dy = y - (object.y + object.diameter / 2);
-    dx = x - (object.x + object.diameter / 2);
-    dm = Math.sqrt(dx * dy + dy * dy);
-    if (dm < object.diameter) {
-      return true;
-    } else {
-      return false;
-    }
   };
   menu = function(p5) {
     p5.setup = function() {
@@ -291,6 +280,17 @@
     };
     return ModeManager;
   })();
+  point_circle_collision = function(x, y, object) {
+    var dm, dx, dy;
+    dy = y - (object.y + object.diameter / 2);
+    dx = x - (object.x + object.diameter / 2);
+    dm = Math.sqrt(dx * dx + dy * dy);
+    if (dm < object.diameter) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   RadioButton = (function() {
     function RadioButton(p5, x, y) {
       this.p5 = p5;
@@ -468,11 +468,14 @@
       this.units = new Units("game");
       this.menu = -1;
       this.mouse = new Mouse();
+      this.jobs = new JobsManager(this.map, this.units.units);
       GameMode.__super__.constructor.call(this, "game");
     }
     GameMode.prototype.act = function() {
       this.units.move();
-      return this.units.clean();
+      this.units.clean();
+      this.jobs.queuing();
+      return this.jobs.assigns();
     };
     GameMode.prototype.input = function(result) {
       GameMode.__super__.input.call(this, result);
@@ -679,29 +682,56 @@
     return ScenarioMode;
   })();
   JobsManager = (function() {
-    function JobsManager() {
+    function JobsManager(map, units) {
+      this.map = map;
+      this.units = units;
       this.queue = [];
     }
-    JobsManager.prototype.run = function(units) {
-      var u, _i, _len, _results;
+    JobsManager.prototype.assigns = function() {
+      var u, _i, _len, _ref, _results;
       if (this.queue.length === 0) {
         return -1;
       }
+      _ref = this.units;
       _results = [];
-      for (_i = 0, _len = units.length; _i < _len; _i++) {
-        u = units[_i];
-        _results.push(u.job === null ? (u.job = this.queue[0], this.queue = this.queue.slice(0, 0)) : void 0);
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        u = _ref[_i];
+        if (u.job === null) {
+          u.set_job(this.queue[0]);
+          this.queue[0].persons.push(u);
+          this.queue.shift();
+          if (this.queue.length === 0) {
+            break;
+          }
+        }
       }
       return _results;
     };
-    JobsManager.prototype.assign_queue = function(map) {
-      var s, _i, _len, _ref, _results;
-      this.map = map;
+    JobsManager.prototype.queuing = function() {
+      var i, length, q, s, _i, _len, _ref, _results;
       _ref = this.map.stockpoints;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         s = _ref[_i];
-        _results.push(s.check_assign() === false ? this.queue.push(s) : void 0);
+        _results.push((function() {
+          var _j, _len2, _ref2;
+          if (s.check_assign() === false && s.queue === false) {
+            i = 0;
+            s.queue = true;
+            length = this.queue.length;
+            _ref2 = this.queue;
+            for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+              q = _ref2[_j];
+              if (q.priority < s.priority) {
+                this.queue.splice(i, 0, s);
+                i += 1;
+              }
+            }
+            if (this.queue.length === length) {
+              return this.queue.push(s);
+            }
+          }
+        }).call(this));
       }
       return _results;
     };
@@ -989,12 +1019,13 @@
       this.name = "CrystalPile";
       this.persons = [];
       this.priority = 4;
+      this.diameter = 5;
+      this.size = 10;
+      this.queue = false;
+      this.orders = ["crystal_move", "crystal_gather", "move_to_drop"];
     }
     CrystalPile.prototype.collide = function() {
       return true;
-    };
-    CrystalPile.prototype.diameter = function() {
-      return 5;
     };
     CrystalPile.prototype.check_assign = function() {
       if (this.persons.length === 0) {
@@ -1002,9 +1033,7 @@
       }
       return true;
     };
-    CrystalPile.prototype.job = function() {
-      return "gather_crystals";
-    };
+    CrystalPile.prototype.set_drop = function() {};
     return CrystalPile;
   })();
   CrystalTree = (function() {
@@ -1140,22 +1169,9 @@
       x = Math.floor(x / 20) - this.camera_x;
       y = Math.floor(y / 20) - this.camera_y;
       if (this.map[y][x] === null || this.map[y][x].collide() === false) {
-        if (this.collision_detect(x, y) === false) {
-          this.map[y][x] = new CrystalPile(x, y);
-          return this.stockpoints.push(this.map[y][x]);
-        }
+        this.map[y][x] = new CrystalPile(x, y);
+        return this.stockpoints.push(this.map[y][x]);
       }
-    };
-    Map.prototype.collision_detect = function(x, y) {
-      var pile, _i, _len, _ref;
-      _ref = this.stockpoints;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        pile = _ref[_i];
-        if (circle_collision(x, y, pile) === true) {
-          return true;
-        }
-      }
-      return false;
     };
     Map.prototype.move_camera = function(x, y) {
       this.camera_x += x;
@@ -1265,7 +1281,19 @@
       this.kills = [];
       this.inventory = [];
       this.job = null;
+      this.queue = [];
+      this.order = 0;
     }
+    Unit.prototype.set_job = function(job) {
+      this.job = job;
+      return this.queue = this.queue.orders;
+    };
+    Unit.prototype.set_action = function() {
+      switch (this.queue[this.order]) {
+        case "move_to_drop":
+          return this.set_move(this.job.x, this.job.y);
+      }
+    };
     Unit.prototype.set_move = function(x, y) {
       this.goal_x = x;
       return this.goal_y = y;
