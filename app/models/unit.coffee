@@ -11,8 +11,9 @@ class Unit
     @queue = []
     @order = 0
   set_queue: () ->
-    if @queue[@order] == "crystal_move"
-      this.set_move(@job.x,@job.y)
+    switch(@queue[@order])
+      when "crystal_move"
+        this.set_move(@job.x,@job.y)
   set_move: (x,y) ->
     @goal_x = x
     @goal_y = y
