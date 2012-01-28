@@ -32,7 +32,7 @@ class Map
   collision_detect: (newpile) ->
     return false if @stockpoints.length == 0
     for pile in @stockpoints
-      if circle_to_cricle_collision(newpile,pile) == true
+      if circle_to_circle_collision(newpile,pile) == true
         return true
     return false
   move_camera: (x,y) ->
