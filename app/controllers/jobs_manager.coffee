@@ -5,7 +5,7 @@ class JobsManager
     return -1 if @queue.length == 0
     for u in @units
       if u.job == null
-        u.job = @queue[0].job()
+        u.job = @queue[0]
         @queue[0].persons.push(u)
         @queue.shift()
         if @queue.length == 0
