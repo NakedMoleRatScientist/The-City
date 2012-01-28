@@ -2,7 +2,7 @@ class GameMode extends Mode
   constructor: ->
     @map = new Map(100,100)
     @map.generate()
-    @units = new Units("game")
+    @units = new Units()
     @menu = -1
     @mouse = new Mouse()
     @jobs = new JobsManager(@map,@units.units)
