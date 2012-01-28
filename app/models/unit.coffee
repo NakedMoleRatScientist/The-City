@@ -38,6 +38,9 @@ class Unit
     else if (@y - @goal_y) > 0
       @y = @y - 1
       return
+    if @y - @goal_y == 0 && @x - @goal_x == 0
+      if @order != null
+        @order += 1
   attack_chance: () ->
     @goal_x = @target.x - 1
     @goal_y = @target.y - 1
