@@ -9,6 +9,9 @@ class Unit
     @inventory = []
     @job = null
     @queue = []
+  set_queue: () ->
+    if @job != null
+      this.set_move(@job.x,@job.y)
   set_move: (x,y) ->
     @goal_x = x
     @goal_y = y
