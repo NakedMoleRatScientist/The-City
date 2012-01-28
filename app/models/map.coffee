@@ -6,6 +6,7 @@ class Map
     for h in [0..height] when h < height
       @map[h] = new Array(width)
     @stockpoints = []
+    @trees = []
   generate: ->
     for h in [0..@map.length] when h < @map.length
       for w in [0..@map[h].length] when w < @map[h].length
