@@ -27,7 +27,7 @@ class Map
     if @map[y][x] == null || @map[y][x].collide() == false
       @map[y][x] = new CrystalPile(x,y)
       @stockpoints.push @map[y][x]
-  collision_detect: (x,y) ->
+  collision_detect: (newpile) ->
     return false if @stockpoints.length == 0
     for pile in @stockpoints
       if circle_to_cricle_collision(newpile,pile) == true
