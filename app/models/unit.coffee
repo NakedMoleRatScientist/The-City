@@ -15,7 +15,7 @@ class Unit
     @queue = @queue.orders
   set_action: () ->
     switch(@queue[@order])
-      when "crystal_move"
+      when "move_to_drop"
         this.set_move(@job.x,@job.y)
   set_move: (x,y) ->
     @goal_x = x
