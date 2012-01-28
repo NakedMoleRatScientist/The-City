@@ -25,8 +25,10 @@ class Map
     x = Math.floor(x / 20) - @camera_x
     y = Math.floor(y / 20) - @camera_y
     if @map[y][x] == null || @map[y][x].collide() == false
-      @map[y][x] = new CrystalPile(x,y)
-      @stockpoints.push @map[y][x]
+      newpile = new CrystalPile(x,y)
+      if collision_detect(newpile) == false
+        @map[y][x] = newpile
+        @stockpoints.push @map[y][x]
   collision_detect: (newpile) ->
     return false if @stockpoints.length == 0
     for pile in @stockpoints
