@@ -16,6 +16,7 @@ class Unit
     @queue = @queue.orders
   find_crystal: () ->
   set_action: (map) ->
+    return if @perform == @order
     switch(@queue[@order])
       when "move_to_drop"
         this.set_move(@job.x,@job.y)
