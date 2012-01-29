@@ -281,15 +281,7 @@
     ModeManager.prototype.update_mode = function(n) {
       var object;
       object = this.modes[n].update_mode(n);
-      if (object === 0 || object === 1 || object === 2) {
-        if (object === 0) {
-          this.game_mode(null);
-        }
-        return object;
-      } else {
-        this.game_mode(object.name);
-        return object.mode;
-      }
+      return object;
     };
     ModeManager.prototype.game_mode = function(name) {
       return this.modes[0].units.initialize_scenario(name);
@@ -717,6 +709,7 @@
         u = _ref[_i];
         if (u.job === null) {
           u.set_job(this.queue[0]);
+          u.order = 0;
           this.queue[0].persons.push(u);
           this.queue.shift();
           if (this.queue.length === 0) {
@@ -865,8 +858,7 @@
       _ref = this.units;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         unit = _ref[_i];
-        if (unit.order === null) {
-          unit.order = 0;
+        if (unit.act_on_queue === false) {
           unit.set_action(this.map);
         }
         unit.move();
@@ -1346,19 +1338,28 @@
       this.job = job;
       return this.queue = this.queue.orders;
     };
-    Unit.prototype.find_crystal = function() {};
+    Unit.prototype.act_on_queue = function() {
+      if (this.perform === this.order || this.queue.length === 0) {
+        return true;
+      }
+      return false;
+    };
     Unit.prototype.set_action = function(map) {
       var object;
-      if (this.perform === this.order) {
+      if (this.act_on_queue) {
         return;
       }
       switch (this.queue[this.order]) {
         case "move_to_drop":
-          return this.set_move(this.job.x, this.job.y);
+          console.log("EE");
+          this.set_move(this.job.x, this.job.y);
+          break;
         case "crystal_move":
+          console.log("DEE");
           object = map.calculate_nearest_tree();
-          return this.set_move(object.x, object.y);
+          this.set_move(object.x, object.y);
       }
+      return this.perform = this.order;
     };
     Unit.prototype.set_move = function(x, y) {
       this.goal_x = x;
