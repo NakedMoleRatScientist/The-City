@@ -19,7 +19,6 @@ class Units
   move: () ->
     for unit in @units
       if unit.act_on_queue == false
-        unit.order = 0
         unit.set_action(@map)
       unit.move()
     @msg_manager.strike(unit.attack()) for unit in @units
