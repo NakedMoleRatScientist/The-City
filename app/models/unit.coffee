@@ -14,7 +14,8 @@ class Unit
   set_job: (job) ->
     @job = job
     @queue = @queue.orders
-  find_crystal: () ->
+  act_on_queue: () ->
+    if @perform == @order || @queue.length == 0
   set_action: (map) ->
     return if @perform == @order || @queue.length == 0
     switch(@queue[@order])
