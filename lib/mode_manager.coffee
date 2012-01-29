@@ -15,3 +15,7 @@ class ModeManager
     @modes[0].units.initialize_scenario(name)
   mouse_input:(n,result) ->
     @modes[n].mouse_input(result)
+  switch_mode: (n) ->
+    @n = n
+    if @n == 0
+      this.game_mode("game")
