@@ -13,9 +13,9 @@ class MenuMode extends Mode
         @options.increase()
       when "select"
         if @options.pointer == 0
-          @mode = 0
+          return (change: 0)
         else
-          @mode = 2
+          return (change: 2)
 
   update_draw: (n) ->
     return (options:  @options.options, pointer: @options.pointer, state: null)
