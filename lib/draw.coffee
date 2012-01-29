@@ -17,7 +17,7 @@ menu = (p5) ->
     p5.mouse_input(@key_manager.mouse_pressed(@logic_manager))
 
   p5.mouse_input = (result) ->
-    @logic_manager.mouse_input(@mode,result)
+    @logic_manager.mouse_input(result)
   p5.input_result = (result) ->
     @logic_manager.input(@mode,result)
     @draw_manager.input(@mode,result)
