@@ -10,13 +10,7 @@ class ModeManager
   update_mode: (n) ->
     object = @modes[n].update_mode(n)
    #Need to clean up eventually
-    if object == 0 || object == 1 || object == 2
-      if object == 0
-        this.game_mode(null)
-      return object
-    else
-      this.game_mode(object.name)
-      return object.mode
+    return object
   game_mode: (name) ->
     @modes[0].units.initialize_scenario(name)
   mouse_input:(n,result) ->
