@@ -8,4 +8,3 @@ class Mode
     @minor.input(result)
   update_draw: () ->
     @minor.update_draw()
-  mouse_input: () ->
