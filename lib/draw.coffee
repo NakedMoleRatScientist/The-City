@@ -13,6 +13,7 @@ menu = (p5) ->
   p5.keyPressed = () ->
     p5.input_result(@key_manager.key_pressed(@logic_manager))
 
+
   p5.mousePressed = () ->
     p5.mouse_input(@key_manager.mouse_pressed(@logic_manager))
 
@@ -20,7 +21,7 @@ menu = (p5) ->
     @logic_manager.mouse_input(result)
   p5.input_result = (result) ->
     @logic_manager.input(result)
-    @draw_manager.input(result)
+    @draw_manager.input(@logic_manager,result)
   p5.logic = () ->
     @logic_manager.act()
     @draw_manager.draw(@logic_manager)
