@@ -22,7 +22,7 @@ menu = (p5) ->
     @logic_manager.input(result)
     @draw_manager.input(result)
   p5.logic = () ->
-    @logic_manager.act(@mode)
+    @logic_manager.act()
     @draw_manager.draw(@mode,@logic_manager)
 
 
