@@ -5,7 +5,9 @@ class ModeManager
   act: () ->
     @modes[@n].act()
   input: (result) ->
-    @modes[@n].input(result)
+    object = @modes[@n].input(result)
+    if object.change != null
+      this.switch_mode(object.change)
   update_draw: () ->
     return @modes[@n].update_draw()
   game_mode: (@name) ->
