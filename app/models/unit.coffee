@@ -23,6 +23,7 @@ class Unit
       when "crystal_move"
         object = map.calculate_nearest_tree()
         this.set_move(object.x,object.y)
+    @perform = @order
   set_move: (x,y) ->
     @goal_x = x
     @goal_y = y
