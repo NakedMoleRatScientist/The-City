@@ -11,10 +11,10 @@ menu = (p5) ->
     @key_manager = new KeyModeManager(p5)
 
   p5.keyPressed = () ->
-    p5.input_result(@key_manager.key_pressed(@mode,@logic_manager))
+    p5.input_result(@key_manager.key_pressed(@logic_manager))
 
   p5.mousePressed = () ->
-    p5.mouse_input(@key_manager.mouse_pressed(@mode,@logic_manager))
+    p5.mouse_input(@key_manager.mouse_pressed(@logic_manager))
 
   p5.mouse_input = (result) ->
     @logic_manager.mouse_input(@mode,result)
