@@ -12,6 +12,7 @@ class ScenarioMode extends Mode
         @options.increase()
       when "select"
         @mode = 0
+    return (change: false)
   update_draw: () ->
     return (options: @options.options, pointer: @options.pointer)
   update_mode: (n) ->
