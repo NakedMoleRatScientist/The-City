@@ -6,6 +6,7 @@ class JobsManager
     for u in @units
       if u.job == null
         u.set_job(@queue[0])
+        u.order = 0
         @queue[0].persons.push(u)
         @queue.shift()
         if @queue.length == 0
