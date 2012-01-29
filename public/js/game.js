@@ -37,27 +37,25 @@
       p5.size(800, 600);
       p5.frameRate(50);
       p5.background(0);
-      this.mode = 1;
       this.logic_manager = new ModeManager();
       this.draw_manager = new DrawModeManager(p5);
       return this.key_manager = new KeyModeManager(p5);
     };
     p5.keyPressed = function() {
-      return p5.input_result(this.key_manager.key_pressed(this.mode, this.logic_manager));
+      return p5.input_result(this.key_manager.key_pressed(this.logic_manager));
     };
     p5.mousePressed = function() {
-      return p5.mouse_input(this.key_manager.mouse_pressed(this.mode, this.logic_manager));
+      return p5.mouse_input(this.key_manager.mouse_pressed(this.logic_manager));
     };
     p5.mouse_input = function(result) {
-      return this.logic_manager.mouse_input(this.mode, result);
+      return this.logic_manager.mouse_input(result);
     };
     p5.input_result = function(result) {
-      this.logic_manager.input(this.mode, result);
-      this.draw_manager.input(this.mode, result);
-      return this.mode = this.logic_manager.update_mode(this.mode);
+      this.logic_manager.input(result);
+      return this.draw_manager.input(result);
     };
     p5.logic = function() {
-      this.logic_manager.act(this.mode);
+      this.logic_manager.act();
       return this.draw_manager.draw(this.mode, this.logic_manager);
     };
     return p5.draw = function() {
@@ -99,11 +97,11 @@
       this.p5 = p5;
       this.modes = initializeDrawModes(this.p5);
     }
-    DrawModeManager.prototype.draw = function(n, logic) {
-      return this.modes[n].draw(logic.update_draw(n));
+    DrawModeManager.prototype.draw = function(logic) {
+      return this.modes[logic.n].draw(logic.update_draw());
     };
-    DrawModeManager.prototype.input = function(n, result) {
-      return this.modes[n].input(result);
+    DrawModeManager.prototype.input = function(logic, result) {
+      return this.modes[logic.n].input(result);
     };
     return DrawModeManager;
   })();
@@ -199,21 +197,21 @@
       this.p5 = p5;
       this.modes = initializeKeyModes(this.p5);
     }
-    KeyModeManager.prototype.key_pressed = function(n, logic) {
+    KeyModeManager.prototype.key_pressed = function(logic) {
       var state;
-      state = (logic.update_draw(n)).state;
+      state = (logic.update_draw()).state;
       if (state === null) {
-        return this.modes[n].key_pressed();
+        return this.modes[logic.n].key_pressed();
       }
-      return this.modes[n].key_pressed(state);
+      return this.modes[logic.n].key_pressed(state);
     };
-    KeyModeManager.prototype.mouse_pressed = function(n, logic) {
+    KeyModeManager.prototype.mouse_pressed = function(logic) {
       var state;
-      state = (logic.update_draw(n)).state;
+      state = (logic.update_draw()).state;
       if (state === null) {
-        return this.modes[n].mouse_pressed();
+        return this.modes[logic.n].mouse_pressed();
       }
-      return this.modes[n].mouse_pressed(state);
+      return this.modes[logic.n].mouse_pressed(state);
     };
     return KeyModeManager;
   })();
@@ -268,26 +266,34 @@
   ModeManager = (function() {
     function ModeManager() {
       this.modes = initializeModes();
+      this.n = 1;
     }
-    ModeManager.prototype.act = function(n) {
-      return this.modes[n].act();
+    ModeManager.prototype.act = function() {
+      return this.modes[this.n].act();
     };
-    ModeManager.prototype.input = function(n, result) {
-      return this.modes[n].input(result);
+    ModeManager.prototype.input = function(result) {
+      return this.modes[this.n].input(result);
     };
-    ModeManager.prototype.update_draw = function(n) {
-      return this.modes[n].update_draw();
+    ModeManager.prototype.update_draw = function() {
+      return this.modes[this.n].update_draw();
     };
-    ModeManager.prototype.update_mode = function(n) {
+    ModeManager.prototype.update_mode = function() {
       var object;
-      object = this.modes[n].update_mode(n);
+      object = this.modes[this.n].update_mode(this.n);
       return object;
     };
     ModeManager.prototype.game_mode = function(name) {
-      return this.modes[0].units.initialize_scenario(name);
+      this.name = name;
+      return this.modes[0].units.initialize_scenario(this.name);
     };
-    ModeManager.prototype.mouse_input = function(n, result) {
-      return this.modes[n].mouse_input(result);
+    ModeManager.prototype.mouse_input = function(result) {
+      return this.modes[this.n].mouse_input(result);
+    };
+    ModeManager.prototype.switch_mode = function(n) {
+      this.n = n;
+      if (this.n === 0) {
+        return this.game_mode("game");
+      }
     };
     return ModeManager;
   })();
