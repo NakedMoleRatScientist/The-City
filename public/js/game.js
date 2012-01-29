@@ -257,6 +257,7 @@
     Mode.prototype.update_draw = function() {
       return this.minor.update_draw();
     };
+    Mode.prototype.mouse_input = function(result) {};
     return Mode;
   })();
   ModeManager = (function() {
@@ -270,7 +271,7 @@
     ModeManager.prototype.input = function(result) {
       var object;
       object = this.modes[this.n].input(result);
-      if (object.change !== null) {
+      if (object.change !== false) {
         return this.switch_mode(object.change);
       }
     };
@@ -495,39 +496,47 @@
         switch (result) {
           case "up":
             this.map.move_camera(0, -1);
-            return this.mouse.offset(0, -1);
+            this.mouse.offset(0, -1);
+            break;
           case "down":
             this.map.move_camera(0, 1);
-            return this.mouse.offset(0, 1);
+            this.mouse.offset(0, 1);
+            break;
           case "left":
             this.map.move_camera(-1, 0);
-            return this.mouse.offset(-1, 0);
+            this.mouse.offset(-1, 0);
+            break;
           case "right":
             this.map.move_camera(1, 0);
-            return this.mouse.offset(1, 0);
+            this.mouse.offset(1, 0);
+            break;
           case "crystal":
             if (this.menu === 1) {
               this.mouse.mode = 1;
-              return this.mouse.build = "crystal";
+              this.mouse.build = "crystal";
             }
             break;
           case "report":
             this.state = 0;
-            return this.minor.update();
+            this.minor.update();
+            break;
           case "build":
             if (this.menu === 0) {
-              return this.menu = 1;
+              this.menu = 1;
             }
             break;
           case "menu":
             if (this.menu !== -1) {
               this.menu = -1;
-              return this.mouse.mode = 0;
+              this.mouse.mode = 0;
             } else if (this.menu === -1) {
-              return this.menu = 0;
+              this.menu = 0;
             }
         }
       }
+      return {
+        change: false
+      };
     };
     GameMode.prototype.mouse_input = function(result) {
       if (this.state === -1) {
@@ -597,9 +606,11 @@
     MenuMode.prototype.input = function(result) {
       switch (result) {
         case "up":
-          return this.options.decrease();
+          this.options.decrease();
+          break;
         case "down":
-          return this.options.increase();
+          this.options.increase();
+          break;
         case "select":
           if (this.options.pointer === 0) {
             return {
@@ -611,6 +622,9 @@
             };
           }
       }
+      return {
+        change: false
+      };
     };
     MenuMode.prototype.update_draw = function(n) {
       return {
@@ -643,6 +657,7 @@
       this.p5 = p5;
     }
     ScenarioKeyMode.prototype.key_pressed = function(state) {
+      console.log(this.p5.key.code);
       switch (this.p5.key.code) {
         case 115:
           return "down";
@@ -665,12 +680,20 @@
     ScenarioMode.prototype.input = function(result) {
       switch (result) {
         case "up":
-          return this.options.decrease();
+          this.options.decrease();
+          break;
         case "down":
-          return this.options.increase();
+          this.options.increase();
+          break;
         case "select":
-          return this.mode = 0;
+          return {
+            change: 0,
+            name: this.options.selected()
+          };
       }
+      return {
+        change: false
+      };
     };
     ScenarioMode.prototype.update_draw = function() {
       return {
