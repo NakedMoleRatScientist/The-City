@@ -19,7 +19,7 @@ class Unit
       return true
     return false
   set_action: (map) ->
-    return if @perform == @order || @queue.length == 0
+    return if this.act_on_queue
     switch(@queue[@order])
       when "move_to_drop"
         console.log("EE")
