@@ -18,7 +18,7 @@ class Units
         @units.push new Unit(12,10, "Cibo",1)
   move: () ->
     for unit in @units
-      if unit.order == null
+      if unit.act_on_queue == false
         unit.order = 0
         unit.set_action(@map)
       unit.move()
