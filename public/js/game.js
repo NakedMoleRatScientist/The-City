@@ -52,11 +52,11 @@
     };
     p5.input_result = function(result) {
       this.logic_manager.input(result);
-      return this.draw_manager.input(result);
+      return this.draw_manager.input(this.logic_manager, result);
     };
     p5.logic = function() {
       this.logic_manager.act();
-      return this.draw_manager.draw(this.mode, this.logic_manager);
+      return this.draw_manager.draw(this.logic_manager);
     };
     return p5.draw = function() {
       return p5.logic();
@@ -257,10 +257,6 @@
     Mode.prototype.update_draw = function() {
       return this.minor.update_draw();
     };
-    Mode.prototype.mouse_input = function() {};
-    Mode.prototype.update_mode = function(n) {
-      return n;
-    };
     return Mode;
   })();
   ModeManager = (function() {
@@ -272,15 +268,14 @@
       return this.modes[this.n].act();
     };
     ModeManager.prototype.input = function(result) {
-      return this.modes[this.n].input(result);
+      var object;
+      object = this.modes[this.n].input(result);
+      if (object.change !== null) {
+        return this.switch_mode(object.change);
+      }
     };
     ModeManager.prototype.update_draw = function() {
       return this.modes[this.n].update_draw();
-    };
-    ModeManager.prototype.update_mode = function() {
-      var object;
-      object = this.modes[this.n].update_mode(this.n);
-      return object;
     };
     ModeManager.prototype.game_mode = function(name) {
       this.name = name;
@@ -290,10 +285,10 @@
       return this.modes[this.n].mouse_input(result);
     };
     ModeManager.prototype.switch_mode = function(n) {
-      this.n = n;
-      if (this.n === 0) {
-        return this.game_mode("game");
+      if (n === 0 && this.n === 1) {
+        this.game_mode("game");
       }
+      return this.n = n;
     };
     return ModeManager;
   })();
@@ -607,9 +602,13 @@
           return this.options.increase();
         case "select":
           if (this.options.pointer === 0) {
-            return this.mode = 0;
+            return {
+              change: 0
+            };
           } else {
-            return this.mode = 2;
+            return {
+              change: 2
+            };
           }
       }
     };
@@ -619,13 +618,6 @@
         pointer: this.options.pointer,
         state: null
       };
-    };
-    MenuMode.prototype.update_mode = function(n) {
-      if (this.mode === -1) {
-        return MenuMode.__super__.update_mode.call(this, n);
-      } else {
-        return this.mode;
-      }
     };
     return MenuMode;
   })();
