@@ -4,7 +4,7 @@ class ModeManager
     @n = 1
   act: () ->
     @modes[@n].act()
-  i@nput: (result) ->
+  input: (result) ->
     @modes[@n].input(result)
   update_draw: () ->
     return @modes[@n].update_draw()
