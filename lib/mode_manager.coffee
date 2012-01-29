@@ -6,7 +6,7 @@ class ModeManager
     @modes[@n].act()
   input: (result) ->
     object = @modes[@n].input(result)
-    if object.change != null
+    if object.change != false
       this.switch_mode(object.change)
   update_draw: () ->
     return @modes[@n].update_draw()
