@@ -1,6 +1,7 @@
 class ModeManager
   constructor: ->
     @modes = initializeModes()
+    @n = 1
   act: (n) ->
     @modes[n].act()
   input: (n,result) ->
