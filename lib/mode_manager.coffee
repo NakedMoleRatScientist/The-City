@@ -18,5 +18,5 @@ class ModeManager
     @modes[@n].mouse_input(result)
   switch_mode: (n) ->
     @n = n
-    if @ == 0
+    if @n == 0
       this.game_mode("game")
