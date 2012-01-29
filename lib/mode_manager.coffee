@@ -11,10 +11,10 @@ class ModeManager
   update_mode: () ->
     object = @modes[@n].update_mode(@n)
    #@Need to clea@n up eve@ntually
-    retur@n object
+    return object
   game_mode: (@name) ->
     @modes[0].units.initialize_scenario(@name)
-  mouse_i@nput:(result) ->
+  mouse_input:(result) ->
     @modes[@n].mouse_input(result)
   switch_mode: (n) ->
     @n = n
