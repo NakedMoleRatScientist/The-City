@@ -3,5 +3,5 @@ class DrawModeManager
     @modes = initializeDrawModes(@p5)
   draw: (logic) ->
     @modes[logic.n].draw(logic.update_draw())
-  input: (n, result) ->
-    @modes[n].input(result)
+  input: (logic, result) ->
+    @modes[logic.n].input(result)
