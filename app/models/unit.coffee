@@ -16,6 +16,8 @@ class Unit
     @queue = @queue.orders
   act_on_queue: () ->
     if @perform == @order || @queue.length == 0
+      return true
+    return false
   set_action: (map) ->
     return if @perform == @order || @queue.length == 0
     switch(@queue[@order])
