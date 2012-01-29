@@ -16,6 +16,7 @@ class MenuMode extends Mode
           return (change: 0)
         else
           return (change: 2)
+    return (change: false)
 
   update_draw: (n) ->
     return (options:  @options.options, pointer: @options.pointer, state: null)
