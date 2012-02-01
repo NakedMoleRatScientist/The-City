@@ -1,5 +1,5 @@
 class CrystalTree
-  constructor: () ->
+  constructor: (@x,@y) ->
     @pile = 50
     @type = "crystal_tree"
   collide: () ->
