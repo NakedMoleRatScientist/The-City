@@ -18,8 +18,7 @@ class Units
         @units.push new Unit(12,10, "Cibo",1)
   move: () ->
     for unit in @units
-      if unit.act_on_queue == false
-        unit.set_action(@map)
+      unit.set_action(@map)
       unit.move()
     @msg_manager.strike(unit.attack()) for unit in @units
     @msg_manager.combat_death(unit.nullify_target()) for unit in @units
