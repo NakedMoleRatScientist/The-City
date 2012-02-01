@@ -272,7 +272,7 @@
       var object;
       object = this.modes[this.n].input(result);
       if (object.change !== false) {
-        return this.switch_mode(object.change);
+        return this.switch_mode(object);
       }
     };
     ModeManager.prototype.update_draw = function() {
@@ -285,9 +285,13 @@
     ModeManager.prototype.mouse_input = function(result) {
       return this.modes[this.n].mouse_input(result);
     };
-    ModeManager.prototype.switch_mode = function(n) {
+    ModeManager.prototype.switch_mode = function(object) {
+      var n;
+      n = object.change;
       if (n === 0 && this.n === 1) {
         this.game_mode("game");
+      } else if (n === 0 && this.n === 2) {
+        this.game_mode(object.name);
       }
       return this.n = n;
     };
@@ -357,6 +361,9 @@
     };
     TextOptions.prototype.clean = function() {
       return this.options = [];
+    };
+    TextOptions.prototype.selected = function() {
+      return this.options[this.pointer];
     };
     return TextOptions;
   })();
@@ -701,16 +708,6 @@
         pointer: this.options.pointer
       };
     };
-    ScenarioMode.prototype.update_mode = function(n) {
-      if (this.mode === -1) {
-        return ScenarioMode.__super__.update_mode.call(this, n);
-      } else {
-        return {
-          mode: this.mode,
-          name: this.options.options[this.options.pointer]
-        };
-      }
-    };
     return ScenarioMode;
   })();
   JobsManager = (function() {
@@ -879,9 +876,7 @@
       _ref = this.units;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         unit = _ref[_i];
-        if (unit.act_on_queue === false) {
-          unit.set_action(this.map);
-        }
+        unit.set_action(this.map);
         unit.move();
       }
       _ref2 = this.units;
@@ -1074,7 +1069,9 @@
     return CrystalPile;
   })();
   CrystalTree = (function() {
-    function CrystalTree() {
+    function CrystalTree(x, y) {
+      this.x = x;
+      this.y = y;
       this.pile = 50;
       this.type = "crystal_tree";
     }
@@ -1192,7 +1189,7 @@
         if (i < 10) {
           x = Math.floor(Math.random() * 100);
           y = Math.floor(Math.random() * 100);
-          _results.push(this.map[y][x] = new CrystalTree());
+          _results.push(this.map[y][x] = new CrystalTree(x, y));
         }
       }
       return _results;
@@ -1228,7 +1225,7 @@
       }
       return false;
     };
-    Map.prototype.calculate_nearest_tree = function(object) {
+    Map.prototype.calculate_nearest_object = function(object) {
       var distance, shortest, t, target, _i, _len, _ref;
       shortest = 1000;
       target = null;
@@ -1357,7 +1354,7 @@
     }
     Unit.prototype.set_job = function(job) {
       this.job = job;
-      return this.queue = this.queue.orders;
+      return this.queue = job.orders;
     };
     Unit.prototype.act_on_queue = function() {
       if (this.perform === this.order || this.queue.length === 0) {
@@ -1367,7 +1364,7 @@
     };
     Unit.prototype.set_action = function(map) {
       var object;
-      if (this.act_on_queue) {
+      if (this.act_on_queue()) {
         return;
       }
       switch (this.queue[this.order]) {
