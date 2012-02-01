@@ -7,7 +7,7 @@ class ModeManager
   input: (result) ->
     object = @modes[@n].input(result)
     if object.change != false
-      this.switch_mode(object.change)
+      this.switch_mode(object)
   update_draw: () ->
     return @modes[@n].update_draw()
   game_mode: (@name) ->
