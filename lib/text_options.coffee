@@ -19,3 +19,5 @@ class TextOptions
       @pointer -= 1
   clean: () ->
     @options = []
+  selected: () ->
+    @options[@pointer]
