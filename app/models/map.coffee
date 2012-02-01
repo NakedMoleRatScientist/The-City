@@ -36,7 +36,7 @@ class Map
       if circle_to_circle_collision(newpile,pile) == true
         return true
     return false
-  calculate_nearest_tree: (object) ->
+  calculate_nearest_object: (object) ->
     shortest = 1000
     target = null
     for t in @trees
