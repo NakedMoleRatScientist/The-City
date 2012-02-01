@@ -15,8 +15,3 @@ class ScenarioMode extends Mode
     return (change: false)
   update_draw: () ->
     return (options: @options.options, pointer: @options.pointer)
-  update_mode: (n) ->
-    if @mode == -1
-      return super(n)
-    else
-      return (mode: @mode, name: @options.options[@options.pointer])
