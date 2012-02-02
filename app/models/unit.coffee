@@ -28,6 +28,8 @@ class Unit
         this.set_move(object.x,object.y)
       when "crystal_gather"
         this.acquire_crystal(@job.nearest.gather())
+      when "drop_crystal"
+        this.drop_crystal()
     @perform = @order
   acquire_crystal: (thing) ->
     @inventory.push(thing)
