@@ -1,7 +1,7 @@
 class CrystalStock extends Stockpile
   constructor: (@x,@y) ->
     super()
-    @name = "CrystalPile"
+    @name = "CrystalStock"
     @persons = []
     @priority = 4
     @diameter = 5
