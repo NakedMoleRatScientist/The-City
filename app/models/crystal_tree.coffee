@@ -4,6 +4,6 @@ class CrystalTree
     @type = "crystal_tree"
   collide: () ->
     true
-  gather: ()
+  gather: () ->
     @pile -= 1
     return 1
