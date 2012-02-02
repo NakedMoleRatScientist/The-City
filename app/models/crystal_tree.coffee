@@ -6,4 +6,4 @@ class CrystalTree
     true
   gather: () ->
     @pile -= 1
-    return 1
+    return "crystal"
