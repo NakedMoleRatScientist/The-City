@@ -26,6 +26,8 @@ class Unit
       when "crystal_move"
         object = map.calculate_nearest_tree(@job)
         this.set_move(object.x,object.y)
+      when "crystal_gather"
+        this.acquire_crystal(@job.tree.gather())
     @perform = @order
   set_move: (x,y) ->
     @goal_x = x
