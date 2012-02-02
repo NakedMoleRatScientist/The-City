@@ -23,6 +23,12 @@ class Map
 
   result: ->
     return @map
+
+  deposit_crystal: (x,y) ->
+    if @map[y][x] == null || @map[y][x].collide() == false
+      @map[y][x] = new CrystalPile(x,y)
+
+
   add_stockpile:(mouse) ->
     x = mouse.x
     y = mouse.y
