@@ -10,4 +10,3 @@ class CrystalStock extends Stockpile
     @nearest = null
   collide: () ->
     return true
-  set_drop: () ->
