@@ -24,7 +24,7 @@ class Unit
       when "move_to_drop"
         this.set_move(@job.x,@job.y)
       when "crystal_move"
-        object = map.calculate_nearest_tree(@job)
+        object = @job.nearest
         this.set_move(object.x,object.y)
       when "crystal_gather"
         this.acquire_crystal(@job.tree.gather())
