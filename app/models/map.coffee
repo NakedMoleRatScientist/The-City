@@ -32,6 +32,7 @@ class Map
       newpile = new CrystalPile(x,y)
       if this.collision_detect(newpile) == false
         @map[y][x] = newpile
+        newpile.nearest = this.calculate_nearest_tree(newpile)
         @stockpoints.push @map[y][x]
   collision_detect: (newpile) ->
     return false if @stockpoints.length == 0
