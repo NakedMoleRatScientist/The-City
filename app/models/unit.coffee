@@ -31,7 +31,7 @@ class Unit
       when "drop_crystal"
         map.deposit_crystal(this.drop_crystal())
     @perform = @order
-  drop_crystal: ()
+  drop_crystal: () ->
     i = 0
     for item in @inventory
       if item == "crystal"
