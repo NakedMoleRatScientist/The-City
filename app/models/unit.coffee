@@ -26,7 +26,7 @@ class Unit
         this.set_move(@job.x,@job.y)
       when "crystal_move"
         console.log("DEE")
-        object = map.calculate_nearest_tree(job)
+        object = map.calculate_nearest_tree(@job)
         this.set_move(object.x,object.y)
     @perform = @order
   set_move: (x,y) ->
