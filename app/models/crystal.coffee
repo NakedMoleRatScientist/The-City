@@ -1,3 +1,3 @@
 class Crystal
-  constructor: (@x,@y)
+  constructor: (@x,@y) ->
     @items = 0
