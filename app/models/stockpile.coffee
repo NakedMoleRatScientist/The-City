@@ -1,5 +1,5 @@
 class Stockpile
-  constructor: () ->
+  constructor: (@x,@y) ->
     @piles = []
     @persons = []
   check_assign: () ->
