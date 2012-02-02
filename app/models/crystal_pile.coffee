@@ -1,4 +1,4 @@
-class CrystalPile extends Stockpile
+class CrystalStock extends Stockpile
   constructor: (@x,@y) ->
     super()
     @name = "CrystalPile"
