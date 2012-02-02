@@ -13,7 +13,7 @@ class mapDraw
         if object == null
           @p5.noFill()
         else
-          switch (object.type)
+          switch (object.name)
             when "floor"
               @p5.fill()
             when "crystal_tree" #Crystal tree
