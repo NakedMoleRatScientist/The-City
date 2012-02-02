@@ -35,7 +35,7 @@ class Map
     x = Math.floor(x / 20) - @camera_x
     y = Math.floor(y / 20) - @camera_y
     if @map[y][x] == null || @map[y][x].collide() == false
-      newpoint = new CrystalPile(x,y)
+      newpoint = new CrystalStock(x,y)
       if this.collision_detect(newpoint) == false
         @map[y][x] = newpoint
         newpoint.nearest = this.calculate_nearest_tree(newpoint)
