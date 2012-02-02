@@ -36,8 +36,8 @@ class Map
       if circle_to_circle_collision(newpile,pile) == true
         return true
     return false
-  calculate_nearest_tree: (unit) ->
-    return nearest_object(unit,@trees)
+  calculate_nearest_tree: (object) ->
+    return nearest_object(object,@trees)
   move_camera: (x,y) ->
     @camera_x += x
     @camera_y += y
