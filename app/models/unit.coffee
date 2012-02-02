@@ -29,6 +29,8 @@ class Unit
       when "crystal_gather"
         this.acquire_crystal(@job.nearest.gather())
     @perform = @order
+  acquire_crystal: (thing) ->
+    @inventory.push(thing)
   set_move: (x,y) ->
     @goal_x = x
     @goal_y = y
