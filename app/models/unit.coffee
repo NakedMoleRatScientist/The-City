@@ -29,7 +29,7 @@ class Unit
       when "crystal_gather"
         this.acquire_crystal(@job.nearest.gather())
       when "drop_crystal"
-        this.drop_crystal()
+        map.deposit_crystal(this.drop_crystal())
     @perform = @order
   drop_crystal: ()
     i = 0
