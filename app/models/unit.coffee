@@ -22,10 +22,8 @@ class Unit
     return if this.act_on_queue()
     switch(@queue[@order])
       when "move_to_drop"
-        console.log("EE")
         this.set_move(@job.x,@job.y)
       when "crystal_move"
-        console.log("DEE")
         object = map.calculate_nearest_tree(@job)
         this.set_move(object.x,object.y)
     @perform = @order
