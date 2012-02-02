@@ -7,7 +7,7 @@ class CrystalPile extends Stockpile
     @diameter = 5
     @size = 10
     @queue = false
-    @orders = ["crystal_move","crystal_gather","move_to_drop"]
+    @orders = ["crystal_move","crystal_gather","move_to_drop","crystal_drop"]
   collide: () ->
     return true
   check_assign: () ->
