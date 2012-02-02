@@ -1,5 +1,5 @@
 class CrystalPile extends Stockpile
-  constructor: (@x,@y,@tree) ->
+  constructor: (@x,@y) ->
     super()
     @name = "CrystalPile"
     @persons = []
