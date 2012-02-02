@@ -5,5 +5,5 @@ nearest_object = (object,list) ->
     distance = distance_between_two_points(object,l)
     if distance < shortest
       shortest = distance
-      target = t
+      target = l
   return target
