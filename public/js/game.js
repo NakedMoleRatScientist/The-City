@@ -1218,30 +1218,35 @@
     Map.prototype.result = function() {
       return this.map;
     };
+    Map.prototype.deposit_crystal = function(x, y) {
+      if (this.map[y][x] === null || this.map[y][x].collide() === false) {
+        return this.map[y][x] = new CrystalPile(x, y);
+      }
+    };
     Map.prototype.add_stockpile = function(mouse) {
-      var newpile, x, y;
+      var newpoint, x, y;
       x = mouse.x;
       y = mouse.y;
       x = Math.floor(x / 20) - this.camera_x;
       y = Math.floor(y / 20) - this.camera_y;
       if (this.map[y][x] === null || this.map[y][x].collide() === false) {
-        newpile = new CrystalPile(x, y);
-        if (this.collision_detect(newpile) === false) {
-          this.map[y][x] = newpile;
-          newpile.nearest = this.calculate_nearest_tree(newpile);
+        newpoint = new CrystalStock(x, y);
+        if (this.collision_detect(newpoint) === false) {
+          this.map[y][x] = newpoint;
+          newpoint.nearest = this.calculate_nearest_tree(newpoint);
           return this.stockpoints.push(this.map[y][x]);
         }
       }
     };
-    Map.prototype.collision_detect = function(newpile) {
-      var pile, _i, _len, _ref;
+    Map.prototype.collision_detect = function(newpoint) {
+      var point, _i, _len, _ref;
       if (this.stockpoints.length === 0) {
         return false;
       }
       _ref = this.stockpoints;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        pile = _ref[_i];
-        if (circle_to_circle_collision(newpile, pile) === true) {
+        point = _ref[_i];
+        if (circle_to_circle_collision(newpoint, point) === true) {
           return true;
         }
       }
@@ -1387,8 +1392,27 @@
           break;
         case "crystal_gather":
           this.acquire_crystal(this.job.nearest.gather());
+          break;
+        case "drop_crystal":
+          map.deposit_crystal(this.drop_crystal());
       }
       return this.perform = this.order;
+    };
+    Unit.prototype.drop_crystal = function() {
+      var i, item, _i, _len, _ref;
+      i = 0;
+      _ref = this.inventory;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        item = _ref[_i];
+        if (item === "crystal") {
+          break;
+        }
+        i += 1;
+      }
+      return this.inventory.slice(i, 0);
+    };
+    Unit.prototype.acquire_crystal = function(thing) {
+      return this.inventory.push(thing);
     };
     Unit.prototype.set_move = function(x, y) {
       this.goal_x = x;
