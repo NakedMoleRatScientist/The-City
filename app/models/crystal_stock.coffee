@@ -10,8 +10,4 @@ class CrystalStock extends Stockpile
     @nearest = null
   collide: () ->
     return true
-  check_assign: () ->
-    if @persons.length == 0
-      return false
-    return true
   set_drop: () ->
