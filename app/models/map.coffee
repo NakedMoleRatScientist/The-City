@@ -51,3 +51,8 @@ class Map
   move_camera: (x,y) ->
     @camera_x += x
     @camera_y += y
+  propose_drop: (x,y) ->
+    if @map[y][x] == null || @map[y][x].collide() == false
+      return (x: x, y: y)
+    else if @map[y][x].collide() == true && @map[y][x].name == "crystal_stockpile"
+      return (x: x, y: y)
