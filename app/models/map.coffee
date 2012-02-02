@@ -17,7 +17,10 @@ class Map
     for i in [0..10] when i < 10
       x = Math.floor(Math.random() * 100)
       y = Math.floor(Math.random() * 100)
-      @map[y][x] = new CrystalTree(x,y)
+      tree = new CrystalTree(x,y)
+      @map[y][x] = tree
+      @trees.push(tree)
+
   result: ->
     return @map
   add_stockpile:(mouse) ->
