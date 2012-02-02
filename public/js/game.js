@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalPile, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, distance_between_two_points, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_object, point_circle_collision, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, distance_between_two_points, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_object, point_circle_collision, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -983,9 +983,15 @@
   })();
   Stockpile = (function() {
     function Stockpile() {
-      this.pile = 0;
-      this.type = "crystal_stockpile";
+      this.piles = [];
+      this.persons = [];
     }
+    Stockpile.prototype.check_assign = function() {
+      if (this.persons.length === 0) {
+        return false;
+      }
+      return true;
+    };
     return Stockpile;
   })();
   Arm = (function() {
@@ -1056,14 +1062,21 @@
     };
     return Body;
   })();
-  CrystalPile = (function() {
-    __extends(CrystalPile, Stockpile);
-    function CrystalPile(x, y) {
+  Crystal = (function() {
+    function Crystal(x, y) {
       this.x = x;
       this.y = y;
-      CrystalPile.__super__.constructor.call(this);
-      this.name = "CrystalPile";
-      this.persons = [];
+      this.items = 0;
+    }
+    return Crystal;
+  })();
+  CrystalStock = (function() {
+    __extends(CrystalStock, Stockpile);
+    function CrystalStock(x, y) {
+      this.x = x;
+      this.y = y;
+      CrystalStock.__super__.constructor.call(this);
+      this.name = "CrystalStock";
       this.priority = 4;
       this.diameter = 5;
       this.size = 10;
@@ -1071,17 +1084,11 @@
       this.orders = ["crystal_move", "crystal_gather", "move_to_drop", "crystal_drop"];
       this.nearest = null;
     }
-    CrystalPile.prototype.collide = function() {
+    CrystalStock.prototype.collide = function() {
       return true;
     };
-    CrystalPile.prototype.check_assign = function() {
-      if (this.persons.length === 0) {
-        return false;
-      }
-      return true;
-    };
-    CrystalPile.prototype.set_drop = function() {};
-    return CrystalPile;
+    CrystalStock.prototype.set_drop = function() {};
+    return CrystalStock;
   })();
   CrystalTree = (function() {
     function CrystalTree(x, y) {
@@ -1220,7 +1227,7 @@
     };
     Map.prototype.deposit_crystal = function(x, y) {
       if (this.map[y][x] === null || this.map[y][x].collide() === false) {
-        return this.map[y][x] = new CrystalPile(x, y);
+        return this.map[y][x] = new Crystal(x, y);
       }
     };
     Map.prototype.add_stockpile = function(mouse) {
