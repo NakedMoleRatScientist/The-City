@@ -83,7 +83,7 @@ class Unit
       return (actors: [this.name,target.name],action: "killed")
     return false
   damage: (unit) ->
-    part = Math.floor(Math.random() * @body.parts.length)
+    part = random_number(@body.parts.length)
     damage = @body.parts[part].interact()
     object = (actors: [unit.name,this.name], part: damage.part, type: damage.type, cause: damage.cause, special: null)
     switch(damage.type)
