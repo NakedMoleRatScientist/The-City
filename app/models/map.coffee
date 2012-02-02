@@ -35,15 +35,15 @@ class Map
     x = Math.floor(x / 20) - @camera_x
     y = Math.floor(y / 20) - @camera_y
     if @map[y][x] == null || @map[y][x].collide() == false
-      newpile = new CrystalPile(x,y)
-      if this.collision_detect(newpile) == false
-        @map[y][x] = newpile
-        newpile.nearest = this.calculate_nearest_tree(newpile)
+      newpoint = new CrystalPile(x,y)
+      if this.collision_detect(newpoint) == false
+        @map[y][x] = newpoint
+        newpoint.nearest = this.calculate_nearest_tree(newpoint)
         @stockpoints.push @map[y][x]
-  collision_detect: (newpile) ->
+  collision_detect: (newpoint) ->
     return false if @stockpoints.length == 0
     for pile in @stockpoints
-      if circle_to_circle_collision(newpile,pile) == true
+      if circle_to_circle_collision(newpoint,pile) == true
         return true
     return false
   calculate_nearest_tree: (object) ->
