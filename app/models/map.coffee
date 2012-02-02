@@ -42,8 +42,8 @@ class Map
         @stockpoints.push @map[y][x]
   collision_detect: (newpoint) ->
     return false if @stockpoints.length == 0
-    for pile in @stockpoints
-      if circle_to_circle_collision(newpoint,pile) == true
+    for point in @stockpoints
+      if circle_to_circle_collision(newpoint,point) == true
         return true
     return false
   calculate_nearest_tree: (object) ->
