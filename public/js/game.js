@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalPile, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, distance_between_two_points, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, point_circle_collision, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, CrystalPile, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, distance_between_two_points, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_object, point_circle_collision, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -297,6 +297,20 @@
     };
     return ModeManager;
   })();
+  nearest_object = function(object, list) {
+    var distance, l, shortest, target, _i, _len;
+    shortest = 1000;
+    target = null;
+    for (_i = 0, _len = list.length; _i < _len; _i++) {
+      l = list[_i];
+      distance = distance_between_two_points(object, l);
+      if (distance < shortest) {
+        shortest = distance;
+        target = l;
+      }
+    }
+    return target;
+  };
   point_circle_collision = function(x, y, object) {
     var dm, dx, dy;
     dy = y - (object.y + object.diameter / 2);
@@ -1054,7 +1068,8 @@
       this.diameter = 5;
       this.size = 10;
       this.queue = false;
-      this.orders = ["crystal_move", "crystal_gather", "move_to_drop"];
+      this.orders = ["crystal_move", "crystal_gather", "move_to_drop", "crystal_drop"];
+      this.nearest = null;
     }
     CrystalPile.prototype.collide = function() {
       return true;
@@ -1077,6 +1092,10 @@
     }
     CrystalTree.prototype.collide = function() {
       return true;
+    };
+    CrystalTree.prototype.gather = function() {
+      this.pile -= 1;
+      return "crystal";
     };
     return CrystalTree;
   })();
@@ -1170,7 +1189,7 @@
       this.trees = [];
     }
     Map.prototype.generate = function() {
-      var h, i, w, x, y, _ref, _ref2, _results;
+      var h, i, tree, w, x, y, _ref, _ref2, _results;
       for (h = 0, _ref = this.map.length; 0 <= _ref ? h <= _ref : h >= _ref; 0 <= _ref ? h++ : h--) {
         if (h < this.map.length) {
           for (w = 0, _ref2 = this.map[h].length; 0 <= _ref2 ? w <= _ref2 : w >= _ref2; 0 <= _ref2 ? w++ : w--) {
@@ -1189,7 +1208,9 @@
         if (i < 10) {
           x = Math.floor(Math.random() * 100);
           y = Math.floor(Math.random() * 100);
-          _results.push(this.map[y][x] = new CrystalTree(x, y));
+          tree = new CrystalTree(x, y);
+          this.map[y][x] = tree;
+          _results.push(this.trees.push(tree));
         }
       }
       return _results;
@@ -1207,6 +1228,7 @@
         newpile = new CrystalPile(x, y);
         if (this.collision_detect(newpile) === false) {
           this.map[y][x] = newpile;
+          newpile.nearest = this.calculate_nearest_tree(newpile);
           return this.stockpoints.push(this.map[y][x]);
         }
       }
@@ -1225,20 +1247,8 @@
       }
       return false;
     };
-    Map.prototype.calculate_nearest_object = function(object) {
-      var distance, shortest, t, target, _i, _len, _ref;
-      shortest = 1000;
-      target = null;
-      _ref = this.trees;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        t = _ref[_i];
-        distance = distance_between_two_points(object, t);
-        if (distance < shortest) {
-          shortest = distance;
-          target = t;
-        }
-      }
-      return target;
+    Map.prototype.calculate_nearest_tree = function(object) {
+      return nearest_object(object, this.trees);
     };
     Map.prototype.move_camera = function(x, y) {
       this.camera_x += x;
@@ -1369,13 +1379,14 @@
       }
       switch (this.queue[this.order]) {
         case "move_to_drop":
-          console.log("EE");
           this.set_move(this.job.x, this.job.y);
           break;
         case "crystal_move":
-          console.log("DEE");
-          object = map.calculate_nearest_tree();
+          object = this.job.nearest;
           this.set_move(object.x, object.y);
+          break;
+        case "crystal_gather":
+          this.acquire_crystal(this.job.nearest.gather());
       }
       return this.perform = this.order;
     };
