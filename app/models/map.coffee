@@ -66,7 +66,7 @@ class Map
     y -= 2
     locations = []
     loop
-      if x == end_x
+      if x > end_x
         x = begin_x
         y += 1
         if y > end_y
@@ -74,5 +74,4 @@ class Map
       if @map[y][x] == null || @map[y][x].collide() == false
         locations.push((x: x,y: y))
       x += 1
-
     return locations
