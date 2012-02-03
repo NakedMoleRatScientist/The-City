@@ -10,7 +10,7 @@ class Stockpile
     return true
   create_drop: (map) ->
     locations = map.free_locations(@x,@y)
-    console.log(locations)
+    location = nearest_object(this,locations)
   get_drop_location: (map) ->
     if @drop == null
       this.create_drop(map)
