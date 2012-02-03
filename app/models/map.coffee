@@ -60,7 +60,8 @@ class Map
     return false
   free_locations: (x,y) ->
     end_x = x + 2
-    x -= 2
+    begin_x = x - 2
+    x = begin_x
     y -= 2
     locations = []
     loop
