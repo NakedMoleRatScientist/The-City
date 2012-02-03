@@ -7,6 +7,5 @@ class CrystalStock extends Stockpile
     @size = 10
     @queue = false
     @orders = ["crystal_move","crystal_gather","move_to_drop","crystal_drop"]
-    @nearest = null
   collide: () ->
     return true

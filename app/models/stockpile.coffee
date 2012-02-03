@@ -2,6 +2,7 @@ class Stockpile
   constructor: (@x,@y) ->
     @piles = []
     @persons = []
+    @nearest = null
   check_assign: () ->
     if @persons.length == 0
       return false
