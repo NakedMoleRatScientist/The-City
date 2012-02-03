@@ -71,5 +71,5 @@ class Map
       x += 1
       if x == end_x
         x = begin_x
-        break
+        y += 1
     return locations
