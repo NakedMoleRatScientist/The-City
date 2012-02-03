@@ -61,6 +61,7 @@ class Map
   free_locations: (x,y) ->
     end_x = x + 2
     begin_x = x - 2
+    end_y = y + 2
     x = begin_x
     y -= 2
     locations = []
