@@ -60,7 +60,6 @@ class Map
     return false
   free_locations: (x,y) ->
     end_x = x + 2
-    console.log("end_x: " + end_x)
     begin_x = x - 2
     end_y = y + 2
     x = begin_x
