@@ -24,7 +24,9 @@ class Map
   result: ->
     return @map
 
-  deposit_crystal: (x,y) ->
+  deposit_crystal: (object) ->
+    y = object.y
+    x = object.x
     if @map[y][x] == null || @map[y][x].collide() == false
       @map[y][x] = new Crystal(x,y)
     else if @map[y][x].name == "crystal"
