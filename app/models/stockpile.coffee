@@ -14,5 +14,5 @@ class Stockpile
     @drop = location
   get_drop_location: (map) ->
     if @drop == null
-      @drop = this.create_drop(map)
+      this.create_drop(map)
     return @drop
