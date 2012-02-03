@@ -15,7 +15,7 @@ class mapDraw
         else
           switch (object.name)
             when "floor"
-              @p5.fill()
+              floor_draw(@p5,x,y)
             when "crystal_tree" #Crystal tree
               @p5.fill(0,0,255)
             when "crystal_stockpile" #Crystal stockpile
@@ -26,4 +26,3 @@ class mapDraw
             when "crystal"
               @p5.fill(0,0,255)
               @p5.triangle(x,y + 20,x + 10, y, x + 20, y + 20)
-        @p5.rect(x,y,20,20)
