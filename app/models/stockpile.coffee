@@ -11,3 +11,6 @@ class Stockpile
   create_drop: (map) ->
     locations = map.free_locations(@x,@y)
     console.log(locations)
+  get_drop_location: (map) ->
+    if @drop == null
+      create_drop(map)
