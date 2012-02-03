@@ -65,7 +65,7 @@ class Map
     locations = []
     loop
       if @map[y][x] == null
-        locations.push([x,y])
+        locations.push((x: x,y: y)
       x += 1
       if x == end_x
         break
