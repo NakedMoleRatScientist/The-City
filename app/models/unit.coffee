@@ -22,7 +22,7 @@ class Unit
     return if this.act_on_queue()
     switch(@queue[@order])
       when "move_to_drop"
-        this.set_move(@job.x,@job.y)
+        this.set_move(@job.drop.x,@job.drop.y)
       when "move_to_crystal"
         object = @job.nearest
         this.set_move(object.x,object.y)
