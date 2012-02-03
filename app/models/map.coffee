@@ -63,7 +63,7 @@ class Map
     x -= 2
     y -= 2
     locations = []
-    loop do
+    loop
       if @map[y][x] == null
         locations.push([x,y])
       x += 1
