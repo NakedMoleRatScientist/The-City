@@ -13,4 +13,4 @@ class Stockpile
     console.log(locations)
   get_drop_location: (map) ->
     if @drop == null
-      create_drop(map)
+      this.create_drop(map)
