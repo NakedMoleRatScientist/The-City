@@ -66,12 +66,13 @@ class Map
     y -= 2
     locations = []
     loop
-      if @map[y][x] == null
-        locations.push((x: x,y: y))
-      x += 1
       if x == end_x
         x = begin_x
         y += 1
         if y > end_y
           break
+      if @map[y][x] == null
+        locations.push((x: x,y: y))
+      x += 1
+
     return locations
