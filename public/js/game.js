@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, distance_between_two_points, floor_draw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, distance_between_two_points, floor_draw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -1003,12 +1003,15 @@
       var location, locations;
       locations = map.free_locations(this.x, this.y);
       location = nearest_object(this, locations);
-      return this.drop = location;
+      return this.drop = map.create_crystal(location);
     };
     Stockpile.prototype.get_drop_location = function(map) {
       if (this.drop === null) {
-        return this.create_drop(map);
+        this.create_drop(map);
+      } else if (this.drop.fullness() === true) {
+        this.create_drop(map);
       }
+      return this.drop;
     };
     return Stockpile;
   })();
@@ -1098,8 +1101,10 @@
     };
     Crystal.prototype.increase = function() {
       if (this.fullness() === false) {
-        return this.items += 1;
+        this.items += 1;
+        return true;
       }
+      return false;
     };
     return Crystal;
   })();
@@ -1254,12 +1259,14 @@
     Map.prototype.result = function() {
       return this.map;
     };
-    Map.prototype.deposit_crystal = function(x, y) {
-      if (this.map[y][x] === null || this.map[y][x].collide() === false) {
-        return this.map[y][x] = new Crystal(x, y);
-      } else if (this.map[y][x].name === "crystal") {
-        return this.map[y][x].increase();
+    Map.prototype.create_crystal = function(x, y) {
+      return this.map[y][x] = new Crystal(x, y);
+    };
+    Map.prototype.drop_crystal = function(x, y) {
+      if (this.map[y][x].increase() === false) {
+        return false;
       }
+      return true;
     };
     Map.prototype.add_stockpile = function(mouse) {
       var newpoint, x, y;
@@ -1462,7 +1469,8 @@
       }
       switch (this.queue[this.order]) {
         case "move_to_drop":
-          this.set_move(this.job.x, this.job.y);
+          object = this.job.get_drop_location(map);
+          this.set_move(object.x, object.y);
           break;
         case "move_to_crystal":
           object = this.job.nearest;
@@ -1473,7 +1481,7 @@
           break;
         case "drop_crystal":
           this.drop_crystal();
-          map.deposit_crystal(this.job.get_drop_location(map));
+          map.drop_crystal(this.drop);
       }
       return this.perform = this.order;
     };
@@ -1615,8 +1623,27 @@
     scrollDraw(this.p5, true);
     return this.p5.text("k - kill lists", 300, 580);
   };
-  floor_draw = function(p5) {
-    return this.p5.fill();
+  crystal_draw = function(p5, x, y, fullness) {
+    var lighten;
+    p5.fill(0, 0, 255);
+    lighten = p5.brightness(fullness * 2);
+    p5.fill(lighten);
+    return p5.triangle(x, y + 20, x + 10, y, x + 20, y + 20);
+  };
+  crystal_stockpile_draw = function(p5, x, y) {
+    p5.noFill();
+    p5.stroke(135, 206, 255);
+    p5.ellipse(x + 10, y + 10, 100, 100);
+    p5.fill(135, 206, 255);
+    return p5.rect(x, y, 20, 20);
+  };
+  crystal_tree_draw = function(p5, x, y) {
+    p5.fill(0, 0, 255);
+    return p5.rect(x, y, 20, 20);
+  };
+  floor_draw = function(p5, x, y) {
+    p5.fill();
+    return p5.rect(x, y, 20, 20);
   };
   gameMenuDraw = function(p5) {
     this.p5 = p5;
@@ -1652,28 +1679,22 @@
                 y = 20 * (height + map.camera_y);
                 object = results[height][width];
                 this.p5.stroke(255, 255, 255);
-                if (object === null) {
-                  this.p5.noFill();
-                } else {
-                  switch (object.name) {
-                    case "floor":
-                      this.p5.fill();
-                      break;
-                    case "crystal_tree":
-                      this.p5.fill(0, 0, 255);
-                      break;
-                    case "crystal_stockpile":
-                      this.p5.noFill();
-                      this.p5.stroke(135, 206, 255);
-                      this.p5.ellipse(x + 10, y + 10, 100, 100);
-                      this.p5.fill(135, 206, 255);
-                      break;
-                    case "crystal":
-                      this.p5.fill(0, 0, 255);
-                      this.p5.triangle(x, y + 20, x + 10, y, x + 20, y + 20);
+                _results2.push((function() {
+                  if (object === null) {
+                    return this.p5.noFill();
+                  } else {
+                    switch (object.name) {
+                      case "floor":
+                        return floor_draw(this.p5, x, y);
+                      case "crystal_tree":
+                        return crystal_tree_draw(this.p5, x, y);
+                      case "crystal_stockpile":
+                        return crystal_stockpile_draw(this.p5, x, y);
+                      case "crystal":
+                        return crystal_draw(this.p5, x, y, object.items);
+                    }
                   }
-                }
-                _results2.push(this.p5.rect(x, y, 20, 20));
+                }).call(this));
               }
             }
             return _results2;
