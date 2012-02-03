@@ -23,10 +23,10 @@ class Unit
     switch(@queue[@order])
       when "move_to_drop"
         this.set_move(@job.x,@job.y)
-      when "crystal_move"
+      when "move_to_crystal"
         object = @job.nearest
         this.set_move(object.x,object.y)
-      when "crystal_gather"
+      when "gather_crystal"
         this.acquire_crystal(@job.nearest.gather())
       when "drop_crystal"
         this.drop_crystal()
