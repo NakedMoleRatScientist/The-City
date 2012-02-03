@@ -60,6 +60,7 @@ class Map
     return false
   free_locations: (x,y) ->
     end_x = x + 2
+    console.log("end_x: " + end_x)
     begin_x = x - 2
     end_y = y + 2
     x = begin_x
@@ -71,7 +72,7 @@ class Map
         y += 1
         if y > end_y
           break
-      if @map[y][x] == null
+      if @map[y][x] == null || @map[y][x].collide() == false
         locations.push((x: x,y: y))
       x += 1
 
