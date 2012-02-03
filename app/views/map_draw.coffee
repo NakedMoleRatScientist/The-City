@@ -21,4 +21,4 @@ class mapDraw
             when "crystal_stockpile" #Crystal stockpile
               crystal_stockpile_draw(@p5,x,y)
             when "crystal"
-              crystal_draw(@p5,x,y)
+              crystal_draw(@p5,x,y,object.items)
