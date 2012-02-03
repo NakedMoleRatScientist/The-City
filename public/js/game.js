@@ -1000,8 +1000,10 @@
       return true;
     };
     Stockpile.prototype.create_drop = function(map) {
-      var locations;
-      return locations = map.free_locations(this.x, this.y);
+      var location, locations;
+      locations = map.free_locations(this.x, this.y);
+      location = nearest_object(this, locations);
+      return this.drop = location;
     };
     Stockpile.prototype.get_drop_location = function(map) {
       if (this.drop === null) {
@@ -1318,16 +1320,20 @@
       y -= 2;
       locations = [];
       while (true) {
-        if (this.map[y][x] === null) {
+        if (x > end_x) {
+          x = begin_x;
+          y += 1;
+          if (y > end_y) {
+            break;
+          }
+        }
+        if (this.map[y][x] === null || this.map[y][x].collide() === false) {
           locations.push({
             x: x,
             y: y
           });
         }
         x += 1;
-        if (x === end_x) {
-          break;
-        }
       }
       return locations;
     };
