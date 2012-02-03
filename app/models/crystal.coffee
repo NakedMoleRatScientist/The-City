@@ -8,3 +8,6 @@ class Crystal
     if @items < 50
       return false
     return true
+  increase: () ->
+    if this.fullness() == false
+      @items += 1
