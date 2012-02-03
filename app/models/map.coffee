@@ -57,3 +57,14 @@ class Map
     else if @map[y][x].collide() == true && @map[y][x].name == "crystal_stockpile"
       return (x: x, y: y)
     return false
+  free_locations: (x,y) ->
+    end_x = x + 2
+    x -= 2
+    y -= 2
+    locations = []
+    loop do
+      if @map[y][x] == null
+        locations.push([x,y])
+      x += 1
+      if x == end_x
+        break
