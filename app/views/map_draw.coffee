@@ -17,7 +17,7 @@ class mapDraw
             when "floor"
               floor_draw(@p5,x,y)
             when "crystal_tree" #Crystal tree
-              @p5.fill(0,0,255)
+              crystal_tree_draw(@p5,x,y)
             when "crystal_stockpile" #Crystal stockpile
               @p5.noFill()
               @p5.stroke(135,206,255)
