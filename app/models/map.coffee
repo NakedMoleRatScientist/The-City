@@ -30,7 +30,10 @@ class Map
     if @map[y][x] == null || @map[y][x].collide() == false
       @map[y][x] = new Crystal(x,y)
     else if @map[y][x].name == "crystal"
-      @map[y][x].increase()
+      if @map[y][x].increase() == false
+        return false
+    return true
+
 
   add_stockpile:(mouse) ->
     x = mouse.x
