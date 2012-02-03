@@ -68,3 +68,4 @@ class Map
       x += 1
       if x == end_x
         break
+    return locations
