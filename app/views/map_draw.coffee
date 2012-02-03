@@ -19,10 +19,7 @@ class mapDraw
             when "crystal_tree" #Crystal tree
               crystal_tree_draw(@p5,x,y)
             when "crystal_stockpile" #Crystal stockpile
-              @p5.noFill()
-              @p5.stroke(135,206,255)
-              @p5.ellipse(x + 10,y + 10,100,100)
-              @p5.fill(135,206,255)
+              crystal_stockpile_draw(@p5,x,y)
             when "crystal"
               @p5.fill(0,0,255)
               @p5.triangle(x,y + 20,x + 10, y, x + 20, y + 20)
