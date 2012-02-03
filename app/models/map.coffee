@@ -25,11 +25,7 @@ class Map
     return @map
 
   create_crystal: (x,y) ->
-    y = object.y
-    x = object.x
-    if @map[y][x] == null || @map[y][x].collide() == false
-      @map[y][x] = new Crystal(x,y)
-      return @map[y][x]
+    @map[y][x] = new Crystal(x,y)
 
   drop_crystal: (x,y) ->
     if @map[y][x].increase() == false
