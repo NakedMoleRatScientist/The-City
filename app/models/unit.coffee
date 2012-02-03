@@ -22,7 +22,8 @@ class Unit
     return if this.act_on_queue()
     switch(@queue[@order])
       when "move_to_drop"
-        this.set_move(@job.drop.x,@job.drop.y)
+        object = @job.get_drop_location(map)
+        this.set_move(object.x,object.y)
       when "move_to_crystal"
         object = @job.nearest
         this.set_move(object.x,object.y)
@@ -30,8 +31,6 @@ class Unit
         this.acquire_crystal(@job.nearest.gather())
       when "drop_crystal"
         this.drop_crystal()
-        if map.deposit_crystal(@job.get_drop_location(map)) == false
-          @job.create_drop(map)
     @perform = @order
   drop_crystal: () ->
     i = 0
