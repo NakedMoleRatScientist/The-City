@@ -70,5 +70,6 @@ class Map
         locations.push((x: x,y: y))
       x += 1
       if x == end_x
+        x = begin_x
         break
     return locations
