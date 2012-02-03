@@ -4,3 +4,7 @@ class Crystal
     @name = "crystal"
   collide: () ->
     true
+  fullness: () ->
+    if @items < 50
+      return false
+    return true
