@@ -3,6 +3,7 @@ class Stockpile
     @piles = []
     @persons = []
     @nearest = null
+    @drop = null
   check_assign: () ->
     if @persons.length == 0
       return false
