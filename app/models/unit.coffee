@@ -50,3 +50,11 @@ class Unit
       @order += 1
     if @order > @queue.length
       @order = 0
+  attack_chance: () ->
+    @goal_x = @target.x - 1
+    @goal_y = @target.y - 1
+    if (@target.x + 1) == @x || (@target.x - 1) == @x
+      if (@target.y + 1) == @y || (@target.y - 1) == @y
+        if (Math.random() * 10) > 5
+          return true
+    return false
