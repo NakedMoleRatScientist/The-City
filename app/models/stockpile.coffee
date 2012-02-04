@@ -12,6 +12,8 @@ class Stockpile
   create_drop: (map) ->
     locations = map.free_locations(@x,@y)
     location = nearest_object(this,locations)
+    if location == null
+      @finish = true
     @drop = map.create_crystal(location.x,location.y)
   get_drop_location: (map) ->
     if @drop == null
