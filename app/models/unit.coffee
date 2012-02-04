@@ -25,6 +25,10 @@ class Unit
         object = @job.get_drop_location(map)
         this.set_move(object.x,object.y)
       when "move_to_crystal"
+        @job.free_space_check(map)
+        if @job.finish == true
+          @queue = null
+          @job = null
         object = @job.nearest
         this.set_move(object.x,object.y)
       when "gather_crystal"
