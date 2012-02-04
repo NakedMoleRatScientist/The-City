@@ -3,9 +3,6 @@ class Human extends Unit
     super(x, y, 1,name)
     @body = new Body(@type)
     @hostility = 0  #0 is friendly. 1 is hostile
-  set_job: (job) ->
-    @job = job
-    @queue = job.orders
   act_on_queue: () ->
     if @perform == @order || @queue.length == 0
       return true
