@@ -17,13 +17,11 @@ class Human extends Unit
         object = @job.nearest
         this.set_move(object.x,object.y)
       when "gather_crystal"
-        this.acquire_crystal(@job.nearest.gather())
+        this.acquire_item(@job.nearest.gather())
       when "drop_crystal"
         this.drop_item("crystal")
         map.drop_crystal(@job.drop.x,@job.drop.y)
     @perform = @order
-  acquire_crystal: (thing) ->
-    @inventory.push(thing)
   move: () ->
     return if @body.leg == 2
     if (@x - @goal_x) < 0
