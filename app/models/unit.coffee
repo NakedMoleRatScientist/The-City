@@ -29,3 +29,19 @@ class Unit
     @inventory.slice(i,0)
   acquire_item: (name) ->
     @inventory.push(name)
+  move: () ->
+    return if @body.leg == 2
+    if (@x - @goal_x) < 0
+      @x = @x + 1
+      return
+    else if (@x - @goal_x) > 0
+      @x = @x - 1
+      return
+    if (@y - @goal_y) < 0
+      @y = @y + 1
+      return
+    else if (@y - @goal_y) > 0
+      @y = @y - 1
+      return
+    if @y - @goal_y == 0 && @x - @goal_x == 0
+      this.next_order()
