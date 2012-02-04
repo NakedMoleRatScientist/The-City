@@ -1,3 +1,3 @@
 class Lightboar extends Unit
-  constructor: (x,y) ->
-    super(@x,@y,2)
+  constructor: (x,y,name) ->
+    super(@x,@y,2,name)
