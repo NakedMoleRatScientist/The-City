@@ -26,6 +26,6 @@ class Unit
       if item == name
         break
       i += 1
-    @inventory.slice(i,0
+    @inventory.slice(i,0)
   acquire_item: (name) ->
     @inventory.push(name)
