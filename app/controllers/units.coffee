@@ -6,16 +6,16 @@ class Units
   initialize_scenario: (name) ->
     switch(name)
       when "combat"
-        @units.push new Unit(10,10, "Miya",1)
-        @units.push new Unit(10,20, "John",1)
+        @units.push new Human(10,10, "Miya",1)
+        @units.push new Human(10,20, "John",1)
         @units[0].target = @units[1]
       when "leg_disability"
-        @units.push new Unit(10,10, "Can'tWalk",1)
+        @units.push new Human(10,10, "Can'tWalk",1)
         @units[0].body.leg = 2
         @units[0].set_move(20,20)
       else
-        @units.push new Unit(10,10, "Killy",1)
-        @units.push new Unit(12,10, "Cibo",1)
+        @units.push new Human(10,10, "Killy",1)
+        @units.push new Human(12,10, "Cibo",1)
   move: () ->
     for unit in @units
       unit.set_action(@map)
