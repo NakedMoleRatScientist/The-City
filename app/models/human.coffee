@@ -1,6 +1,6 @@
 class Human extends Unit
-  constructor: (x, y, @name) ->
-    super(x, y, 1)
+  constructor: (x, y, name) ->
+    super(x, y, 1,name)
     @goal_x = @x
     @goal_y = @y
     @body = new Body(@type)
