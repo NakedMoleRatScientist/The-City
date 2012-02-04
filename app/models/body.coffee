@@ -1,7 +1,8 @@
 class Body
   constructor: (type) ->
-    if type == 1
-      @parts = human_body()
+    switch(type)
+      when 1
+        @parts = human_body()
     @death = 0
     @hand = 0 #0 for operational hands. #1 means he only have one hand. #2 means that he lost all his hand functionality
     @leg = 0
