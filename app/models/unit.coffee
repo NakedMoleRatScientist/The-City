@@ -23,6 +23,10 @@ class Unit
     switch(@queue[@order])
       when "move_to_drop"
         object = @job.get_drop_location(map)
+        if object == false
+          @job = null
+          @queue = null
+          @perform = null
         this.set_move(object.x,object.y)
       when "move_to_crystal"
         object = @job.nearest
