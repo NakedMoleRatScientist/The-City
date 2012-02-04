@@ -22,27 +22,6 @@ class Human extends Unit
         this.drop_item("crystal")
         map.drop_crystal(@job.drop.x,@job.drop.y)
     @perform = @order
-  move: () ->
-    return if @body.leg == 2
-    if (@x - @goal_x) < 0
-      @x = @x + 1
-      return
-    else if (@x - @goal_x) > 0
-      @x = @x - 1
-      return
-    if (@y - @goal_y) < 0
-      @y = @y + 1
-      return
-    else if (@y - @goal_y) > 0
-      @y = @y - 1
-      return
-    if @y - @goal_y == 0 && @x - @goal_x == 0
-      this.next_order()
-  next_order: () ->
-    if @order != null
-      @order += 1
-    if @order > @queue.length
-      @order = 0
   attack_chance: () ->
     @goal_x = @target.x - 1
     @goal_y = @target.y - 1
