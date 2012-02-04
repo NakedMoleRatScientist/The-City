@@ -5,14 +5,15 @@ class JobsManager
     return -1 if @queue.length == 0
     for u in @units
       if u.job == null
-        u.set_job(@map[@queue[0]])
+        u.set_job(@map.stockpoints[@queue[0]])
         u.order = 0
-        @map[@queue[0]].persons.push(u)
+        @map.stockpoints[@queue[0]].persons.push(u)
         @queue.shift()
         if @queue.length == 0
           break
   queuing: () ->
     count = 0
+    @queue = []
     for s in @map.stockpoints
       if s.check_assign() == false && s.finish == false
         i = 0
@@ -24,3 +25,4 @@ class JobsManager
         if @queue.length == length
           @queue.push(count)
       count += 1
+    console.log("queue_size: " + @queue.length)
