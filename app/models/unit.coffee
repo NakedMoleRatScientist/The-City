@@ -10,3 +10,6 @@ class Unit
     @queue = []
     @order = null
     @perform = null
+  set_job: (job) ->
+    @job = job
+    @queue = job.orders
