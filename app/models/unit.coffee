@@ -3,3 +3,4 @@ class Unit
     @body = new Body(@type)
     @goal_x = @x
     @goal_y = @y
+    @target = null
