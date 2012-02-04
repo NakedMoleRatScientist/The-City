@@ -19,7 +19,7 @@ class Human extends Unit
       when "gather_crystal"
         this.acquire_crystal(@job.nearest.gather())
       when "drop_crystal"
-        this.drop_crystal()
+        this.drop_item("crystal")
         map.drop_crystal(@job.drop.x,@job.drop.y)
     @perform = @order
   acquire_crystal: (thing) ->
