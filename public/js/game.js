@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, distance_between_two_points, floor_draw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, distance_between_two_points, floor_draw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -743,9 +743,9 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         u = _ref[_i];
         if (u.job === null) {
-          u.set_job(this.queue[0]);
+          u.set_job(this.map.stockpoints[this.queue[0]]);
           u.order = 0;
-          this.queue[0].persons.push(u);
+          this.map.stockpoints[this.queue[0]].persons.push(u);
           this.queue.shift();
           if (this.queue.length === 0) {
             break;
@@ -755,29 +755,29 @@
       return _results;
     };
     JobsManager.prototype.queuing = function() {
-      var i, length, q, s, _i, _len, _ref, _results;
+      var count, i, length, q, s, _i, _j, _len, _len2, _ref, _ref2, _results;
+      count = 0;
+      this.queue = [];
       _ref = this.map.stockpoints;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         s = _ref[_i];
-        _results.push((function() {
-          var _j, _len2, _ref2;
-          if (s.check_assign() === false && s.finish === false) {
-            i = 0;
-            length = this.queue.length;
-            _ref2 = this.queue;
-            for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-              q = _ref2[_j];
-              if (q.priority < s.priority) {
-                this.queue.splice(i, 0, s);
-                i += 1;
-              }
-            }
-            if (this.queue.length === length) {
-              return this.queue.push(s);
+        if (s.check_assign() === false && s.finish === false) {
+          i = 0;
+          length = this.queue.length;
+          _ref2 = this.queue;
+          for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+            q = _ref2[_j];
+            if (q.priority < s.priority) {
+              this.queue.splice(i, 0, count);
+              i += 1;
             }
           }
-        }).call(this));
+          if (this.queue.length === length) {
+            this.queue.push(count);
+          }
+        }
+        _results.push(count += 1);
       }
       return _results;
     };
@@ -875,16 +875,16 @@
     Units.prototype.initialize_scenario = function(name) {
       switch (name) {
         case "combat":
-          this.units.push(new Unit(10, 10, "Miya", 1));
-          this.units.push(new Unit(10, 20, "John", 1));
+          this.units.push(new Human(10, 10, "Miya", 1));
+          this.units.push(new Human(10, 20, "John", 1));
           return this.units[0].target = this.units[1];
         case "leg_disability":
-          this.units.push(new Unit(10, 10, "Can'tWalk", 1));
+          this.units.push(new Human(10, 10, "Can'tWalk", 1));
           this.units[0].body.leg = 2;
           return this.units[0].set_move(20, 20);
         default:
-          this.units.push(new Unit(10, 10, "Killy", 1));
-          return this.units.push(new Unit(12, 10, "Cibo", 1));
+          this.units.push(new Human(10, 10, "Killy", 1));
+          return this.units.push(new Human(12, 10, "Cibo", 1));
       }
     };
     Units.prototype.move = function() {
@@ -983,6 +983,15 @@
     };
     return Part;
   })();
+  Unit = (function() {
+    function Unit(x, y, type) {
+      this.x = x;
+      this.y = y;
+      this.type = type;
+      this.body = new Body(this.type);
+    }
+    return Unit;
+  })();
   Stockpile = (function() {
     function Stockpile(x, y) {
       this.x = x;
@@ -1050,10 +1059,25 @@
     };
     return Arm;
   })();
+  boar_body = function() {
+    var parts;
+    parts = [];
+    parts.push(new Head());
+    parts.push(new Torso());
+    parts.push(new Leg("right_leg"));
+    parts.push(new Leg("left_leg"));
+    parts.push(new Leg("hind_left_leg"));
+    parts.push(new Leg("hind_right_leg"));
+    return parts;
+  };
   Body = (function() {
     function Body(type) {
-      if (type === 1) {
-        this.parts = human_body();
+      switch (type) {
+        case 1:
+          this.parts = human_body();
+          break;
+        case 2:
+          this.parts = boar_body();
       }
       this.death = 0;
       this.hand = 0;
@@ -1107,7 +1131,7 @@
     };
     Crystal.prototype.increase = function() {
       if (this.fullness() === false) {
-        this.items += 10;
+        this.items += 1;
         return true;
       }
       return false;
@@ -1193,6 +1217,185 @@
     parts.push(new Torso());
     return parts;
   };
+  Human = (function() {
+    __extends(Human, Unit);
+    function Human(x, y, name, type) {
+      this.x = x;
+      this.y = y;
+      this.name = name;
+      this.type = type;
+      this.goal_x = this.x;
+      this.goal_y = this.y;
+      this.body = new Body(this.type);
+      this.hostility = 0;
+      this.target = null;
+      this.kills = [];
+      this.inventory = [];
+      this.job = null;
+      this.queue = [];
+      this.order = null;
+      this.perform = null;
+    }
+    Human.prototype.set_job = function(job) {
+      this.job = job;
+      return this.queue = job.orders;
+    };
+    Human.prototype.act_on_queue = function() {
+      if (this.perform === this.order || this.queue.length === 0) {
+        return true;
+      }
+      return false;
+    };
+    Human.prototype.set_action = function(map) {
+      var object;
+      if (this.act_on_queue()) {
+        return;
+      }
+      switch (this.queue[this.order]) {
+        case "move_to_drop":
+          object = this.job.get_drop_location(map);
+          if (object === false) {
+            this.job = null;
+            this.queue = [];
+            this.perform = null;
+            return;
+          }
+          this.set_move(object.x, object.y);
+          break;
+        case "move_to_crystal":
+          object = this.job.nearest;
+          this.set_move(object.x, object.y);
+          break;
+        case "gather_crystal":
+          this.acquire_crystal(this.job.nearest.gather());
+          break;
+        case "drop_crystal":
+          this.drop_crystal();
+          map.drop_crystal(this.job.drop.x, this.job.drop.y);
+      }
+      return this.perform = this.order;
+    };
+    Human.prototype.drop_crystal = function() {
+      var i, item, _i, _len, _ref;
+      i = 0;
+      _ref = this.inventory;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        item = _ref[_i];
+        if (item === "crystal") {
+          break;
+        }
+        i += 1;
+      }
+      return this.inventory.slice(i, 0);
+    };
+    Human.prototype.acquire_crystal = function(thing) {
+      return this.inventory.push(thing);
+    };
+    Human.prototype.set_move = function(x, y) {
+      this.goal_x = x;
+      return this.goal_y = y;
+    };
+    Human.prototype.move = function() {
+      if (this.body.leg === 2) {
+        return;
+      }
+      if ((this.x - this.goal_x) < 0) {
+        this.x = this.x + 1;
+        return;
+      } else if ((this.x - this.goal_x) > 0) {
+        this.x = this.x - 1;
+        return;
+      }
+      if ((this.y - this.goal_y) < 0) {
+        this.y = this.y + 1;
+        return;
+      } else if ((this.y - this.goal_y) > 0) {
+        this.y = this.y - 1;
+        return;
+      }
+      if (this.y - this.goal_y === 0 && this.x - this.goal_x === 0) {
+        return this.next_order();
+      }
+    };
+    Human.prototype.next_order = function() {
+      if (this.order !== null) {
+        this.order += 1;
+      }
+      if (this.order > this.queue.length) {
+        return this.order = 0;
+      }
+    };
+    Human.prototype.attack_chance = function() {
+      this.goal_x = this.target.x - 1;
+      this.goal_y = this.target.y - 1;
+      if ((this.target.x + 1) === this.x || (this.target.x - 1) === this.x) {
+        if ((this.target.y + 1) === this.y || (this.target.y - 1) === this.y) {
+          if ((Math.random() * 10) > 5) {
+            return true;
+          }
+        }
+      }
+      return false;
+    };
+    Human.prototype.attack = function() {
+      if (this.target === null || (this.body.hand === 2)) {
+        return -1;
+      }
+      if (this.attack_chance()) {
+        return this.target.damage(this);
+      }
+      return -1;
+    };
+    Human.prototype.nullify_target = function() {
+      var target;
+      if (this.target === null) {
+        return false;
+      }
+      if (this.target.body.check_death() === true) {
+        target = this.target;
+        this.target = null;
+        this.kills.push(target.name);
+        return {
+          actors: [this.name, target.name],
+          action: "killed"
+        };
+      }
+      return false;
+    };
+    Human.prototype.damage = function(unit) {
+      var damage, object, part;
+      part = random_number(this.body.parts.length);
+      damage = this.body.parts[part].interact();
+      object = {
+        actors: [unit.name, this.name],
+        part: damage.part,
+        type: damage.type,
+        cause: damage.cause,
+        special: null
+      };
+      switch (damage.type) {
+        case 1:
+          this.body.death = 1;
+          break;
+        case 2:
+          switch (this.body.update_ability(damage.damage)) {
+            case "hand":
+              object.special = 0;
+              break;
+            case "hand_destroy":
+              object.special = 1;
+              break;
+            case "leg":
+              object.special = 2;
+              break;
+            case "leg_destroy":
+              object.special = 3;
+          }
+      }
+      return object;
+    };
+    return Human;
+  })();
   Leg = (function() {
     __extends(Leg, Part);
     function Leg(side) {
@@ -1220,6 +1423,13 @@
       }
     };
     return Leg;
+  })();
+  Lightboar = (function() {
+    __extends(Lightboar, Unit);
+    function Lightboar(x, y) {
+      Lightboar.__super__.constructor.call(this, this.x, this.y);
+    }
+    return Lightboar;
   })();
   Map = (function() {
     function Map(width, height) {
@@ -1440,184 +1650,6 @@
     };
     return Torso;
   })();
-  Unit = (function() {
-    function Unit(x, y, name, type) {
-      this.x = x;
-      this.y = y;
-      this.name = name;
-      this.type = type;
-      this.goal_x = this.x;
-      this.goal_y = this.y;
-      this.body = new Body(this.type);
-      this.hostility = 0;
-      this.target = null;
-      this.kills = [];
-      this.inventory = [];
-      this.job = null;
-      this.queue = [];
-      this.order = null;
-      this.perform = null;
-    }
-    Unit.prototype.set_job = function(job) {
-      this.job = job;
-      return this.queue = job.orders;
-    };
-    Unit.prototype.act_on_queue = function() {
-      if (this.perform === this.order || this.queue.length === 0) {
-        return true;
-      }
-      return false;
-    };
-    Unit.prototype.set_action = function(map) {
-      var object;
-      if (this.act_on_queue()) {
-        return;
-      }
-      switch (this.queue[this.order]) {
-        case "move_to_drop":
-          object = this.job.get_drop_location(map);
-          if (object === false) {
-            this.job = null;
-            this.queue = [];
-            this.perform = null;
-            return;
-          }
-          this.set_move(object.x, object.y);
-          break;
-        case "move_to_crystal":
-          object = this.job.nearest;
-          this.set_move(object.x, object.y);
-          break;
-        case "gather_crystal":
-          this.acquire_crystal(this.job.nearest.gather());
-          break;
-        case "drop_crystal":
-          this.drop_crystal();
-          map.drop_crystal(this.job.drop.x, this.job.drop.y);
-      }
-      return this.perform = this.order;
-    };
-    Unit.prototype.drop_crystal = function() {
-      var i, item, _i, _len, _ref;
-      i = 0;
-      _ref = this.inventory;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        item = _ref[_i];
-        if (item === "crystal") {
-          break;
-        }
-        i += 1;
-      }
-      return this.inventory.slice(i, 0);
-    };
-    Unit.prototype.acquire_crystal = function(thing) {
-      return this.inventory.push(thing);
-    };
-    Unit.prototype.set_move = function(x, y) {
-      this.goal_x = x;
-      return this.goal_y = y;
-    };
-    Unit.prototype.move = function() {
-      if (this.body.leg === 2) {
-        return;
-      }
-      if ((this.x - this.goal_x) < 0) {
-        this.x = this.x + 1;
-        return;
-      } else if ((this.x - this.goal_x) > 0) {
-        this.x = this.x - 1;
-        return;
-      }
-      if ((this.y - this.goal_y) < 0) {
-        this.y = this.y + 1;
-        return;
-      } else if ((this.y - this.goal_y) > 0) {
-        this.y = this.y - 1;
-        return;
-      }
-      if (this.y - this.goal_y === 0 && this.x - this.goal_x === 0) {
-        return this.next_order();
-      }
-    };
-    Unit.prototype.next_order = function() {
-      if (this.order !== null) {
-        this.order += 1;
-      }
-      if (this.order > this.queue.length) {
-        return this.order = 0;
-      }
-    };
-    Unit.prototype.attack_chance = function() {
-      this.goal_x = this.target.x - 1;
-      this.goal_y = this.target.y - 1;
-      if ((this.target.x + 1) === this.x || (this.target.x - 1) === this.x) {
-        if ((this.target.y + 1) === this.y || (this.target.y - 1) === this.y) {
-          if ((Math.random() * 10) > 5) {
-            return true;
-          }
-        }
-      }
-      return false;
-    };
-    Unit.prototype.attack = function() {
-      if (this.target === null || (this.body.hand === 2)) {
-        return -1;
-      }
-      if (this.attack_chance()) {
-        return this.target.damage(this);
-      }
-      return -1;
-    };
-    Unit.prototype.nullify_target = function() {
-      var target;
-      if (this.target === null) {
-        return false;
-      }
-      if (this.target.body.check_death() === true) {
-        target = this.target;
-        this.target = null;
-        this.kills.push(target.name);
-        return {
-          actors: [this.name, target.name],
-          action: "killed"
-        };
-      }
-      return false;
-    };
-    Unit.prototype.damage = function(unit) {
-      var damage, object, part;
-      part = random_number(this.body.parts.length);
-      damage = this.body.parts[part].interact();
-      object = {
-        actors: [unit.name, this.name],
-        part: damage.part,
-        type: damage.type,
-        cause: damage.cause,
-        special: null
-      };
-      switch (damage.type) {
-        case 1:
-          this.body.death = 1;
-          break;
-        case 2:
-          switch (this.body.update_ability(damage.damage)) {
-            case "hand":
-              object.special = 0;
-              break;
-            case "hand_destroy":
-              object.special = 1;
-              break;
-            case "leg":
-              object.special = 2;
-              break;
-            case "leg_destroy":
-              object.special = 3;
-          }
-      }
-      return object;
-    };
-    return Unit;
-  })();
   buildMenuDraw = function(p5) {
     this.p5 = p5;
     this.p5.fill(255, 0, 0);
@@ -1636,10 +1668,8 @@
     return this.p5.text("k - kill lists", 300, 580);
   };
   crystal_draw = function(p5, x, y, fullness) {
-    var lighten;
-    p5.fill(0, 0, 255);
-    lighten = p5.brightness(fullness * 2);
-    p5.fill(lighten);
+    fullness *= 3;
+    p5.fill(fullness % 255 / 10, fullness % 255 / 10, fullness % 255);
     return p5.triangle(x, y + 20, x + 10, y, x + 20, y + 20);
   };
   crystal_stockpile_draw = function(p5, x, y) {
