@@ -4,3 +4,9 @@ class Unit
     @goal_x = @x
     @goal_y = @y
     @target = null
+    @kills = []
+    @inventory = []
+    @job = null
+    @queue = []
+    @order = null
+    @perform = null
