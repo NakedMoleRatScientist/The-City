@@ -25,7 +25,7 @@ class Unit
         object = @job.get_drop_location(map)
         if object == false
           @job = null
-          @queue = null
+          @queue = []
           @perform = null
           return
         this.set_move(object.x,object.y)
