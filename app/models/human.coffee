@@ -35,9 +35,6 @@ class Human extends Unit
     @inventory.slice(i,0)
   acquire_crystal: (thing) ->
     @inventory.push(thing)
-  set_move: (x,y) ->
-    @goal_x = x
-    @goal_y = y
   move: () ->
     return if @body.leg == 2
     if (@x - @goal_x) < 0
