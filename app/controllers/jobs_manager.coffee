@@ -12,13 +12,15 @@ class JobsManager
         if @queue.length == 0
           break
   queuing: () ->
+    count = 0
     for s in @map.stockpoints
       if s.check_assign() == false && s.finish == false
         i = 0
         length = @queue.length
         for q in @queue
           if q.priority < s.priority
-            @queue.splice(i,0,s)
+            @queue.splice(i,0,count)
             i += 1
         if @queue.length == length
-          @queue.push(s)
+          @queue.push(count)
+      count += 1
