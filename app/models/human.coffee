@@ -1,7 +1,6 @@
 class Human extends Unit
   constructor: (x, y, name) ->
     super(x, y, 1,name)
-    @body = new Body(@type)
     @hostility = 0  #0 is friendly. 1 is hostile
   act_on_queue: () ->
     if @perform == @order || @queue.length == 0
