@@ -45,3 +45,8 @@ class Unit
       return
     if @y - @goal_y == 0 && @x - @goal_x == 0
       this.next_order()
+  next_order: () ->
+    if @order != null
+      @order += 1
+    if @order > @queue.length
+      @order = 0
