@@ -16,3 +16,7 @@ class Unit
   set_move: (x,y) ->
     @goal_x = x
     @goal_y = y
+  act_on_queue: () ->
+    if @perform == @order || @queue.length == 0
+      return true
+    return false
