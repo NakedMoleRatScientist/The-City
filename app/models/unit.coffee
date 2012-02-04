@@ -27,6 +27,7 @@ class Unit
           @job = null
           @queue = null
           @perform = null
+          return
         this.set_move(object.x,object.y)
       when "move_to_crystal"
         object = @job.nearest
