@@ -762,9 +762,8 @@
         s = _ref[_i];
         _results.push((function() {
           var _j, _len2, _ref2;
-          if (s.check_assign() === false && s.queue === false) {
+          if (s.check_assign() === false && s.finish === false) {
             i = 0;
-            s.queue = true;
             length = this.queue.length;
             _ref2 = this.queue;
             for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
@@ -992,6 +991,7 @@
       this.persons = [];
       this.nearest = null;
       this.drop = null;
+      this.finish = false;
     }
     Stockpile.prototype.check_assign = function() {
       if (this.persons.length === 0) {
@@ -1003,7 +1003,14 @@
       var location, locations;
       locations = map.free_locations(this.x, this.y);
       location = nearest_object(this, locations);
-      return this.drop = map.create_crystal(location);
+      return this.drop = map.create_crystal(location.x, location.y);
+    };
+    Stockpile.prototype.free_space_check = function(map) {
+      var locations;
+      locations = map.free_locations(this.x, this.y);
+      if (locations.length === 0) {
+        return this.finish = true;
+      }
     };
     Stockpile.prototype.get_drop_location = function(map) {
       if (this.drop === null) {
@@ -1481,7 +1488,7 @@
           break;
         case "drop_crystal":
           this.drop_crystal();
-          map.drop_crystal(this.drop);
+          map.drop_crystal(this.job.drop.x, this.job.drop.y);
       }
       return this.perform = this.order;
     };
