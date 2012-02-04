@@ -3,12 +3,6 @@ class Human extends Unit
     super(x, y, 1,name)
     @body = new Body(@type)
     @hostility = 0  #0 is friendly. 1 is hostile
-    @kills = []
-    @inventory = []
-    @job = null
-    @queue = []
-    @order = null
-    @perform = null
   set_job: (job) ->
     @job = job
     @queue = job.orders
