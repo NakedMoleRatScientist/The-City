@@ -1,2 +1,2 @@
 class Unit
-  constructor: (@x,@y)
+  constructor: (@x,@y) ->
