@@ -5,9 +5,9 @@ class JobsManager
     return -1 if @queue.length == 0
     for u in @units
       if u.job == null
-        u.set_job(@queue[0])
+        u.set_job(@map[@queue[0]])
         u.order = 0
-        @queue[0].persons.push(u)
+        @map[@queue[0]].persons.push(u)
         @queue.shift()
         if @queue.length == 0
           break
