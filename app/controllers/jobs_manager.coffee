@@ -13,9 +13,8 @@ class JobsManager
           break
   queuing: () ->
     for s in @map.stockpoints
-      if s.check_assign() == false && s.queue == false
+      if s.check_assign() == false
         i = 0
-        s.queue = true
         length = @queue.length
         for q in @queue
           if q.priority < s.priority
