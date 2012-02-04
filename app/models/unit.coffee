@@ -20,3 +20,10 @@ class Unit
     if @perform == @order || @queue.length == 0
       return true
     return false
+  drop_item: (name) ->
+    i = 0
+    for item in @inventory
+      if item == name
+        break
+      i += 1
+    @inventory.slice(i,0)
