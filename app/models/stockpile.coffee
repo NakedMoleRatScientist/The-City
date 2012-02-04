@@ -20,5 +20,6 @@ class Stockpile
     if @drop == null
       this.create_drop(map)
     else if @drop.fullness() == true
-      this.create_drop(map)
+      if this.create_drop(map) == false
+        return false
     return @drop
