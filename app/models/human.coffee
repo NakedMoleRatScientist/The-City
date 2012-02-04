@@ -22,13 +22,6 @@ class Human extends Unit
         this.drop_crystal()
         map.drop_crystal(@job.drop.x,@job.drop.y)
     @perform = @order
-  drop_crystal: () ->
-    i = 0
-    for item in @inventory
-      if item == "crystal"
-        break
-      i += 1
-    @inventory.slice(i,0)
   acquire_crystal: (thing) ->
     @inventory.push(thing)
   move: () ->
