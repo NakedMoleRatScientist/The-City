@@ -22,14 +22,6 @@ class Human extends Unit
         this.drop_item("crystal")
         map.drop_crystal(@job.drop.x,@job.drop.y)
     @perform = @order
-  attack_chance: () ->
-    @goal_x = @target.x - 1
-    @goal_y = @target.y - 1
-    if (@target.x + 1) == @x || (@target.x - 1) == @x
-      if (@target.y + 1) == @y || (@target.y - 1) == @y
-        if (Math.random() * 10) > 5
-          return true
-    return false
   attack: () ->
     return -1 if @target == null || (@body.hand == 2)
     if this.attack_chance()
