@@ -25,4 +25,3 @@ class JobsManager
         if @queue.length == length
           @queue.push(count)
       count += 1
-    console.log("queue_size: " + @queue.length)
