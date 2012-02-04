@@ -1002,21 +1002,20 @@
     Stockpile.prototype.create_drop = function(map) {
       var location, locations;
       locations = map.free_locations(this.x, this.y);
+      if (locations.length === 0) {
+        this.finish = true;
+        return false;
+      }
       location = nearest_object(this, locations);
       return this.drop = map.create_crystal(location.x, location.y);
-    };
-    Stockpile.prototype.free_space_check = function(map) {
-      var locations;
-      locations = map.free_locations(this.x, this.y);
-      if (locations.length === 0) {
-        return this.finish = true;
-      }
     };
     Stockpile.prototype.get_drop_location = function(map) {
       if (this.drop === null) {
         this.create_drop(map);
       } else if (this.drop.fullness() === true) {
-        this.create_drop(map);
+        if (this.create_drop(map) === false) {
+          return false;
+        }
       }
       return this.drop;
     };
@@ -1108,7 +1107,7 @@
     };
     Crystal.prototype.increase = function() {
       if (this.fullness() === false) {
-        this.items += 1;
+        this.items += 10;
         return true;
       }
       return false;
@@ -1477,6 +1476,12 @@
       switch (this.queue[this.order]) {
         case "move_to_drop":
           object = this.job.get_drop_location(map);
+          if (object === false) {
+            this.job = null;
+            this.queue = [];
+            this.perform = null;
+            return;
+          }
           this.set_move(object.x, object.y);
           break;
         case "move_to_crystal":
