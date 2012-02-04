@@ -10,6 +10,6 @@ class Crystal
     return true
   increase: () ->
     if this.fullness() == false
-      @items += 5
+      @items += 1
       return true
     return false
