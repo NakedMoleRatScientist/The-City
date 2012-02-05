@@ -42,7 +42,7 @@ class Map
       newpoint = new CrystalStock(x,y)
       if this.collision_detect(newpoint) == false
         @map[y][x] = newpoint
-        newpoint.nearest = this.calculate_nearest_tree(newpoint)
+        newpoint.nearest = nearest_object(newpoint,@trees)
         @stockpoints.push @map[y][x]
   collision_detect: (newpoint) ->
     return false if @stockpoints.length == 0
