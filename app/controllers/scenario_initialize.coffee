@@ -13,3 +13,6 @@ class ScenarioInitialize
       when "pig_invasion"
         @units.create new Human(10,10, "defender")
         @units.create new Lightboar(0,100, "pigboy")
+      else
+        @units.create new Human(10,10, "Killy")
+        @units.create new Human(12,10, "Cibo")
