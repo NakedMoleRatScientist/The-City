@@ -1,2 +1,2 @@
 scenarioList = () ->
-  ["combat","hand_disability","leg_disability"]
+  ["combat","hand_disability","leg_disability","pig_invasion"]
