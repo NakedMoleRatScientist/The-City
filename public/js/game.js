@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, distance_between_two_points, floor_draw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, distance_between_two_points, floor_draw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -297,6 +297,27 @@
     };
     return ModeManager;
   })();
+  nearest_edge = function(object) {
+    var list;
+    list = [];
+    list.push({
+      x: 0,
+      y: object.y
+    });
+    list.push({
+      x: 99,
+      y: object.y
+    });
+    list.push({
+      x: object.x,
+      y: 99
+    });
+    list.push({
+      x: object.x,
+      y: 0
+    });
+    return nearest_object(object, list);
+  };
   nearest_object = function(object, list) {
     var distance, l, shortest, target, _i, _len;
     shortest = 1000;
@@ -892,7 +913,7 @@
       _ref = this.units;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         unit = _ref[_i];
-        unit.set_action(this.map);
+        unit.set_action(this.map, this);
         unit.move();
       }
       _ref2 = this.units;
@@ -1424,15 +1445,30 @@
     __extends(Lightboar, Unit);
     function Lightboar(x, y, name) {
       Lightboar.__super__.constructor.call(this, this.x, this.y, 2, name);
+      this.hostile = true;
     }
-    Lightboar.prototype.set_action = function(map) {
+    Lightboar.prototype.set_action = function(map, controller) {
       var object;
       if (this.act_on_queue()) {
         return;
       }
       switch (this.queue[this.order]) {
         case "decide":
-          object = nearest_object(this, map.stockpoints);
+          if (random_number(5) < 5) {
+            this.decide = "steal";
+            object = nearest_object(this, map.stockpoints);
+            return this.set_move(object.x, object.y);
+          } else {
+            return this.decide = "attack";
+          }
+          break;
+        case "act":
+          if (this.decide === "steal") {
+            return this.acquire_item(map.acquire(this.target.x, this.target.y));
+          }
+          break;
+        case "move_to_escape":
+          object = nearest_edge(this);
           return this.set_move(object.x, object.y);
       }
     };
@@ -1802,7 +1838,16 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         unit = _ref[_i];
         this.p5.fill();
-        _results.push(unit.type === 1 ? (this.p5.fill(255, 69, 0), this.p5.text("H", (unit.x + map.camera_x) * 20 + 5, (unit.y + map.camera_y) * 20 - 5)) : void 0);
+        _results.push((function() {
+          switch (unit.type) {
+            case 1:
+              this.p5.fill(255, 69, 0);
+              return this.p5.text("H", (unit.x + map.camera_x) * 20 + 5, (unit.y + map.camera_y) * 20 - 5);
+            case 2:
+              this.p5.fill(255, 69, 0);
+              return this.p5.text("b", (unit.x + map.camera_x) * 20 + 5, (unit.y + map.camera_y) * 20 - 5);
+          }
+        }).call(this));
       }
       return _results;
     };
