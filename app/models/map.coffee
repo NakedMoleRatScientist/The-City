@@ -76,3 +76,5 @@ class Map
         locations.push((x: x,y: y))
       x += 1
     return locations
+  acquire: (x,y) ->
+    @map[y][x].acquire()
