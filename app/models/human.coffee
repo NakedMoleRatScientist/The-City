@@ -1,6 +1,7 @@
 class Human extends Unit
   constructor: (x, y, name) ->
     super(x, y, 1,name)
+    @hostility = 0
   set_action: (map) ->
     return if this.act_on_queue()
     switch(@queue[@order])
