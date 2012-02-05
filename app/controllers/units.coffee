@@ -5,10 +5,6 @@ class Units
     @fatalities = 0
   initialize_scenario: (name) ->
     switch(name)
-      when "combat"
-        @units.push new Human(10,10, "Miya")
-        @units.push new Human(10,20, "John")
-        @units[0].target = @units[1]
       when "leg_disability"
         @units.push new Human(10,10, "Can'tWalk")
         @units[0].body.leg = 2
