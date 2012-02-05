@@ -7,9 +7,6 @@ class Units
     @units.push(unit)
   initialize_scenario: (name) ->
     switch(name)
-      when "pig_invasion"
-        @units.push new Human(10,10, "defender")
-        @units.push new Lightboar(0,100, "pigboy")
       else
         @units.push new Human(10,10, "Killy")
         @units.push new Human(12,10, "Cibo")
