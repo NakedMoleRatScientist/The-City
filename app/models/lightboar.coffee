@@ -1,7 +1,7 @@
 class Lightboar extends Unit
   constructor: (x,y,name) ->
     super(@x,@y,2,name)
-    @hostile = true
+    @hostility = true
     @queue = ["decide","act","move_to_escape","escape"]
   set_action: (map,controller) ->
     return if this.act_on_queue()
