@@ -21,3 +21,5 @@ class Lightboar extends Unit
       when "move_to_escape"
         object = nearest_edge(this)
         this.set_move(object.x,object.y)
+      when "escape"
+        controller.leave(this)
