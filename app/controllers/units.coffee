@@ -13,6 +13,9 @@ class Units
         @units.push new Human(10,10, "Can'tWalk")
         @units[0].body.leg = 2
         @units[0].set_move(20,20)
+      when "pig_invasion"
+        @units.push new Human(10,10, "defender")
+        @units.push new Lightboar(0,100, "pigboy")
       else
         @units.push new Human(10,10, "Killy")
         @units.push new Human(12,10, "Cibo")
