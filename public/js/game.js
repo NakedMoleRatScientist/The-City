@@ -896,16 +896,16 @@
     Units.prototype.initialize_scenario = function(name) {
       switch (name) {
         case "combat":
-          this.units.push(new Human(10, 10, "Miya", 1));
-          this.units.push(new Human(10, 20, "John", 1));
+          this.units.push(new Human(10, 10, "Miya"));
+          this.units.push(new Human(10, 20, "John"));
           return this.units[0].target = this.units[1];
         case "leg_disability":
-          this.units.push(new Human(10, 10, "Can'tWalk", 1));
+          this.units.push(new Human(10, 10, "Can'tWalk"));
           this.units[0].body.leg = 2;
           return this.units[0].set_move(20, 20);
         default:
-          this.units.push(new Human(10, 10, "Killy", 1));
-          return this.units.push(new Human(12, 10, "Cibo", 1));
+          this.units.push(new Human(10, 10, "Killy"));
+          return this.units.push(new Human(12, 10, "Cibo"));
       }
     };
     Units.prototype.move = function() {
@@ -1296,6 +1296,10 @@
       }
       return false;
     };
+    Crystal.prototype.acquire = function() {
+      this.items -= 1;
+      return "crystal";
+    };
     return Crystal;
   })();
   CrystalStock = (function() {
@@ -1324,7 +1328,7 @@
     CrystalTree.prototype.collide = function() {
       return true;
     };
-    CrystalTree.prototype.gather = function() {
+    CrystalTree.prototype.acquire = function() {
       this.pile -= 1;
       return "crystal";
     };
@@ -1381,6 +1385,7 @@
     __extends(Human, Unit);
     function Human(x, y, name) {
       Human.__super__.constructor.call(this, x, y, 1, name);
+      this.hostility = 0;
     }
     Human.prototype.set_action = function(map) {
       var object;
@@ -1446,6 +1451,7 @@
     function Lightboar(x, y, name) {
       Lightboar.__super__.constructor.call(this, this.x, this.y, 2, name);
       this.hostile = true;
+      this.queue = ["decide", "act", "move_to_escape", "escape"];
     }
     Lightboar.prototype.set_action = function(map, controller) {
       var object;
@@ -1459,7 +1465,10 @@
             object = nearest_object(this, map.stockpoints);
             return this.set_move(object.x, object.y);
           } else {
-            return this.decide = "attack";
+            this.decide = "attack";
+            object = nearest_object(this, controller.units);
+            this.set_move(object.x, object.y);
+            return this.target = object;
           }
           break;
         case "act":
@@ -1470,6 +1479,8 @@
         case "move_to_escape":
           object = nearest_edge(this);
           return this.set_move(object.x, object.y);
+        case "escape":
+          return controller.leave(this);
       }
     };
     return Lightboar;
@@ -1600,6 +1611,9 @@
       }
       return locations;
     };
+    Map.prototype.acquire = function(x, y) {
+      return this.map[y][x].acquire();
+    };
     return Map;
   })();
   Mouse = (function() {
@@ -1635,7 +1649,7 @@
     return Relation;
   })();
   scenarioList = function() {
-    return ["combat", "hand_disability", "leg_disability"];
+    return ["combat", "hand_disability", "leg_disability", "pig_invasion"];
   };
   Subpart = (function() {
     function Subpart(name, type) {
