@@ -13,3 +13,6 @@ class Crystal
       @items += 1
       return true
     return false
+  acquire: () ->
+    @items -= 1
+    return "crystal"
