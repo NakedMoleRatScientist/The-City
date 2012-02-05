@@ -18,7 +18,7 @@ class Units
         @units.push new Human(12,10, "Cibo",1)
   move: () ->
     for unit in @units
-      unit.set_action(@map)
+      unit.set_action(@map,this)
       unit.move()
     @msg_manager.strike(unit.attack()) for unit in @units
     @msg_manager.combat_death(unit.nullify_target()) for unit in @units
