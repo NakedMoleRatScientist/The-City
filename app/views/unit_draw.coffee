@@ -11,4 +11,4 @@ class unitDraw
           @p5.text("H",x,y)
         when 2
           @p5.fill(255,69,0)
-          @p5.text("b",(unit.x + map.camera_x) * 20 + 5, (unit.y + map.camera_y) * 20 - 5)
+          @p5.text("B",x,y)
