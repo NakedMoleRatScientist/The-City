@@ -15,3 +15,6 @@ class Lightboar extends Unit
       when "act"
         if @decide == "steal"
           this.acquire_item(map.acquire(@target.x,@target.y))
+      when "move_to_escape"
+        object = nearest_edge(this)
+        this.set_move(object.x,object.y)
