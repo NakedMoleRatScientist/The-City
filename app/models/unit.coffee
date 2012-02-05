@@ -63,3 +63,11 @@ class Unit
     if this.attack_chance()
       return @target.damage(this)
     return -1
+  nullify_target: () ->
+    return false if @target == null
+    if @target.body.check_death() == true
+      target = @target
+      @target = null
+      @kills.push(target.name)
+      return (actors: [this.name,target.name],action: "killed")
+    return false
