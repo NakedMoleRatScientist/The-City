@@ -1072,6 +1072,63 @@
       }
       return false;
     };
+    Unit.prototype.attack = function() {
+      if (this.target === null || (this.body.hand === 2)) {
+        return -1;
+      }
+      if (this.attack_chance()) {
+        return this.target.damage(this);
+      }
+      return -1;
+    };
+    Unit.prototype.nullify_target = function() {
+      var target;
+      if (this.target === null) {
+        return false;
+      }
+      if (this.target.body.check_death() === true) {
+        target = this.target;
+        this.target = null;
+        this.kills.push(target.name);
+        return {
+          actors: [this.name, target.name],
+          action: "killed"
+        };
+      }
+      return false;
+    };
+    Unit.prototype.damage = function(unit) {
+      var damage, object, part;
+      part = random_number(this.body.parts.length);
+      damage = this.body.parts[part].interact();
+      object = {
+        actors: [unit.name, this.name],
+        part: damage.part,
+        type: damage.type,
+        cause: damage.cause,
+        special: null
+      };
+      switch (damage.type) {
+        case 1:
+          this.body.death = 1;
+          break;
+        case 2:
+          switch (this.body.update_ability(damage.damage)) {
+            case "hand":
+              object.special = 0;
+              break;
+            case "hand_destroy":
+              object.special = 1;
+              break;
+            case "leg":
+              object.special = 2;
+              break;
+            case "leg_destroy":
+              object.special = 3;
+          }
+      }
+      return object;
+    };
     return Unit;
   })();
   Stockpile = (function() {
@@ -1303,7 +1360,6 @@
     __extends(Human, Unit);
     function Human(x, y, name) {
       Human.__super__.constructor.call(this, x, y, 1, name);
-      this.hostility = 0;
     }
     Human.prototype.set_action = function(map) {
       var object;
@@ -1333,63 +1389,6 @@
           map.drop_crystal(this.job.drop.x, this.job.drop.y);
       }
       return this.perform = this.order;
-    };
-    Human.prototype.attack = function() {
-      if (this.target === null || (this.body.hand === 2)) {
-        return -1;
-      }
-      if (this.attack_chance()) {
-        return this.target.damage(this);
-      }
-      return -1;
-    };
-    Human.prototype.nullify_target = function() {
-      var target;
-      if (this.target === null) {
-        return false;
-      }
-      if (this.target.body.check_death() === true) {
-        target = this.target;
-        this.target = null;
-        this.kills.push(target.name);
-        return {
-          actors: [this.name, target.name],
-          action: "killed"
-        };
-      }
-      return false;
-    };
-    Human.prototype.damage = function(unit) {
-      var damage, object, part;
-      part = random_number(this.body.parts.length);
-      damage = this.body.parts[part].interact();
-      object = {
-        actors: [unit.name, this.name],
-        part: damage.part,
-        type: damage.type,
-        cause: damage.cause,
-        special: null
-      };
-      switch (damage.type) {
-        case 1:
-          this.body.death = 1;
-          break;
-        case 2:
-          switch (this.body.update_ability(damage.damage)) {
-            case "hand":
-              object.special = 0;
-              break;
-            case "hand_destroy":
-              object.special = 1;
-              break;
-            case "leg":
-              object.special = 2;
-              break;
-            case "leg_destroy":
-              object.special = 3;
-          }
-      }
-      return object;
     };
     return Human;
   })();
@@ -1426,6 +1425,17 @@
     function Lightboar(x, y, name) {
       Lightboar.__super__.constructor.call(this, this.x, this.y, 2, name);
     }
+    Lightboar.prototype.set_action = function(map) {
+      var object;
+      if (this.act_on_queue()) {
+        return;
+      }
+      switch (this.queue[this.order]) {
+        case "decide":
+          object = nearest_object(this, map.stockpoints);
+          return this.set_move(object.x, object.y);
+      }
+    };
     return Lightboar;
   })();
   Map = (function() {
@@ -1491,7 +1501,7 @@
         newpoint = new CrystalStock(x, y);
         if (this.collision_detect(newpoint) === false) {
           this.map[y][x] = newpoint;
-          newpoint.nearest = this.calculate_nearest_tree(newpoint);
+          newpoint.nearest = nearest_object(newpoint, this.trees);
           return this.stockpoints.push(this.map[y][x]);
         }
       }
@@ -1509,9 +1519,6 @@
         }
       }
       return false;
-    };
-    Map.prototype.calculate_nearest_tree = function(object) {
-      return nearest_object(object, this.trees);
     };
     Map.prototype.move_camera = function(x, y) {
       this.camera_x += x;
