@@ -902,6 +902,12 @@
           this.units.create(new Human(10, 10, "Can'tWalk"));
           this.units.units[0].body.leg = 2;
           return this.units.units[0].set_move(20, 20);
+        case "pig_invasion":
+          this.units.create(new Human(10, 10, "defender"));
+          return this.units.create(new Lightboar(0, 4, "pigboy"));
+        default:
+          this.units.create(new Human(10, 10, "Killy"));
+          return this.units.create(new Human(12, 10, "Cibo"));
       }
     };
     return ScenarioInitialize;
@@ -915,16 +921,6 @@
     }
     Units.prototype.create = function(unit) {
       return this.units.push(unit);
-    };
-    Units.prototype.initialize_scenario = function(name) {
-      switch (name) {
-        case "pig_invasion":
-          this.units.push(new Human(10, 10, "defender"));
-          return this.units.push(new Lightboar(0, 100, "pigboy"));
-        default:
-          this.units.push(new Human(10, 10, "Killy"));
-          return this.units.push(new Human(12, 10, "Cibo"));
-      }
     };
     Units.prototype.move = function() {
       var unit, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _ref3, _results;
@@ -1426,7 +1422,7 @@
           this.set_move(object.x, object.y);
           break;
         case "gather_crystal":
-          this.acquire_item(this.job.nearest.gather());
+          this.acquire_item(this.job.nearest.acquire());
           break;
         case "drop_crystal":
           this.drop_item("crystal");
@@ -1467,8 +1463,8 @@
   Lightboar = (function() {
     __extends(Lightboar, Unit);
     function Lightboar(x, y, name) {
-      Lightboar.__super__.constructor.call(this, this.x, this.y, 2, name);
-      this.hostile = true;
+      Lightboar.__super__.constructor.call(this, x, y, 2, name);
+      this.hostility = true;
       this.queue = ["decide", "act", "move_to_escape", "escape"];
     }
     Lightboar.prototype.set_action = function(map, controller) {
@@ -1864,20 +1860,22 @@
       this.p5 = p5;
     }
     unitDraw.prototype.draw = function(units, map) {
-      var unit, _i, _len, _ref, _results;
+      var unit, x, y, _i, _len, _ref, _results;
       _ref = units.units;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         unit = _ref[_i];
         this.p5.fill();
+        x = (unit.x + map.camera_x) * 20 + 5;
+        y = (unit.y + map.camera_y) * 20 - 5;
         _results.push((function() {
           switch (unit.type) {
             case 1:
               this.p5.fill(255, 69, 0);
-              return this.p5.text("H", (unit.x + map.camera_x) * 20 + 5, (unit.y + map.camera_y) * 20 - 5);
+              return this.p5.text("H", x, y);
             case 2:
               this.p5.fill(255, 69, 0);
-              return this.p5.text("b", (unit.x + map.camera_x) * 20 + 5, (unit.y + map.camera_y) * 20 - 5);
+              return this.p5.text("B", x, y);
           }
         }).call(this));
       }
