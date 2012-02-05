@@ -22,11 +22,6 @@ class Human extends Unit
         this.drop_item("crystal")
         map.drop_crystal(@job.drop.x,@job.drop.y)
     @perform = @order
-  attack: () ->
-    return -1 if @target == null || (@body.hand == 2)
-    if this.attack_chance()
-      return @target.damage(this)
-    return -1
   nullify_target: () ->
     return false if @target == null
     if @target.body.check_death() == true
