@@ -7,10 +7,6 @@ class Units
     @units.push(unit)
   initialize_scenario: (name) ->
     switch(name)
-      when "leg_disability"
-        @units.push new Human(10,10, "Can'tWalk")
-        @units[0].body.leg = 2
-        @units[0].set_move(20,20)
       when "pig_invasion"
         @units.push new Human(10,10, "defender")
         @units.push new Lightboar(0,100, "pigboy")
