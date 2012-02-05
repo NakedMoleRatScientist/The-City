@@ -3,6 +3,8 @@ class Units
     @units = []
     @msg_manager = new MsgManager()
     @fatalities = 0
+  create: (unit) ->
+    @units.push(unit)
   initialize_scenario: (name) ->
     switch(name)
       when "leg_disability"
