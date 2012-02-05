@@ -10,3 +10,6 @@ class ScenarioInitialize
         @units.create new Human(10,10, "Can'tWalk")
         @units.units[0].body.leg = 2
         @units.units[0].set_move(20,20)
+      when "pig_invasion"
+        @units.create new Human(10,10, "defender")
+        @units.create new Lightboar(0,100, "pigboy")
