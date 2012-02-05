@@ -5,11 +5,6 @@ class Units
     @fatalities = 0
   create: (unit) ->
     @units.push(unit)
-  initialize_scenario: (name) ->
-    switch(name)
-      else
-        @units.push new Human(10,10, "Killy")
-        @units.push new Human(12,10, "Cibo")
   move: () ->
     for unit in @units
       unit.set_action(@map,this)
