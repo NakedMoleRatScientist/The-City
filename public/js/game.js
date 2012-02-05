@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, distance_between_two_points, floor_draw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, distance_between_two_points, floor_draw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -280,7 +280,7 @@
     };
     ModeManager.prototype.game_mode = function(name) {
       this.name = name;
-      return this.modes[0].units.initialize_scenario(this.name);
+      return this.modes[0].scenario.create(this.name);
     };
     ModeManager.prototype.mouse_input = function(result) {
       return this.modes[this.n].mouse_input(result);
@@ -527,6 +527,7 @@
       this.menu = -1;
       this.mouse = new Mouse();
       this.jobs = new JobsManager(this.map, this.units.units);
+      this.scenario = new ScenarioInitialize(this.units, this.map);
       GameMode.__super__.constructor.call(this, "game");
     }
     GameMode.prototype.act = function() {
@@ -886,6 +887,25 @@
     };
     return MsgManager;
   })();
+  ScenarioInitialize = (function() {
+    function ScenarioInitialize(units, map) {
+      this.units = units;
+      this.map = map;
+    }
+    ScenarioInitialize.prototype.create = function(name) {
+      switch (name) {
+        case "combat":
+          this.units.create(new Human(10, 10, "Miya"));
+          this.units.create(new Human(10, 20, "John"));
+          return this.units.units[0].target = this.units[1];
+        case "leg_disability":
+          this.units.create(new Human(10, 10, "Can'tWalk"));
+          this.units.units[0].body.leg = 2;
+          return this.units.units[0].set_move(20, 20);
+      }
+    };
+    return ScenarioInitialize;
+  })();
   Units = (function() {
     function Units(map) {
       this.map = map;
@@ -893,16 +913,14 @@
       this.msg_manager = new MsgManager();
       this.fatalities = 0;
     }
+    Units.prototype.create = function(unit) {
+      return this.units.push(unit);
+    };
     Units.prototype.initialize_scenario = function(name) {
       switch (name) {
-        case "combat":
-          this.units.push(new Human(10, 10, "Miya"));
-          this.units.push(new Human(10, 20, "John"));
-          return this.units[0].target = this.units[1];
-        case "leg_disability":
-          this.units.push(new Human(10, 10, "Can'tWalk"));
-          this.units[0].body.leg = 2;
-          return this.units[0].set_move(20, 20);
+        case "pig_invasion":
+          this.units.push(new Human(10, 10, "defender"));
+          return this.units.push(new Lightboar(0, 100, "pigboy"));
         default:
           this.units.push(new Human(10, 10, "Killy"));
           return this.units.push(new Human(12, 10, "Cibo"));
