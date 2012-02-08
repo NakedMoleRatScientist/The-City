@@ -4,20 +4,24 @@ class Lightboar extends Unit
     @hostility = 1
     @queue = ["decide","act","move_to_escape","escape"]
     @order = 0
+    @advance = true
   set_action: (map,controller) ->
     return if this.act_on_queue()
+    console.log("order" + @order)
     switch(@queue[@order])
       when "decide"
         if random_number(5) < 5
           @decide = "steal"
           object = nearest_object(this,map.stockpoints)
           if object == null
+            @advance = false
             return
           this.set_move(object.x,object.y)
         else
           @decide = "attack"
           object = nearest_object(this,controller.units)
           if object == null
+            @advance = false
             return
           this.set_move(object.x,object.y)
           @target = object
