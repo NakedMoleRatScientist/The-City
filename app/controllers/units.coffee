@@ -43,4 +43,4 @@ class Units
       size = random_number(3)
       while existing_boars != size + 1
         existing_boars += 1
-        @units.push new Lightboar(x,y,"lightboar" + (existing_boars))
+        @units.push new Lightboar(0,random_number(10),"lightboar" + (existing_boars))
