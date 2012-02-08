@@ -29,3 +29,11 @@ class Units
     for u in @units when u.hostility == 0
       if u.name == name
         return u.kills
+
+  generate_boars: () ->
+    existing_boars = 0
+    for u in @units
+      if u.type == 2
+        existing_boars += 1
+    if existing_boars == 0
+      @units.push new Lightboar(x,y,"lightboar" + (existing_boars + 1))
