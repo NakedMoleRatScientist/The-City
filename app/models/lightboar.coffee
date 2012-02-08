@@ -7,7 +7,6 @@ class Lightboar extends Unit
     @advance = true
   set_action: (map,controller) ->
     return if this.act_on_queue()
-    console.log("order" + @order)
     switch(@queue[@order])
       when "decide"
         if random_number(5) < 5
