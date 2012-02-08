@@ -16,7 +16,8 @@ class Lightboar extends Unit
         else
           @decide = "attack"
           object = nearest_object(this,controller.units)
-          this.set_move(object.x,object.y)
+          if object != null
+            this.set_move(object.x,object.y)
           @target = object
       when "act"
         if @decide == "steal"
