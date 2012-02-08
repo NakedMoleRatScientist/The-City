@@ -367,7 +367,7 @@
     return RadioButton;
   })();
   random_number = function(size) {
-    return Math.floor(Math.random() * size);
+    return Math.floor(Math.random() * size) + 1;
   };
   TextOptions = (function() {
     function TextOptions() {
@@ -904,7 +904,9 @@
           return this.units.units[0].set_move(20, 20);
         case "pig_invasion":
           this.units.create(new Human(10, 10, "defender"));
-          return this.units.create(new Lightboar(0, 4, "pigboy"));
+          this.units.create(new Lightboar(0, 4, "pigboy"));
+          this.map.create_crystal(5, 5);
+          return this.map.drop_crystal(5, 5);
         default:
           this.units.create(new Human(10, 10, "Killy"));
           return this.units.create(new Human(12, 10, "Cibo"));
@@ -918,6 +920,7 @@
       this.units = [];
       this.msg_manager = new MsgManager();
       this.fatalities = 0;
+      this.advance = true;
     }
     Units.prototype.create = function(unit) {
       return this.units.push(unit);
@@ -1006,7 +1009,7 @@
       }
     };
     Units.prototype.generate_boars = function() {
-      var existing_boars, u, _i, _len, _ref;
+      var existing_boars, size, u, _i, _len, _ref, _results;
       existing_boars = 0;
       _ref = this.units;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -1016,7 +1019,13 @@
         }
       }
       if (existing_boars === 0) {
-        return this.units.push(new Lightboar(x, y, "lightboar" + (existing_boars + 1)));
+        size = random_number(3);
+        _results = [];
+        while (existing_boars !== size + 1) {
+          existing_boars += 1;
+          _results.push(this.units.push(new Lightboar(x, y, "lightboar" + existing_boars)));
+        }
+        return _results;
       }
     };
     return Units;
@@ -1484,14 +1493,12 @@
       this.hostility = 1;
       this.queue = ["decide", "act", "move_to_escape", "escape"];
       this.order = 0;
-      this.advance = true;
     }
     Lightboar.prototype.set_action = function(map, controller) {
       var object;
       if (this.act_on_queue()) {
         return;
       }
-      console.log("order" + this.order);
       switch (this.queue[this.order]) {
         case "decide":
           if (random_number(5) < 5) {
@@ -1501,6 +1508,7 @@
               this.advance = false;
               return;
             }
+            this.advance = true;
             this.set_move(object.x, object.y);
           } else {
             this.decide = "attack";
@@ -1509,6 +1517,7 @@
               this.advance = false;
               return;
             }
+            this.advance = true;
             this.set_move(object.x, object.y);
             this.target = object;
           }
