@@ -3,6 +3,7 @@ class Lightboar extends Unit
     super(x,y,2,name)
     @hostility = true
     @queue = ["decide","act","move_to_escape","escape"]
+    @order = 0
   set_action: (map,controller) ->
     return if this.act_on_queue()
     switch(@queue[@order])
