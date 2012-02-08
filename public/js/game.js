@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, distance_between_two_points, floor_draw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, distance_between_two_points, floor_draw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -811,7 +811,7 @@
       this.last_status = -1;
     }
     MsgManager.prototype.create_combat_relation = function(unit_one, unit_two) {
-      this.relations.push(new Relation([unit_one, unit_two]));
+      this.relations.push(new CombatRelation([unit_one, unit_two]));
       return this.relations.length - 1;
     };
     MsgManager.prototype.find_relation = function(unit_one, unit_two) {
@@ -955,13 +955,25 @@
           this.fatalities += 1;
         }
       }
-      return this.units = (function() {
+      this.units = (function() {
         var _j, _len2, _ref2, _results;
         _ref2 = this.units;
         _results = [];
         for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
           unit = _ref2[_j];
           if (unit.body.check_death() === false) {
+            _results.push(unit);
+          }
+        }
+        return _results;
+      }).call(this);
+      return this.units = (function() {
+        var _j, _len2, _ref2, _results;
+        _ref2 = this.units;
+        _results = [];
+        for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+          unit = _ref2[_j];
+          if (unit.leave === false) {
             _results.push(unit);
           }
         }
@@ -977,6 +989,18 @@
         u = _ref[_i];
         if (u.hostility === 0) {
           _results.push(k += u.kills.length);
+        }
+      }
+      return _results;
+    };
+    Units.prototype.hostile_filter = function(hostile) {
+      var u, _i, _len, _ref, _results;
+      _ref = this.units;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        u = _ref[_i];
+        if (u.hostility === hostile) {
+          _results.push(u);
         }
       }
       return _results;
@@ -1023,7 +1047,7 @@
         _results = [];
         while (existing_boars !== size + 1) {
           existing_boars += 1;
-          _results.push(this.units.push(new Lightboar(x, y, "lightboar" + existing_boars)));
+          _results.push(this.units.push(new Lightboar(0, random_number(10), "lightboar" + existing_boars)));
         }
         return _results;
       }
@@ -1057,6 +1081,7 @@
       this.queue = [];
       this.order = null;
       this.perform = null;
+      this.leave = false;
     }
     Unit.prototype.set_job = function(job) {
       this.job = job;
@@ -1196,7 +1221,6 @@
     function Stockpile(x, y) {
       this.x = x;
       this.y = y;
-      this.piles = [];
       this.persons = [];
       this.nearest = null;
       this.drop = null;
@@ -1209,14 +1233,14 @@
       return true;
     };
     Stockpile.prototype.create_drop = function(map) {
-      var location, locations;
+      var location, locations, object;
       locations = map.free_locations(this.x, this.y);
       if (locations.length === 0) {
         this.finish = true;
         return false;
       }
       location = nearest_object(this, locations);
-      return this.drop = map.create_crystal(location.x, location.y);
+      return object = map.create_crystal(location.x, location.y);
     };
     Stockpile.prototype.get_drop_location = function(map) {
       if (this.drop === null) {
@@ -1503,7 +1527,7 @@
         case "decide":
           if (random_number(5) < 5) {
             this.decide = "steal";
-            object = nearest_object(this, map.stockpoints);
+            object = nearest_object(this, map.crystals);
             if (object === null) {
               this.advance = false;
               return;
@@ -1512,19 +1536,18 @@
             this.set_move(object.x, object.y);
           } else {
             this.decide = "attack";
-            object = nearest_object(this, controller.units);
+            object = nearest_object(this, controller.hostile_filter(1));
             if (object === null) {
               this.advance = false;
               return;
             }
             this.advance = true;
-            this.set_move(object.x, object.y);
             this.target = object;
           }
           break;
         case "act":
           if (this.decide === "steal") {
-            this.acquire_item(map.acquire(this.target.x, this.target.y));
+            this.acquire_item(map.acquire(this.goal_x, this.goal_y));
           }
           break;
         case "move_to_escape":
@@ -1532,7 +1555,7 @@
           this.set_move(object.x, object.y);
           break;
         case "escape":
-          controller.leave(this);
+          this.leave = true;
       }
       return this.perform = this.order;
     };
@@ -1550,6 +1573,7 @@
         }
       }
       this.stockpoints = [];
+      this.crystals = [];
       this.trees = [];
     }
     Map.prototype.generate = function() {
@@ -1583,7 +1607,11 @@
       return this.map;
     };
     Map.prototype.create_crystal = function(x, y) {
-      return this.map[y][x] = new Crystal(x, y);
+      this.map[y][x] = new Crystal(x, y);
+      return this.crystals.push({
+        x: x,
+        y: y
+      });
     };
     Map.prototype.drop_crystal = function(x, y) {
       if (this.map[y][x].increase() === false) {
@@ -1682,24 +1710,24 @@
     };
     return Mouse;
   })();
-  Relation = (function() {
-    function Relation(actors) {
+  CombatRelation = (function() {
+    function CombatRelation(actors) {
       this.actors = actors;
       this.msgs = [];
     }
-    Relation.prototype.add_msg = function(msg) {
+    CombatRelation.prototype.add_msg = function(msg) {
       return this.msgs.push(msg);
     };
-    Relation.prototype.add_passive_msg = function(unit_two, msg) {
+    CombatRelation.prototype.add_passive_msg = function(unit_two, msg) {
       return this.msgs.push(unit_two + msg);
     };
-    Relation.prototype.last = function() {
+    CombatRelation.prototype.last = function() {
       return this.msgs[this.msgs.length - 1];
     };
-    Relation.prototype.summary = function() {
+    CombatRelation.prototype.summary = function() {
       return this.actors[0] + " and " + this.actors[1] + " are engaged in mortal combat!";
     };
-    return Relation;
+    return CombatRelation;
   })();
   scenarioList = function() {
     return ["combat", "hand_disability", "leg_disability", "pig_invasion"];
