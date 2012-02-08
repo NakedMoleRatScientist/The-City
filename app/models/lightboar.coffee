@@ -27,3 +27,4 @@ class Lightboar extends Unit
         this.set_move(object.x,object.y)
       when "escape"
         controller.leave(this)
+    @perform = @order
