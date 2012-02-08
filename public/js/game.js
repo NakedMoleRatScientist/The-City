@@ -1005,6 +1005,20 @@
         }
       }
     };
+    Units.prototype.generate_boars = function() {
+      var existing_boars, u, _i, _len, _ref;
+      existing_boars = 0;
+      _ref = this.units;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        u = _ref[_i];
+        if (u.type === 2) {
+          existing_boars += 1;
+        }
+      }
+      if (existing_boars === 0) {
+        return this.units.push(new Lightboar(x, y, "lightboar" + (existing_boars + 1)));
+      }
+    };
     return Units;
   })();
   Part = (function() {
@@ -1088,6 +1102,9 @@
       }
     };
     Unit.prototype.next_order = function() {
+      if (this.advance === false) {
+        return;
+      }
       if (this.order !== null) {
         this.order += 1;
       }
@@ -1464,38 +1481,51 @@
     __extends(Lightboar, Unit);
     function Lightboar(x, y, name) {
       Lightboar.__super__.constructor.call(this, x, y, 2, name);
-      this.hostility = true;
+      this.hostility = 1;
       this.queue = ["decide", "act", "move_to_escape", "escape"];
+      this.order = 0;
+      this.advance = true;
     }
     Lightboar.prototype.set_action = function(map, controller) {
       var object;
       if (this.act_on_queue()) {
         return;
       }
+      console.log("order" + this.order);
       switch (this.queue[this.order]) {
         case "decide":
           if (random_number(5) < 5) {
             this.decide = "steal";
             object = nearest_object(this, map.stockpoints);
-            return this.set_move(object.x, object.y);
+            if (object === null) {
+              this.advance = false;
+              return;
+            }
+            this.set_move(object.x, object.y);
           } else {
             this.decide = "attack";
             object = nearest_object(this, controller.units);
+            if (object === null) {
+              this.advance = false;
+              return;
+            }
             this.set_move(object.x, object.y);
-            return this.target = object;
+            this.target = object;
           }
           break;
         case "act":
           if (this.decide === "steal") {
-            return this.acquire_item(map.acquire(this.target.x, this.target.y));
+            this.acquire_item(map.acquire(this.target.x, this.target.y));
           }
           break;
         case "move_to_escape":
           object = nearest_edge(this);
-          return this.set_move(object.x, object.y);
+          this.set_move(object.x, object.y);
+          break;
         case "escape":
-          return controller.leave(this);
+          controller.leave(this);
       }
+      return this.perform = this.order;
     };
     return Lightboar;
   })();
