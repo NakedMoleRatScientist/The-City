@@ -11,7 +11,8 @@ class Lightboar extends Unit
         if random_number(5) < 5
           @decide = "steal"
           object = nearest_object(this,map.stockpoints)
-          this.set_move(object.x,object.y)
+          if object != null
+            this.set_move(object.x,object.y)
         else
           @decide = "attack"
           object = nearest_object(this,controller.units)
