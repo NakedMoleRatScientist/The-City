@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, distance_between_two_points, floor_draw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, distance_between_two_points, floor_draw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -1337,6 +1337,14 @@
     };
     return Body;
   })();
+  CombatRelation = (function() {
+    __extends(CombatRelation, Relation);
+    function CombatRelation(actors) {
+      this.actors = actors;
+      this.summary = this.actors[0] + " and " + this.actors[1] + " are engaged in mortal combat!";
+    }
+    return CombatRelation;
+  })();
   Crystal = (function() {
     function Crystal(x, y) {
       this.x = x;
@@ -1710,24 +1718,17 @@
     };
     return Mouse;
   })();
-  CombatRelation = (function() {
-    function CombatRelation(actors) {
-      this.actors = actors;
+  Relation = (function() {
+    function Relation() {
       this.msgs = [];
     }
-    CombatRelation.prototype.add_msg = function(msg) {
-      return this.msgs.push(msg);
-    };
-    CombatRelation.prototype.add_passive_msg = function(unit_two, msg) {
-      return this.msgs.push(unit_two + msg);
-    };
-    CombatRelation.prototype.last = function() {
+    Relation.prototype.last = function() {
       return this.msgs[this.msgs.length - 1];
     };
-    CombatRelation.prototype.summary = function() {
-      return this.actors[0] + " and " + this.actors[1] + " are engaged in mortal combat!";
+    Relation.prototype.add_msg = function(msg) {
+      return this.msgs.push(msg);
     };
-    return CombatRelation;
+    return Relation;
   })();
   scenarioList = function() {
     return ["combat", "hand_disability", "leg_disability", "pig_invasion"];
@@ -2028,7 +2029,7 @@
           _results = [];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             r = _ref[_i];
-            _results.push(this.options.add_text([r.summary()]));
+            _results.push(this.options.add_text([r.summary]));
           }
           return _results;
           break;
