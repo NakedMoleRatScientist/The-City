@@ -46,6 +46,8 @@ class Unit
     if @y - @goal_y == 0 && @x - @goal_x == 0
       this.next_order()
   next_order: () ->
+    if @advance == false
+      return
     if @order != null
       @order += 1
     if @order > @queue.length
