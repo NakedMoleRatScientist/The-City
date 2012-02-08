@@ -1,4 +1,4 @@
-class Relation
+class CombatRelation
   constructor: (@actors) ->
     @msgs = []
   add_msg: (msg) ->
