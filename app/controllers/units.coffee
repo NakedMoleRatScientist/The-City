@@ -36,4 +36,7 @@ class Units
       if u.type == 2
         existing_boars += 1
     if existing_boars == 0
-      @units.push new Lightboar(x,y,"lightboar" + (existing_boars + 1))
+      size = random_number(3)
+      while existing_boars != size + 1
+        existing_boars += 1
+        @units.push new Lightboar(x,y,"lightboar" + (existing_boars))
