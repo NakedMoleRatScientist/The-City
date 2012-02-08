@@ -23,7 +23,7 @@ class Units
     for u in @units when u.hostility == 0
       k += u.kills.length
   hostile_filter: (hostile) ->
-    u for unit in @units when u.hostility == hostile
+    u for u in @units when u.hostility == hostile
   killers: () ->
     killers = []
     for u in @units when u.hostility == 0
