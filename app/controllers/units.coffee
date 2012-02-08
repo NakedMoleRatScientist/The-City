@@ -17,6 +17,7 @@ class Units
       if unit.body.check_death() == true && unit.hostility == 0
         @fatalities += 1
     @units = (unit for unit in @units when unit.body.check_death() == false)
+    @units = (unit for unit in @units when unit.leave == false)
   kills: () ->
     k = 0
     for u in @units when u.hostility == 0
