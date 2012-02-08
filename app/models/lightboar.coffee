@@ -15,6 +15,7 @@ class Lightboar extends Unit
           if object == null
             @advance = false
             return
+          @advance = true
           this.set_move(object.x,object.y)
         else
           @decide = "attack"
@@ -22,6 +23,7 @@ class Lightboar extends Unit
           if object == null
             @advance = false
             return
+          @advance = true
           this.set_move(object.x,object.y)
           @target = object
       when "act"
