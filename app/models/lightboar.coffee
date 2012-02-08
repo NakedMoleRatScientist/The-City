@@ -1,7 +1,7 @@
 class Lightboar extends Unit
   constructor: (x,y,name) ->
     super(x,y,2,name)
-    @hostility = true
+    @hostility = 1
     @queue = ["decide","act","move_to_escape","escape"]
     @order = 0
   set_action: (map,controller) ->
