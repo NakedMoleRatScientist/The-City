@@ -27,9 +27,11 @@ class Lightboar extends Unit
           @target = object
       when "act"
         if @decide == "steal"
-          this.acquire_item(map.acquire(@target.x,@target.y))
+          this.acquire_item(map.acquire(@goal_x,@goal_y))
+          console.log("DEEP")
       when "move_to_escape"
         object = nearest_edge(this)
+        console.log("BEEP")
         this.set_move(object.x,object.y)
       when "escape"
         controller.leave(this)
