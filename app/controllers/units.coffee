@@ -3,6 +3,7 @@ class Units
     @units = []
     @msg_manager = new MsgManager()
     @fatalities = 0
+    @advance = true
   create: (unit) ->
     @units.push(unit)
   move: () ->
