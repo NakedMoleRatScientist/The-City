@@ -23,7 +23,6 @@ class Lightboar extends Unit
             @advance = false
             return
           @advance = true
-          this.set_move(object.x,object.y)
           @target = object
       when "act"
         if @decide == "steal"
