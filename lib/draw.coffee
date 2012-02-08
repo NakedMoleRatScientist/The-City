@@ -4,8 +4,8 @@ menu = (p5) ->
 
   p5.setup = () ->
     p5.size(800, 600)
-    p5.frameRate(50)
     p5.background(0)
+    @fps = 50
     @logic_manager = new ModeManager()
     @draw_manager = new DrawModeManager(p5)
     @key_manager = new KeyModeManager(p5)
