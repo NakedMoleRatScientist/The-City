@@ -29,7 +29,7 @@ class Map
 
   drop_crystal: (x,y) ->
     if @map[y][x].increase() == false
-        return false
+      return false
     return true
 
 
