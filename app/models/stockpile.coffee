@@ -1,6 +1,5 @@
 class Stockpile
   constructor: (@x,@y) ->
-    @piles = []
     @persons = []
     @nearest = null
     @drop = null
