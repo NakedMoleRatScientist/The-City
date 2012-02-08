@@ -47,7 +47,7 @@ class Unit
     if @y - @goal_y == 0 && @x - @goal_x == 0
       this.next_order()
   next_order: () ->
-    if @advance == false
+    if @advance == false || @target != null
       return
     if @order != null
       @order += 1
