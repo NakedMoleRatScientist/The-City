@@ -10,7 +10,7 @@ class Lightboar extends Unit
       when "decide"
         if random_number(5) < 5
           @decide = "steal"
-          object = nearest_object(this,map.stockpoints)
+          object = nearest_object(this,map.crystals)
           if object == null
             @advance = false
             return
