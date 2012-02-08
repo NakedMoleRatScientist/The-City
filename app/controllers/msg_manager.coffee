@@ -3,7 +3,7 @@ class MsgManager
     @relations = []
     @last_status = -1
   create_combat_relation: (unit_one,unit_two) ->
-    @relations.push new Relation([unit_one,unit_two])
+    @relations.push new CombatRelation([unit_one,unit_two])
     return (@relations.length - 1)
   find_relation: (unit_one,unit_two) ->
     n = 0
