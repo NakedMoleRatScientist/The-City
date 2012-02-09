@@ -17,10 +17,10 @@ class GameMode extends Mode
     super(result)
     if @state == -1
       switch(result)
-        when "up"
+        when "down"
           @map.move_camera(0,-1)
           @mouse.offset(0,-1)
-        when "down"
+        when "up"
           @map.move_camera(0,1)
           @mouse.offset(0,1)
         when "right"
