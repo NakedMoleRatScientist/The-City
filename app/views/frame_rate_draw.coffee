@@ -1,3 +1,3 @@
 frameRateDraw = (@p5) ->
-  @p5.fill(0,0,255)
-  @p5.text(@p5.frameRate,0,100)
+  @p5.text(255,0,0)
+  @p5.text("FPS: " + @p5.__frameRate,200,0)
