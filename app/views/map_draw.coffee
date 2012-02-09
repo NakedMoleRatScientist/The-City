@@ -4,10 +4,10 @@ class mapDraw
   draw: (map) ->
     results = map.map
     @p5.stroke(255)
-    for height in [0..@height] when height < @height
-      for width in [0..@width] when width < @width
-        x = 20 * (width + map.camera_x)
-        y = 20 * (height + map.camera_y)
+    for height in [map.camera_y..@height] when height < @height
+      for width in [map.camera_x..@width] when width < @width
+        x = 20 * width
+        y = 20 * height
         object = results[height][width]
         @p5.stroke(255,255,255)
         if object != null
