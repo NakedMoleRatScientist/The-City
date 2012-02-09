@@ -54,6 +54,8 @@ class Map
     return false
   move_camera: (x,y) ->
     @camera_x += x
+    if @camera_x < 0
+      @camera_x -= x
     @camera_y += y
   propose_drop: (x,y) ->
     if @map[y][x] == null || @map[y][x].collide() == false
