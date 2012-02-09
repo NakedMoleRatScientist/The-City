@@ -23,10 +23,10 @@ class GameMode extends Mode
         when "down"
           @map.move_camera(0,1)
           @mouse.offset(0,1)
-        when "left"
+        when "right"
           @map.move_camera(-1,0)
           @mouse.offset(-1,0)
-        when "right"
+        when "left"
           @map.move_camera(1,0)
           @mouse.offset(1,0)
         when "crystal"
