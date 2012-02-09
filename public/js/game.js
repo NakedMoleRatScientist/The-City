@@ -552,19 +552,19 @@
       GameMode.__super__.input.call(this, result);
       if (this.state === -1) {
         switch (result) {
-          case "up":
+          case "down":
             this.map.move_camera(0, -1);
             this.mouse.offset(0, -1);
             break;
-          case "down":
+          case "up":
             this.map.move_camera(0, 1);
             this.mouse.offset(0, 1);
             break;
-          case "left":
+          case "right":
             this.map.move_camera(-1, 0);
             this.mouse.offset(-1, 0);
             break;
-          case "right":
+          case "left":
             this.map.move_camera(1, 0);
             this.mouse.offset(1, 0);
             break;
@@ -1257,14 +1257,14 @@
       return true;
     };
     Stockpile.prototype.create_drop = function(map) {
-      var location, locations, object;
+      var location, locations;
       locations = map.free_locations(this.x, this.y);
       if (locations.length === 0) {
         this.finish = true;
         return false;
       }
       location = nearest_object(this, locations);
-      return object = map.create_crystal(location.x, location.y);
+      return this.drop = map.create_crystal(location.x, location.y);
     };
     Stockpile.prototype.get_drop_location = function(map) {
       if (this.drop === null) {
@@ -1682,6 +1682,9 @@
     };
     Map.prototype.move_camera = function(x, y) {
       this.camera_x += x;
+      if (this.camera_x < 0) {
+        this.camera_x -= x;
+      }
       return this.camera_y += y;
     };
     Map.prototype.propose_drop = function(x, y) {
@@ -1859,25 +1862,25 @@
       this.height = height;
     }
     mapDraw.prototype.draw = function(map) {
-      var height, object, results, width, x, y, _ref, _results;
+      var end_x, end_y, height, object, results, width, x, y, _ref, _results;
       results = map.map;
       this.p5.stroke(255);
+      end_y = map.camera_y + 30;
+      end_x = map.camera_x + 40;
       _results = [];
-      for (height = 0, _ref = this.height; 0 <= _ref ? height <= _ref : height >= _ref; 0 <= _ref ? height++ : height--) {
-        if (height < this.height) {
+      for (height = _ref = map.camera_y; _ref <= end_y ? height <= end_y : height >= end_y; _ref <= end_y ? height++ : height--) {
+        if (height < end_y) {
           _results.push((function() {
             var _ref2, _results2;
             _results2 = [];
-            for (width = 0, _ref2 = this.width; 0 <= _ref2 ? width <= _ref2 : width >= _ref2; 0 <= _ref2 ? width++ : width--) {
-              if (width < this.width) {
-                x = 20 * (width + map.camera_x);
-                y = 20 * (height + map.camera_y);
+            for (width = _ref2 = map.camera_x; _ref2 <= end_x ? width <= end_x : width >= end_x; _ref2 <= end_x ? width++ : width--) {
+              if (width < end_x) {
+                x = 20 * (width - map.camera_x);
+                y = 20 * (height - map.camera_y);
                 object = results[height][width];
                 this.p5.stroke(255, 255, 255);
                 _results2.push((function() {
-                  if (object === null) {
-                    return this.p5.noFill();
-                  } else {
+                  if (object !== null) {
                     switch (object.name) {
                       case "floor":
                         return floor_draw(this.p5, x, y);
@@ -1951,8 +1954,8 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         unit = _ref[_i];
         this.p5.fill();
-        x = (unit.x + map.camera_x) * 20 + 5;
-        y = (unit.y + map.camera_y) * 20 - 5;
+        x = (unit.x - map.camera_x) * 20 + 5;
+        y = (unit.y - map.camera_y) * 20 - 5;
         _results.push((function() {
           switch (unit.type) {
             case 1:
