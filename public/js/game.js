@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Torso, Unit, Units, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, distance_between_two_points, floor_draw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, distance_between_two_points, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -35,8 +35,8 @@
   menu = function(p5) {
     p5.setup = function() {
       p5.size(800, 600);
-      p5.frameRate(50);
       p5.background(0);
+      this.fps = 50;
       this.logic_manager = new ModeManager();
       this.draw_manager = new DrawModeManager(p5);
       return this.key_manager = new KeyModeManager(p5);
@@ -98,7 +98,8 @@
       this.modes = initializeDrawModes(this.p5);
     }
     DrawModeManager.prototype.draw = function(logic) {
-      return this.modes[logic.n].draw(logic.update_draw());
+      this.modes[logic.n].draw(logic.update_draw());
+      return frameRateDraw(this.p5);
     };
     DrawModeManager.prototype.input = function(logic, result) {
       return this.modes[logic.n].input(result);
@@ -429,6 +430,17 @@
       return this.offset_y = 0;
     };
     return TextOptionsDraw;
+  })();
+  Timer = (function() {
+    function Timer() {
+      var event;
+      event = setInterval(this.act, 1000);
+      this.seconds = 0;
+    }
+    Timer.prototype.act = function() {
+      return this.seconds += 1;
+    };
+    return Timer;
   })();
   GameDrawMode = (function() {
     __extends(GameDrawMode, DrawMode);
@@ -1054,6 +1066,18 @@
     };
     return Units;
   })();
+  Relation = (function() {
+    function Relation() {
+      this.msgs = [];
+    }
+    Relation.prototype.last = function() {
+      return this.msgs[this.msgs.length - 1];
+    };
+    Relation.prototype.add_msg = function(msg) {
+      return this.msgs.push(msg);
+    };
+    return Relation;
+  })();
   Part = (function() {
     function Part(name) {
       this.name = name;
@@ -1136,7 +1160,7 @@
       }
     };
     Unit.prototype.next_order = function() {
-      if (this.advance === false) {
+      if (this.advance === false || this.target !== null) {
         return;
       }
       if (this.order !== null) {
@@ -1718,18 +1742,6 @@
     };
     return Mouse;
   })();
-  Relation = (function() {
-    function Relation() {
-      this.msgs = [];
-    }
-    Relation.prototype.last = function() {
-      return this.msgs[this.msgs.length - 1];
-    };
-    Relation.prototype.add_msg = function(msg) {
-      return this.msgs.push(msg);
-    };
-    return Relation;
-  })();
   scenarioList = function() {
     return ["combat", "hand_disability", "leg_disability", "pig_invasion"];
   };
@@ -1822,6 +1834,11 @@
   floor_draw = function(p5, x, y) {
     p5.fill();
     return p5.rect(x, y, 20, 20);
+  };
+  frameRateDraw = function(p5) {
+    this.p5 = p5;
+    this.p5.text(255, 0, 0);
+    return this.p5.text("FPS: " + this.p5.__frameRate, 200, 15);
   };
   gameMenuDraw = function(p5) {
     this.p5 = p5;
