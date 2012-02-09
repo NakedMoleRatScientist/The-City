@@ -10,9 +10,7 @@ class mapDraw
         y = 20 * (height + map.camera_y)
         object = results[height][width]
         @p5.stroke(255,255,255)
-        if object == null
-          @p5.noFill()
-        else
+        if object != null
           switch (object.name)
             when "floor"
               floor_draw(@p5,x,y)
