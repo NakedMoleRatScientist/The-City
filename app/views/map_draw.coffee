@@ -1,7 +1,7 @@
 class mapDraw
   constructor: (@p5) ->
     @drawable = false
-  draw: (map) ->
+  draw: (objects,map) ->
     if @drawable == false
       @p5.background(0)
       this.output_map(map)
