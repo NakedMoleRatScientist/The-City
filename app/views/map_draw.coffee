@@ -12,8 +12,8 @@ class mapDraw
       y = (o.y - map.camera_y) * 20
       location = map.map[o.x][o.y]
       if location != null
-        this.determine_draw(location)
-  determine_draw: (location) ->
+        this.determine_draw(location,x,y)
+  determine_draw: (location,x,y) ->
     switch(location.name)
       when "floor"
         floor_draw(@p5,x,y)
