@@ -35,4 +35,4 @@ class mapDraw
         object = results[height][width]
         @p5.stroke(255,255,255)
         if object != null
-          switch (object.name)
+          this.determine_draw(location,x,y)
