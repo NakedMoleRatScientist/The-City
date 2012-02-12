@@ -2,6 +2,7 @@ class mapDraw
   constructor: (@p5) ->
     @drawable = false
   draw: (map) ->
+    if @drawable == false
       output_map(map)
       @drawable = true
   output_map: (map) ->
