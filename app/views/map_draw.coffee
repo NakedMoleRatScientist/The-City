@@ -13,6 +13,17 @@ class mapDraw
       location = map.map[o.x][o.y]
       if location != null
         this.determine_draw(location)
+  determine_draw: (location) ->
+    switch(location)
+      when "floor"
+        floor_draw(@p5,x,y)
+      when "crystal_tree" #Crystal tree
+        crystal_tree_draw(@p5,x,y)
+      when "crystal_stockpile" #Crystal stockpile
+        crystal_stockpile_draw(@p5,x,y)
+      when "crystal"
+        crystal_draw(@p5,x,y,object.items)
+
   output_map: (map) ->
     results = map.map
     end_y = map.camera_y + 30
@@ -25,11 +36,3 @@ class mapDraw
         @p5.stroke(255,255,255)
         if object != null
           switch (object.name)
-            when "floor"
-              floor_draw(@p5,x,y)
-            when "crystal_tree" #Crystal tree
-              crystal_tree_draw(@p5,x,y)
-            when "crystal_stockpile" #Crystal stockpile
-              crystal_stockpile_draw(@p5,x,y)
-            when "crystal"
-              crystal_draw(@p5,x,y,object.items)
