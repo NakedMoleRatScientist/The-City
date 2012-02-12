@@ -2,19 +2,14 @@ class mapDraw
   constructor: (@p5) ->
     @drawable = false
   draw: (map) ->
-    if @drawable = false
-      output_map()
+      output_map(map)
       @drawable = true
-    @p5.image(@mg,0,0)
-  output_map: () ->
-    @mg = @p5.createGraphic(800,600)
-    @mg.beginDraw()
+  output_map: (map) ->
     results = map.map
-    @mg.stroke(255)
     end_y = map.camera_y + 30
     end_x = map.camera_x + 40
-    for height in [map.camera_y..end_y] when height < end_y
-      for width in [map.camera_x..end_x] when width < end_x
+    for height in [map.camera_y..end_y]
+      for width in [map.camera_x..end_x]
         x = 20 * (width - map.camera_x)
         y = 20 * (height - map.camera_y)
         object = results[height][width]
@@ -29,4 +24,3 @@ class mapDraw
               crystal_stockpile_draw(@mg,x,y)
             when "crystal"
               crystal_draw(@mg,x,y,object.items)
-    @mg.endDraw()
