@@ -447,7 +447,7 @@
     function GameDrawMode(p5) {
       this.p5 = p5;
       this.unit_draw = new unitDraw(this.p5);
-      this.map_draw = new mapDraw(this.p5, 100, 100);
+      this.map_draw = new mapDraw(this.p5);
       GameDrawMode.__super__.constructor.call(this, "game", this.p5);
     }
     GameDrawMode.prototype.draw = function(object) {
@@ -457,7 +457,6 @@
           map = object.map;
           units = object.units;
           msg = object.msg;
-          this.p5.background(0);
           this.map_draw.draw(map);
           this.unit_draw.draw(units, map);
           if (object.menu !== -1) {
@@ -1856,48 +1855,48 @@
     return this.p5.text("Kills by Colonists Thus Far: " + kills, 400, 12);
   };
   mapDraw = (function() {
-    function mapDraw(p5, width, height) {
+    function mapDraw(p5) {
       this.p5 = p5;
-      this.width = width;
-      this.height = height;
+      this.drawable = false;
     }
     mapDraw.prototype.draw = function(map) {
+      if (this.drawable === false) {
+        output_map(map);
+        return this.drawable = true;
+      }
+    };
+    mapDraw.prototype.output_map = function(map) {
       var end_x, end_y, height, object, results, width, x, y, _ref, _results;
       results = map.map;
-      this.p5.stroke(255);
       end_y = map.camera_y + 30;
       end_x = map.camera_x + 40;
       _results = [];
       for (height = _ref = map.camera_y; _ref <= end_y ? height <= end_y : height >= end_y; _ref <= end_y ? height++ : height--) {
-        if (height < end_y) {
-          _results.push((function() {
-            var _ref2, _results2;
-            _results2 = [];
-            for (width = _ref2 = map.camera_x; _ref2 <= end_x ? width <= end_x : width >= end_x; _ref2 <= end_x ? width++ : width--) {
-              if (width < end_x) {
-                x = 20 * (width - map.camera_x);
-                y = 20 * (height - map.camera_y);
-                object = results[height][width];
-                this.p5.stroke(255, 255, 255);
-                _results2.push((function() {
-                  if (object !== null) {
-                    switch (object.name) {
-                      case "floor":
-                        return floor_draw(this.p5, x, y);
-                      case "crystal_tree":
-                        return crystal_tree_draw(this.p5, x, y);
-                      case "crystal_stockpile":
-                        return crystal_stockpile_draw(this.p5, x, y);
-                      case "crystal":
-                        return crystal_draw(this.p5, x, y, object.items);
-                    }
-                  }
-                }).call(this));
+        _results.push((function() {
+          var _ref2, _results2;
+          _results2 = [];
+          for (width = _ref2 = map.camera_x; _ref2 <= end_x ? width <= end_x : width >= end_x; _ref2 <= end_x ? width++ : width--) {
+            x = 20 * (width - map.camera_x);
+            y = 20 * (height - map.camera_y);
+            object = results[height][width];
+            this.mg.stroke(255, 255, 255);
+            _results2.push((function() {
+              if (object !== null) {
+                switch (object.name) {
+                  case "floor":
+                    return floor_draw(this.mg, x, y);
+                  case "crystal_tree":
+                    return crystal_tree_draw(this.mg, x, y);
+                  case "crystal_stockpile":
+                    return crystal_stockpile_draw(this.mg, x, y);
+                  case "crystal":
+                    return crystal_draw(this.mg, x, y, object.items);
+                }
               }
-            }
-            return _results2;
-          }).call(this));
-        }
+            }).call(this));
+          }
+          return _results2;
+        }).call(this));
       }
       return _results;
     };
@@ -1948,7 +1947,8 @@
       this.p5 = p5;
     }
     unitDraw.prototype.draw = function(units, map) {
-      var unit, x, y, _i, _len, _ref, _results;
+      var dirty, unit, x, y, _i, _len, _ref, _results;
+      dirty = [];
       _ref = units.units;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -1956,6 +1956,10 @@
         this.p5.fill();
         x = (unit.x - map.camera_x) * 20 + 5;
         y = (unit.y - map.camera_y) * 20 - 5;
+        dirty.push({
+          x: x,
+          y: y
+        });
         _results.push((function() {
           switch (unit.type) {
             case 1:
