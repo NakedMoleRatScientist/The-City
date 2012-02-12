@@ -14,7 +14,7 @@ class mapDraw
       if location != null
         this.determine_draw(location)
   determine_draw: (location) ->
-    switch(location)
+    switch(location.name)
       when "floor"
         floor_draw(@p5,x,y)
       when "crystal_tree" #Crystal tree
