@@ -3,6 +3,7 @@ class mapDraw
     @drawable = false
   draw: (map) ->
     if @drawable == false
+      @p5.background(0)
       this.output_map(map)
       @drawable = true
   output_map: (map) ->
