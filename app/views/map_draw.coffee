@@ -6,7 +6,7 @@ class mapDraw
       @p5.background(0)
       this.output_map(map)
       @drawable = true
-  redraw_rect: (objects,map) ->
+      return
     for o in objects
       x = (o.x - map.camera_x) * 20
       y = (o.y - map.camera_y) * 20
