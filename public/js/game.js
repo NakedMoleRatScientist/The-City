@@ -1860,9 +1860,33 @@
       this.drawable = false;
     }
     mapDraw.prototype.draw = function(map) {
+      var location, o, x, y, _i, _len, _results;
       if (this.drawable === false) {
-        output_map(map);
-        return this.drawable = true;
+        this.p5.background(0);
+        this.output_map(map);
+        this.drawable = true;
+        return;
+      }
+      _results = [];
+      for (_i = 0, _len = objects.length; _i < _len; _i++) {
+        o = objects[_i];
+        x = (o.x - map.camera_x) * 20;
+        y = (o.y - map.camera_y) * 20;
+        location = map.map[o.x][o.y];
+        _results.push(location !== null ? this.determine_draw(location, x, y) : void 0);
+      }
+      return _results;
+    };
+    mapDraw.prototype.determine_draw = function(location, x, y) {
+      switch (location.name) {
+        case "floor":
+          return floor_draw(this.p5, x, y);
+        case "crystal_tree":
+          return crystal_tree_draw(this.p5, x, y);
+        case "crystal_stockpile":
+          return crystal_stockpile_draw(this.p5, x, y);
+        case "crystal":
+          return crystal_draw(this.p5, x, y, object.items);
       }
     };
     mapDraw.prototype.output_map = function(map) {
@@ -1879,21 +1903,8 @@
             x = 20 * (width - map.camera_x);
             y = 20 * (height - map.camera_y);
             object = results[height][width];
-            this.mg.stroke(255, 255, 255);
-            _results2.push((function() {
-              if (object !== null) {
-                switch (object.name) {
-                  case "floor":
-                    return floor_draw(this.mg, x, y);
-                  case "crystal_tree":
-                    return crystal_tree_draw(this.mg, x, y);
-                  case "crystal_stockpile":
-                    return crystal_stockpile_draw(this.mg, x, y);
-                  case "crystal":
-                    return crystal_draw(this.mg, x, y, object.items);
-                }
-              }
-            }).call(this));
+            this.p5.stroke(255, 255, 255);
+            _results2.push(object !== null ? this.determine_draw(location, x, y) : void 0);
           }
           return _results2;
         }).call(this));
@@ -1953,13 +1964,8 @@
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         unit = _ref[_i];
-        this.p5.fill();
         x = (unit.x - map.camera_x) * 20 + 5;
         y = (unit.y - map.camera_y) * 20 - 5;
-        dirty.push({
-          x: x,
-          y: y
-        });
         _results.push((function() {
           switch (unit.type) {
             case 1:
