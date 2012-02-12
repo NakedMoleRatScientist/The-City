@@ -2,6 +2,7 @@ class mapDraw
   constructor: (@p5,@width, @height) ->
 
   draw: (map) ->
+  output_map: () ->
     results = map.map
     @p5.stroke(255)
     end_y = map.camera_y + 30
