@@ -3,7 +3,7 @@ class mapDraw
     @drawable = false
   draw: (map) ->
     if @drawable == false
-      output_map(map)
+      this.output_map(map)
       @drawable = true
   output_map: (map) ->
     results = map.map
@@ -14,14 +14,14 @@ class mapDraw
         x = 20 * (width - map.camera_x)
         y = 20 * (height - map.camera_y)
         object = results[height][width]
-        @mg.stroke(255,255,255)
+        @p5.stroke(255,255,255)
         if object != null
           switch (object.name)
             when "floor"
-              floor_draw(@mg,x,y)
+              floor_draw(@p5,x,y)
             when "crystal_tree" #Crystal tree
-              crystal_tree_draw(@mg,x,y)
+              crystal_tree_draw(@p5,x,y)
             when "crystal_stockpile" #Crystal stockpile
-              crystal_stockpile_draw(@mg,x,y)
+              crystal_stockpile_draw(@p5,x,y)
             when "crystal"
-              crystal_draw(@mg,x,y,object.items)
+              crystal_draw(@p5,x,y,object.items)
