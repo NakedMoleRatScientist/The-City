@@ -1,7 +1,7 @@
 class GameDrawMode extends DrawMode
   constructor:(@p5) ->
     @dirty_rects = []
-    @dirty_menu = null
+    @dirty_menu = -1
     @camera = (x: null, y: null)
     super("game",@p5)
   draw: (object) ->
@@ -28,6 +28,7 @@ class GameDrawMode extends DrawMode
           @dirty_rects.push(x: unit.x, y: unit.y)
         @camera.x = map.camera_x
         @camera.y = map.camera_y
+
       when 0
         super(object)
 
