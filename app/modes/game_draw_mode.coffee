@@ -12,14 +12,8 @@ class GameDrawMode extends DrawMode
         drawDirtyRects(@dirty_rects,map,@p5)
         units = object.units
         msg = object.msg
+        changeMenuDraw(object.menu,@dirty_menu,map,@p5)
         unitDraw(@p5,units,map)
-        if object.menu != -1
-          menuDraw(@p5)
-        switch(object.menu)
-          when 0
-            gameMenuDraw(@p5)
-          when 1
-            buildMenuDraw(@p5)
         if msg != -1
           messageDraw(@p5,msg)
         mouseDraw(@p5,object.mouse,map.camera_x,map.camera_y)
