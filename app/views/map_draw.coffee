@@ -10,4 +10,4 @@ mapDraw = (map,p5) ->
         object = results[height][width]
         p5.stroke(255,255,255)
         if object != null
-          determine_rect_draw(object,x,y)
+          determine_rect_draw(object,x,y,p5)
