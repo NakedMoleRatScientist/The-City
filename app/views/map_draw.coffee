@@ -1,7 +1,7 @@
 class mapDraw
   constructor: (@p5) ->
     @drawable = false
-  draw_dirty_rect = (dirty,map) ->
+  draw_dirty_rect = (dirty,map,p5) ->
     if @drawable == false
       this.output_map(map)
       @drawable = true
@@ -13,9 +13,9 @@ class mapDraw
       if location != null
         this.determine_draw(location,x,y)
       else
-        @p5.noStroke()
-        @p5.fill(0)
-        @p5.rect(x,y,20,20)
+        p5.noStroke()
+        p5.fill(0)
+        p5.rect(x,y,20,20)
   determine_draw: (location,x,y) ->
     switch(location.name)
       when "floor"
