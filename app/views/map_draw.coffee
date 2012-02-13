@@ -13,7 +13,7 @@ class mapDraw
       y = (d.y - map.camera_y) * 20
       this.determine_draw(d,x,y)
     for o in objects
-      @dirty_rect = [] if @direct_rect.length > 0
+      @dirty_rect = [] if @dirty_rect.length > 0
       location = map.map[o.y][o.x]
       @dirty_rect.push(location)
   determine_draw: (location,x,y) ->
