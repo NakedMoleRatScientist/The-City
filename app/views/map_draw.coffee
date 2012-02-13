@@ -9,8 +9,8 @@ class mapDraw
       return
     for o in objects
       location = map.map[o.y][o.x]
-      x = (d.x - map.camera_x) * 20
-      y = (d.y - map.camera_y) * 20
+      x = (o.x - map.camera_x) * 20
+      y = (o.y - map.camera_y) * 20
       if location != null
         this.determine_draw(location,x,y)
   determine_draw: (location,x,y) ->
