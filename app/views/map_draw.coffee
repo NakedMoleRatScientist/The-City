@@ -1,15 +1,15 @@
 class mapDraw
   constructor: (@p5) ->
     @drawable = false
-  draw: (objects,map) ->
+  draw: (dirty,map) ->
     if @drawable == false
       this.output_map(map)
       @drawable = true
       return
-    for o in objects
-      location = map.map[o.y][o.x]
-      x = (o.x - map.camera_x) * 20
-      y = (o.y - map.camera_y) * 20
+    for d in dirty
+      location = map.map[d.y][d.x]
+      x = (d.x - map.camera_x) * 20
+      y = (d.y - map.camera_y) * 20
       if location != null
         this.determine_draw(location,x,y)
       else
