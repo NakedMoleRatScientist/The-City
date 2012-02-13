@@ -28,7 +28,7 @@ class GameDrawMode extends DrawMode
           @dirty_rects.push(x: unit.x, y: unit.y)
         @camera.x = map.camera_x
         @camera.y = map.camera_y
-
+        @dirty_menu = object.menu
       when 0
         super(object)
 
