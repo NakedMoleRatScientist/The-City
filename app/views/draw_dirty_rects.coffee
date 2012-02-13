@@ -1,4 +1,4 @@
-draw_dirty_rects = (dirty,map,p5) ->
+drawDirtyRects = (dirty,map,p5) ->
   for d in dirty
     location = map.map[d.y][d.x]
     x = (d.x - map.camera_x) * 20
