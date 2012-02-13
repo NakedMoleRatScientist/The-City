@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, distance_between_two_points, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determine_camera_redraw, determine_draw, distance_between_two_points, draw_dirty_rects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -446,16 +446,20 @@
     __extends(GameDrawMode, DrawMode);
     function GameDrawMode(p5) {
       this.p5 = p5;
-      this.map_draw = new mapDraw(this.p5);
       this.dirty_rects = [];
+      this.camera = {
+        x: null,
+        y: null
+      };
       GameDrawMode.__super__.constructor.call(this, "game", this.p5);
     }
     GameDrawMode.prototype.draw = function(object) {
-      var map, msg, unit, units, _i, _len, _results;
+      var map, msg, unit, units, _i, _len;
       switch (object.state) {
         case -1:
           map = object.map;
-          this.map_draw.draw(this.dirty_rects, map);
+          determine_camera_redraw(map, this.camera, this.p5);
+          draw_dirty_rects(this.dirty_rects, map, this.p5);
           units = object.units;
           msg = object.msg;
           unitDraw(this.p5, units, map);
@@ -474,16 +478,15 @@
           }
           mouseDraw(this.p5, object.mouse, map.camera_x, map.camera_y);
           this.dirty_rects = [];
-          _results = [];
           for (_i = 0, _len = units.length; _i < _len; _i++) {
             unit = units[_i];
-            _results.push(this.dirty_rects.push({
+            this.dirty_rects.push({
               x: unit.x,
               y: unit.y
-            }));
+            });
           }
-          return _results;
-          break;
+          this.camera.x = map.camera_x;
+          return this.camera.y = map.camera_y;
         case 0:
           return GameDrawMode.__super__.draw.call(this, object);
       }
@@ -1846,6 +1849,37 @@
     p5.fill(0, 0, 255);
     return p5.rect(x, y, 20, 20);
   };
+  determine_camera_redraw = function(map, old_camera, p5) {
+    if (old_camera.x === null || old_camera.y === null) {
+      return mapDraw(map, p5);
+    } else if (old_camera.x !== map.camera_x || old_camera.y !== map.camera_y) {
+      return mapDraw(map, p5);
+    }
+  };
+  determine_draw = function(location, x, y, p5) {
+    switch (location.name) {
+      case "floor":
+        return floor_draw(p5, x, y);
+      case "crystal_tree":
+        return crystal_tree_draw(p5, x, y);
+      case "crystal_stockpile":
+        return crystal_stockpile_draw(p5, x, y);
+      case "crystal":
+        return crystal_draw(p5, x, y, object.items);
+    }
+  };
+  draw_dirty_rects = function(dirty, map, p5) {
+    var d, location, x, y, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = dirty.length; _i < _len; _i++) {
+      d = dirty[_i];
+      location = map.map[d.y][d.x];
+      x = (d.x - map.camera_x) * 20;
+      y = (d.y - map.camera_y) * 20;
+      _results.push(location !== null ? this.determine_draw(location, x, y) : (p5.noStroke(), p5.fill(0), p5.rect(x, y, 20, 20)));
+    }
+    return _results;
+  };
   floor_draw = function(p5, x, y) {
     p5.stroke(255);
     p5.fill();
@@ -1868,65 +1902,29 @@
     this.p5.textFont("Monospace", 12);
     return this.p5.text("Kills by Colonists Thus Far: " + kills, 400, 12);
   };
-  mapDraw = (function() {
-    function mapDraw(p5) {
-      this.p5 = p5;
-      this.drawable = false;
+  mapDraw = function(map, p5) {
+    var end_x, end_y, height, object, results, width, x, y, _ref, _results;
+    p5.background(0);
+    results = map.map;
+    end_y = map.camera_y + 30;
+    end_x = map.camera_x + 40;
+    _results = [];
+    for (height = _ref = map.camera_y; _ref <= end_y ? height <= end_y : height >= end_y; _ref <= end_y ? height++ : height--) {
+      _results.push((function() {
+        var _ref2, _results2;
+        _results2 = [];
+        for (width = _ref2 = map.camera_x; _ref2 <= end_x ? width <= end_x : width >= end_x; _ref2 <= end_x ? width++ : width--) {
+          x = 20 * (width - map.camera_x);
+          y = 20 * (height - map.camera_y);
+          object = results[height][width];
+          p5.stroke(255, 255, 255);
+          _results2.push(object !== null ? determine_rect_draw(object, x, y) : void 0);
+        }
+        return _results2;
+      })());
     }
-    mapDraw.prototype.draw = function(objects, map) {
-      var location, o, x, y, _i, _len, _results;
-      if (this.drawable === false) {
-        this.p5.background(0);
-        this.output_map(map);
-        this.drawable = true;
-        return;
-      }
-      _results = [];
-      for (_i = 0, _len = objects.length; _i < _len; _i++) {
-        o = objects[_i];
-        location = map.map[o.y][o.x];
-        x = (o.x - map.camera_x) * 20;
-        y = (o.y - map.camera_y) * 20;
-        _results.push(location !== null ? this.determine_draw(location, x, y) : (this.p5.stroke(0), this.p5.fill(0), this.p5.rect(x, y, 20, 20)));
-      }
-      return _results;
-    };
-    mapDraw.prototype.determine_draw = function(location, x, y) {
-      switch (location.name) {
-        case "floor":
-          return floor_draw(this.p5, x, y);
-        case "crystal_tree":
-          return crystal_tree_draw(this.p5, x, y);
-        case "crystal_stockpile":
-          return crystal_stockpile_draw(this.p5, x, y);
-        case "crystal":
-          return crystal_draw(this.p5, x, y, object.items);
-      }
-    };
-    mapDraw.prototype.output_map = function(map) {
-      var end_x, end_y, height, object, results, width, x, y, _ref, _results;
-      results = map.map;
-      end_y = map.camera_y + 30;
-      end_x = map.camera_x + 40;
-      _results = [];
-      for (height = _ref = map.camera_y; _ref <= end_y ? height <= end_y : height >= end_y; _ref <= end_y ? height++ : height--) {
-        _results.push((function() {
-          var _ref2, _results2;
-          _results2 = [];
-          for (width = _ref2 = map.camera_x; _ref2 <= end_x ? width <= end_x : width >= end_x; _ref2 <= end_x ? width++ : width--) {
-            x = 20 * (width - map.camera_x);
-            y = 20 * (height - map.camera_y);
-            object = results[height][width];
-            this.p5.stroke(255, 255, 255);
-            _results2.push(object !== null ? this.determine_draw(object, x, y) : void 0);
-          }
-          return _results2;
-        }).call(this));
-      }
-      return _results;
-    };
-    return mapDraw;
-  })();
+    return _results;
+  };
   menuDraw = function(p5) {
     this.p5 = p5;
     this.p5.fill(0, 0, 0);
