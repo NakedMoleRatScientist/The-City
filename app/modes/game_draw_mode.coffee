@@ -21,6 +21,9 @@ class GameDrawMode extends DrawMode
         if msg != -1
           messageDraw(@p5,msg)
         mouseDraw(@p5,object.mouse,map.camera_x,map.camera_y)
+        @dirty_rects = []
+        for unit in units
+          @dirty_rect.push(x: unit.x, y: unit.y)
       when 0
         super(object)
 
