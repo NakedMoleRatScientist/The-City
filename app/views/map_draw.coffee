@@ -1,7 +1,7 @@
 class mapDraw
   constructor: (@p5) ->
     @drawable = false
-  draw: (dirty,map) ->
+  draw_dirty_rect = (dirty,map) ->
     if @drawable == false
       this.output_map(map)
       @drawable = true
