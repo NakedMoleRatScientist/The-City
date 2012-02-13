@@ -13,6 +13,9 @@ class mapDraw
       y = (o.y - map.camera_y) * 20
       if location != null
         this.determine_draw(location,x,y)
+      else
+        @p5.fill(0)
+        @p5.rect(x,y,20,20)
   determine_draw: (location,x,y) ->
     switch(location.name)
       when "floor"
