@@ -455,13 +455,14 @@
       GameDrawMode.__super__.constructor.call(this, "game", this.p5);
     }
     GameDrawMode.prototype.draw = function(object) {
-      var map, msg, unit, units, _i, _len;
+      var map, mouse, msg, unit, units, _i, _len;
       switch (object.state) {
         case -1:
           map = object.map;
           determineCameraRedraw(map, this.camera, this.p5);
           drawDirtyRects(this.dirty_rects, map, this.p5);
           units = object.units;
+          mouse = object.mouse;
           msg = object.msg;
           changeMenuDraw(object.menu, this.dirty_menu, map, this.p5);
           unitDraw(this.p5, units, map);
@@ -477,6 +478,10 @@
               y: unit.y
             });
           }
+          this.dirty_rects.push({
+            x: mouse.x,
+            y: mouse.y
+          });
           this.camera.x = map.camera_x;
           this.camera.y = map.camera_y;
           return this.dirty_menu = object.menu;
@@ -560,19 +565,15 @@
         switch (result) {
           case "down":
             this.map.move_camera(0, -1);
-            this.mouse.offset(0, -1);
             break;
           case "up":
             this.map.move_camera(0, 1);
-            this.mouse.offset(0, 1);
             break;
           case "right":
             this.map.move_camera(-1, 0);
-            this.mouse.offset(-1, 0);
             break;
           case "left":
             this.map.move_camera(1, 0);
-            this.mouse.offset(1, 0);
             break;
           case "crystal":
             if (this.menu === 1) {
@@ -1690,11 +1691,11 @@
     };
     Map.prototype.move_camera = function(x, y) {
       this.camera_x += x;
-      if (this.camera_x < 0 || this.camera_x > 59) {
+      if (this.camera_x < 0 || this.camera_x > 60) {
         this.camera_x -= x;
       }
       this.camera_y += y;
-      if (this.camera_y < 0) {
+      if (this.camera_y < 0 || this.camera_y > 70) {
         return this.camera_y -= y;
       }
     };
@@ -1750,10 +1751,6 @@
       this.x = 0;
       this.y = 0;
     }
-    Mouse.prototype.offset = function(x, y) {
-      this.x += x;
-      return this.y += y;
-    };
     return Mouse;
   })();
   scenarioList = function() {
@@ -1916,8 +1913,8 @@
     var end_x, end_y, height, object, results, width, x, y, _ref, _results;
     p5.background(0);
     results = map.map;
-    end_y = map.camera_y + 30;
-    end_x = map.camera_x + 40;
+    end_y = map.camera_y + 30 - 1;
+    end_x = map.camera_x + 40 - 1;
     _results = [];
     for (height = _ref = map.camera_y; _ref <= end_y ? height <= end_y : height >= end_y; _ref <= end_y ? height++ : height--) {
       _results.push((function() {
