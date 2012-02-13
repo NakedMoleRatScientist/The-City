@@ -1,6 +1,7 @@
 class GameDrawMode extends DrawMode
   constructor:(@p5) ->
     @map_draw = new mapDraw(@p5)
+    @dirty_rects = []
     super("game",@p5)
   draw: (object) ->
     switch (object.state)
