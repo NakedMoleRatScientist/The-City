@@ -9,7 +9,7 @@ class mapDraw
       @drawable = true
       return
     for o in objects
-      @dirty_rect = [] if @direct_rect.length == 0
+      @dirty_rect = [] if @direct_rect.length > 0
       location = map.map[o.y][o.x]
         @dirty_rect.push(location)
     for d in @dirty_rect
