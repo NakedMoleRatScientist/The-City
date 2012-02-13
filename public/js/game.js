@@ -446,19 +446,19 @@
     __extends(GameDrawMode, DrawMode);
     function GameDrawMode(p5) {
       this.p5 = p5;
-      this.unit_draw = new unitDraw(this.p5);
       this.map_draw = new mapDraw(this.p5);
+      this.dirty_rects = [];
       GameDrawMode.__super__.constructor.call(this, "game", this.p5);
     }
     GameDrawMode.prototype.draw = function(object) {
-      var map, msg, units;
+      var map, msg, unit, units, _i, _len, _results;
       switch (object.state) {
         case -1:
           map = object.map;
+          this.map_draw.draw(this.dirty_rects, map);
           units = object.units;
           msg = object.msg;
-          this.map_draw.draw(map);
-          this.unit_draw.draw(units, map);
+          unitDraw(this.p5, units, map);
           if (object.menu !== -1) {
             menuDraw(this.p5);
           }
@@ -472,7 +472,18 @@
           if (msg !== -1) {
             messageDraw(this.p5, msg);
           }
-          return mouseDraw(this.p5, object.mouse, map.camera_x, map.camera_y);
+          mouseDraw(this.p5, object.mouse, map.camera_x, map.camera_y);
+          this.dirty_rects = [];
+          _results = [];
+          for (_i = 0, _len = units.length; _i < _len; _i++) {
+            unit = units[_i];
+            _results.push(this.dirty_rects.push({
+              x: unit.x,
+              y: unit.y
+            }));
+          }
+          return _results;
+          break;
         case 0:
           return GameDrawMode.__super__.draw.call(this, object);
       }
@@ -605,7 +616,7 @@
     GameMode.prototype.update_draw = function() {
       if (this.state === -1) {
         return {
-          units: this.units,
+          units: this.units.units,
           map: this.map,
           msg: this.units.msg_manager.get_last_update(),
           state: -1,
@@ -1430,7 +1441,9 @@
     return CrystalTree;
   })();
   Floor = (function() {
-    function Floor() {
+    function Floor(x, y) {
+      this.x = x;
+      this.y = y;
       this.name = "floor";
     }
     Floor.prototype.collide = function() {
@@ -1614,7 +1627,7 @@
           for (w = 0, _ref2 = this.map[h].length; 0 <= _ref2 ? w <= _ref2 : w >= _ref2; 0 <= _ref2 ? w++ : w--) {
             if (w < this.map[h].length) {
               if ((Math.random() * 10) > 5) {
-                this.map[h][w] = new Floor();
+                this.map[h][w] = new Floor(w, h);
               } else {
                 this.map[h][w] = null;
               }
@@ -1834,6 +1847,7 @@
     return p5.rect(x, y, 20, 20);
   };
   floor_draw = function(p5, x, y) {
+    p5.stroke(255);
     p5.fill();
     return p5.rect(x, y, 20, 20);
   };
@@ -1859,7 +1873,7 @@
       this.p5 = p5;
       this.drawable = false;
     }
-    mapDraw.prototype.draw = function(map) {
+    mapDraw.prototype.draw = function(objects, map) {
       var location, o, x, y, _i, _len, _results;
       if (this.drawable === false) {
         this.p5.background(0);
@@ -1870,10 +1884,10 @@
       _results = [];
       for (_i = 0, _len = objects.length; _i < _len; _i++) {
         o = objects[_i];
+        location = map.map[o.y][o.x];
         x = (o.x - map.camera_x) * 20;
         y = (o.y - map.camera_y) * 20;
-        location = map.map[o.x][o.y];
-        _results.push(location !== null ? this.determine_draw(location, x, y) : void 0);
+        _results.push(location !== null ? this.determine_draw(location, x, y) : (this.p5.stroke(0), this.p5.fill(0), this.p5.rect(x, y, 20, 20)));
       }
       return _results;
     };
@@ -1904,7 +1918,7 @@
             y = 20 * (height - map.camera_y);
             object = results[height][width];
             this.p5.stroke(255, 255, 255);
-            _results2.push(object !== null ? this.determine_draw(location, x, y) : void 0);
+            _results2.push(object !== null ? this.determine_draw(object, x, y) : void 0);
           }
           return _results2;
         }).call(this));
@@ -1953,34 +1967,26 @@
     p5.textFont("monospace", 30);
     return p5.text("The City", 350, 100);
   };
-  unitDraw = (function() {
-    function unitDraw(p5) {
-      this.p5 = p5;
+  unitDraw = function(p5, units, map) {
+    var unit, x, y, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = units.length; _i < _len; _i++) {
+      unit = units[_i];
+      x = (unit.x - map.camera_x) * 20 + 5;
+      y = (unit.y - map.camera_y) * 20 + 20;
+      _results.push((function() {
+        switch (unit.type) {
+          case 1:
+            p5.fill(255, 69, 0);
+            return p5.text("H", x, y);
+          case 2:
+            p5.fill(255, 69, 0);
+            return p5.text("B", x, y);
+        }
+      })());
     }
-    unitDraw.prototype.draw = function(units, map) {
-      var dirty, unit, x, y, _i, _len, _ref, _results;
-      dirty = [];
-      _ref = units.units;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        unit = _ref[_i];
-        x = (unit.x - map.camera_x) * 20 + 5;
-        y = (unit.y - map.camera_y) * 20 - 5;
-        _results.push((function() {
-          switch (unit.type) {
-            case 1:
-              this.p5.fill(255, 69, 0);
-              return this.p5.text("H", x, y);
-            case 2:
-              this.p5.fill(255, 69, 0);
-              return this.p5.text("B", x, y);
-          }
-        }).call(this));
-      }
-      return _results;
-    };
-    return unitDraw;
-  })();
+    return _results;
+  };
   CombatReportDrawMinorMode = (function() {
     function CombatReportDrawMinorMode(p5) {
       this.p5 = p5;
