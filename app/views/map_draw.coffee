@@ -1,7 +1,6 @@
 class mapDraw
   constructor: (@p5) ->
     @drawable = false
-    @dirty_rect = []
   draw: (objects,map) ->
     if @drawable == false
       @p5.background(0)
@@ -9,7 +8,6 @@ class mapDraw
       @drawable = true
       return
     for o in objects
-      @dirty_rect = [] if @dirty_rect.length > 0
       location = map.map[o.y][o.x]
       x = (d.x - map.camera_x) * 20
       y = (d.y - map.camera_y) * 20
