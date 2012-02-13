@@ -1,4 +1,4 @@
-determine_draw = (location,x,y,p5) ->
+determineRectDraw = (location,x,y,p5) ->
   switch(location.name)
     when "floor"
       floor_draw(p5,x,y)
