@@ -1,7 +1,4 @@
-class mapDraw
-  constructor: (@p5) ->
-    @drawable = false
-  output_map: (map,p5) ->
+mapDraw = (map,p5) ->
     p5.background(0)
     results = map.map
     end_y = map.camera_y + 30
