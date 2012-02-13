@@ -1,6 +1,7 @@
 class GameDrawMode extends DrawMode
   constructor:(@p5) ->
     @dirty_rects = []
+    @dirty_menu = null
     @camera = (x: null, y: null)
     super("game",@p5)
   draw: (object) ->
