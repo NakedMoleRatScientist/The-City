@@ -1,6 +1,7 @@
 class mapDraw
   constructor: (@p5) ->
     @drawable = false
+    @dirty_rect = []
   draw: (objects,map) ->
     if @drawable == false
       @p5.background(0)
@@ -8,11 +9,11 @@ class mapDraw
       @drawable = true
       return
     for o in objects
+      @dirty_rect = [] if @direct_rect.length == 0
       x = (o.x - map.camera_x) * 20
       y = (o.y - map.camera_y) * 20
       location = map.map[o.y][o.x]
-      if location != null
-        this.determine_draw(location,x,y)
+        @dirty_rect.push(location)
   determine_draw: (location,x,y) ->
     switch(location.name)
       when "floor"
