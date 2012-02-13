@@ -1,6 +1,7 @@
 mapDraw = (map,p5) ->
     p5.background(0)
     results = map.map
+    #0 to 30 would be 31 numbers in all since we're starting with 0. This also have implication for end_x as well.
     end_y = map.camera_y + 30 - 1
     end_x = map.camera_x + 40 - 1
     for height in [map.camera_y..end_y]
