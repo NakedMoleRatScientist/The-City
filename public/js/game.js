@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determine_camera_redraw, determine_draw, distance_between_two_points, draw_dirty_rects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, boar_body, buildMenuDraw, changeMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determineCameraRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -447,6 +447,7 @@
     function GameDrawMode(p5) {
       this.p5 = p5;
       this.dirty_rects = [];
+      this.dirty_menu = -1;
       this.camera = {
         x: null,
         y: null
@@ -458,21 +459,12 @@
       switch (object.state) {
         case -1:
           map = object.map;
-          determine_camera_redraw(map, this.camera, this.p5);
-          draw_dirty_rects(this.dirty_rects, map, this.p5);
+          determineCameraRedraw(map, this.camera, this.p5);
+          drawDirtyRects(this.dirty_rects, map, this.p5);
           units = object.units;
           msg = object.msg;
+          changeMenuDraw(object.menu, this.dirty_menu, map, this.p5);
           unitDraw(this.p5, units, map);
-          if (object.menu !== -1) {
-            menuDraw(this.p5);
-          }
-          switch (object.menu) {
-            case 0:
-              gameMenuDraw(this.p5);
-              break;
-            case 1:
-              buildMenuDraw(this.p5);
-          }
           if (msg !== -1) {
             messageDraw(this.p5, msg);
           }
@@ -486,7 +478,8 @@
             });
           }
           this.camera.x = map.camera_x;
-          return this.camera.y = map.camera_y;
+          this.camera.y = map.camera_y;
+          return this.dirty_menu = object.menu;
         case 0:
           return GameDrawMode.__super__.draw.call(this, object);
       }
@@ -1697,10 +1690,13 @@
     };
     Map.prototype.move_camera = function(x, y) {
       this.camera_x += x;
-      if (this.camera_x < 0) {
+      if (this.camera_x < 0 || this.camera_x > 59) {
         this.camera_x -= x;
       }
-      return this.camera_y += y;
+      this.camera_y += y;
+      if (this.camera_y < 0) {
+        return this.camera_y -= y;
+      }
     };
     Map.prototype.propose_drop = function(x, y) {
       if (this.map[y][x] === null || this.map[y][x].collide() === false) {
@@ -1823,6 +1819,20 @@
     this.p5.fill(255, 255, 0);
     return this.p5.text("c - crystal pile", 705, 140);
   };
+  changeMenuDraw = function(toggle, previous, map, p5) {
+    if (previous !== toggle) {
+      switch (toggle) {
+        case -1:
+          return mapDraw(map, p5);
+        case 0:
+          menuDraw(p5);
+          return gameMenuDraw(p5);
+        case 1:
+          menuDraw(p5);
+          return buildMenuDraw(p5);
+      }
+    }
+  };
   combatLogMenuDraw = function(p5) {
     this.p5 = p5;
     return scrollDraw(this.p5, false);
@@ -1849,14 +1859,14 @@
     p5.fill(0, 0, 255);
     return p5.rect(x, y, 20, 20);
   };
-  determine_camera_redraw = function(map, old_camera, p5) {
+  determineCameraRedraw = function(map, old_camera, p5) {
     if (old_camera.x === null || old_camera.y === null) {
       return mapDraw(map, p5);
     } else if (old_camera.x !== map.camera_x || old_camera.y !== map.camera_y) {
       return mapDraw(map, p5);
     }
   };
-  determine_draw = function(location, x, y, p5) {
+  determineRectDraw = function(location, x, y, p5) {
     switch (location.name) {
       case "floor":
         return floor_draw(p5, x, y);
@@ -1868,7 +1878,7 @@
         return crystal_draw(p5, x, y, object.items);
     }
   };
-  draw_dirty_rects = function(dirty, map, p5) {
+  drawDirtyRects = function(dirty, map, p5) {
     var d, location, x, y, _i, _len, _results;
     _results = [];
     for (_i = 0, _len = dirty.length; _i < _len; _i++) {
@@ -1876,7 +1886,7 @@
       location = map.map[d.y][d.x];
       x = (d.x - map.camera_x) * 20;
       y = (d.y - map.camera_y) * 20;
-      _results.push(location !== null ? this.determine_draw(location, x, y) : (p5.noStroke(), p5.fill(0), p5.rect(x, y, 20, 20)));
+      _results.push(location !== null ? determineRectDraw(location, x, y, p5) : (p5.noStroke(), p5.fill(0), p5.rect(x, y, 20, 20)));
     }
     return _results;
   };
@@ -1918,7 +1928,7 @@
           y = 20 * (height - map.camera_y);
           object = results[height][width];
           p5.stroke(255, 255, 255);
-          _results2.push(object !== null ? determine_rect_draw(object, x, y) : void 0);
+          _results2.push(object !== null ? determineRectDraw(object, x, y, p5) : void 0);
         }
         return _results2;
       })());
