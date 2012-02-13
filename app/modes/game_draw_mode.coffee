@@ -20,6 +20,7 @@ class GameDrawMode extends DrawMode
         @dirty_rects = []
         for unit in units
           @dirty_rects.push(x: unit.x, y: unit.y)
+        @dirty_rects.push(x: mouse.x, mouse.y)
         @camera.x = map.camera_x
         @camera.y = map.camera_y
         @dirty_menu = object.menu
