@@ -3,7 +3,6 @@ class mapDraw
     @drawable = false
   draw: (objects,map) ->
     if @drawable == false
-      @p5.background(0)
       this.output_map(map)
       @drawable = true
       return
@@ -28,7 +27,8 @@ class mapDraw
       when "crystal"
         crystal_draw(@p5,x,y,object.items)
 
-  output_map: (map) ->
+  output_map: (map,p5) ->
+    p5.background(0)
     results = map.map
     end_y = map.camera_y + 30
     end_x = map.camera_x + 40
@@ -37,6 +37,6 @@ class mapDraw
         x = 20 * (width - map.camera_x)
         y = 20 * (height - map.camera_y)
         object = results[height][width]
-        @p5.stroke(255,255,255)
+        p5.stroke(255,255,255)
         if object != null
           this.determine_draw(object,x,y)
