@@ -8,7 +8,7 @@ class GameDrawMode extends DrawMode
       when -1
         map = object.map
         determineCameraRedraw(map,@camera,@p5)
-        draw_dirty_rects(@dirty_rects,map,@p5)
+        drawDirtyRects(@dirty_rects,map,@p5)
         units = object.units
         msg = object.msg
         unitDraw(@p5,units,map)
