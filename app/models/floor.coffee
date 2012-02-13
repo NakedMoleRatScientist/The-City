@@ -1,5 +1,5 @@
 class Floor
-  constructor: () ->
+  constructor: (@x,@y) ->
     @name = "floor"
   collide: () ->
     false
