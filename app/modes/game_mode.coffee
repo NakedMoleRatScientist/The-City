@@ -19,16 +19,12 @@ class GameMode extends Mode
       switch(result)
         when "down"
           @map.move_camera(0,-1)
-          @mouse.offset(0,-1)
         when "up"
           @map.move_camera(0,1)
-          @mouse.offset(0,1)
         when "right"
           @map.move_camera(-1,0)
-          @mouse.offset(-1,0)
         when "left"
           @map.move_camera(1,0)
-          @mouse.offset(1,0)
         when "crystal"
           if @menu == 1
             @mouse.mode = 1
