@@ -8,15 +8,13 @@ class mapDraw
       this.output_map(map)
       @drawable = true
       return
-    for d in @dirty_rect
-      if d != null
-        x = (d.x - map.camera_x) * 20
-        y = (d.y - map.camera_y) * 20
-        this.determine_draw(d,x,y)
     for o in objects
       @dirty_rect = [] if @dirty_rect.length > 0
       location = map.map[o.y][o.x]
-      @dirty_rect.push(location)
+      x = (d.x - map.camera_x) * 20
+      y = (d.y - map.camera_y) * 20
+      if location != null
+        this.determine_draw(location,x,y)
   determine_draw: (location,x,y) ->
     switch(location.name)
       when "floor"
