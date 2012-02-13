@@ -1,7 +1,7 @@
 mapDraw = (map,p5) ->
     p5.background(0)
     results = map.map
-    end_y = map.camera_y + 30
+    end_y = map.camera_y + 30 - 1
     end_x = map.camera_x + 40
     for height in [map.camera_y..end_y]
       for width in [map.camera_x..end_x]
