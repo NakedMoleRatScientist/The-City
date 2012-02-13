@@ -9,9 +9,10 @@ class mapDraw
       @drawable = true
       return
     for d in @dirty_rect
-      x = (d.x - map.camera_x) * 20
-      y = (d.y - map.camera_y) * 20
-      this.determine_draw(d,x,y)
+      if d != null
+        x = (d.x - map.camera_x) * 20
+        y = (d.y - map.camera_y) * 20
+        this.determine_draw(d,x,y)
     for o in objects
       @dirty_rect = [] if @dirty_rect.length > 0
       location = map.map[o.y][o.x]
