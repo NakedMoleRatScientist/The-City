@@ -4,7 +4,7 @@ drawDirtyRects = (dirty,map,p5) ->
     x = (d.x - map.camera_x) * 20
     y = (d.y - map.camera_y) * 20
     if location != null
-      this.determine_draw(location,x,y)
+      determineRectDraw(location,x,y,p5)
     else
       p5.noStroke()
       p5.fill(0)
