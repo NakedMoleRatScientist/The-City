@@ -54,7 +54,7 @@ class Map
     return false
   move_camera: (x,y) ->
     @camera_x += x
-    if @camera_x < 0 || @camera_x > 59
+    if @camera_x < 0 || @camera_x > 60
       @camera_x -= x
     @camera_y += y
     if @camera_y < 0
