@@ -11,7 +11,7 @@ class mapDraw
     for o in objects
       @dirty_rect = [] if @direct_rect.length > 0
       location = map.map[o.y][o.x]
-        @dirty_rect.push(location)
+      @dirty_rect.push(location)
     for d in @dirty_rect
       x = (d.x - map.camera_x) * 20
       y = (d.y - map.camera_y) * 20
