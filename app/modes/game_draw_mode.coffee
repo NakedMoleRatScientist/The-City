@@ -25,8 +25,8 @@ class GameDrawMode extends DrawMode
         @dirty_rects = []
         for unit in units
           @dirty_rects.push(x: unit.x, y: unit.y)
-          @camera.x = map.camera_x
-          @camera.y = map.camera_y
+        @camera.x = map.camera_x
+        @camera.y = map.camera_y
       when 0
         super(object)
 
