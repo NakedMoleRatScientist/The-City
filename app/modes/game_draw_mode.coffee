@@ -10,7 +10,7 @@ class GameDrawMode extends DrawMode
         @map_draw.draw(@dirty_rects,map)
         units = object.units
         msg = object.msg
-        unitDraw(units,map,@p5)
+        unitDraw(@p5,units,map)
         if object.menu != -1
           menuDraw(@p5)
         switch(object.menu)
