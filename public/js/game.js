@@ -447,6 +447,7 @@
       this.p5 = p5;
       this.dirty_rects = [];
       this.dirty_menu = -1;
+      this.redraw = false;
       this.camera = {
         x: null,
         y: null
@@ -506,6 +507,7 @@
           this.camera.y = map.camera_y;
           return this.dirty_menu = object.menu;
         case 0:
+          this.redraw = true;
           return GameDrawMode.__super__.draw.call(this, object);
       }
     };
@@ -546,7 +548,7 @@
           }
           break;
         case 0:
-          GameKeyMode.__super__.key_pressed.call(this, state);
+          return GameKeyMode.__super__.key_pressed.call(this, state);
       }
       return false;
     };
@@ -945,6 +947,12 @@
         case "pig_invasion":
           this.units.create(new Human(10, 10, "defender"));
           this.units.create(new Lightboar(0, 4, "pigboy"));
+          this.units.create(new Lightboar(3, 3, "pigone"));
+          this.units.create(new Lightboar(2, 3, "pigtwo"));
+          this.units.create(new Lightboar(20, 15, "pigthree"));
+          this.units.units[2].order = null;
+          this.units.units[3].order = null;
+          this.units.units[4].order = null;
           this.map.create_crystal(5, 5);
           return this.map.drop_crystal(5, 5);
         default:
@@ -961,17 +969,20 @@
       this.msg_manager = new MsgManager();
       this.fatalities = 0;
       this.advance = true;
+      this.frame = 0;
     }
     Units.prototype.create = function(unit) {
       return this.units.push(unit);
     };
     Units.prototype.move = function() {
-      var unit, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _ref3, _results;
+      var unit, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _ref3;
       _ref = this.units;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         unit = _ref[_i];
-        unit.set_action(this.map, this);
-        unit.move();
+        if (this.frame % unit.agility === 0) {
+          unit.set_action(this.map, this);
+          unit.move();
+        }
       }
       _ref2 = this.units;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
@@ -979,12 +990,11 @@
         this.msg_manager.strike(unit.attack());
       }
       _ref3 = this.units;
-      _results = [];
       for (_k = 0, _len3 = _ref3.length; _k < _len3; _k++) {
         unit = _ref3[_k];
-        _results.push(this.msg_manager.combat_death(unit.nullify_target()));
+        this.msg_manager.combat_death(unit.nullify_target());
       }
-      return _results;
+      return this.frame += 1;
     };
     Units.prototype.clean = function() {
       var unit, _i, _len, _ref;
@@ -1071,6 +1081,16 @@
           }
         }
       }
+    };
+    Units.prototype.tells = function(msg, type) {
+      var u, units, _i, _len, _results;
+      units = this.hostile_filter(type);
+      _results = [];
+      for (_i = 0, _len = units.length; _i < _len; _i++) {
+        u = units[_i];
+        _results.push(u.receive_msg(msg));
+      }
+      return _results;
     };
     Units.prototype.generate_boars = function() {
       var existing_boars, size, u, _i, _len, _ref, _results;
@@ -1515,6 +1535,7 @@
       Human.__super__.constructor.call(this, x, y, 1, name);
       this.hostility = 0;
       this.advance = true;
+      this.agility = 5;
     }
     Human.prototype.set_action = function(map) {
       var object;
@@ -1582,6 +1603,7 @@
       this.hostility = 1;
       this.queue = ["decide", "act", "move_to_escape", "escape"];
       this.order = 0;
+      this.agility = 6;
     }
     Lightboar.prototype.set_action = function(map, controller) {
       var object;
@@ -1590,7 +1612,7 @@
       }
       switch (this.queue[this.order]) {
         case "decide":
-          if (random_number(5) < 5) {
+          if (random_number(6) <= 5) {
             this.decide = "steal";
             object = nearest_object(this, map.crystals);
             if (object === null) {
@@ -1601,9 +1623,9 @@
             this.set_move(object.x, object.y);
           } else {
             this.decide = "attack";
-            object = nearest_object(this, controller.hostile_filter(1));
+            object = nearest_object(this, controller.hostile_filter(0));
             if (object === null) {
-              this.advance = false;
+              this.order = 2;
               return;
             }
             this.advance = true;
@@ -1620,9 +1642,17 @@
           this.set_move(object.x, object.y);
           break;
         case "escape":
+          controller.tells("escape", 1);
           this.leave = true;
       }
       return this.perform = this.order;
+    };
+    Lightboar.prototype.receive_msg = function(msg) {
+      switch (msg) {
+        case "escape":
+          this.order = 2;
+          return this.advance = true;
+      }
     };
     return Lightboar;
   })();
@@ -1868,7 +1898,7 @@
     this.p5 = p5;
     this.p5.textFont("Monospace", 12);
     scrollDraw(this.p5, true);
-    return this.p5.text("k - kill lists", 300, 580);
+    return this.p5.text("k - kill lists", 345, 580);
   };
   crystal_draw = function(p5, x, y, fullness) {
     fullness *= 3;
