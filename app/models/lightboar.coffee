@@ -32,7 +32,7 @@ class Lightboar extends Unit
         object = nearest_edge(this)
         this.set_move(object.x,object.y)
       when "escape"
-        controller.tells("escape",2)
+        controller.tells("escape",1)
         @leave = true
     @perform = @order
   receive_msg: (msg) ->
