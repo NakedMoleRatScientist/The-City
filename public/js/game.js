@@ -459,6 +459,10 @@
       switch (object.state) {
         case -1:
           map = object.map;
+          if (this.redraw === true) {
+            mapDraw(map, p5);
+            this.redraw = false;
+          }
           determineCameraRedraw(map, this.camera, this.p5);
           drawDirtyRects(this.dirty_rects, map, this.p5);
           units = object.units;
@@ -935,6 +939,7 @@
       this.map = map;
     }
     ScenarioInitialize.prototype.create = function(name) {
+      var location;
       switch (name) {
         case "combat":
           this.units.create(new Human(10, 10, "Miya"));
@@ -945,16 +950,28 @@
           this.units.units[0].body.leg = 2;
           return this.units.units[0].set_move(20, 20);
         case "pig_invasion":
-          this.units.create(new Human(10, 10, "defender"));
           this.units.create(new Lightboar(0, 4, "pigboy"));
           this.units.create(new Lightboar(3, 3, "pigone"));
           this.units.create(new Lightboar(2, 3, "pigtwo"));
           this.units.create(new Lightboar(20, 15, "pigthree"));
+          this.units.units[1].order = null;
           this.units.units[2].order = null;
           this.units.units[3].order = null;
-          this.units.units[4].order = null;
           this.map.create_crystal(5, 5);
           return this.map.drop_crystal(5, 5);
+        case "hand_disability_combat":
+          this.units.create(new Human(10, 10, "nofight"));
+          this.units.create(new Human(10, 20, "Target"));
+          this.units.units[0].body.hand = 2;
+          return this.units.units[0].target = this.units.units[1];
+        case "hand_disability_gathering":
+          this.units.create(new Human(10, 10, "gatherer"));
+          this.units.units[0].body.hand = 2;
+          location = {
+            x: 300,
+            y: 300
+          };
+          return this.map.add_stockpile(location);
         default:
           this.units.create(new Human(10, 10, "Killy"));
           return this.units.create(new Human(12, 10, "Cibo"));
@@ -1232,11 +1249,13 @@
       return false;
     };
     Unit.prototype.attack = function() {
-      if (this.target === null || (this.body.hand === 2)) {
+      if (this.target === null) {
         return -1;
       }
       if (this.attack_chance()) {
-        return this.target.damage(this);
+        if (this.body.hand !== 2) {
+          return this.target.damage(this);
+        }
       }
       return -1;
     };
@@ -1612,30 +1631,16 @@
       }
       switch (this.queue[this.order]) {
         case "decide":
-          if (random_number(6) <= 5) {
-            this.decide = "steal";
-            object = nearest_object(this, map.crystals);
-            if (object === null) {
-              this.advance = false;
-              return;
-            }
-            this.advance = true;
-            this.set_move(object.x, object.y);
-          } else {
-            this.decide = "attack";
-            object = nearest_object(this, controller.hostile_filter(0));
-            if (object === null) {
-              this.order = 2;
-              return;
-            }
-            this.advance = true;
-            this.target = object;
+          object = nearest_object(this, map.crystals);
+          if (object === null) {
+            this.advance = false;
+            return;
           }
+          this.advance = true;
+          this.set_move(object.x, object.y);
           break;
         case "act":
-          if (this.decide === "steal") {
-            this.acquire_item(map.acquire(this.goal_x, this.goal_y));
-          }
+          this.acquire_item(map.acquire(this.goal_x, this.goal_y));
           break;
         case "move_to_escape":
           object = nearest_edge(this);
@@ -1814,7 +1819,7 @@
     return Mouse;
   })();
   scenarioList = function() {
-    return ["combat", "hand_disability", "leg_disability", "pig_invasion"];
+    return ["combat", "hand_disability_combat", "leg_disability", "pig_invasion"];
   };
   Subpart = (function() {
     function Subpart(name, type) {
