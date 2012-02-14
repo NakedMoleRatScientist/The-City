@@ -1,9 +1,9 @@
-mouseDraw = (@p5,object,camera_x,camera_y) ->
+mouseDraw = (@p5,mouse) ->
   x = @p5.mouseX
   y = @p5.mouseY
   location_x = Math.floor(x / 20)
   location_y = Math.floor(y / 20)
-  switch(object.mode)
+  switch(mouse.mode)
     when 1 #build
       @p5.noStroke()
       @p5.fill(128,128,128)
