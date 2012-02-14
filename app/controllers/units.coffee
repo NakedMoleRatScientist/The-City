@@ -38,7 +38,7 @@ class Units
         return u.kills
   tells: (msg,type) ->
     units = this.hostile_filter(type)
-    for u in @units
+    for u in units
       u.receive_msg(msg)
   generate_boars: () ->
     existing_boars = 0
