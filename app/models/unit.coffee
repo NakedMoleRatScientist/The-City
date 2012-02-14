@@ -11,6 +11,7 @@ class Unit
     @order = null
     @perform = null
     @leave = false
+    @advance = false
   set_job: (job) ->
     @job = job
     @queue = job.orders
