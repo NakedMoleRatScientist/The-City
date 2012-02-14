@@ -9,4 +9,4 @@ mouseDraw = (@p5,object,camera_x,camera_y) ->
       @p5.fill(128,128,128)
       @p5.rect(location_x * 20,location_y * 20,20,20)
       @p5.fill(255,0,0)
-      @p5.text("Crystal Pile",x - 5,y - 5)
+      @p5.text("Crystal Pile",location_x * 20,location_y * 20)
