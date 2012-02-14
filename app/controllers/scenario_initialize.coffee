@@ -23,6 +23,7 @@ class ScenarioInitialize
       when "hand_disability_combat"
         @units.create new Human(10,10, "nofight")
         @units.create new Human(10,20, "Target")
+        @units.units[0].body.hand = 2
         @units.units[0].target = @units.units[1]
       else
         @units.create new Human(10,10, "Killy")
