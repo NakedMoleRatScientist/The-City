@@ -26,8 +26,9 @@ class Map
     return @map
 
   create_crystal: (x,y) ->
-    @map[y][x] = new Crystal(x,y)
     @crystals.push (x: x, y: y)
+    @map[y][x] = new Crystal(x,y)
+
 
   drop_crystal: (x,y) ->
     if @map[y][x].increase() == false
