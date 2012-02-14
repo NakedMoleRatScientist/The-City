@@ -4,12 +4,14 @@ class Units
     @msg_manager = new MsgManager()
     @fatalities = 0
     @advance = true
+    @frame = 0
   create: (unit) ->
     @units.push(unit)
   move: () ->
     for unit in @units
-      unit.set_action(@map,this)
-      unit.move()
+      if @frame % unit.agility == 0
+        unit.set_action(@map,this)
+        unit.move()
     @msg_manager.strike(unit.attack()) for unit in @units
     @msg_manager.combat_death(unit.nullify_target()) for unit in @units
   clean: () ->
