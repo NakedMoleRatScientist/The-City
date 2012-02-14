@@ -19,7 +19,7 @@ class Lightboar extends Unit
           this.set_move(object.x,object.y)
         else
           @decide = "attack"
-          object = nearest_object(this,controller.hostile_filter(1))
+          object = nearest_object(this,controller.hostile_filter(0))
           if object == null
             @order = 2
             return
