@@ -8,6 +8,9 @@ class GameDrawMode extends DrawMode
   draw: (object) ->
     switch (object.state)
       when -1
+        if @redraw == true
+          mapDraw(map,p5)
+          @redraw = false
         map = object.map
         determineCameraRedraw(map,@camera,@p5)
         drawDirtyRects(@dirty_rects,map,@p5)
