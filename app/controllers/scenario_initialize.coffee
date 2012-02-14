@@ -11,14 +11,13 @@ class ScenarioInitialize
         @units.units[0].body.leg = 2
         @units.units[0].set_move(20,20)
       when "pig_invasion"
-        @units.create new Human(10,10, "defender")
         @units.create new Lightboar(0,4, "pigboy")
         @units.create new Lightboar(3,3, "pigone")
         @units.create new Lightboar(2,3, "pigtwo")
         @units.create new Lightboar(20,15,"pigthree")
+        @units.units[1].order = null
         @units.units[2].order = null
         @units.units[3].order = null
-        @units.units[4].order = null
         @map.create_crystal(5,5)
         @map.drop_crystal(5,5)
       else
