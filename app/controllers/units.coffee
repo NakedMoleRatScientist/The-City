@@ -36,7 +36,10 @@ class Units
     for u in @units when u.hostility == 0
       if u.name == name
         return u.kills
-
+  tells: (msg,type) ->
+    units = this.hostile_filter(type)
+    for u in @units
+      u.receive_msg(msg)
   generate_boars: () ->
     existing_boars = 0
     for u in @units
