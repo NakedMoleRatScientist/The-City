@@ -20,6 +20,10 @@ class ScenarioInitialize
         @units.units[3].order = null
         @map.create_crystal(5,5)
         @map.drop_crystal(5,5)
+      when "hand_disability_combat"
+        @units.create new Human(10,10, "nofight")
+        @units.create new Human(10,20, "Target")
+        @units.units[0].target = @units.units[1]
       else
         @units.create new Human(10,10, "Killy")
         @units.create new Human(12,10, "Cibo")
