@@ -1,2 +1,2 @@
 random_number = (size) ->
-  Math.floor(Math.random() * size ) + 1
+  Math.floor(Math.random() * size )
