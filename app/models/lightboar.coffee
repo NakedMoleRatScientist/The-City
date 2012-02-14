@@ -38,4 +38,4 @@ class Lightboar extends Unit
   receive_msg: (msg) ->
     switch(msg)
       when "escape"
-        @order = 3
+        @order = 2
