@@ -2,6 +2,7 @@ class GameDrawMode extends DrawMode
   constructor:(@p5) ->
     @dirty_rects = []
     @dirty_menu = -1
+    @redraw = false
     @camera = (x: null, y: null)
     super("game",@p5)
   draw: (object) ->
@@ -34,6 +35,7 @@ class GameDrawMode extends DrawMode
         @camera.y = map.camera_y
         @dirty_menu = object.menu
       when 0
+        @redraw = true
         super(object)
 
   input: (result) ->
