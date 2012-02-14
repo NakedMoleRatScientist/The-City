@@ -25,6 +25,11 @@ class ScenarioInitialize
         @units.create new Human(10,20, "Target")
         @units.units[0].body.hand = 2
         @units.units[0].target = @units.units[1]
+      when "hand_disability_gathering"
+        @units.create new Human(10,10,"gatherer")
+        @units.units[0].body.hand = 2
+        location = (x: 300, y: 300)
+        @map.add_stockpile(location)
       else
         @units.create new Human(10,10, "Killy")
         @units.create new Human(12,10, "Cibo")
