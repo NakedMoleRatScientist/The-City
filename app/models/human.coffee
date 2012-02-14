@@ -3,6 +3,7 @@ class Human extends Unit
     super(x, y, 1,name)
     @hostility = 0
     @advance = true
+    @agility = 5
   set_action: (map) ->
     return if this.act_on_queue()
     switch(@queue[@order])
