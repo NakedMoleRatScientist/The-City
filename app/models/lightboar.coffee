@@ -39,3 +39,4 @@ class Lightboar extends Unit
     switch(msg)
       when "escape"
         @order = 2
+        @advance = true
