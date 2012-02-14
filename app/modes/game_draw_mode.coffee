@@ -13,6 +13,7 @@ class GameDrawMode extends DrawMode
         units = object.units
         mouse = object.mouse
         msg = object.msg
+        frameRateDraw(@p5)
         changeMenuDraw(object.menu,@dirty_menu,map,@p5)
         unitDraw(@p5,units,map)
         if msg != -1
