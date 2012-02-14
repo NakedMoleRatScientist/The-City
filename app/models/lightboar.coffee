@@ -9,7 +9,7 @@ class Lightboar extends Unit
     return if this.act_on_queue()
     switch(@queue[@order])
       when "decide"
-        if random_number(5) < 5
+        if random_number(6) <= 5
           @decide = "steal"
           object = nearest_object(this,map.crystals)
           if object == null
