@@ -22,7 +22,13 @@ class GameDrawMode extends DrawMode
         for unit in units
           @dirty_rects.push(x: unit.x, y: unit.y)
         if mouse.mode == 1
-          @dirty_rects.push(x: Math.floor(@p5.mouseX / 20), y: Math.floor(@p5.mouseY / 20))
+          x = Math.floor(@p5.mouseX / 20)
+          y = Math.floor(@p5.mouseY / 20)
+          @dirty_rects.push(x: x, y: y)
+          @dirty_rects.push(x: x, y: y - 1)
+          @dirty_rects.push(x: x + 1, y: y - 1)
+          @dirty_rects.push(x: x + 2, y: y - 1)
+          @dirty_rects.push(x: x + 3, y: y - 1)
         @camera.x = map.camera_x
         @camera.y = map.camera_y
         @dirty_menu = object.menu
