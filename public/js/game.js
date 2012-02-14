@@ -98,8 +98,7 @@
       this.modes = initializeDrawModes(this.p5);
     }
     DrawModeManager.prototype.draw = function(logic) {
-      this.modes[logic.n].draw(logic.update_draw());
-      return frameRateDraw(this.p5);
+      return this.modes[logic.n].draw(logic.update_draw());
     };
     DrawModeManager.prototype.input = function(logic, result) {
       return this.modes[logic.n].input(result);
@@ -368,7 +367,7 @@
     return RadioButton;
   })();
   random_number = function(size) {
-    return Math.floor(Math.random() * size) + 1;
+    return Math.floor(Math.random() * size);
   };
   TextOptions = (function() {
     function TextOptions() {
@@ -455,7 +454,7 @@
       GameDrawMode.__super__.constructor.call(this, "game", this.p5);
     }
     GameDrawMode.prototype.draw = function(object) {
-      var map, mouse, msg, unit, units, _i, _len;
+      var map, mouse, msg, unit, units, x, y, _i, _len;
       switch (object.state) {
         case -1:
           map = object.map;
@@ -464,6 +463,7 @@
           units = object.units;
           mouse = object.mouse;
           msg = object.msg;
+          frameRateDraw(this.p5);
           changeMenuDraw(object.menu, this.dirty_menu, map, this.p5);
           unitDraw(this.p5, units, map);
           if (msg !== -1) {
@@ -478,10 +478,30 @@
               y: unit.y
             });
           }
-          this.dirty_rects.push({
-            x: mouse.x,
-            y: mouse.y
-          });
+          if (mouse.mode === 1) {
+            x = Math.floor(this.p5.mouseX / 20);
+            y = Math.floor(this.p5.mouseY / 20);
+            this.dirty_rects.push({
+              x: x,
+              y: y
+            });
+            this.dirty_rects.push({
+              x: x,
+              y: y - 1
+            });
+            this.dirty_rects.push({
+              x: x + 1,
+              y: y - 1
+            });
+            this.dirty_rects.push({
+              x: x + 2,
+              y: y - 1
+            });
+            this.dirty_rects.push({
+              x: x + 3,
+              y: y - 1
+            });
+          }
           this.camera.x = map.camera_x;
           this.camera.y = map.camera_y;
           return this.dirty_menu = object.menu;
@@ -633,6 +653,7 @@
     }
     MenuDrawMode.prototype.draw = function(object) {
       this.p5.background(0);
+      frameRateDraw(this.p5);
       titleDraw(this.p5);
       return this.texts.draw(object.options, object.pointer);
     };
@@ -916,7 +937,7 @@
         case "combat":
           this.units.create(new Human(10, 10, "Miya"));
           this.units.create(new Human(10, 20, "John"));
-          return this.units.units[0].target = this.units[1];
+          return this.units.units[0].target = this.units.units[1];
         case "leg_disability":
           this.units.create(new Human(10, 10, "Can'tWalk"));
           this.units.units[0].body.leg = 2;
@@ -1113,6 +1134,7 @@
       this.order = null;
       this.perform = null;
       this.leave = false;
+      this.advance = false;
     }
     Unit.prototype.set_job = function(job) {
       this.job = job;
@@ -1373,6 +1395,7 @@
     function CombatRelation(actors) {
       this.actors = actors;
       this.summary = this.actors[0] + " and " + this.actors[1] + " are engaged in mortal combat!";
+      CombatRelation.__super__.constructor.call(this);
     }
     return CombatRelation;
   })();
@@ -1491,6 +1514,7 @@
     function Human(x, y, name) {
       Human.__super__.constructor.call(this, x, y, 1, name);
       this.hostility = 0;
+      this.advance = true;
     }
     Human.prototype.set_action = function(map) {
       var object;
@@ -1648,11 +1672,11 @@
       return this.map;
     };
     Map.prototype.create_crystal = function(x, y) {
-      this.map[y][x] = new Crystal(x, y);
-      return this.crystals.push({
+      this.crystals.push({
         x: x,
         y: y
       });
+      return this.map[y][x] = new Crystal(x, y);
     };
     Map.prototype.drop_crystal = function(x, y) {
       if (this.map[y][x].increase() === false) {
@@ -1751,6 +1775,12 @@
       this.x = 0;
       this.y = 0;
     }
+    Mouse.prototype.map_coord = function() {
+      return {
+        x: Math.floor(this.x / 20),
+        y: Math.floor(this.y / 20)
+      };
+    };
     return Mouse;
   })();
   scenarioList = function() {
@@ -1872,7 +1902,7 @@
       case "crystal_stockpile":
         return crystal_stockpile_draw(p5, x, y);
       case "crystal":
-        return crystal_draw(p5, x, y, object.items);
+        return crystal_draw(p5, x, y, location.items);
     }
   };
   drawDirtyRects = function(dirty, map, p5) {
@@ -1894,8 +1924,11 @@
   };
   frameRateDraw = function(p5) {
     this.p5 = p5;
-    this.p5.text(255, 0, 0);
-    return this.p5.text("FPS: " + this.p5.__frameRate, 200, 15);
+    this.p5.fill(0);
+    this.p5.rect(200, 0, 50, 20);
+    this.p5.fill(255);
+    this.p5.textSize(15);
+    return this.p5.text("FPS: " + Math.floor(this.p5.__frameRate), 200, 15);
   };
   gameMenuDraw = function(p5) {
     this.p5 = p5;
@@ -1944,20 +1977,20 @@
     p5.fill(255, 0, 0);
     return p5.text(msg, 5, 595);
   };
-  mouseDraw = function(p5, object, camera_x, camera_y) {
+  mouseDraw = function(p5, mouse) {
     var location_x, location_y, x, y;
     this.p5 = p5;
     x = this.p5.mouseX;
     y = this.p5.mouseY;
     location_x = Math.floor(x / 20);
     location_y = Math.floor(y / 20);
-    switch (object.mode) {
+    switch (mouse.mode) {
       case 1:
         this.p5.noStroke();
         this.p5.fill(128, 128, 128);
         this.p5.rect(location_x * 20, location_y * 20, 20, 20);
         this.p5.fill(255, 0, 0);
-        return this.p5.text("Crystal Pile", x - 5, y - 5);
+        return this.p5.text("Crystal Pile", location_x * 20, location_y * 20);
     }
   };
   scrollDraw = function(p5, select) {
