@@ -13,6 +13,9 @@ class ScenarioInitialize
       when "pig_invasion"
         @units.create new Human(10,10, "defender")
         @units.create new Lightboar(0,4, "pigboy")
+        @units.create new Lightboar(3,3, "pigone")
+        @units.create new Lightboar(2,3, "pigtwo")
+        @units.create new Lightboar(20,15,"pigthree")
         @map.create_crystal(5,5)
         @map.drop_crystal(5,5)
       else
