@@ -9,25 +9,21 @@ class Lightboar extends Unit
     return if this.act_on_queue()
     switch(@queue[@order])
       when "decide"
-        if random_number(6) <= 5
-          @decide = "steal"
-          object = nearest_object(this,map.crystals)
-          if object == null
-            @advance = false
-            return
-          @advance = true
-          this.set_move(object.x,object.y)
-        else
-          @decide = "attack"
-          object = nearest_object(this,controller.hostile_filter(0))
-          if object == null
-            @order = 2
-            return
-          @advance = true
-          @target = object
+        object = nearest_object(this,map.crystals)
+        if object == null
+          @advance = false
+          return
+        @advance = true
+        this.set_move(object.x,object.y)
+          # @decide = "attack"
+          # object = nearest_object(this,controller.hostile_filter(0))
+          # if object == null
+          #   @order = 2
+          #   return
+          # @advance = true
+          # @target = object
       when "act"
-        if @decide == "steal"
-          this.acquire_item(map.acquire(@goal_x,@goal_y))
+        this.acquire_item(map.acquire(@goal_x,@goal_y))
       when "move_to_escape"
         object = nearest_edge(this)
         this.set_move(object.x,object.y)
