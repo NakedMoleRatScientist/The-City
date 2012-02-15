@@ -69,10 +69,12 @@ class Unit
     this.set_move(goal.x,goal.y)
   attack: () ->
     return -1 if @target == null
-    if this.attack_chance()
+    if this.next_order()
       if @body.hand != 2
 #        @target.target = this if @target.target == null
         return @target.damage(this)
+    else
+      this.determine_approach()
     return -1
   nullify_target: () ->
     return false if @target == null
