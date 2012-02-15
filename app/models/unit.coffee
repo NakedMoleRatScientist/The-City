@@ -89,7 +89,7 @@ class Unit
   dodge: () ->
     result = approaches(@target)
     loop
-      choice = random_number(approaches.length)
+      choice = random_number(result.length)
       if choice.x != result.x || choice.y != result.y
         this.set_move(choice.x,choice.y)
         return
