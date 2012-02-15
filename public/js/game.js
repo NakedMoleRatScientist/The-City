@@ -923,11 +923,24 @@
       msg = object.actors[0] + " " + object.action + " " + object.actors[1];
       return this.msg(object.actors[0], object.actors[1], msg);
     };
-    MsgManager.prototype.strike = function(object) {
-      var msg, part;
+    MsgManager.prototype.dodge = function(object) {
+      var msg;
+      msg = object.actors[0] + " dodges " + object.actors[1] + "'s strike";
+      return this.msg(object.actors[0], object.actors[1], msg);
+    };
+    MsgManager.prototype.determine_combat_msg = function(object) {
       if (object === -1) {
         return;
       }
+      switch (object.action) {
+        case "strike":
+          return this.strike(object);
+        case "dodge":
+          return this.dodge(object);
+      }
+    };
+    MsgManager.prototype.strike = function(object) {
+      var msg, part;
       part = object.part;
       msg = object.actors[0] + " strikes " + object.actors[1] + "'s " + part + "!";
       this.msg(object.actors[0], object.actors[1], msg);
@@ -963,30 +976,30 @@
       var location;
       switch (name) {
         case "combat":
-          this.units.create(new Human(10, 10, "Miya"));
-          this.units.create(new Human(10, 20, "John"));
+          this.units.create(new Human(10, 10, "Miya", 1));
+          this.units.create(new Human(10, 20, "John", 0));
           return this.units.units[0].target = this.units.units[1];
         case "leg_disability":
-          this.units.create(new Human(10, 10, "Can'tWalk"));
+          this.units.create(new Human(10, 10, "Can'tWalk", 0));
           this.units.units[0].body.leg = 2;
           return this.units.units[0].set_move(20, 20);
         case "pig_invasion":
-          this.units.create(new Lightboar(0, 4, "pigboy"));
-          this.units.create(new Lightboar(3, 3, "pigone"));
-          this.units.create(new Lightboar(2, 3, "pigtwo"));
-          this.units.create(new Lightboar(20, 15, "pigthree"));
+          this.units.create(new Lightboar(0, 4, "pigboy", 0));
+          this.units.create(new Lightboar(3, 3, "pigone", 0));
+          this.units.create(new Lightboar(2, 3, "pigtwo", 0));
+          this.units.create(new Lightboar(20, 15, "pigthree", 0));
           this.units.units[1].order = null;
           this.units.units[2].order = null;
           this.units.units[3].order = null;
           this.map.create_crystal(5, 5);
           return this.map.drop_crystal(5, 5);
         case "hand_disability_combat":
-          this.units.create(new Human(10, 10, "nofight"));
-          this.units.create(new Human(10, 20, "Target"));
+          this.units.create(new Human(10, 10, "nofight", 0));
+          this.units.create(new Human(10, 20, "Target", 1));
           this.units.units[0].body.hand = 2;
           return this.units.units[0].target = this.units.units[1];
         case "hand_disability_gathering":
-          this.units.create(new Human(10, 10, "gatherer"));
+          this.units.create(new Human(10, 10, "gatherer", 0));
           this.units.units[0].body.hand = 2;
           location = {
             x: 300,
@@ -994,8 +1007,8 @@
           };
           return this.map.add_stockpile(location);
         default:
-          this.units.create(new Human(10, 10, "Killy"));
-          return this.units.create(new Human(12, 10, "Cibo"));
+          this.units.create(new Human(10, 10, "Killy", 0));
+          return this.units.create(new Human(12, 10, "Cibo", 1));
       }
     };
     return ScenarioInitialize;
@@ -1013,23 +1026,19 @@
       return this.units.push(unit);
     };
     Units.prototype.move = function() {
-      var unit, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _ref3;
+      var unit, _i, _j, _len, _len2, _ref, _ref2;
       _ref = this.units;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         unit = _ref[_i];
         if (this.frame % unit.agility === 0) {
           unit.set_action(this.map, this);
+          this.msg_manager.determine_combat_msg(unit.attack());
           unit.move();
         }
       }
       _ref2 = this.units;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
         unit = _ref2[_j];
-        this.msg_manager.strike(unit.attack());
-      }
-      _ref3 = this.units;
-      for (_k = 0, _len3 = _ref3.length; _k < _len3; _k++) {
-        unit = _ref3[_k];
         this.msg_manager.combat_death(unit.nullify_target());
       }
       return this.frame += 1;
@@ -1176,11 +1185,12 @@
     return Part;
   })();
   Unit = (function() {
-    function Unit(x, y, type, name) {
+    function Unit(x, y, type, name, gender) {
       this.x = x;
       this.y = y;
       this.type = type;
       this.name = name;
+      this.gender = gender;
       this.body = new Body(this.type);
       this.goal_x = this.x;
       this.goal_y = this.y;
@@ -1270,13 +1280,16 @@
       return this.set_move(goal.x, goal.y);
     };
     Unit.prototype.attack = function() {
+      var action;
       if (this.target === null) {
         return -1;
       }
-      if (this.is_next_to_target()) {
-        if (this.body.hand !== 2 && this.counteraction(this.target) === false) {
+      if (this.is_next_to_target() && this.body.hand !== 2) {
+        action = this.counteraction(this.target);
+        if (action === false) {
           return this.target.damage(this);
         }
+        return action;
       } else {
         this.determine_direction();
       }
@@ -1304,25 +1317,31 @@
       act = random_number(6);
       for (i = 0; i <= 2; i++) {
         if (i === act) {
-          this.target.dodge(this);
-          return true;
+          return this.target.dodge(this);
         }
       }
       return false;
     };
     Unit.prototype.dodge = function(target) {
-      var choice, list, result, _results;
+      var ability, choice, list, result;
       list = approachesList(target);
       result = nearest_object(this, list);
-      _results = [];
       while (true) {
         choice = list[random_number(list.length)];
         if (choice.x !== result.x || choice.y !== result.y) {
           this.set_move(choice.x, choice.y);
-          return;
+          break;
         }
       }
-      return _results;
+      if (this.target.body.leg === 2) {
+        ability = false;
+      }
+      ability = true;
+      return {
+        actors: [this.name, target.name],
+        action: "dodge",
+        ability: ability
+      };
     };
     Unit.prototype.damage = function(unit) {
       var damage, object, part;
@@ -1333,7 +1352,8 @@
         part: damage.part,
         type: damage.type,
         cause: damage.cause,
-        special: null
+        special: null,
+        action: "strike"
       };
       switch (damage.type) {
         case 1:
@@ -1599,8 +1619,8 @@
   };
   Human = (function() {
     __extends(Human, Unit);
-    function Human(x, y, name) {
-      Human.__super__.constructor.call(this, x, y, 1, name);
+    function Human(x, y, name, gender) {
+      Human.__super__.constructor.call(this, x, y, 1, name, gender);
       this.hostility = 0;
       this.advance = true;
       this.agility = 5;
@@ -1666,8 +1686,8 @@
   })();
   Lightboar = (function() {
     __extends(Lightboar, Unit);
-    function Lightboar(x, y, name) {
-      Lightboar.__super__.constructor.call(this, x, y, 2, name);
+    function Lightboar(x, y, name, gender) {
+      Lightboar.__super__.constructor.call(this, x, y, 2, name, gender);
       this.hostility = 1;
       this.queue = ["decide", "act", "move_to_escape", "escape"];
       this.order = 0;
@@ -2090,19 +2110,24 @@
     return p5.text("The City", 350, 100);
   };
   unitDraw = function(p5, units, map) {
-    var unit, x, y, _i, _len, _results;
+    var blue, pink, unit, x, y, _i, _len, _results;
     _results = [];
     for (_i = 0, _len = units.length; _i < _len; _i++) {
       unit = units[_i];
       x = (unit.x - map.camera_x) * 20 + 5;
       y = (unit.y - map.camera_y) * 20 + 20;
+      pink = p5.color(255, 192, 203);
+      blue = p5.color(0, 0, 255);
+      if (unit.gender === 0) {
+        p5.fill(blue);
+      } else {
+        p5.fill(pink);
+      }
       _results.push((function() {
         switch (unit.type) {
           case 1:
-            p5.fill(255, 69, 0);
             return p5.text("H", x, y);
           case 2:
-            p5.fill(255, 69, 0);
             return p5.text("B", x, y);
         }
       })());
