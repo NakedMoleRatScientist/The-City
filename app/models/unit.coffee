@@ -87,7 +87,8 @@ class Unit
         return true
     return false
   dodge: (target) ->
-    result = approachesList(target)
+    list = approachesList(target)
+    result = nearest_object(this,list)
     loop
       choice = random_number(result.length)
       if choice.x != result.x || choice.y != result.y
