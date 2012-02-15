@@ -13,6 +13,7 @@ class Unit
     @leave = false
     @advance = false
     @stance = 0 #1 for assualt. 0 for ignore. 2 for dodging.
+    @gender = 0 #0 for boy. 1 for girl
   set_job: (job) ->
     @job = job
     @queue = job.orders
