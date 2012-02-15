@@ -60,7 +60,7 @@ class Unit
       return true
     return false
   determine_direction: () ->
-    goal = nearest_object(this,approaches())
+    goal = nearest_object(this,approaches(@target))
     this.set_move(goal.x,goal.y)
   attack: () ->
     return -1 if @target == null
