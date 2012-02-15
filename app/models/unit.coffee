@@ -69,7 +69,7 @@ class Unit
 #        @target.target = this if @target.target == null
         return @target.damage(this)
     else
-      this.determine_approach()
+      this.determine_direction()
     return -1
   nullify_target: () ->
     return false if @target == null
