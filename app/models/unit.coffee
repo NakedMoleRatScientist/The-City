@@ -87,7 +87,7 @@ class Unit
         return true
     return false
   dodge: () ->
-    result = this.determine_approach(this,@target)
+    result = approaches(@target)
     loop
       choice = random_number(approaches.length)
       if choice.x != result.x || choice.y != result.y
