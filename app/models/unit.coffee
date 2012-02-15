@@ -60,12 +60,7 @@ class Unit
       return true
     return false
   determine_direction: () ->
-    approachs = []
-    approachs.push(x: @target.x - 1, y: @target.y) #left of target
-    approachs.push(x: @target.x + 1, y: @target.y) #right of target
-    approachs.push(x: @target.x, y: @target.y - 1) #top of target
-    approachs.push(x: @target.x, y: @target.y + 1) #below of target
-    goal = nearest_object(this,approachs)
+    goal = nearest_object(this,approaches())
     this.set_move(goal.x,goal.y)
   attack: () ->
     return -1 if @target == null
