@@ -89,8 +89,8 @@ class Unit
     for i in [0..2]
       if i == act
         this.dodge()
-        break
-
+        return true
+    return false
   damage: (unit) ->
     part = random_number(@body.parts.length)
     damage = @body.parts[part].interact()
