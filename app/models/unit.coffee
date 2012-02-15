@@ -91,6 +91,14 @@ class Unit
         @target.dodge()
         return true
     return false
+  dodge: () ->
+    result = this.determine_approach(this,@target)
+    loop
+      choice = random_number(approaches.length)
+      if choice.x != result.x || choice.y != result.y
+        this.set_move(choice.x,choice.y)
+        return
+
   damage: (unit) ->
     part = random_number(@body.parts.length)
     damage = @body.parts[part].interact()
