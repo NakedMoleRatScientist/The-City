@@ -1172,6 +1172,7 @@
       this.perform = null;
       this.leave = false;
       this.advance = false;
+      this.stance = 0;
     }
     Unit.prototype.set_job = function(job) {
       this.job = job;
@@ -1236,26 +1237,44 @@
         return this.order = 0;
       }
     };
-    Unit.prototype.attack_chance = function() {
-      this.goal_x = this.target.x - 1;
-      this.goal_y = this.target.y - 1;
-      if ((this.target.x + 1) === this.x || (this.target.x - 1) === this.x) {
-        if ((this.target.y + 1) === this.y || (this.target.y - 1) === this.y) {
-          if ((Math.random() * 10) > 5) {
-            return true;
-          }
-        }
+    Unit.prototype.is_next_to_target = function() {
+      if (distance_between_two_point(this, this.target) === 1) {
+        return true;
       }
       return false;
+    };
+    Unit.prototype.determine_approach = function() {
+      var approachs, goal;
+      approachs = [];
+      approachs.push({
+        x: this.target.x - 1,
+        y: this.target.y
+      });
+      approachs.push({
+        x: this.target.x + 1,
+        y: this.target.y
+      });
+      approachs.push({
+        x: this.target.x,
+        y: this.target.y - 1
+      });
+      approachs.push({
+        x: this.target.x,
+        y: this.target.y + 1
+      });
+      goal = nearest_object(this, approachs);
+      return this.set_move(goal.x, goal.y);
     };
     Unit.prototype.attack = function() {
       if (this.target === null) {
         return -1;
       }
-      if (this.attack_chance()) {
+      if (this.next_order()) {
         if (this.body.hand !== 2) {
           return this.target.damage(this);
         }
+      } else {
+        this.determine_approach();
       }
       return -1;
     };
@@ -1274,6 +1293,13 @@
         };
       }
       return false;
+    };
+    Unit.prototype.counteraction = function() {
+      var act;
+      act = random_number(6);
+      if (act === 0 || act === 1 || act === 2) {
+        return this.dodge();
+      }
     };
     Unit.prototype.damage = function(unit) {
       var damage, object, part;
