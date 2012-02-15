@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, boar_body, buildMenuDraw, changeMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determineCameraRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, approachesList, boar_body, buildMenuDraw, changeMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determineCameraRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -12,6 +12,27 @@
       if (this[i] === item) return i;
     }
     return -1;
+  };
+  approachesList = function(location) {
+    var approaches;
+    approaches = [];
+    approaches.push({
+      x: location.x - 1,
+      y: location.y
+    });
+    approaches.push({
+      x: location.x + 1,
+      y: location.y
+    });
+    approaches.push({
+      x: location.x,
+      y: location.y - 1
+    });
+    approaches.push({
+      x: location.x,
+      y: location.y + 1
+    });
+    return approaches;
   };
   circle_to_circle_collision = function(one, two) {
     var combined_radii, distance, one_radius, two_radius;
@@ -1238,43 +1259,26 @@
       }
     };
     Unit.prototype.is_next_to_target = function() {
-      if (distance_between_two_point(this, this.target) === 1) {
+      if (distance_between_two_points(this, this.target) === 1) {
         return true;
       }
       return false;
     };
-    Unit.prototype.determine_approach = function() {
-      var approachs, goal;
-      approachs = [];
-      approachs.push({
-        x: this.target.x - 1,
-        y: this.target.y
-      });
-      approachs.push({
-        x: this.target.x + 1,
-        y: this.target.y
-      });
-      approachs.push({
-        x: this.target.x,
-        y: this.target.y - 1
-      });
-      approachs.push({
-        x: this.target.x,
-        y: this.target.y + 1
-      });
-      goal = nearest_object(this, approachs);
+    Unit.prototype.determine_direction = function() {
+      var goal;
+      goal = nearest_object(this, approachesList(this.target));
       return this.set_move(goal.x, goal.y);
     };
     Unit.prototype.attack = function() {
       if (this.target === null) {
         return -1;
       }
-      if (this.next_order()) {
-        if (this.body.hand !== 2) {
+      if (this.is_next_to_target()) {
+        if (this.body.hand !== 2 && this.counteraction(this.target) === false) {
           return this.target.damage(this);
         }
       } else {
-        this.determine_approach();
+        this.determine_direction();
       }
       return -1;
     };
@@ -1294,12 +1298,31 @@
       }
       return false;
     };
-    Unit.prototype.counteraction = function() {
-      var act;
+    Unit.prototype.counteraction = function(target) {
+      var act, i;
+      this.target = target;
       act = random_number(6);
-      if (act === 0 || act === 1 || act === 2) {
-        return this.dodge();
+      for (i = 0; i <= 2; i++) {
+        if (i === act) {
+          this.target.dodge(this);
+          return true;
+        }
       }
+      return false;
+    };
+    Unit.prototype.dodge = function(target) {
+      var choice, list, result, _results;
+      list = approachesList(target);
+      result = nearest_object(this, list);
+      _results = [];
+      while (true) {
+        choice = list[random_number(list.length)];
+        if (choice.x !== result.x || choice.y !== result.y) {
+          this.set_move(choice.x, choice.y);
+          return;
+        }
+      }
+      return _results;
     };
     Unit.prototype.damage = function(unit) {
       var damage, object, part;
