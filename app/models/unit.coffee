@@ -87,7 +87,7 @@ class Unit
     act = random_number(6)
     for i in [0..2]
       if i == act
-        return @target.dodge(this) unless @target.body.leg == 2
+        return @target.dodge(this)
     return false
   dodge: (target) ->
     list = approachesList(target)
@@ -97,7 +97,10 @@ class Unit
       if choice.x != result.x || choice.y != result.y
         this.set_move(choice.x,choice.y)
         break
-    return (actors: [this.name,target.name], action: "dodge", ability: true)
+    if @target.body.leg == 2
+      ability = false
+    ability = true
+    return (actors: [this.name,target.name], action: "dodge", ability: ability)
 
   damage: (unit) ->
     part = random_number(@body.parts.length)
