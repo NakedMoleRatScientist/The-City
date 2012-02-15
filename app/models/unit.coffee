@@ -84,11 +84,11 @@ class Unit
       @kills.push(target.name)
       return (actors: [this.name,target.name],action: "killed")
     return false
-  counteraction: () ->
+  counteraction: (@target) ->
     act = random_number(6)
     for i in [0..2]
       if i == act
-        this.dodge()
+        @target.dodge()
         return true
     return false
   damage: (unit) ->
