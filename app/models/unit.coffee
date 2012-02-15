@@ -59,7 +59,7 @@ class Unit
     if distance_between_two_points(this,@target) == 1
       return true
     return false
-  determine_approach: () ->
+  determine_direction: () ->
     approachs = []
     approachs.push(x: @target.x - 1, y: @target.y) #left of target
     approachs.push(x: @target.x + 1, y: @target.y) #right of target
