@@ -1,6 +1,6 @@
 class Lightboar extends Unit
-  constructor: (x,y,name) ->
-    super(x,y,2,name)
+  constructor: (x,y,name,gender) ->
+    super(x,y,2,name,gender)
     @hostility = 1
     @queue = ["decide","act","move_to_escape","escape"]
     @order = 0
