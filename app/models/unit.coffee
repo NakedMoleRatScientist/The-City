@@ -97,7 +97,7 @@ class Unit
       if choice.x != result.x || choice.y != result.y
         this.set_move(choice.x,choice.y)
         break
-    return (actors: [this.name,target.name], action: "dodge")
+    return (actors: [this.name,target.name], action: "dodge", ability: true)
 
   damage: (unit) ->
     part = random_number(@body.parts.length)
