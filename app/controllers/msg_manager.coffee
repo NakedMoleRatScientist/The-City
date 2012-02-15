@@ -29,6 +29,9 @@ class MsgManager
     return if object == false
     msg = object.actors[0] + " " + object.action + " " + object.actors[1]
     this.msg(object.actors[0],object.actors[1],msg)
+  dodge: (object) ->
+    msg = object.actors[0] + " dodges " + object.actors[1] + "'s strike"
+    this.msg(object.actors[0],object.actors[1],msg)
   determine_combat_msg: (object) ->
     return if object == -1
     switch(object.action)
