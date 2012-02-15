@@ -65,9 +65,11 @@ class Unit
   attack: () ->
     return -1 if @target == null
     if this.is_next_to_target()
-      if @body.hand != 2 && this.counteraction(@target) == false
+      action = this.counteraction(@target)
+      if @body.hand != 2 && action == false
 #        @target.target = this if @target.target == null
         return @target.damage(this)
+      return action
     else
       this.determine_direction()
     return -1
