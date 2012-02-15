@@ -66,7 +66,7 @@ class Unit
     approachs.push(x: @target.x, y: @target.y - 1) #top of target
     approachs.push(x: @target.x, y: @target.y + 1) #below of target
     goal = nearest_object(this,approachs)
-    this.set.move(goal.x,goal.y)
+    this.set_move(goal.x,goal.y)
   attack: () ->
     return -1 if @target == null
     if this.attack_chance()
