@@ -1333,7 +1333,7 @@
           break;
         }
       }
-      if (this.target.body.leg === 2) {
+      if (this.body.leg === 2) {
         ability = false;
       }
       ability = true;
