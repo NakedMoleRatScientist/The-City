@@ -86,8 +86,10 @@ class Unit
     return false
   counteraction: () ->
     act = random_number(6)
-    if act == 0 || act == 1 || act == 2
-      this.dodge()
+    for i in [0..2]
+      if i == act
+        this.dodge()
+        break
 
   damage: (unit) ->
     part = random_number(@body.parts.length)
