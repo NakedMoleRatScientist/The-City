@@ -60,7 +60,7 @@ class Unit
       return true
     return false
   determine_direction: () ->
-    goal = nearest_object(this,approaches(@target))
+    goal = nearest_object(this,approachesList(@target))
     this.set_move(goal.x,goal.y)
   attack: () ->
     return -1 if @target == null
@@ -87,7 +87,7 @@ class Unit
         return true
     return false
   dodge: () ->
-    result = approaches(@target)
+    result = approachesList(@target)
     loop
       choice = random_number(result.length)
       if choice.x != result.x || choice.y != result.y
