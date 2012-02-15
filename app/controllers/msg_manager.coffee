@@ -29,8 +29,14 @@ class MsgManager
     return if object == false
     msg = object.actors[0] + " " + object.action + " " + object.actors[1]
     this.msg(object.actors[0],object.actors[1],msg)
-  strike: (object) ->
+  determine_msg: (object) ->
     return if object == -1
+    switch(object.action)
+      when "strike"
+        this.strike(object)
+      when "dodge"
+        this.dodge(object)
+  strike: (object) ->
     part = object.part
     msg = object.actors[0] + " strikes " + object.actors[1] + "'s " + part + "!"
     this.msg(object.actors[0],object.actors[1],msg)
