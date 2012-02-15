@@ -76,6 +76,11 @@ class Unit
       @kills.push(target.name)
       return (actors: [this.name,target.name],action: "killed")
     return false
+  counteraction: () ->
+    act = random_number(6)
+    if act == 0 || act == 1 || act == 2
+      this.dodge
+
   damage: (unit) ->
     part = random_number(@body.parts.length)
     damage = @body.parts[part].interact()
