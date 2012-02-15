@@ -85,8 +85,7 @@ class Unit
     act = random_number(6)
     for i in [0..2]
       if i == act
-        @target.dodge(this)
-        return true
+        return @target.dodge(this)
     return false
   dodge: (target) ->
     list = approachesList(target)
@@ -95,12 +94,13 @@ class Unit
       choice = list[random_number(list.length)]
       if choice.x != result.x || choice.y != result.y
         this.set_move(choice.x,choice.y)
-        return
+        break
+    return (actors: [this.name,target.name], action: "dodge")
 
   damage: (unit) ->
     part = random_number(@body.parts.length)
     damage = @body.parts[part].interact()
-    object = (actors: [unit.name,this.name], part: damage.part, type: damage.type, cause: damage.cause, special: null)
+    object = (actors: [unit.name,this.name], part: damage.part, type: damage.type, cause: damage.cause, special: null, action: "strike")
     switch(damage.type)
       when 1
         @body.death = 1
