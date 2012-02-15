@@ -83,11 +83,11 @@ class Unit
     act = random_number(6)
     for i in [0..2]
       if i == act
-        @target.dodge()
+        @target.dodge(this)
         return true
     return false
-  dodge: () ->
-    result = approachesList(@target)
+  dodge: (target) ->
+    result = approachesList(target)
     loop
       choice = random_number(result.length)
       if choice.x != result.x || choice.y != result.y
