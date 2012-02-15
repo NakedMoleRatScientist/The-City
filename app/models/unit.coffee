@@ -12,6 +12,7 @@ class Unit
     @perform = null
     @leave = false
     @advance = false
+    @stance = 0 #1 for assualt. 0 for ignore. 2 for dodging.
   set_job: (job) ->
     @job = job
     @queue = job.orders
