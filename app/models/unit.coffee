@@ -79,7 +79,7 @@ class Unit
   counteraction: () ->
     act = random_number(6)
     if act == 0 || act == 1 || act == 2
-      this.dodge
+      this.dodge()
 
   damage: (unit) ->
     part = random_number(@body.parts.length)
