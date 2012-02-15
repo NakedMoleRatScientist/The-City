@@ -87,7 +87,7 @@ class Unit
     act = random_number(6)
     for i in [0..2]
       if i == act
-        return @target.dodge(this)
+        return @target.dodge(this) unless @target.body.leg == 2
     return false
   dodge: (target) ->
     list = approachesList(target)
