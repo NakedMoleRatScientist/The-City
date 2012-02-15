@@ -1,6 +1,6 @@
 class Human extends Unit
-  constructor: (x, y, name) ->
-    super(x, y, 1,name)
+  constructor: (x, y, name,gender) ->
+    super(x, y, 1,name,gender)
     @hostility = 0
     @advance = true
     @agility = 5
