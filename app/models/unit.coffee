@@ -67,6 +67,7 @@ class Unit
     return -1 if @target == null
     if this.attack_chance()
       if @body.hand != 2
+        @target.target = this if @target.target == null
         return @target.damage(this)
     return -1
   nullify_target: () ->
