@@ -90,7 +90,7 @@ class Unit
     list = approachesList(target)
     result = nearest_object(this,list)
     loop
-      choice = random_number(result.length)
+      choice = list[random_number(list.length)]
       if choice.x != result.x || choice.y != result.y
         this.set_move(choice.x,choice.y)
         return
