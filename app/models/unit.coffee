@@ -97,7 +97,7 @@ class Unit
       if choice.x != result.x || choice.y != result.y
         this.set_move(choice.x,choice.y)
         break
-    if @target.body.leg == 2
+    if this.body.leg == 2
       ability = false
     ability = true
     return (actors: [this.name,target.name], action: "dodge", ability: ability)
