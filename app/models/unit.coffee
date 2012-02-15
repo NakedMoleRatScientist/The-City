@@ -69,7 +69,7 @@ class Unit
     this.set_move(goal.x,goal.y)
   attack: () ->
     return -1 if @target == null
-    if this.next_order()
+    if this.is_next_to_target()
       if @body.hand != 2
 #        @target.target = this if @target.target == null
         return @target.damage(this)
