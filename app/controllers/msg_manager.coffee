@@ -38,11 +38,11 @@ class MsgManager
   determine_combat_msg: (objects) ->
     return if objects == -1
     for o in objects
-      switch(object.action)
+      switch(o.action)
         when "strike"
-          this.strike(object)
+          this.strike(o)
         when "dodge"
-          this.dodge(object)
+          this.dodge(o)
   strike: (object) ->
     part = object.part
     msg = object.actors[0] + " strikes " + object.actors[1] + "'s " + part + "!"
