@@ -4,6 +4,12 @@ class Torso extends Part
     @subparts.push new Subpart("heart",1)
     @subparts.push new Subpart("left_lung",2)
     @subparts.push new Subpart("right_lung",2)
+    @subparts.push new subpart("rib_left_one",3)
+    @subparts.push new Subpart("rib_left_two",3)
+    @subparts.push new Subpart("rib_left_three",3)
+    @subparts.push new Subpart("rib_right_one",3)
+    @subparts.push new Subpart("rib_right_two",3)
+    @subparts.push new Subpart("rib_right_three",3)
   lung_damage: (choice) ->
     @subparts[choice].damage = 1
     if @subparts[1].damage == 1 && @subparts[2].damage == 1
