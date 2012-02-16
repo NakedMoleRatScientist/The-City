@@ -70,7 +70,7 @@ class Unit
       action = this.counteraction(@target)
       if action == false
 #        @target.target = this if @target.target == null
-        return @target.damage(this)
+        return [@target.damage(this)]
       else if action.ability == false
         return [action,@target.damage(this)]
       return [action]
