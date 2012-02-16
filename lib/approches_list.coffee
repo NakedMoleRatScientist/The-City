@@ -1,7 +1,9 @@
 approachesList = (location) ->
   approaches = []
-  approaches.push(x: location.x - 1, y: location.y) #left of location
-  approaches.push(x: location.x + 1, y: location.y) #right of location
-  approaches.push(x: location.x, y: location.y - 1) #top of location
-  approaches.push(x: location.x, y: location.y + 1) #below of location
+  #left of location
+  approaches.push(x: location.x - 1, y: location.y) if location.x - 1 < 0
+  #right of location
+  approaches.push(x: location.x + 1, y: location.y) if location.x + 1 > 99
+  approaches.push(x: location.x, y: location.y - 1) if location.y - 1 < 0
+  approaches.push(x: location.x, y: location.y + 1) if location.y + 1 > 99
   return approaches
