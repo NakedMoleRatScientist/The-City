@@ -30,15 +30,17 @@ class MsgManager
     msg = object.actors[0] + " " + object.action + " " + object.actors[1]
     this.msg(object.actors[0],object.actors[1],msg)
   dodge: (object) ->
+    if object.
     msg = object.actors[0] + " dodges " + object.actors[1] + "'s strike"
     this.msg(object.actors[0],object.actors[1],msg)
-  determine_combat_msg: (object) ->
-    return if object == -1
-    switch(object.action)
-      when "strike"
-        this.strike(object)
-      when "dodge"
-        this.dodge(object)
+  determine_combat_msg: (objects) ->
+    return if objects == -1
+    for o in objects
+      switch(object.action)
+        when "strike"
+          this.strike(object)
+        when "dodge"
+          this.dodge(object)
   strike: (object) ->
     part = object.part
     msg = object.actors[0] + " strikes " + object.actors[1] + "'s " + part + "!"
