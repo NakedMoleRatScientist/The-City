@@ -71,7 +71,9 @@ class Unit
       if action == false
 #        @target.target = this if @target.target == null
         return @target.damage(this)
-      return action
+      else if action.ability == false
+        return [action,@target.damage(this)]
+      return [action]
     else
       this.determine_direction()
     return -1
