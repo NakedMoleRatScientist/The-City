@@ -4,6 +4,7 @@ class CombatReportDrawMinorMode
   draw: (object) ->
     @p5.background(0)
     switch(object.type)
+      @p5.fill(255,0,0)
       when 0
         @texts.draw(object.summaries,object.pointer)
         killsDraw(object.kills, @p5)
