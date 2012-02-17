@@ -38,7 +38,7 @@ class Unit
       i += 1
     @inventory.slice(i,0)
   acquire_item: (name) ->
-    @inventory.push(name) unless name == false
+    @inventory.push(name)
   move: () ->
     return if @body.leg == 2
     if (@x - @goal_x) < 0
