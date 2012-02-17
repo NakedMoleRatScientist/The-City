@@ -19,6 +19,8 @@ class Human extends Unit
         object = @job.nearest
         this.set_move(object.x,object.y)
       when "gather_crystal"
+        if @body.hand == 2
+          return
         this.acquire_item(@job.nearest.acquire())
       when "drop_crystal"
         this.drop_item("crystal")
