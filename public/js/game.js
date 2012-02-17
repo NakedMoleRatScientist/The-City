@@ -1013,7 +1013,8 @@
         case "combat":
           this.units.create(new Human(10, 10, "Miya", 1));
           this.units.create(new Human(10, 20, "John", 0));
-          return this.units.units[0].target = this.units.units[1];
+          this.units.units[0].target = this.units.units[1];
+          return this.units.units[1].stance = 1;
         case "leg_disability":
           this.units.create(new Human(10, 10, "Can'tWalk", 0));
           this.units.units[0].body.leg = 2;
@@ -1041,9 +1042,15 @@
             y: 300
           };
           return this.map.add_stockpile(location);
+        case "full_test_boars":
+          this.map.create_crystal(5, 5);
+          this.map.map[5][5].items = 50;
+          return this.units.generate_boars();
         default:
           this.units.create(new Human(10, 10, "Killy", 0));
-          return this.units.create(new Human(12, 10, "Cibo", 1));
+          this.units.units[0].stance = 1;
+          this.units.create(new Human(12, 10, "Cibo", 1));
+          return this.units.units[1].stance = 1;
       }
     };
     return ScenarioInitialize;
@@ -1320,7 +1327,9 @@
         return -1;
       }
       if (this.is_next_to_target() && this.body.hand !== 2) {
-        this.target.target = this;
+        if (this.target.stance === 1) {
+          this.target.target = this;
+        }
         action = this.counteraction(this.target);
         if (action === false) {
           return [this.target.damage(this)];
@@ -1670,6 +1679,9 @@
       if (this.act_on_queue()) {
         return;
       }
+      if (this.body.hand === 2) {
+        return;
+      }
       switch (this.queue[this.order]) {
         case "move_to_drop":
           object = this.job.get_drop_location(map);
@@ -1928,7 +1940,7 @@
     return Mouse;
   })();
   scenarioList = function() {
-    return ["combat", "hand_disability_combat", "leg_disability", "pig_invasion"];
+    return ["combat", "hand_disability_combat", "leg_disability", "pig_invasion", "hand_disability_gathering", "full_test_boars"];
   };
   Subpart = (function() {
     function Subpart(name, type) {
