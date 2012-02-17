@@ -928,7 +928,13 @@
       if (object === false) {
         return;
       }
-      msg = object.actors[0] + " " + object.action + " " + object.actors[1];
+      switch (object.action) {
+        case "killed":
+          msg = object.actors[0] + " " + object.action + " " + object.actors[1];
+          break;
+        case "escaped":
+          msg = object.actors[1] + " " + object.action + " from the grasp of " + object.actors[0];
+      }
       return this.msg(object.actors[0], object.actors[1], msg);
     };
     MsgManager.prototype.dodge = function(object) {
@@ -1079,6 +1085,9 @@
           this.msg_manager.determine_combat_msg(unit.attack());
           unit.move();
         }
+      }
+      if (this.frame % 1000 === 0) {
+        console.log("item: " + this.map.items_total());
       }
       _ref2 = this.units;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
@@ -1253,7 +1262,10 @@
       var list;
       if (this.target === null && this.hostility === 0) {
         list = units.hostile_filter(1);
-        return this.target = units.units[random_number(list.length)];
+        if (list.length === 0) {
+          return;
+        }
+        return this.target = list[random_number(list.length)];
       }
     };
     Unit.prototype.set_job = function(job) {
@@ -1361,7 +1373,7 @@
         action: null
       };
       if (this.target.body.check_death() === true) {
-        this.kills.push(target.name);
+        this.kills.push(this.target.name);
         data.action = "killed";
         return data;
       } else if (this.target.leave === true) {
@@ -1847,6 +1859,17 @@
         y: y
       });
       return this.map[y][x] = new Crystal(x, y);
+    };
+    Map.prototype.items_total = function() {
+      var c, items, _i, _len, _ref, _results;
+      items = 0;
+      _ref = this.crystals;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        c = _ref[_i];
+        _results.push(items += c.items);
+      }
+      return _results;
     };
     Map.prototype.drop_crystal = function(x, y) {
       if (this.map[y][x].increase() === false) {
