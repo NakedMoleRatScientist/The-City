@@ -4,7 +4,7 @@ class Torso extends Part
     @subparts.push new Subpart("heart",1)
     @subparts.push new Subpart("left_lung",2)
     @subparts.push new Subpart("right_lung",2)
-    @subparts.push new subpart("rib_left_one",3)
+    @subparts.push new Subpart("rib_left_one",3)
     @subparts.push new Subpart("rib_left_two",3)
     @subparts.push new Subpart("rib_left_three",3)
     @subparts.push new Subpart("rib_right_one",3)
