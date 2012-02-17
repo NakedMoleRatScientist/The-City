@@ -27,7 +27,11 @@ class MsgManager
     @relations[@last_status].last()
   combat_death: (object) ->
     return if object == false
-    msg = object.actors[0] + " " + object.action + " " + object.actors[1]
+    switch(object.action)
+      when "killed"
+        msg = object.actors[0] + " " + object.action + " " + object.actors[1]
+      when "escaped"
+        msg = object.actors[1] + " " + object.action + " from the grasp of " + object.actors[1]
     this.msg(object.actors[0],object.actors[1],msg)
   dodge: (object) ->
     if object.ability == false
