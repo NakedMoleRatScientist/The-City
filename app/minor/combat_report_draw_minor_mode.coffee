@@ -1,6 +1,6 @@
 class CombatReportDrawMinorMode
   constructor: (@p5) ->
-    @texts = new TextOptionsDraw(@p5,30,14,12)
+    @texts = new TextOptionsDraw(@p5,30,12,12)
   draw: (object) ->
     @p5.background(0)
     @p5.fill(255,0,0)
