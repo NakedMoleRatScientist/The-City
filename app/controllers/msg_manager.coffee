@@ -55,6 +55,8 @@ class MsgManager
         this.msg(object.actors[0],object.actors[1],msg)
         msg = object.actors[1] + " dies of " + object.cause
         this.msg(object.actors[0],object.actors[1],msg)
+      when 2
+        msg = object.actors[1] + "'s " + part + " suffers damage!"
       when 3
         msg = object.actors[1] + "'s " + part + " was protected by his " + object.protector.name
         this.msg(object.actors[0],object.actors[1],msg)
