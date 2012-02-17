@@ -47,6 +47,7 @@ class MsgManager
     part = object.part
     msgs = []
     attack_msg = object.actors[0] + " strikes " + object.actors[1] + "'s " + part + "!"
+    msgs.push(attack_msg)
     damage_msg = object.actors[1] + "'s " + part + " suffers damage!"
     switch(object.type)
       when 0
