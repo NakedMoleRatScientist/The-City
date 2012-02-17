@@ -108,7 +108,7 @@ class Unit
   damage: (unit) ->
     part = random_number(@body.parts.length)
     damage = @body.parts[part].interact()
-    object = (actors: [unit.name,this.name], part: damage.part, type: damage.type, cause: damage.cause, special: null, action: "strike")
+    object = (actors: [unit.name,this.name], part: damage.part, type: damage.type, cause: damage.cause, special: null, action: "strike", protect: damage.protect)
     switch(damage.type)
       when 1
         @body.death = 1
