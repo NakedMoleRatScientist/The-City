@@ -26,10 +26,13 @@ class Torso extends Part
       when  2
         switch(part.protector.damage)
           when 0
+            part.protector.damage = 1
+            return {type: 3, part: part.name, protect: part.protector.name}
+          when 1
             return {type: 1, part: part.name, cause: "asphyxia"} if this.lung_damage(@random)
             return {type: 0, part: part.name}
-          when 1
-            return {type: 3, part: part.name, protect: part.protector.name}
+
+
       when 1
         switch(part.protector.damage)
           when 0
