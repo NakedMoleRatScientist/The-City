@@ -19,7 +19,7 @@ class CombatReportDrawMinorMode
         @texts.draw(msg,object.pointer)
       when 3
         msg = []
-        @p5.text(object.name + " killed about " + object.kills.length + "beings",20,12 )
+        @p5.text(object.name + " killed about " + object.kills.length + " beings",20,12 )
         @p5.text("Kill list:",30,20)
         for name in object.kills
           msg.push(name)
