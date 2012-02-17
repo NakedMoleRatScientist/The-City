@@ -11,6 +11,8 @@ class Torso extends Part
     @subparts.push new Subpart("rib_right_two",3)
     @subparts.push new Subpart("rib_right_three",3)
     @subparts[0].protector = @subparts[3]
+    @subparts[1].protector = @subparts[4]
+    @subparts[2].protector = @subparts[7]
   lung_damage: (choice) ->
     @subparts[choice].damage = 1
     if @subparts[1].damage == 1 && @subparts[2].damage == 1
