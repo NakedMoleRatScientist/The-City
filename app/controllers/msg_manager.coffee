@@ -56,7 +56,7 @@ class MsgManager
       when 2
         msgs.push(strike_msg)
       when 3
-        msgs.push(object.actors[1] + "'s " + part + " was protected by his " + object.protector.name)
+        msgs.push(object.actors[1] + "'s " + part + " was protected by his " + object.protect)
     switch(object.special)
       when 0
         msgs.push(object.actors[1] + " losts some hand functionality")
