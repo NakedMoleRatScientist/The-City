@@ -27,7 +27,7 @@ class Torso extends Part
       when 1
         switch(part.protector.damage)
           when 0
-            return {type: 0, part: part.name}
+            return {type: 3, part: part.name}
           when 1
             part.damage = 1
             return {type: 1, part: part.name, cause: "heart failure"}
