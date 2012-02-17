@@ -56,7 +56,7 @@ class MsgManager
         msg = object.actors[1] + " dies of " + object.cause
         this.msg(object.actors[0],object.actors[1],msg)
       when 3
-        msg = object.actors[1] + "'s " + part + " was protected by his " + object.protect
+        msg = object.actors[1] + "'s " + part + " was protected by his " + object.protector.name
         this.msg(object.actors[0],object.actors[1],msg)
     switch(object.special)
       when 0
