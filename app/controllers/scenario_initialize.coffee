@@ -32,8 +32,8 @@ class ScenarioInitialize
         location = (x: 300, y: 300)
         @map.add_stockpile(location)
       when "full_test_boars"
-        @map.create_crystal(5,5)
-        @map.map[5][5].items = 50
+        @map.create_crystal(20,20)
+        @map.map[20][20].items = 50
         @units.generate_boars()
       else
         @units.create new Human(10,10, "Killy",0)
