@@ -17,7 +17,7 @@ class Unit
   auto_detect_target: (units) ->
     if @target == null && @hostility == 0
       list = units.hostile_filter(1)
-      @target = units.units[random_number(list.length)]
+      @target = list[random_number(list.length)]
   set_job: (job) ->
     @job = job
     @queue = job.orders
