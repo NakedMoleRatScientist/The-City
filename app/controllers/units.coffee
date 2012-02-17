@@ -14,8 +14,8 @@ class Units
         unit.auto_detect_target(this)
         @msg_manager.determine_combat_msg(unit.attack())
         unit.move()
-      if @frame % 1000 == 0
-        console.log("BOOP")
+    if @frame % 1000 == 0
+      console.log("BOOP")
     @msg_manager.combat_death(unit.nullify_target()) for unit in @units
     @frame += 1
   clean: () ->
