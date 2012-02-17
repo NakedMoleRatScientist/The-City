@@ -960,41 +960,45 @@
       return _results;
     };
     MsgManager.prototype.strike = function(object) {
-      var msg, part;
+      var attack_msg, damage_msg, m, msgs, part, _i, _len, _results;
       part = object.part;
-      msg = object.actors[0] + " strikes " + object.actors[1] + "'s " + part + "!";
+      msgs = [];
+      attack_msg = object.actors[0] + " strikes!";
+      msgs.push(attack_msg);
+      damage_msg = object.actors[1] + "'s " + part + " suffers damage!";
       switch (object.type) {
         case 0:
-          msg = object.actors[1] + "'s " + part + " suffers damage!";
-          this.msg(object.actors[0], object.actors[1], msg);
+          msgs.push(damage_msg);
           break;
         case 1:
-          msg = object.actors[1] + "'s " + part + " suffers damage!";
-          this.msg(object.actors[0], object.actors[1], msg);
-          msg = object.actors[1] + " dies of " + object.cause;
-          this.msg(object.actors[0], object.actors[1], msg);
+          msgs.push(damage_msg);
+          msgs.push(object.actors[1] + " dies of " + object.cause);
           break;
         case 2:
-          msg = object.actors[1] + "'s " + part + " suffers damage!";
+          msgs.push(damage_msg);
           break;
         case 3:
-          msg = object.actors[1] + "'s " + part + " was protected by his " + object.protector.name;
-          this.msg(object.actors[0], object.actors[1], msg);
+          msgs.push(object.actors[1] + "'s " + part + " was protected by his " + object.protect);
       }
       switch (object.special) {
         case 0:
-          msg = object.actors[1] + " losts some hand functionality";
-          return this.msg(object.actors[0], object.actors[1], msg);
+          msgs.push(object.actors[1] + " losts some hand functionality");
+          break;
         case 1:
-          msg = object.actors[1] + " suffers hand disability";
-          return this.msg(object.actors[0], object.actors[1], msg);
+          msgs.push(object.actors[1] + " suffers hand disability");
+          break;
         case 2:
-          msg = object.actors[1] + " losts some leg functionality";
-          return this.msg(object.actors[0], object.actors[1], msg);
+          msgs.push(object.actors[1] + " losts some leg functionality");
+          break;
         case 3:
-          msg = object.actors[1] + " losts all leg functionality";
-          return this.msg(object.actors[0], object.actors[1], msg);
+          msgs.push(object.actors[1] + " losts all leg functionality");
       }
+      _results = [];
+      for (_i = 0, _len = msgs.length; _i < _len; _i++) {
+        m = msgs[_i];
+        _results.push(this.msg(object.actors[0], object.actors[1], m));
+      }
+      return _results;
     };
     return MsgManager;
   })();
@@ -1316,6 +1320,7 @@
         return -1;
       }
       if (this.is_next_to_target() && this.body.hand !== 2) {
+        this.target.target = this;
         action = this.counteraction(this.target);
         if (action === false) {
           return [this.target.damage(this)];
@@ -1349,7 +1354,7 @@
       this.target = target;
       act = random_number(6);
       for (i = 0; i <= 2; i++) {
-        if (i === act) {
+        if (act === i) {
           return this.target.dodge(this);
         }
       }
@@ -1387,7 +1392,8 @@
         type: damage.type,
         cause: damage.cause,
         special: null,
-        action: "strike"
+        action: "strike",
+        protect: damage.protect
       };
       switch (damage.type) {
         case 1:
@@ -1947,6 +1953,8 @@
       this.subparts.push(new Subpart("rib_right_two", 3));
       this.subparts.push(new Subpart("rib_right_three", 3));
       this.subparts[0].protector = this.subparts[3];
+      this.subparts[1].protector = this.subparts[4];
+      this.subparts[2].protector = this.subparts[7];
     }
     Torso.prototype.lung_damage = function(choice) {
       this.subparts[choice].damage = 1;
@@ -1960,20 +1968,32 @@
       part = Torso.__super__.interact.call(this);
       switch (part.type) {
         case 2:
-          if (this.lung_damage(this.random)) {
-            return {
-              type: 1,
-              part: part.name,
-              cause: "asphyxia"
-            };
+          switch (part.protector.damage) {
+            case 0:
+              part.protector.damage = 1;
+              return {
+                type: 3,
+                part: part.name,
+                protect: part.protector.name
+              };
+            case 1:
+              if (this.lung_damage(this.random)) {
+                return {
+                  type: 1,
+                  part: part.name,
+                  cause: "asphyxia"
+                };
+              }
+              return {
+                type: 0,
+                part: part.name
+              };
           }
-          return {
-            type: 0,
-            part: part.name
-          };
+          break;
         case 1:
           switch (part.protector.damage) {
             case 0:
+              part.protector.damage = 1;
               return {
                 type: 3,
                 part: part.name,
@@ -1988,9 +2008,11 @@
               };
           }
           break;
-        default:
+        case 3:
+          part.damage = 1;
           return {
-            type: 0
+            type: 0,
+            part: part.name
           };
       }
     };
