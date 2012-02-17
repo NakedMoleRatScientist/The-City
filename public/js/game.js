@@ -1087,7 +1087,9 @@
         }
       }
       if (this.frame % 1000 === 0) {
-        console.log("item: " + this.map.items_total());
+        if (this.map.items_total() > 50) {
+          this.generate_boars();
+        }
       }
       _ref2 = this.units;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
@@ -1207,7 +1209,7 @@
         _results = [];
         while (existing_boars !== size + 1) {
           existing_boars += 1;
-          _results.push(this.units.push(new Lightboar(0, random_number(10), "lightboar" + existing_boars)));
+          _results.push(this.units.push(new Lightboar(0, random_number(100), "lightboar" + existing_boars)));
         }
         return _results;
       }
@@ -1374,6 +1376,7 @@
       };
       if (this.target.body.check_death() === true) {
         this.kills.push(this.target.name);
+        this.target = null;
         data.action = "killed";
         return data;
       } else if (this.target.leave === true) {
@@ -1861,15 +1864,14 @@
       return this.map[y][x] = new Crystal(x, y);
     };
     Map.prototype.items_total = function() {
-      var c, items, _i, _len, _ref, _results;
+      var c, items, _i, _len, _ref;
       items = 0;
       _ref = this.crystals;
-      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         c = _ref[_i];
-        _results.push(items += c.items);
+        items += this.map[c.y][c.x].items;
       }
-      return _results;
+      return items;
     };
     Map.prototype.drop_crystal = function(x, y) {
       if (this.map[y][x].increase() === false) {
