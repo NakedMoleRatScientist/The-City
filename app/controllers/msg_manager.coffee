@@ -48,13 +48,13 @@ class MsgManager
     msg = object.actors[0] + " strikes " + object.actors[1] + "'s " + part + "!"
     switch(object.type)
       when 0
-        msg = object.actors[1] + "'s " + part.name + " suffers damage!"
+        msg = object.actors[1] + "'s " + part + " suffers damage!"
       when 1
         msg = object.actors[1] + " dies of " + object.cause
         this.msg(object.actors[0],object.actors[1],msg)
       when 3
         this.msg(object.actors[0],object.actors[1],msg)
-        msg = object.actors[1] + "'s " + part.name + " was protected by his " + object.protect
+        msg = object.actors[1] + "'s " + part + " was protected by his " + object.protect
     this.msg(object.actors[0],object.actors[1],msg)
     switch(object.special)
       when 0
