@@ -46,8 +46,9 @@ class MsgManager
   strike: (object) ->
     part = object.part
     msg = object.actors[0] + " strikes " + object.actors[1] + "'s " + part + "!"
-    msg = object.actors[1] + "'s " + part + " suffers damage!"
     switch(object.type)
+      when 0
+        msg = object.actors[1] + "'s " + part + " suffers damage!"
       when 1
         msg = object.actors[1] + " dies of " + object.cause
         this.msg(object.actors[0],object.actors[1],msg)
