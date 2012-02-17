@@ -15,7 +15,7 @@ class Units
         @msg_manager.determine_combat_msg(unit.attack())
         unit.move()
     if @frame % 1000 == 0
-      console.log("BOOP")
+      console.log(@map.items_total)
     @msg_manager.combat_death(unit.nullify_target()) for unit in @units
     @frame += 1
   clean: () ->
