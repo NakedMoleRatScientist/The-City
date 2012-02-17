@@ -29,6 +29,10 @@ class Map
     @crystals.push (x: x, y: y)
     @map[y][x] = new Crystal(x,y)
 
+  items_total: () ->
+    items = 0
+    for c in @crystals
+     items +=  c.items
 
   drop_crystal: (x,y) ->
     if @map[y][x].increase() == false
