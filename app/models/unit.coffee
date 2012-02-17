@@ -86,8 +86,6 @@ class Unit
     return false if @target == null
     data = (actors: [this.name,@target.name], action: null)
     if @target.body.check_death() == true
-      target = @target
-      @target = null
       @kills.push(target.name)
       data.action = "killed"
       return data
