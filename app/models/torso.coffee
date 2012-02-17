@@ -31,6 +31,6 @@ class Torso extends Part
           when 1
             part.damage = 1
             return {type: 1, part: part.name, cause: "heart failure"}
-      else
+      when 3
         part.damage = 1
         return {type: 0, part: part.name}
