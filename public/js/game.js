@@ -1133,17 +1133,16 @@
       }).call(this);
     };
     Units.prototype.kills = function() {
-      var k, u, _i, _len, _ref, _results;
+      var k, u, _i, _len, _ref;
       k = 0;
       _ref = this.units;
-      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         u = _ref[_i];
         if (u.hostility === 0) {
-          _results.push(k += u.kills.length);
+          k += u.kills.length;
         }
       }
-      return _results;
+      return k;
     };
     Units.prototype.hostile_filter = function(hostile) {
       var u, _i, _len, _ref, _results;
@@ -2155,6 +2154,7 @@
   frameRateDraw = function(p5) {
     this.p5 = p5;
     this.p5.fill(0);
+    this.p5.noStroke();
     this.p5.rect(200, 0, 50, 20);
     this.p5.fill(255);
     this.p5.textSize(15);
@@ -2187,7 +2187,7 @@
           x = 20 * (width - map.camera_x);
           y = 20 * (height - map.camera_y);
           object = results[height][width];
-          p5.stroke(255, 255, 255);
+          p5.noStroke();
           _results2.push(object !== null ? determineRectDraw(object, x, y, p5) : void 0);
         }
         return _results2;
@@ -2268,6 +2268,7 @@
     CombatReportDrawMinorMode.prototype.draw = function(object) {
       var k, msg, name, _i, _j, _len, _len2, _ref, _ref2;
       this.p5.background(0);
+      this.p5.fill(255, 0, 0);
       switch (object.type) {
         case 0:
           this.texts.draw(object.summaries, object.pointer);
@@ -2286,8 +2287,8 @@
           return this.texts.draw(msg, object.pointer);
         case 3:
           msg = [];
-          this.p5.text(object.name + " killed about " + object.kills.length + "beings", 20, 12);
-          this.p5.text("Kill list:", 30, 20);
+          this.p5.text(object.name + " killed about " + object.kills.length + " beings", 20, 12);
+          this.p5.text("Kill list:", 30, 22);
           _ref2 = object.kills;
           for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
             name = _ref2[_j];
