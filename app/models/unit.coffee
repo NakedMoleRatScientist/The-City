@@ -106,7 +106,8 @@ class Unit
       loop
         choice = list[random_number(list.length)]
         if choice.x != result.x || choice.y != result.y
-          this.set_move(choice.x,choice.y)
+          @x = choice.x
+          @y = choice.y
           break
     return (actors: [this.name,target.name], action: "dodge", ability: ability)
 
