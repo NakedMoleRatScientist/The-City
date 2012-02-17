@@ -62,15 +62,13 @@ class MsgManager
         this.msg(object.actors[0],object.actors[1],msg)
     switch(object.special)
       when 0
-        msg = object.actors[1] + " losts some hand functionality"
-        this.msg(object.actors[0],object.actors[1],msg)
+        msgs.push(object.actors[1] + " losts some hand functionality")
       when 1
-        msg = object.actors[1] + " suffers hand disability"
-        this.msg(object.actors[0],object.actors[1],msg)
+        msgs.push(object.actors[1] + " suffers hand disability")
       when 2
-        msg = object.actors[1] + " losts some leg functionality"
-        this.msg(object.actors[0],object.actors[1],msg)
+        msgs.push(object.actors[1] + " losts some leg functionality")
       when 3
-        msg = object.actors[1] + " losts all leg functionality"
+        msgs.push(object.actors[1] + " losts all leg functionality")
+
     for m in msgs
       this.msg(object.actors[0],object.actors[1],m)
