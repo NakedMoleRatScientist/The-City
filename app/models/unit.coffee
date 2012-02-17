@@ -89,6 +89,9 @@ class Unit
       @target = null
       @kills.push(target.name)
       return (actors: [this.name,target.name],action: "killed")
+    else if @target.leave == true
+      @target = null
+      return (actors: [this.name,target.name],action: "escape")
     return false
   counteraction: (@target) ->
     act = random_number(6)
