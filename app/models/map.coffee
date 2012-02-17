@@ -32,7 +32,7 @@ class Map
   items_total: () ->
     items = 0
     for c in @crystals
-     items += c.items
+     items += @map[c.y][c.x].items
     items
   drop_crystal: (x,y) ->
     if @map[y][x].increase() == false
