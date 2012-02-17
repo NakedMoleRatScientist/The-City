@@ -966,16 +966,21 @@
       switch (object.type) {
         case 0:
           msg = object.actors[1] + "'s " + part + " suffers damage!";
+          this.msg(object.actors[0], object.actors[1], msg);
           break;
         case 1:
+          msg = object.actors[1] + "'s " + part + " suffers damage!";
+          this.msg(object.actors[0], object.actors[1], msg);
           msg = object.actors[1] + " dies of " + object.cause;
           this.msg(object.actors[0], object.actors[1], msg);
           break;
+        case 2:
+          msg = object.actors[1] + "'s " + part + " suffers damage!";
+          break;
         case 3:
+          msg = object.actors[1] + "'s " + part + " was protected by his " + object.protector.name;
           this.msg(object.actors[0], object.actors[1], msg);
-          msg = object.actors[1] + "'s " + part + " was protected by his " + object.protect;
       }
-      this.msg(object.actors[0], object.actors[1], msg);
       switch (object.special) {
         case 0:
           msg = object.actors[1] + " losts some hand functionality";
@@ -1935,7 +1940,7 @@
       this.subparts.push(new Subpart("heart", 1));
       this.subparts.push(new Subpart("left_lung", 2));
       this.subparts.push(new Subpart("right_lung", 2));
-      this.subparts.push(new subpart("rib_left_one", 3));
+      this.subparts.push(new Subpart("rib_left_one", 3));
       this.subparts.push(new Subpart("rib_left_two", 3));
       this.subparts.push(new Subpart("rib_left_three", 3));
       this.subparts.push(new Subpart("rib_right_one", 3));
