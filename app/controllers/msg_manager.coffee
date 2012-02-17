@@ -46,15 +46,16 @@ class MsgManager
   strike: (object) ->
     part = object.part
     msgs = []
-    attack_msg = object.actors[1] + "'s " + part + " suffers damage!"
+    object.actors[0] + " strikes " + object.actors[1] + "'s " + part + "!"
+    damage_msg = object.actors[1] + "'s " + part + " suffers damage!"
     switch(object.type)
       when 0
-        msgs.push(attack_msg)
+        msgs.push(damage_msg)
       when 1
-        msgs.push(attack_msg)
+        msgs.push(damage_msg)
         msgs.push(object.actors[1] + " dies of " + object.cause)
       when 2
-        msgs.push(attack_msg)
+        msgs.push(damage_msg)
       when 3
         msgs.push(object.actors[1] + "'s " + part + " was protected by his " + object.protect)
     switch(object.special)
