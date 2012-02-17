@@ -14,7 +14,6 @@ class Unit
     @leave = false
     @advance = false
     @stance = 0 #1 for assualt. 0 for ignore. 2 for dodging.
-
   set_job: (job) ->
     @job = job
     @queue = job.orders
@@ -67,7 +66,8 @@ class Unit
   attack: () ->
     return -1 if @target == null
     if this.is_next_to_target() && @body.hand != 2
-      @target.target = this
+      if @target.stance == 1
+        @target.target = this
       action = this.counteraction(@target)
       if action == false
 #        @target.target = this if @target.target == null
