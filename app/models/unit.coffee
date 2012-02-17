@@ -84,14 +84,17 @@ class Unit
     return -1
   nullify_target: () ->
     return false if @target == null
+    data = (actors: [this.name,@target.name], action: null)
     if @target.body.check_death() == true
       target = @target
       @target = null
       @kills.push(target.name)
-      return (actors: [this.name,target.name],action: "killed")
+      data.action = "killed"
+      return data
     else if @target.leave == true
       @target = null
-      return (actors: [this.name,target.name],action: "escape")
+      data.action = "escaped"
+      return data
     return false
   counteraction: (@target) ->
     act = random_number(6)
