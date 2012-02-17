@@ -9,6 +9,6 @@ mapDraw = (map,p5) ->
         x = 20 * (width - map.camera_x)
         y = 20 * (height - map.camera_y)
         object = results[height][width]
-        p5.stroke(255,255,255)
+        p5.noStroke()
         if object != null
           determineRectDraw(object,x,y,p5)
