@@ -53,7 +53,7 @@ class MsgManager
         msgs.push(strike_msg)
         msgs.push(object.actors[1] + " dies of " + object.cause)
       when 2
-        msgs.push(object.actors[1] + "'s " + part + " suffers damage!")
+        msgs.push(strike_msg)
       when 3
         msgs.push(object.actors[1] + "'s " + part + " was protected by his " + object.protector.name)
     switch(object.special)
