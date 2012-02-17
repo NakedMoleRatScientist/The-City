@@ -15,7 +15,8 @@ class Units
         @msg_manager.determine_combat_msg(unit.attack())
         unit.move()
     if @frame % 1000 == 0
-      console.log("item: " + @map.items_total())
+      if @map.items_total() > 50
+        this.generate_boars()
     @msg_manager.combat_death(unit.nullify_target()) for unit in @units
     @frame += 1
   clean: () ->
