@@ -16,22 +16,30 @@
   approachesList = function(location) {
     var approaches;
     approaches = [];
-    approaches.push({
-      x: location.x - 1,
-      y: location.y
-    });
-    approaches.push({
-      x: location.x + 1,
-      y: location.y
-    });
-    approaches.push({
-      x: location.x,
-      y: location.y - 1
-    });
-    approaches.push({
-      x: location.x,
-      y: location.y + 1
-    });
+    if (location.x - 1 > 0) {
+      approaches.push({
+        x: location.x - 1,
+        y: location.y
+      });
+    }
+    if (location.x + 1 < 99) {
+      approaches.push({
+        x: location.x + 1,
+        y: location.y
+      });
+    }
+    if (location.y - 1 > 0) {
+      approaches.push({
+        x: location.x,
+        y: location.y - 1
+      });
+    }
+    if (location.y + 1 < 99) {
+      approaches.push({
+        x: location.x,
+        y: location.y + 1
+      });
+    }
     return approaches;
   };
   circle_to_circle_collision = function(one, two) {
@@ -925,31 +933,49 @@
     };
     MsgManager.prototype.dodge = function(object) {
       var msg;
-      msg = object.actors[0] + " dodges " + object.actors[1] + "'s strike";
+      if (object.ability === false) {
+        msg = object.actors[0] + " can't dodge!";
+      } else {
+        msg = object.actors[0] + " dodges " + object.actors[1] + "'s strike";
+      }
       return this.msg(object.actors[0], object.actors[1], msg);
     };
-    MsgManager.prototype.determine_combat_msg = function(object) {
-      if (object === -1) {
+    MsgManager.prototype.determine_combat_msg = function(objects) {
+      var o, _i, _len, _results;
+      if (objects === -1) {
         return;
       }
-      switch (object.action) {
-        case "strike":
-          return this.strike(object);
-        case "dodge":
-          return this.dodge(object);
+      _results = [];
+      for (_i = 0, _len = objects.length; _i < _len; _i++) {
+        o = objects[_i];
+        _results.push((function() {
+          switch (o.action) {
+            case "strike":
+              return this.strike(o);
+            case "dodge":
+              return this.dodge(o);
+          }
+        }).call(this));
       }
+      return _results;
     };
     MsgManager.prototype.strike = function(object) {
       var msg, part;
       part = object.part;
       msg = object.actors[0] + " strikes " + object.actors[1] + "'s " + part + "!";
-      this.msg(object.actors[0], object.actors[1], msg);
-      msg = object.actors[1] + "'s " + part + " suffers damage!";
-      this.msg(object.actors[0], object.actors[1], msg);
-      if (object.type === 1) {
-        msg = object.actors[1] + " dies of " + object.cause;
-        this.msg(object.actors[0], object.actors[1], msg);
+      switch (object.type) {
+        case 0:
+          msg = object.actors[1] + "'s " + part + " suffers damage!";
+          break;
+        case 1:
+          msg = object.actors[1] + " dies of " + object.cause;
+          this.msg(object.actors[0], object.actors[1], msg);
+          break;
+        case 3:
+          this.msg(object.actors[0], object.actors[1], msg);
+          msg = object.actors[1] + "'s " + part + " was protected by his " + object.protect;
       }
+      this.msg(object.actors[0], object.actors[1], msg);
       switch (object.special) {
         case 0:
           msg = object.actors[1] + " losts some hand functionality";
@@ -1287,9 +1313,11 @@
       if (this.is_next_to_target() && this.body.hand !== 2) {
         action = this.counteraction(this.target);
         if (action === false) {
-          return this.target.damage(this);
+          return [this.target.damage(this)];
+        } else if (action.ability === false) {
+          return [action, this.target.damage(this)];
         }
-        return action;
+        return [action];
       } else {
         this.determine_direction();
       }
@@ -1326,17 +1354,18 @@
       var ability, choice, list, result;
       list = approachesList(target);
       result = nearest_object(this, list);
-      while (true) {
-        choice = list[random_number(list.length)];
-        if (choice.x !== result.x || choice.y !== result.y) {
-          this.set_move(choice.x, choice.y);
-          break;
-        }
-      }
       if (this.body.leg === 2) {
         ability = false;
+      } else {
+        ability = true;
+        while (true) {
+          choice = list[random_number(list.length)];
+          if (choice.x !== result.x || choice.y !== result.y) {
+            this.set_move(choice.x, choice.y);
+            break;
+          }
+        }
       }
-      ability = true;
       return {
         actors: [this.name, target.name],
         action: "dodge",
@@ -1895,6 +1924,7 @@
       this.name = name;
       this.type = type;
       this.damage = 0;
+      this.protector = null;
     }
     return Subpart;
   })();
@@ -1905,6 +1935,13 @@
       this.subparts.push(new Subpart("heart", 1));
       this.subparts.push(new Subpart("left_lung", 2));
       this.subparts.push(new Subpart("right_lung", 2));
+      this.subparts.push(new subpart("rib_left_one", 3));
+      this.subparts.push(new Subpart("rib_left_two", 3));
+      this.subparts.push(new Subpart("rib_left_three", 3));
+      this.subparts.push(new Subpart("rib_right_one", 3));
+      this.subparts.push(new Subpart("rib_right_two", 3));
+      this.subparts.push(new Subpart("rib_right_three", 3));
+      this.subparts[0].protector = this.subparts[3];
     }
     Torso.prototype.lung_damage = function(choice) {
       this.subparts[choice].damage = 1;
@@ -1916,29 +1953,40 @@
     Torso.prototype.interact = function() {
       var part;
       part = Torso.__super__.interact.call(this);
-      if (part.type === 2) {
-        if (this.lung_damage(this.random)) {
+      switch (part.type) {
+        case 2:
+          if (this.lung_damage(this.random)) {
+            return {
+              type: 1,
+              part: part.name,
+              cause: "asphyxia"
+            };
+          }
           return {
-            type: 1,
-            part: part.name,
-            cause: "asphyxia"
+            type: 0,
+            part: part.name
           };
-        }
-        return {
-          type: 0,
-          part: part.name
-        };
-      } else if (part.type === 1) {
-        part.damage = 1;
-        return {
-          type: 1,
-          part: part.name,
-          cause: "heart failure"
-        };
-      } else {
-        return {
-          type: 0
-        };
+        case 1:
+          switch (part.protector.damage) {
+            case 0:
+              return {
+                type: 3,
+                part: part.name,
+                protect: part.protector.name
+              };
+            case 1:
+              part.damage = 1;
+              return {
+                type: 1,
+                part: part.name,
+                cause: "heart failure"
+              };
+          }
+          break;
+        default:
+          return {
+            type: 0
+          };
       }
     };
     return Torso;
