@@ -1,5 +1,6 @@
 frameRateDraw = (@p5) ->
   @p5.fill(0)
+  @p5.noStroke()
   @p5.rect(200,0,50,20)
   @p5.fill(255)
   @p5.textSize(15)
