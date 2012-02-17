@@ -1043,9 +1043,10 @@
           };
           return this.map.add_stockpile(location);
         case "full_test_boars":
-          this.map.create_crystal(5, 5);
-          this.map.map[5][5].items = 50;
-          return this.units.generate_boars();
+          this.map.create_crystal(20, 20);
+          this.map.map[20][20].items = 50;
+          this.units.generate_boars();
+          return this.units.create(new Human(10, 10, "grumpy_killer", 0));
         default:
           this.units.create(new Human(10, 10, "Killy", 0));
           this.units.units[0].stance = 1;
@@ -1074,6 +1075,7 @@
         unit = _ref[_i];
         if (this.frame % unit.agility === 0) {
           unit.set_action(this.map, this);
+          unit.auto_detect_target(this);
           this.msg_manager.determine_combat_msg(unit.attack());
           unit.move();
         }
@@ -1247,6 +1249,13 @@
       this.advance = false;
       this.stance = 0;
     }
+    Unit.prototype.auto_detect_target = function(units) {
+      var list;
+      if (this.target === null && this.hostility === 0) {
+        list = units.hostile_filter(1);
+        return this.target = units.units[random_number(list.length)];
+      }
+    };
     Unit.prototype.set_job = function(job) {
       this.job = job;
       return this.queue = job.orders;
@@ -1343,18 +1352,22 @@
       return -1;
     };
     Unit.prototype.nullify_target = function() {
-      var target;
+      var data;
       if (this.target === null) {
         return false;
       }
+      data = {
+        actors: [this.name, this.target.name],
+        action: null
+      };
       if (this.target.body.check_death() === true) {
-        target = this.target;
-        this.target = null;
         this.kills.push(target.name);
-        return {
-          actors: [this.name, target.name],
-          action: "killed"
-        };
+        data.action = "killed";
+        return data;
+      } else if (this.target.leave === true) {
+        this.target = null;
+        data.action = "escaped";
+        return data;
       }
       return false;
     };
@@ -1380,7 +1393,8 @@
         while (true) {
           choice = list[random_number(list.length)];
           if (choice.x !== result.x || choice.y !== result.y) {
-            this.set_move(choice.x, choice.y);
+            this.x = choice.x;
+            this.y = choice.y;
             break;
           }
         }
