@@ -33,4 +33,6 @@ class ScenarioInitialize
         @map.add_stockpile(location)
       else
         @units.create new Human(10,10, "Killy",0)
+        @units.units[0].stance = 1
         @units.create new Human(12,10, "Cibo",1)
+        @units.units[1].stance = 1
