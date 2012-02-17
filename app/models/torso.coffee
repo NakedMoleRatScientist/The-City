@@ -24,8 +24,12 @@ class Torso extends Part
     part = super()
     switch(part.type)
       when  2
-        return {type: 1, part: part.name, cause: "asphyxia"} if this.lung_damage(@random)
-        return {type: 0, part: part.name}
+        switch(part.protector.damage)
+          when 0
+            return {type: 1, part: part.name, cause: "asphyxia"} if this.lung_damage(@random)
+            return {type: 0, part: part.name}
+          when 1
+            return {type: 3, part: part.name, protect: part.protector.name}
       when 1
         switch(part.protector.damage)
           when 0
