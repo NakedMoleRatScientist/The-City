@@ -67,6 +67,7 @@ class Unit
   attack: () ->
     return -1 if @target == null
     if this.is_next_to_target() && @body.hand != 2
+      @target.target = this
       action = this.counteraction(@target)
       if action == false
 #        @target.target = this if @target.target == null
@@ -88,7 +89,7 @@ class Unit
   counteraction: (@target) ->
     act = random_number(6)
     for i in [0..2]
-      if i == act
+      if act == i
         return @target.dodge(this)
     return false
   dodge: (target) ->
