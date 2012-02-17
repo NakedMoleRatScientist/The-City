@@ -14,6 +14,10 @@ class Unit
     @leave = false
     @advance = false
     @stance = 0 #1 for assualt. 0 for ignore. 2 for dodging.
+  auto_detect_target: (units) ->
+    if @target == null
+      list = units.hostile_filter(1)
+      @target = units.units[random_number(list.length)]
   set_job: (job) ->
     @job = job
     @queue = job.orders
