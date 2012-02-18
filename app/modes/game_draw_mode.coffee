@@ -12,7 +12,8 @@ class GameDrawMode extends DrawMode
         if @redraw == true
           mapDraw(map,p5)
           @redraw = false
-        determineCameraRedraw(map,@camera)
+        if determineCameraRedraw(map,@camera)
+          mapDraw(map,p5)
         if drawDirtyRects(@dirty_rects,map,@p5)
           mapDraw(map,@p5)
           menuDraw(object.menu,@p5)
