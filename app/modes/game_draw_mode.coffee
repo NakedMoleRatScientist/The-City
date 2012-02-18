@@ -15,6 +15,13 @@ class GameDrawMode extends DrawMode
         determineCameraRedraw(map,@camera)
         if drawDirtyRects(@dirty_rects,map,@p5)
           mapDraw(map,@p5)
+          switch(object.menu)
+            when 0
+              menuDraw(@p5)
+              gameMenuDraw(@p5)
+            when 1
+              menuDraw(@p5)
+              buildMenuDraw(@p5)
         units = object.units
         mouse = object.mouse
         msg = object.msg
