@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, approachesList, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determineCameraRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, approachesList, backgroundMenuDraw, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determineCameraRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -492,17 +492,17 @@
             mapDraw(map, p5);
             this.redraw = false;
           }
-          determineCameraRedraw(map, this.camera);
-          if (drawDirtyRects(this.dirty_rects, map, this.p5)) {
-            mapDraw(map, this.p5);
+          if (determineCameraRedraw(map, this.camera)) {
+            mapDraw(map, p5);
             menuDraw(object.menu, this.p5);
           }
+          drawDirtyRects(this.dirty_rects, map, this.p5);
           units = object.units;
           mouse = object.mouse;
           msg = object.msg;
           frameRateDraw(this.p5);
           if (this.dirty_menu !== object.menu) {
-            menuDraw(object.menu, this.dirty_menu, this.p5);
+            menuDraw(object.menu, this.p5);
           }
           unitDraw(this.p5, units, map);
           if (msg !== -1) {
@@ -2073,22 +2073,18 @@
     };
     return Torso;
   })();
+  backgroundMenuDraw = function(p5) {
+    this.p5 = p5;
+    this.p5.fill(0, 0, 0);
+    this.p5.stroke(255, 255, 0);
+    return this.p5.rect(700, 100, 100, 400);
+  };
   buildMenuDraw = function(p5) {
     this.p5 = p5;
     this.p5.fill(255, 0, 0);
     this.p5.text("Build Menu", 715, 115);
     this.p5.fill(255, 255, 0);
     return this.p5.text("c - crystal pile", 705, 140);
-  };
-  menuDraw = function(toggle, p5) {
-    switch (toggle) {
-      case 0:
-        menuDraw(p5);
-        return gameMenuDraw(p5);
-      case 1:
-        menuDraw(p5);
-        return buildMenuDraw(p5);
-    }
   };
   combatLogMenuDraw = function(p5) {
     this.p5 = p5;
@@ -2196,11 +2192,17 @@
     }
     return _results;
   };
-  menuDraw = function(p5) {
-    this.p5 = p5;
-    this.p5.fill(0, 0, 0);
-    this.p5.stroke(255, 255, 0);
-    return this.p5.rect(700, 100, 100, 400);
+  menuDraw = function(toggle, p5) {
+    switch (toggle) {
+      case -1:
+        return mapDraw(p5);
+      case 0:
+        backgroundMenuDraw(p5);
+        return gameMenuDraw(p5);
+      case 1:
+        backgroundMenuDraw(p5);
+        return buildMenuDraw(p5);
+    }
   };
   messageDraw = function(p5, msg) {
     p5.fill(0);
