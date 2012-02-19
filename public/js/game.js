@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, approachesList, backgroundMenuDraw, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determineCameraRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, unitDraw;
+  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, approachesList, backgroundMenuDraw, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, rectToRectCollision, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -398,6 +398,15 @@
   random_number = function(size) {
     return Math.floor(Math.random() * size);
   };
+  rectToRectCollision = function(rect_one, rect_two) {
+    var x, y;
+    x = rect_one.x >= rect_two.x && rect_one.x <= rect_two.x + rect_two.width;
+    y = rect_one.y >= rect_two.y && rect_one.y <= rect_two.y + rect_two.height;
+    if (x && y) {
+      return true;
+    }
+    return false;
+  };
   TextOptions = (function() {
     function TextOptions() {
       this.options = [];
@@ -488,27 +497,21 @@
       switch (object.state) {
         case -1:
           map = object.map;
-          if (this.redraw === true) {
-            mapDraw(map, p5);
-            this.redraw = false;
-          }
+          units = object.units;
+          mouse = object.mouse;
+          msg = object.msg;
           if (determineCameraRedraw(map, this.camera)) {
             mapDraw(map, p5);
             menuDraw(object.menu, this.p5);
           }
           drawDirtyRects(this.dirty_rects, map, this.p5);
-          units = object.units;
-          mouse = object.mouse;
-          msg = object.msg;
-          frameRateDraw(this.p5);
-          if (this.dirty_menu !== object.menu) {
+          if (determineCollisionRedraw(this.dirty_rects, map)) {
             menuDraw(object.menu, this.p5);
           }
-          unitDraw(this.p5, units, map);
-          if (msg !== -1) {
-            messageDraw(this.p5, msg);
+          if (this.dirty_menu !== object.menu) {
+            mapDraw(map, p5);
+            menuDraw(object.menu, this.p5);
           }
-          mouseDraw(this.p5, object.mouse, map.camera_x, map.camera_y);
           this.dirty_rects = [];
           for (_i = 0, _len = units.length; _i < _len; _i++) {
             unit = units[_i];
@@ -543,7 +546,10 @@
           }
           this.camera.x = map.camera_x;
           this.camera.y = map.camera_y;
-          return this.dirty_menu = object.menu;
+          this.dirty_menu = object.menu;
+          mouseDraw(this.p5, object.mouse, map.camera_x, map.camera_y);
+          frameRateDraw(this.p5);
+          return messageDraw(this.p5, msg);
         case 0:
           this.redraw = true;
           return GameDrawMode.__super__.draw.call(this, object);
@@ -2098,6 +2104,7 @@
   };
   crystal_draw = function(p5, x, y, fullness) {
     fullness *= 3;
+    p5.stroke(255);
     p5.fill(fullness % 255 / 10, fullness % 255 / 10, fullness % 255);
     return p5.triangle(x, y + 20, x + 10, y, x + 20, y + 20);
   };
@@ -2118,6 +2125,22 @@
     } else if (old_camera.x !== map.camera_x || old_camera.y !== map.camera_y) {
       return true;
     }
+  };
+  determineCollisionRedraw = function(dirty, map) {
+    var coord, d, _i, _len;
+    for (_i = 0, _len = dirty.length; _i < _len; _i++) {
+      d = dirty[_i];
+      coord = translateIntoDrawCoord(d, map);
+      if (rectToRectCollision(coord, {
+        x: 700,
+        y: 100,
+        width: 100,
+        height: 400
+      }) === true) {
+        return true;
+      }
+    }
+    return false;
   };
   determineRectDraw = function(location, x, y, p5) {
     switch (location.name) {
@@ -2194,8 +2217,6 @@
   };
   menuDraw = function(toggle, p5) {
     switch (toggle) {
-      case -1:
-        return mapDraw(p5);
       case 0:
         backgroundMenuDraw(p5);
         return gameMenuDraw(p5);
@@ -2237,6 +2258,13 @@
   titleDraw = function(p5) {
     p5.textFont("monospace", 30);
     return p5.text("The City", 350, 100);
+  };
+  translateIntoDrawCoord = function(object, map) {
+    var transform;
+    return transform = {
+      x: (object.x - map.camera_x) * 20,
+      y: (object.y - map.camera_x) * 20
+    };
   };
   unitDraw = function(p5, units, map) {
     var blue, pink, unit, x, y, _i, _len, _results;
