@@ -505,6 +505,7 @@
             menuDraw(object.menu, this.p5);
           }
           drawDirtyRects(this.dirty_rects, map, this.p5);
+          unitDraw(this.p5, units, map);
           if (determineCollisionRedraw(this.dirty_rects, map)) {
             menuDraw(object.menu, this.p5);
           }
@@ -521,28 +522,36 @@
             });
           }
           if (mouse.mode === 1) {
-            x = Math.floor(this.p5.mouseX / 20);
-            y = Math.floor(this.p5.mouseY / 20);
+            x = Math.floor(this.p5.mouseX / 20) + map.camera_x;
+            y = Math.floor(this.p5.mouseY / 20) + map.camera_y;
             this.dirty_rects.push({
               x: x,
               y: y
             });
-            this.dirty_rects.push({
-              x: x,
-              y: y - 1
-            });
-            this.dirty_rects.push({
-              x: x + 1,
-              y: y - 1
-            });
-            this.dirty_rects.push({
-              x: x + 2,
-              y: y - 1
-            });
-            this.dirty_rects.push({
-              x: x + 3,
-              y: y - 1
-            });
+            if (y > 0) {
+              this.dirty_rects.push({
+                x: x,
+                y: y - 1
+              });
+              if (x + 1 < 99) {
+                this.dirty_rects.push({
+                  x: x + 1,
+                  y: y - 1
+                });
+              }
+              if (x + 2 < 99) {
+                this.dirty_rects.push({
+                  x: x + 2,
+                  y: y - 1
+                });
+              }
+              if (x + 3 < 99) {
+                this.dirty_rects.push({
+                  x: x + 3,
+                  y: y - 1
+                });
+              }
+            }
           }
           this.camera.x = map.camera_x;
           this.camera.y = map.camera_y;
@@ -2155,14 +2164,13 @@
     }
   };
   drawDirtyRects = function(dirty, map, p5) {
-    var d, location, x, y, _i, _len, _results;
+    var coord, d, location, _i, _len, _results;
     _results = [];
     for (_i = 0, _len = dirty.length; _i < _len; _i++) {
       d = dirty[_i];
       location = map.map[d.y][d.x];
-      x = (d.x - map.camera_x) * 20;
-      y = (d.y - map.camera_y) * 20;
-      _results.push(location !== null ? determineRectDraw(location, x, y, p5) : (p5.noStroke(), p5.fill(0), p5.rect(x, y, 20, 20)));
+      coord = translateIntoDrawCoord(d, map);
+      _results.push(location !== null ? determineRectDraw(location, coord.x, coord.y, p5) : (p5.noStroke(), p5.fill(0), p5.rect(coord.x, coord.y, 20, 20)));
     }
     return _results;
   };
@@ -2263,7 +2271,7 @@
     var transform;
     return transform = {
       x: (object.x - map.camera_x) * 20,
-      y: (object.y - map.camera_x) * 20
+      y: (object.y - map.camera_y) * 20
     };
   };
   unitDraw = function(p5, units, map) {
