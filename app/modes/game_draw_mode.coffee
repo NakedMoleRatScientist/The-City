@@ -12,6 +12,7 @@ class GameDrawMode extends DrawMode
         units = object.units
         mouse = object.mouse
         msg = object.msg
+      #Selective draw
         if determineCameraRedraw(map,@camera)
           mapDraw(map,p5)
           menuDraw(object.menu,@p5)
@@ -21,7 +22,6 @@ class GameDrawMode extends DrawMode
         if @dirty_menu != object.menu
           mapDraw(map,p5)
           menuDraw(object.menu,@p5)
-
         @dirty_rects = []
         for unit in units
           @dirty_rects.push(x: unit.x, y: unit.y)
