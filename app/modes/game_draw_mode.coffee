@@ -16,16 +16,12 @@ class GameDrawMode extends DrawMode
           mapDraw(map,p5)
           menuDraw(object.menu,@p5)
         drawDirtyRects(@dirty_rects,map,@p5)
-        frameRateDraw(@p5)
         if determineCollisionRedraw(@dirty_rects,map)
           menuDraw(object.menu,@p5)
         if @dirty_menu != object.menu
           mapDraw(map,p5)
           menuDraw(object.menu,@p5)
-        unitDraw(@p5,units,map)
-        if msg != -1
-          messageDraw(@p5,msg)
-        mouseDraw(@p5,object.mouse,map.camera_x,map.camera_y)
+
         @dirty_rects = []
         for unit in units
           @dirty_rects.push(x: unit.x, y: unit.y)
@@ -40,6 +36,11 @@ class GameDrawMode extends DrawMode
         @camera.x = map.camera_x
         @camera.y = map.camera_y
         @dirty_menu = object.menu
+      #Draw ALL the time
+        mouseDraw(@p5,object.mouse,map.camera_x,map.camera_y)
+        frameRateDraw(@p5)
+        messageDraw(@p5,msg)
+
       when 0
         @redraw = true
         super(object)
