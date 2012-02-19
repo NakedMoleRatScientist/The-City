@@ -12,9 +12,6 @@ class GameDrawMode extends DrawMode
         units = object.units
         mouse = object.mouse
         msg = object.msg
-        if @redraw == true
-          mapDraw(map,p5)
-          @redraw = false
         if determineCameraRedraw(map,@camera)
           mapDraw(map,p5)
           menuDraw(object.menu,@p5)
