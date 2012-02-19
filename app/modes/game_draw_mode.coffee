@@ -33,9 +33,9 @@ class GameDrawMode extends DrawMode
           @dirty_rects.push(x: x, y: y)
           if y > 0
             @dirty_rects.push(x: x, y: y - 1)
-            @dirty_rects.push(x: x + 1, y: y - 1)
-            @dirty_rects.push(x: x + 2, y: y - 1)
-            @dirty_rects.push(x: x + 3, y: y - 1)
+            @dirty_rects.push(x: x + 1, y: y - 1) if x + 1 < 99
+            @dirty_rects.push(x: x + 2, y: y - 1) if x + 2 < 99
+            @dirty_rects.push(x: x + 3, y: y - 1) if x + 3 < 99
         @camera.x = map.camera_x
         @camera.y = map.camera_y
         @dirty_menu = object.menu
