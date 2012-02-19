@@ -20,6 +20,8 @@ class GameDrawMode extends DrawMode
         mouse = object.mouse
         msg = object.msg
         frameRateDraw(@p5)
+        if rectToRectCollision(@dirty_rects,(x: 700, y: 100, width: 100, height: 400))
+          menuDraw(object.menu,@p5)
         if @dirty_menu != object.menu
           mapDraw(map,p5)
           menuDraw(object.menu,@p5)
