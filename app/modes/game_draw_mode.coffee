@@ -9,6 +9,9 @@ class GameDrawMode extends DrawMode
     switch (object.state)
       when -1
         map = object.map
+        units = object.units
+        mouse = object.mouse
+        msg = object.msg
         if @redraw == true
           mapDraw(map,p5)
           @redraw = false
@@ -16,9 +19,6 @@ class GameDrawMode extends DrawMode
           mapDraw(map,p5)
           menuDraw(object.menu,@p5)
         drawDirtyRects(@dirty_rects,map,@p5)
-        units = object.units
-        mouse = object.mouse
-        msg = object.msg
         frameRateDraw(@p5)
         if determineCollisionRedraw(@dirty_rects,map)
           menuDraw(object.menu,@p5)
