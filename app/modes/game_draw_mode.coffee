@@ -38,6 +38,7 @@ class GameDrawMode extends DrawMode
         @camera.y = map.camera_y
         @dirty_menu = object.menu
       #Draw ALL the time
+        unitDraw(@p5,units,map)
         mouseDraw(@p5,object.mouse,map.camera_x,map.camera_y)
         frameRateDraw(@p5)
         messageDraw(@p5,msg)
