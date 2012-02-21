@@ -34,5 +34,5 @@ menu = (p5) ->
 
 $(document).ready ->
   canvas = document.getElementById "processing"
-
+  canvas.focus()
   processing = new Processing(canvas, menu)
