@@ -42,7 +42,8 @@ class GameDrawMode extends DrawMode
       #Draw ALL the time
         mouseDraw(@p5,object.mouse,map.camera_x,map.camera_y)
         frameRateDraw(@p5)
-        messageDraw(@p5,msg)
+        if msg != -1
+          messageDraw(@p5,msg)
 
       when 0
         @redraw = true
