@@ -1615,6 +1615,7 @@
       this.y = y;
       this.items = 0;
       this.name = "crystal";
+      this.background = null;
     }
     Crystal.prototype.collide = function() {
       return true;
@@ -1881,11 +1882,18 @@
       return this.map;
     };
     Map.prototype.create_crystal = function(x, y) {
+      var back, object;
       this.crystals.push({
         x: x,
         y: y
       });
-      return this.map[y][x] = new Crystal(x, y);
+      object = this.map[y][x];
+      if (object !== null && object.name === "floor") {
+        back = "floor";
+      }
+      object = new Crystal(x, y);
+      object.background = "floor";
+      return this.map[y][x] = object;
     };
     Map.prototype.items_total = function() {
       var c, items, _i, _len, _ref;
@@ -2122,8 +2130,11 @@
     scrollDraw(this.p5, true);
     return this.p5.text("k - kill lists", 345, 580);
   };
-  crystal_draw = function(p5, x, y, fullness) {
+  crystal_draw = function(p5, x, y, fullness, background) {
     fullness *= 3;
+    if (background === "floor") {
+      floor_draw(p5, x, y);
+    }
     p5.stroke(255);
     p5.fill(fullness % 255 / 10, fullness % 255 / 10, fullness % 255);
     return p5.triangle(x, y + 20, x + 10, y, x + 20, y + 20);
@@ -2181,7 +2192,7 @@
       case "crystal_stockpile":
         return crystal_stockpile_draw(p5, x, y);
       case "crystal":
-        return crystal_draw(p5, x, y, location.items);
+        return crystal_draw(p5, x, y, d.items, d.background);
     }
   };
   drawDirtyRects = function(dirty, map, p5) {
@@ -2196,7 +2207,7 @@
     return _results;
   };
   floor_draw = function(p5, x, y) {
-    p5.stroke(255);
+    p5.noStroke();
     p5.fill();
     return p5.rect(x, y, 20, 20);
   };
