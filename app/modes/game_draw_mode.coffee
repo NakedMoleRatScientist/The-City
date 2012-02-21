@@ -18,7 +18,7 @@ class GameDrawMode extends DrawMode
           menuDraw(object.menu,@p5)
         drawDirtyRects(@dirty_rects,map,@p5)
         unitDraw(@p5,units,map)
-        determineCollisionRedraw(@dirty_rects,map)
+        determineCollisionRedraw(@p5,@dirty_rects,map)
         menuDraw(object.menu,@p5)
         if @dirty_menu != object.menu
           mapDraw(map,p5)
