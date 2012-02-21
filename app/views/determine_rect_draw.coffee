@@ -8,3 +8,4 @@ determineRectDraw = (location,x,y,p5) ->
       crystal_stockpile_draw(p5,x,y)
     when "crystal"
       return (object: location, x: x , y: y)
+  return true
