@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, approachesList, backgroundMenuDraw, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, point_circle_collision, random_number, rectToRectCollision, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw;
+  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, approachesList, backgroundMenuDraw, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -373,6 +373,15 @@
       return false;
     }
   };
+  pointToRectCollision = function(rect_one, rect_two) {
+    var x, y;
+    x = rect_one.x >= rect_two.x && rect_one.x <= rect_two.x + rect_two.width;
+    y = rect_one.y >= rect_two.y && rect_one.y <= rect_two.y + rect_two.height;
+    if (x && y) {
+      return true;
+    }
+    return false;
+  };
   RadioButton = (function() {
     function RadioButton(p5, x, y) {
       this.p5 = p5;
@@ -398,15 +407,6 @@
   })();
   random_number = function(size) {
     return Math.floor(Math.random() * size);
-  };
-  rectToRectCollision = function(rect_one, rect_two) {
-    var x, y;
-    x = rect_one.x >= rect_two.x && rect_one.x <= rect_two.x + rect_two.width;
-    y = rect_one.y >= rect_two.y && rect_one.y <= rect_two.y + rect_two.height;
-    if (x && y) {
-      return true;
-    }
-    return false;
   };
   TextOptions = (function() {
     function TextOptions() {
@@ -507,9 +507,8 @@
           }
           drawDirtyRects(this.dirty_rects, map, this.p5);
           unitDraw(this.p5, units, map);
-          if (determineCollisionRedraw(this.dirty_rects, map)) {
-            menuDraw(object.menu, this.p5);
-          }
+          determineCollisionRedraw(this.p5, this.dirty_rects, map);
+          menuDraw(object.menu, this.p5);
           if (this.dirty_menu !== object.menu) {
             mapDraw(map, p5);
             menuDraw(object.menu, this.p5);
@@ -559,7 +558,10 @@
           this.dirty_menu = object.menu;
           mouseDraw(this.p5, object.mouse, map.camera_x, map.camera_y);
           frameRateDraw(this.p5);
-          return messageDraw(this.p5, msg);
+          if (msg !== -1) {
+            return messageDraw(this.p5, msg);
+          }
+          break;
         case 0:
           this.redraw = true;
           return GameDrawMode.__super__.draw.call(this, object);
@@ -1905,9 +1907,12 @@
       var newpoint, x, y;
       x = mouse.x;
       y = mouse.y;
-      x = Math.floor(x / 20) - this.camera_x;
-      y = Math.floor(y / 20) - this.camera_y;
-      if (x < 2) {
+      x = Math.floor(x / 20) + this.camera_x;
+      y = Math.floor(y / 20) + this.camera_y;
+      if (x < 2 || x > 97) {
+        return;
+      }
+      if (y < 2 || y > 97) {
         return;
       }
       if (this.map[y][x] === null || this.map[y][x].collide() === false) {
@@ -2126,7 +2131,7 @@
   crystal_stockpile_draw = function(p5, x, y) {
     p5.noFill();
     p5.stroke(135, 206, 255);
-    p5.ellipse(x + 10, y + 10, 100, 100);
+    p5.rect(x - 39, y - 39, 99, 99);
     p5.fill(135, 206, 255);
     return p5.rect(x, y, 20, 20);
   };
@@ -2141,21 +2146,31 @@
       return true;
     }
   };
-  determineCollisionRedraw = function(dirty, map) {
-    var coord, d, _i, _len;
+  determineCollisionRedraw = function(p5, dirty, map) {
+    var coord, d, location, rect, s, _i, _len, _results;
+    _results = [];
     for (_i = 0, _len = dirty.length; _i < _len; _i++) {
       d = dirty[_i];
       coord = translateIntoDrawCoord(d, map);
-      if (rectToRectCollision(coord, {
-        x: 700,
-        y: 100,
-        width: 100,
-        height: 400
-      }) === true) {
-        return true;
-      }
+      _results.push((function() {
+        var _j, _len2, _ref, _results2;
+        _ref = map.stockpoints;
+        _results2 = [];
+        for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
+          s = _ref[_j];
+          location = translateIntoDrawCoord(s, map);
+          rect = {
+            x: location.x - 40,
+            y: location.y - 40,
+            width: 100,
+            height: 100
+          };
+          _results2.push(pointToRectCollision(coord, rect) === true ? crystal_stockpile_draw(p5, location.x, location.y) : void 0);
+        }
+        return _results2;
+      })());
     }
-    return false;
+    return _results;
   };
   determineRectDraw = function(location, x, y, p5) {
     switch (location.name) {
