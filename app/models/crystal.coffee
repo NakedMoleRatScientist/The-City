@@ -2,6 +2,7 @@ class Crystal
   constructor: (@x,@y) ->
     @items = 0
     @name = "crystal"
+    @background = null
   collide: () ->
     true
   fullness: () ->
