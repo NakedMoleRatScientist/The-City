@@ -46,6 +46,7 @@ class Map
     x = Math.floor(x / 20) + @camera_x
     y = Math.floor(y / 20) + @camera_y
     return if x < 2 || x > 97
+    return if y < 2 || y > 97
     if @map[y][x] == null || @map[y][x].collide() == false
       newpoint = new CrystalStock(x,y)
       if this.collision_detect(newpoint) == false
