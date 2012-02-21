@@ -45,7 +45,7 @@ class Map
     y = mouse.y
     x = Math.floor(x / 20) - @camera_x
     y = Math.floor(y / 20) - @camera_y
-    return if x < 1
+    return if x < 2
 
     if @map[y][x] == null || @map[y][x].collide() == false
       newpoint = new CrystalStock(x,y)
