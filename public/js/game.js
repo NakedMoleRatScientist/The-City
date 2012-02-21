@@ -94,6 +94,7 @@
   $(document).ready(function() {
     var canvas, processing;
     canvas = document.getElementById("processing");
+    canvas.focus();
     return processing = new Processing(canvas, menu);
   });
   DrawMinorModeManager = (function() {
@@ -682,7 +683,9 @@
       if (this.state === -1) {
         this.mouse.x = result.x;
         this.mouse.y = result.y;
-        return this.map.add_stockpile(this.mouse);
+        if (this.mouse.mode === 1) {
+          return this.map.add_stockpile(this.mouse);
+        }
       }
     };
     GameMode.prototype.update_draw = function() {
@@ -1904,6 +1907,9 @@
       y = mouse.y;
       x = Math.floor(x / 20) - this.camera_x;
       y = Math.floor(y / 20) - this.camera_y;
+      if (x < 2) {
+        return;
+      }
       if (this.map[y][x] === null || this.map[y][x].collide() === false) {
         newpoint = new CrystalStock(x, y);
         if (this.collision_detect(newpoint) === false) {
