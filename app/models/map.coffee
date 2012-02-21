@@ -28,7 +28,7 @@ class Map
   create_crystal: (x,y) ->
     @crystals.push (x: x, y: y)
     object = @map[y][x]
-    #workaround
+    #workaround! NEED to replace someday.
     if object != null && object.name == "floor"
       back = "floor"
     object = new Crystal(x,y)
