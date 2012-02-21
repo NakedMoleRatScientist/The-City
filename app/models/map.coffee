@@ -27,7 +27,12 @@ class Map
 
   create_crystal: (x,y) ->
     @crystals.push (x: x, y: y)
-    @map[y][x] = new Crystal(x,y)
+    object = @map[y][x]
+    #workaround
+    if object != null && object.name == "floor"
+      back = "floor"
+    object = new Crystal(x,y)
+    object.background = "floor"
 
   items_total: () ->
     items = 0
