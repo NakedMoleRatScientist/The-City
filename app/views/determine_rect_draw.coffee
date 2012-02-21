@@ -5,7 +5,7 @@ determineRectDraw = (location,x,y,p5) ->
     when "crystal_tree" #Crystal tree
       crystal_tree_draw(p5,x,y)
     when "crystal_stockpile" #Crystal stockpile
-      crystal_stockpile_draw(p5,x,y)
+      return (x: x, y: y)
     when "crystal"
-      return (items: location.items, background: location.background, x: x , y: y)
+      crystal_draw(p5,x,y,location.items,item.background)
   return true
