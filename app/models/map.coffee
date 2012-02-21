@@ -33,6 +33,7 @@ class Map
       back = "floor"
     object = new Crystal(x,y)
     object.background = "floor"
+    @map[y][x] = object
 
   items_total: () ->
     items = 0
