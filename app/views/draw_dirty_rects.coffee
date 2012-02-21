@@ -12,4 +12,4 @@ drawDirtyRects = (dirty,map,p5) ->
       p5.fill(0)
       p5.rect(coord.x,coord.y,20,20)
   for d in delay
-    crystal_draw(p5,d.x,d.y,d.items,d.background)
+    crystal_stockpile_draw(p5,d.x,d.y)
