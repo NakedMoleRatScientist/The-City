@@ -36,6 +36,10 @@ class ScenarioInitialize
         @map.map[20][20].items = 50
         @units.generate_boars()
         @units.create new Human(10,10, "grumpy_killer",0)
+      when "pathfinding"
+        @units.create new Human(10,10, "pathfinder",0)
+        @map.create_wall(15,10)
+        @units.units[0].set_move(20,10)
       else
         @units.create new Human(10,10, "Killy",0)
         @units.units[0].stance = 1
