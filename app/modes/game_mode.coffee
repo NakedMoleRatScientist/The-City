@@ -41,6 +41,9 @@ class GameMode extends Mode
             @mouse.mode = 0
           else if @menu == -1
             @menu = 0
+        when "back"
+          if @menu == 1
+            @menu = 0
     (change: false)
   mouse_input: (result) ->
     if @state == -1
