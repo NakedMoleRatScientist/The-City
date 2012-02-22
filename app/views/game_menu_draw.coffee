@@ -6,4 +6,3 @@ gameMenuDraw = (@p5) ->
   @p5.fill(255,255,0)
   @p5.text("b - build", x, y)
   @p5.text("m - hide menu", x, y += height)
-  @p5.text("q - back", x, y += height)
