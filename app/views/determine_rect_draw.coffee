@@ -9,5 +9,5 @@ determineRectDraw = (location,x,y,p5) ->
     when "crystal"
       crystal_draw(p5,x,y,location.items,location.background)
     when "wall"
-      wall_draw(p5,x,y)
+      wallDraw(p5,x,y)
   return true
