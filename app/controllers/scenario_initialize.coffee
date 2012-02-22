@@ -39,6 +39,8 @@ class ScenarioInitialize
       when "pathfinding"
         @units.create new Human(10,10, "pathfinder",0)
         @map.create_wall(15,10)
+        @map.create_wall(15,11)
+        @map.create_wall(15,9)
         @units.units[0].set_move(20,10)
       else
         @units.create new Human(10,10, "Killy",0)
