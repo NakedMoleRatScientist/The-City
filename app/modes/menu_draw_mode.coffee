@@ -7,5 +7,6 @@ class MenuDrawMode
     frameRateDraw(@p5)
     titleDraw(@p5)
     @texts.draw(object.options,object.pointer)
-    boxedText(@p5,100,100,"W")
+    boxedText(@p5,100,100,"w")
+    @p5.text(@p5,115,100,"up")
   input: (result) ->
