@@ -13,9 +13,10 @@ class GameDrawMode extends DrawMode
         mouse = object.mouse
         msg = object.msg
       #Selective draw
-        if determineCameraRedraw(map,@camera)
+        if determineCameraRedraw(map,@camera) || @redraw == true
           mapDraw(map,p5)
           menuDraw(object.menu,@p5)
+          @redraw = false
         drawDirtyRects(@dirty_rects,map,@p5)
         unitDraw(@p5,units,map)
         determineCollisionRedraw(@p5,@dirty_rects,map)
