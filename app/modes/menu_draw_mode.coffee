@@ -8,5 +8,5 @@ class MenuDrawMode
     titleDraw(@p5)
     @texts.draw(object.options,object.pointer)
     boxedText(@p5,100,100,"w")
-    @p5.text(@p5,115,100,"up")
+    @p5.text("up",115,100)
   input: (result) ->
