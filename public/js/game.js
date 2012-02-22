@@ -716,15 +716,18 @@
   MenuDrawMode = (function() {
     function MenuDrawMode(p5) {
       this.p5 = p5;
-      this.texts = new TextOptionsDraw(this.p5, 250, 250, 18);
+      this.texts = new TextOptionsDraw(this.p5, 300, 250, 18);
       this.size = 0;
     }
     MenuDrawMode.prototype.draw = function(object) {
       this.p5.background(0);
       frameRateDraw(this.p5);
       titleDraw(this.p5);
-      boxedText(this.p5, 100, 100, "blah");
-      return this.texts.draw(object.options, object.pointer);
+      this.texts.draw(object.options, object.pointer);
+      boxedText(this.p5, 100, 100, "w");
+      this.p5.text(" - up", 115, 100);
+      boxedText(this.p5, 100, 120, "s");
+      return this.p5.text(" - down", 115, 120);
     };
     MenuDrawMode.prototype.input = function(result) {};
     return MenuDrawMode;
@@ -2143,7 +2146,9 @@
   boxedText = function(p5, x, y, text) {
     var t;
     t = p5.text(text, x, y);
-    return p5.rect(x, y - p5.textAscent(), p5.textWidth(text), p5.textAscent());
+    p5.noFill();
+    p5.stroke();
+    return p5.rect(x - 3, y - p5.textAscent() - 3, p5.textWidth(text) + 3, p5.textAscent() + 3);
   };
   buildMenuDraw = function(p5) {
     var height, x, y;
@@ -2371,7 +2376,7 @@
   };
   titleDraw = function(p5) {
     p5.textFont("monospace", 30);
-    return p5.text("The City", 350, 100);
+    return p5.text("The City", 300, 100);
   };
   translateIntoDrawCoord = function(object, map) {
     var transform;
