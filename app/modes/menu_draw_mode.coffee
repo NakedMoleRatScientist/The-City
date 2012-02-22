@@ -9,4 +9,6 @@ class MenuDrawMode
     @texts.draw(object.options,object.pointer)
     boxedText(@p5,100,100,"w")
     @p5.text(" - up",115,100)
+    boxedText(@p5,100,120,"s")
+    @p5.text(" - down",115,120)
   input: (result) ->
