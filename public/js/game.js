@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, approachesList, backgroundMenuDraw, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw;
+  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, approachesList, backgroundMenuDraw, boar_body, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -501,9 +501,10 @@
           units = object.units;
           mouse = object.mouse;
           msg = object.msg;
-          if (determineCameraRedraw(map, this.camera)) {
+          if (determineCameraRedraw(map, this.camera) || this.redraw === true) {
             mapDraw(map, p5);
             menuDraw(object.menu, this.p5);
+            this.redraw = false;
           }
           drawDirtyRects(this.dirty_rects, map, this.p5);
           unitDraw(this.p5, units, map);
@@ -625,7 +626,7 @@
       this.map = new Map(100, 100);
       this.map.generate();
       this.units = new Units(this.map);
-      this.menu = -1;
+      this.menu = 0;
       this.mouse = new Mouse();
       this.jobs = new JobsManager(this.map, this.units.units);
       this.scenario = new ScenarioInitialize(this.units, this.map);
@@ -1888,11 +1889,12 @@
         y: y
       });
       object = this.map[y][x];
+      back = null;
       if (object !== null && object.name === "floor") {
         back = "floor";
       }
       object = new Crystal(x, y);
-      object.background = "floor";
+      object.background = back;
       return this.map[y][x] = object;
     };
     Map.prototype.items_total = function() {
@@ -2114,11 +2116,19 @@
     return this.p5.rect(700, 100, 100, 400);
   };
   buildMenuDraw = function(p5) {
+    var x;
     this.p5 = p5;
+    x = 705;
     this.p5.fill(255, 0, 0);
     this.p5.text("Build Menu", 715, 115);
     this.p5.fill(255, 255, 0);
-    return this.p5.text("c - crystal pile", 705, 140);
+    this.p5.text("c - crystal pile", x, 140);
+    return this.p5.text("m - hide menu", x, 155);
+  };
+  menuTitleText = function(p5, name) {
+    this.p5 = p5;
+    this.p5.fill(255, 0, 0);
+    return this.p5.text("Game Menu", 715, 115);
   };
   combatLogMenuDraw = function(p5) {
     this.p5 = p5;
@@ -2242,8 +2252,7 @@
   };
   gameMenuDraw = function(p5) {
     this.p5 = p5;
-    this.p5.fill(255, 0, 0);
-    this.p5.text("Game Menu", 715, 115);
+    menuTitleText("Game Menu");
     this.p5.fill(255, 255, 0);
     return this.p5.text("b - build", 705, 140);
   };
@@ -2289,6 +2298,11 @@
         backgroundMenuDraw(p5);
         return buildMenuDraw(p5);
     }
+  };
+  menuTitleText = function(p5, name) {
+    this.p5 = p5;
+    this.p5.fill(255, 0, 0);
+    return this.p5.text("Game Menu", 715, 115);
   };
   messageDraw = function(p5, msg) {
     p5.fill(0);
