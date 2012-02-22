@@ -3,7 +3,7 @@ class GameMode extends Mode
     @map = new Map(100,100)
     @map.generate()
     @units = new Units(@map)
-    @menu = -1
+    @menu = 0
     @mouse = new Mouse()
     @jobs = new JobsManager(@map,@units.units)
     @scenario = new ScenarioInitialize(@units,@map)
