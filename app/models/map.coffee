@@ -26,14 +26,7 @@ class Map
     @map[y][x].push(new Wall(x,y))
   create_crystal: (x,y) ->
     @crystals.push (x: x, y: y)
-    object = @map[y][x]
-    #workaround! NEED to replace someday.
-    back = null
-    if object != null && object.name == "floor"
-      back = "floor"
-    object = new Crystal(x,y)
-    object.background = back
-    @map[y][x] = object
+    @map[y][x].push(new Crystal(x,y))
 
   items_total: () ->
     items = 0
