@@ -14,7 +14,7 @@ class Units
         unit.set_action(@map,this)
         unit.auto_detect_target(this)
         @msg_manager.determine_combat_msg(unit.attack())
-        unit.move()
+        unit.move(@pathfinder)
     if @frame % 1000 == 0
       if @map.items_total() > 50
         this.generate_boars()
