@@ -63,7 +63,7 @@ class Map
   stockpoints_collision_detect: (newpoint) ->
     return false if @stockpoints.length == 0
     for point in @stockpoints
-      if circle_to_circle_collision(newpoint,point) == true
+      if circle_to_circle_collision(newpoint,point) == true #It's not actually a circle anymore
         return true
     return false
   move_camera: (x,y) ->
