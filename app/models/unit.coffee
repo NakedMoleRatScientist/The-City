@@ -46,6 +46,7 @@ class Unit
     return false
   move: (finder) ->
     return if @body.leg == 2
+    return if this.at_goal_check()
     if @move_list.length == 0
       @move_list = finder.decide(this,(x: @goal_x, y: @goal_y))
     else
