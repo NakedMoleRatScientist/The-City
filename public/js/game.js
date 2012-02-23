@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw;
+  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -1113,6 +1113,7 @@
       this.fatalities = 0;
       this.advance = true;
       this.frame = 0;
+      this.finder = new Pathfinder(this.map);
     }
     Units.prototype.create = function(unit) {
       return this.units.push(unit);
@@ -2061,6 +2062,61 @@
       };
     };
     return Mouse;
+  })();
+  Pathfinder = (function() {
+    function Pathfinder(map) {
+      this.map = map;
+    }
+    Pathfinder.prototype.nearest_position = function(x, y, goal) {
+      var calculation, compare, hor, lowest, now, ver, which, _ref, _ref2, _ref3, _ref4;
+      compare = {
+        x: goal.x,
+        y: goal.y
+      };
+      lowest = distance_between_two_points({
+        x: x,
+        y: y
+      }, compare);
+      which = null;
+      for (hor = _ref = x - 1, _ref2 = x + 1; _ref <= _ref2 ? hor <= _ref2 : hor >= _ref2; _ref <= _ref2 ? hor++ : hor--) {
+        for (ver = _ref3 = y - 1, _ref4 = y + 1; _ref3 <= _ref4 ? ver <= _ref4 : ver >= _ref4; _ref3 <= _ref4 ? ver++ : ver--) {
+          if (!(hor === x && ver === y)) {
+            if (!this.map.collide_check(hor, ver)) {
+              now = {
+                x: hor,
+                y: ver
+              };
+              calculation = distance_beteen_two_points(compare, now);
+              if (calculation < lowest) {
+                lowest = calculation;
+                which = now;
+              }
+            }
+          }
+        }
+      }
+      if (lowest === 0) {
+        return -1;
+      }
+      return which;
+    };
+    Pathfinder.prototype.decide = function(x, y, goal) {
+      var positions, result;
+      result = {
+        x: x,
+        y: y
+      };
+      positions = [];
+      while (true) {
+        result = nearest_position(result, goal);
+        if (result === -1) {
+          break;
+        }
+        positions.push(result);
+      }
+      return positions;
+    };
+    return Pathfinder;
   })();
   scenarioList = function() {
     return ["combat", "hand_disability_combat", "leg_disability", "pig_invasion", "hand_disability_gathering", "full_test_boars", "pathfinding"];
