@@ -43,7 +43,6 @@ class Map
         return true
 
   collide_check: (x,y) ->
-    console.log(@map[y][x].length)
     for m in @map[y][x]
       return true if m.collide() == true
     false
