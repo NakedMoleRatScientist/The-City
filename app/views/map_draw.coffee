@@ -9,11 +9,12 @@ mapDraw = (map,p5) ->
       for width in [map.camera_x..end_x]
         x = 20 * (width - map.camera_x)
         y = 20 * (height - map.camera_y)
-        object = results[height][width]
+        objects = results[height][width]
         p5.noStroke()
-        if object != null
-          result = determineRectDraw(object,x,y,p5)
-          if result != true
-            delay.push(result)
+        if objects.length != 0
+          for item in objects
+            result = determineRectDraw(item,x,y,p5)
+            if result != true
+              delay.push(result)
     for d in delay
       crystal_stockpile_draw(p5,d.x,d.y)
