@@ -80,7 +80,7 @@ class Map
   select_by_name: (name,x,y) ->
     for m in @map[y][x]
       if m.name == name
-        return true
+        return m
     false
   propose_drop: (x,y) ->
     if @map[y][x].length == 0 || this.collide_check(x,y) == false
