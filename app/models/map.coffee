@@ -77,7 +77,7 @@ class Map
     if @camera_y < 0 || @camera_y > 70
       @camera_y -= y
   propose_drop: (x,y) ->
-    if @map[y][x].length == 0 || @map[y][x].collide() == false
+    if @map[y][x].length == 0 || this.collide_check() == false
       return (x: x, y: y)
     else if @map[y][x].collide() == true && @map[y][x].name == "crystal_stockpile"
       return (x: x, y: y)
