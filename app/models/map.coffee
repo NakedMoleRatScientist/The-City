@@ -51,7 +51,7 @@ class Map
     return if y < 2 || y > 97
     newpoint = new CrystalStock(x,y)
     collide = false
-    if this.collision_detect(newpoint) == false
+    if this.stockpoints_collision_detect(newpoint) == false
       for m in @map[y][x]
          if m.collide() == true
           collide == true
