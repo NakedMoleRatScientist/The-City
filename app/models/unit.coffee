@@ -42,6 +42,8 @@ class Unit
     @inventory.push(name)
   move: (finder) ->
     return if @body.leg == 2
+    if @move_list.length == 0
+      @move_list = finder.decide(@x,@y,(x: @goal_x, y: @goal_y))
     # if @y - @goal_y == 0 && @x - @goal_x == 0
     #   this.next_order()
   next_order: () ->
