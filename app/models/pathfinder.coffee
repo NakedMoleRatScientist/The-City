@@ -1,2 +1,2 @@
 class Pathfinder
-  constructor: (@map)
+  constructor: (@map) ->
