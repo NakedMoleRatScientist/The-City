@@ -49,8 +49,8 @@ class Unit
       @x = movement.x
       @y = movement.y
       @move_list.shift()
-    # if @y - @goal_y == 0 && @x - @goal_x == 0
-    #   this.next_order()
+      if @y - @goal_y == 0 && @x - @goal_x == 0
+        this.next_order()
   next_order: () ->
     if @advance == false || @target != null
       return
