@@ -1344,21 +1344,28 @@
       return this.inventory.push(name);
     };
     Unit.prototype.at_goal_check = function() {
-      if (this.y === this.goal_y && this.x === this.goal_y) {
+      if (this.y === this.goal_y && this.x === this.goal_x) {
         return true;
       }
       return false;
     };
     Unit.prototype.move = function(finder) {
-      var movement;
+      var movement, result;
       if (this.body.leg === 2) {
         return;
       }
+      if (this.at_goal_check()) {
+        return;
+      }
       if (this.move_list.length === 0) {
-        return this.move_list = finder.decide(this, {
+        result = finder.decide(this, {
           x: this.goal_x,
           y: this.goal_y
         });
+        if (result !== -1) {
+          this.move_list = result;
+          return this.goal_x = -1;
+        }
       } else {
         movement = this.move_list[0];
         this.x = movement.x;
@@ -1940,6 +1947,9 @@
     };
     Map.prototype.collide_check = function(x, y) {
       var m, _i, _len, _ref;
+      if (y < 0 || y > 99 || x < 0 || x > 99) {
+        return false;
+      }
       _ref = this.map[y][x];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         m = _ref[_i];
@@ -2095,12 +2105,18 @@
       return which;
     };
     Pathfinder.prototype.decide = function(location, goal) {
-      var positions, result;
+      var limit, positions, result;
       result = location;
       positions = [];
+      limit = 0;
       while (true) {
+        if (limit === 100) {
+          console.log("ERROR! CANNOT FIND PATH");
+          return -1;
+        }
         result = this.nearest_position(result, goal);
         positions.push(result);
+        limit += 1;
         if (result.x === goal.x && result.y === goal.y) {
           break;
         }
