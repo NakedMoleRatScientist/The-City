@@ -45,7 +45,7 @@ class Unit
     if @move_list.length == 0
       @move_list = finder.decide(this,(x: @goal_x, y: @goal_y))
     else
-      movement = @move_list[@move_list.length - 1]
+      movement = @move_list[0]
       @x = movement.x
       @y = movement.y
       @move_list.pop()
