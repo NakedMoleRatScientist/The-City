@@ -60,7 +60,7 @@ class Map
       newpoint.nearest = nearest_object(newpoint,@trees)
       @stockpoints.push(newpoint)
 
-  collision_detect: (newpoint) ->
+  stockpoints_collision_detect: (newpoint) ->
     return false if @stockpoints.length == 0
     for point in @stockpoints
       if circle_to_circle_collision(newpoint,point) == true
