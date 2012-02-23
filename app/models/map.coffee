@@ -56,10 +56,8 @@ class Map
     return if y < 2 || y > 97
     newpoint = new CrystalStock(x,y)
     collide = false
-    if this.stockpoints_collision_detect(newpoint) == false
-      for m in @map[y][x]
-         if m.collide() == true
-          collide == true
+    if this.stockpoints_collision_detect(newpoint) == true || this.collide_check() == true
+      collide == true
     if collide == false
       @map[y][x].push(newpoint)
       newpoint.nearest = nearest_object(newpoint,@trees)
