@@ -20,7 +20,7 @@ class Pathfinder
     loop
       if limit == 100
         console.log("ERROR! CANNOT FIND PATH")
-        break
+        return -1
       result = this.nearest_position(result,goal)
       positions.push(result)
       limit += 1
