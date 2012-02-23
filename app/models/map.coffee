@@ -12,14 +12,14 @@ class Map
     for h in [0..@map.length] when h < @map.length
       for w in [0..@map[h].length] when w < @map[h].length
         if (Math.random() * 10) > 5
-          @map[h][w] = new Floor(w,h)
+          @map[h][w] = [new Floor(w,h)]
         else
-          @map[h][w] = null
+          @map[h][w] = []
     for i in [0..10] when i < 10
       x = Math.floor(Math.random() * 100)
       y = Math.floor(Math.random() * 100)
       tree = new CrystalTree(x,y)
-      @map[y][x] = tree
+      @map[y][x].push(tree)
       @trees.push(tree)
 
   create_wall: (x, y) ->
