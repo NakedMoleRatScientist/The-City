@@ -13,6 +13,8 @@ class Pathfinder
             if calculation < lowest
               lowest = calculation
               which = now
+    if lowest == 0
+      return -1
     which
   decide: (x,y,goal) ->
     result = (x: x, y: y)
