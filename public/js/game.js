@@ -1634,6 +1634,7 @@
       this.items = 0;
       this.name = "crystal";
       this.background = null;
+      this.stack = 0;
     }
     Crystal.prototype.collide = function() {
       return true;
@@ -1876,9 +1877,9 @@
           for (w = 0, _ref2 = this.map[h].length; 0 <= _ref2 ? w <= _ref2 : w >= _ref2; 0 <= _ref2 ? w++ : w--) {
             if (w < this.map[h].length) {
               if ((Math.random() * 10) > 5) {
-                this.map[h][w] = new Floor(w, h);
+                this.map[h][w] = [new Floor(w, h)];
               } else {
-                this.map[h][w] = null;
+                this.map[h][w] = [];
               }
             }
           }
@@ -1890,29 +1891,21 @@
           x = Math.floor(Math.random() * 100);
           y = Math.floor(Math.random() * 100);
           tree = new CrystalTree(x, y);
-          this.map[y][x] = tree;
+          this.map[y][x].push(tree);
           _results.push(this.trees.push(tree));
         }
       }
       return _results;
     };
     Map.prototype.create_wall = function(x, y) {
-      return this.map[y][x] = new Wall();
+      return this.map[y][x].push(new Wall(x, y));
     };
     Map.prototype.create_crystal = function(x, y) {
-      var back, object;
-      this.crystals.push({
-        x: x,
-        y: y
-      });
-      object = this.map[y][x];
-      back = null;
-      if (object !== null && object.name === "floor") {
-        back = "floor";
-      }
-      object = new Crystal(x, y);
-      object.background = back;
-      return this.map[y][x] = object;
+      var crystal;
+      crystal = new Crystal(x, y);
+      crystal.stack = this.map[y][x].length;
+      this.crystals.push(crystal);
+      return this.map[y][x].push(crystal);
     };
     Map.prototype.items_total = function() {
       var c, items, _i, _len, _ref;
@@ -1920,18 +1913,38 @@
       _ref = this.crystals;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         c = _ref[_i];
-        items += this.map[c.y][c.x].items;
+        items += this.map[c.y][c.x][c.stack].items;
       }
       return items;
     };
     Map.prototype.drop_crystal = function(x, y) {
-      if (this.map[y][x].increase() === false) {
-        return false;
+      var m, _i, _len, _ref, _results;
+      _ref = this.map[y][x];
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        m = _ref[_i];
+        if (m.name === "crystal") {
+          if (m.increase() === false) {
+            return false;
+          }
+          return true;
+        }
       }
-      return true;
+      return _results;
+    };
+    Map.prototype.collide_check = function(x, y) {
+      var m, _i, _len, _ref;
+      _ref = this.map[y][x];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        m = _ref[_i];
+        if (m.collide() === true) {
+          return true;
+        }
+      }
+      return false;
     };
     Map.prototype.add_stockpile = function(mouse) {
-      var newpoint, x, y;
+      var collide, newpoint, x, y;
       x = mouse.x;
       y = mouse.y;
       x = Math.floor(x / 20) + this.camera_x;
@@ -1942,16 +1955,18 @@
       if (y < 2 || y > 97) {
         return;
       }
-      if (this.map[y][x] === null || this.map[y][x].collide() === false) {
-        newpoint = new CrystalStock(x, y);
-        if (this.collision_detect(newpoint) === false) {
-          this.map[y][x] = newpoint;
-          newpoint.nearest = nearest_object(newpoint, this.trees);
-          return this.stockpoints.push(this.map[y][x]);
-        }
+      newpoint = new CrystalStock(x, y);
+      collide = false;
+      if (this.stockpoints_collision_detect(newpoint) === true || this.collide_check() === true) {
+        collide = true;
+      }
+      if (collide === false) {
+        this.map[y][x].push(newpoint);
+        newpoint.nearest = nearest_object(newpoint, this.trees);
+        return this.stockpoints.push(newpoint);
       }
     };
-    Map.prototype.collision_detect = function(newpoint) {
+    Map.prototype.stockpoints_collision_detect = function(newpoint) {
       var point, _i, _len, _ref;
       if (this.stockpoints.length === 0) {
         return false;
@@ -1976,7 +1991,7 @@
       }
     };
     Map.prototype.propose_drop = function(x, y) {
-      if (this.map[y][x] === null || this.map[y][x].collide() === false) {
+      if (this.map[y][x].length === 0 || this.collide_check() === false) {
         return {
           x: x,
           y: y
