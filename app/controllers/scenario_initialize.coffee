@@ -42,6 +42,7 @@ class ScenarioInitialize
         @map.create_wall(15,11)
         @map.create_wall(15,9)
         @units.units[0].set_move(20,10)
+        @units.units[0].agility = 25
       else
         @units.create new Human(10,10, "Killy",0)
         @units.units[0].stance = 1
