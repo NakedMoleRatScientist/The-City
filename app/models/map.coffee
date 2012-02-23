@@ -100,7 +100,7 @@ class Map
         y += 1
         if y > end_y
           break
-      if @map[y][x] == null || @map[y][x].collide() == false
+      if @map[y][x].length == 0 || this.collide_check() == false
         locations.push((x: x,y: y))
       x += 1
     return locations
