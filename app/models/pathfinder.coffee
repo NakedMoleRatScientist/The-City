@@ -14,3 +14,12 @@ class Pathfinder
               lowest = calculation
               which = now
     which
+  decide: (x,y,goal) ->
+    result = (x: x, y: y)
+    positions = []
+    loop
+      result = nearest_position(result,goal)
+      if result == -1
+        break
+      positions.push(result)
+    positions
