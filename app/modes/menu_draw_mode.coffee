@@ -7,8 +7,8 @@ class MenuDrawMode
     frameRateDraw(@p5)
     titleDraw(@p5)
     @texts.draw(object.options,object.pointer)
-    boxedText(@p5,350,100,"w")
-    @p5.text(" - up",365,100)
-    boxedText(@p5,350,120,"s")
-    @p5.text(" - down",365,120)
+    boxedText(@p5,400,100,"w")
+    @p5.text(" - up",415,100)
+    boxedText(@p5,400,120,"s")
+    @p5.text(" - down",415,120)
   input: (result) ->
