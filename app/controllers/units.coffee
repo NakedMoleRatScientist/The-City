@@ -5,6 +5,7 @@ class Units
     @fatalities = 0
     @advance = true
     @frame = 0
+    @finder = new Pathfinder(@map)
   create: (unit) ->
     @units.push(unit)
   move: () ->
