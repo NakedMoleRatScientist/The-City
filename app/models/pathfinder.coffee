@@ -2,6 +2,7 @@ class Pathfinder
   constructor: (@map) ->
   nearest_position: (location,goal) ->
     which = null
+    lowest = 1000
     for x  in [(location.x - 1)..(location.x + 1)]
       for y in [(location.y - 1)..(location.y + 1)]
         if !(x == location.x && y == location.y)
@@ -19,6 +20,7 @@ class Pathfinder
     positions = []
     loop
       result = this.nearest_position(result,goal)
+      console.log("x: " + result.x + " y: " + result.y)
       if result == -1
         break
       positions.push(result)
