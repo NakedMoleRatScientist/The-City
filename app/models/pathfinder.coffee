@@ -15,8 +15,8 @@ class Pathfinder
     if lowest == 0
       return -1
     which
-  decide: (x,y,goal) ->
-    result = (x: x, y: y)
+  decide: (location,goal) ->
+    result = location
     positions = []
     loop
       result = this.nearest_position(result,goal)
