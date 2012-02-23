@@ -13,3 +13,4 @@ class Pathfinder
             if calculation < lowest
               lowest = calculation
               which = now
+    which
