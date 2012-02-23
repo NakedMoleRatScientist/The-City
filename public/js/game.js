@@ -1905,7 +1905,8 @@
       crystal = new Crystal(x, y);
       crystal.stack = this.map[y][x].length;
       this.crystals.push(crystal);
-      return this.map[y][x].push(crystal);
+      this.map[y][x].push(crystal);
+      return crystal;
     };
     Map.prototype.items_total = function() {
       var c, items, _i, _len, _ref;
@@ -1934,7 +1935,6 @@
     };
     Map.prototype.collide_check = function(x, y) {
       var m, _i, _len, _ref;
-      console.log(this.map[y][x].length);
       _ref = this.map[y][x];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         m = _ref[_i];
@@ -1997,18 +1997,18 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         m = _ref[_i];
         if (m.name === name) {
-          return true;
+          return m;
         }
       }
       return false;
     };
     Map.prototype.propose_drop = function(x, y) {
-      if (this.map[y][x].length === 0 || this.collide_check() === false) {
+      if (this.map[y][x].length === 0 || this.collide_check(x, y) === false) {
         return {
           x: x,
           y: y
         };
-      } else if (this.collide_check() === true && this.select_by_name("crystal_stockpile", x, y) === true) {
+      } else if (this.collide_check(x, y) === true && this.select_by_name("crystal_stockpile", x, y) === true) {
         return {
           x: x,
           y: y
@@ -2032,7 +2032,7 @@
             break;
           }
         }
-        if (this.map[y][x].length === 0 || this.collide_check() === false) {
+        if (this.map[y][x].length === 0 || this.collide_check(x, y) === false) {
           locations.push({
             x: x,
             y: y
@@ -2043,7 +2043,7 @@
       return locations;
     };
     Map.prototype.acquire = function(x, y) {
-      return this.select_by_name("crystal_tree").acquire();
+      return this.select_by_name("crystal", x, y).acquire();
     };
     return Map;
   })();
