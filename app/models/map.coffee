@@ -43,11 +43,9 @@ class Map
         return true
 
   collide_check: (x,y) ->
-    console.log("COLLIDE_BEGIN")
     console.log(@map[y][x].length)
     for m in @map[y][x]
       return true if m.collide() == true
-    console.log("COLLIDE_END")
     false
 
   add_stockpile:(mouse) ->
@@ -59,10 +57,8 @@ class Map
     return if y < 2 || y > 97
     newpoint = new CrystalStock(x,y)
     collide = false
-    console.log("REEP")
     if this.stockpoints_collision_detect(newpoint) == true || this.collide_check(x,y) == true
       collide = true
-    console.log("BEEP")
     if collide == false
       @map[y][x].push(newpoint)
       newpoint.nearest = nearest_object(newpoint,@trees)
@@ -72,9 +68,7 @@ class Map
     return false if @stockpoints.length == 0
     for point in @stockpoints
       if circle_to_circle_collision(newpoint,point) == true #It's not actually a circle anymore
-        console.log("DERP")
         return true
-    console.log("PEEP")
     return false
   move_camera: (x,y) ->
     @camera_x += x
