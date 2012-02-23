@@ -14,6 +14,7 @@ class Unit
     @leave = false
     @advance = false
     @stance = 0 #1 for assualt. 0 for ignore. 2 for dodging.
+    @move_list = []
   auto_detect_target: (units) ->
     if @target == null && @hostility == 0
       list = units.hostile_filter(1)
