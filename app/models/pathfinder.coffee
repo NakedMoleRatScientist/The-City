@@ -1,7 +1,7 @@
 class Pathfinder
   constructor: (@map) ->
   positions: (x,y,goal) ->
-    compare = (x: x, y: y)
+    compare = (x: goal.x, y: goal.y)
     lowest = 1000
     which = null
     for hor  in [(x - 1)..(x + 1)]
