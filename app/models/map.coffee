@@ -105,4 +105,4 @@ class Map
       x += 1
     return locations
   acquire: (x,y) ->
-    @map[y][x].acquire()
+    this.select_by_name("crystal_tree") .acquire()
