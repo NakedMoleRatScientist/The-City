@@ -101,9 +101,9 @@ class Map
         y += 1
         if y > end_y
           break
-      if @map[y][x].length == 0 || this.collide_check() == false
+      if @map[y][x].length == 0 || this.collide_check(x,y) == false
         locations.push((x: x,y: y))
       x += 1
     return locations
   acquire: (x,y) ->
-    this.select_by_name("crystal_tree") .acquire()
+    this.select_by_name("crystal_tree").acquire()
