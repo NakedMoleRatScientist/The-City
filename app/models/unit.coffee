@@ -40,6 +40,10 @@ class Unit
     @inventory.slice(i,0)
   acquire_item: (name) ->
     @inventory.push(name)
+  at_goal_check: () ->
+    if @y == @goal_y && @x == @goal_y
+      return true
+    return false
   move: (finder) ->
     return if @body.leg == 2
     if @move_list.length == 0
