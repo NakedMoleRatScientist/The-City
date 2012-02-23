@@ -36,10 +36,11 @@ class Map
      items += @map[c.y][c.x][c.stack].items
     items
   drop_crystal: (x,y) ->
-    if @map[y][x].increase() == false
-      return false
-    return true
-
+    for m in @map[y][x]
+      if m.name == "crystal"
+        if m.increase() == false
+          return false
+        return true
 
   add_stockpile:(mouse) ->
     x = mouse.x
