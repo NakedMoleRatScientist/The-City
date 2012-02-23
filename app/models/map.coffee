@@ -49,12 +49,13 @@ class Map
     y = Math.floor(y / 20) + @camera_y
     return if x < 2 || x > 97
     return if y < 2 || y > 97
-    if @map[y][x] == null || @map[y][x].collide() == false
+    if @map[y][x].length == 0
       newpoint = new CrystalStock(x,y)
-      if this.collision_detect(newpoint) == false
-        @map[y][x] = newpoint
-        newpoint.nearest = nearest_object(newpoint,@trees)
-        @stockpoints.push @map[y][x]
+      for m in @map[y][x]
+        if this.collision_detect(newpoint) == false || m.collide() == false
+          @map[y][x].push(newpoint)
+          newpoint.nearest = nearest_object(newpoint,@trees)
+          @stockpoints.push(newpoint)
   collision_detect: (newpoint) ->
     return false if @stockpoints.length == 0
     for point in @stockpoints
