@@ -106,4 +106,4 @@ class Map
       x += 1
     return locations
   acquire: (x,y) ->
-    this.select_by_name("crystal_tree").acquire()
+    this.select_by_name("crystal_tree",x,y).acquire()
