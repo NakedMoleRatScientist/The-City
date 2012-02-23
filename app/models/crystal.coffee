@@ -3,6 +3,7 @@ class Crystal
     @items = 0
     @name = "crystal"
     @background = null
+    @stack = 0
   collide: () ->
     true
   fullness: () ->
