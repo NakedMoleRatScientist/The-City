@@ -801,7 +801,8 @@
     }
     ScenarioDrawMode.prototype.draw = function(object) {
       this.p5.background(0);
-      return this.texts.draw(object.options, object.pointer);
+      this.texts.draw(object.options, object.pointer);
+      return instructionDraw(this.p5);
     };
     ScenarioDrawMode.prototype.input = function(result) {};
     return ScenarioDrawMode;
@@ -1092,7 +1093,8 @@
           this.map.create_wall(15, 10);
           this.map.create_wall(15, 11);
           this.map.create_wall(15, 9);
-          return this.units.units[0].set_move(20, 10);
+          this.units.units[0].set_move(20, 10);
+          return this.units.units[0].agility = 25;
         default:
           this.units.create(new Human(10, 10, "Killy", 0));
           this.units.units[0].stance = 1;
@@ -1124,7 +1126,7 @@
           unit.set_action(this.map, this);
           unit.auto_detect_target(this);
           this.msg_manager.determine_combat_msg(unit.attack());
-          unit.move();
+          unit.move(this.finder);
         }
       }
       if (this.frame % 1000 === 0) {
@@ -1299,6 +1301,7 @@
       this.leave = false;
       this.advance = false;
       this.stance = 0;
+      this.move_list = [];
     }
     Unit.prototype.auto_detect_target = function(units) {
       var list;
@@ -1340,26 +1343,30 @@
     Unit.prototype.acquire_item = function(name) {
       return this.inventory.push(name);
     };
-    Unit.prototype.move = function() {
+    Unit.prototype.at_goal_check = function() {
+      if (this.y === this.goal_y && this.x === this.goal_y) {
+        return true;
+      }
+      return false;
+    };
+    Unit.prototype.move = function(finder) {
+      var movement;
       if (this.body.leg === 2) {
         return;
       }
-      if ((this.x - this.goal_x) < 0) {
-        this.x = this.x + 1;
-        return;
-      } else if ((this.x - this.goal_x) > 0) {
-        this.x = this.x - 1;
-        return;
-      }
-      if ((this.y - this.goal_y) < 0) {
-        this.y = this.y + 1;
-        return;
-      } else if ((this.y - this.goal_y) > 0) {
-        this.y = this.y - 1;
-        return;
-      }
-      if (this.y - this.goal_y === 0 && this.x - this.goal_x === 0) {
-        return this.next_order();
+      if (this.move_list.length === 0) {
+        return this.move_list = finder.decide(this, {
+          x: this.goal_x,
+          y: this.goal_y
+        });
+      } else {
+        movement = this.move_list[0];
+        this.x = movement.x;
+        this.y = movement.y;
+        this.move_list.shift();
+        if (this.at_goal_check()) {
+          return this.next_order();
+        }
       }
     };
     Unit.prototype.next_order = function() {
@@ -2064,26 +2071,19 @@
     function Pathfinder(map) {
       this.map = map;
     }
-    Pathfinder.prototype.nearest_position = function(x, y, goal) {
-      var calculation, compare, hor, lowest, now, ver, which, _ref, _ref2, _ref3, _ref4;
-      compare = {
-        x: goal.x,
-        y: goal.y
-      };
-      lowest = distance_between_two_points({
-        x: x,
-        y: y
-      }, compare);
+    Pathfinder.prototype.nearest_position = function(location, goal) {
+      var calculation, lowest, now, which, x, y, _ref, _ref2, _ref3, _ref4;
       which = null;
-      for (hor = _ref = x - 1, _ref2 = x + 1; _ref <= _ref2 ? hor <= _ref2 : hor >= _ref2; _ref <= _ref2 ? hor++ : hor--) {
-        for (ver = _ref3 = y - 1, _ref4 = y + 1; _ref3 <= _ref4 ? ver <= _ref4 : ver >= _ref4; _ref3 <= _ref4 ? ver++ : ver--) {
-          if (!(hor === x && ver === y)) {
-            if (!this.map.collide_check(hor, ver)) {
+      lowest = 1000;
+      for (x = _ref = location.x - 1, _ref2 = location.x + 1; _ref <= _ref2 ? x <= _ref2 : x >= _ref2; _ref <= _ref2 ? x++ : x--) {
+        for (y = _ref3 = location.y - 1, _ref4 = location.y + 1; _ref3 <= _ref4 ? y <= _ref4 : y >= _ref4; _ref3 <= _ref4 ? y++ : y--) {
+          if (!(x === location.x && y === location.y)) {
+            if (!this.map.collide_check(x, y)) {
               now = {
-                x: hor,
-                y: ver
+                x: x,
+                y: y
               };
-              calculation = distance_beteen_two_points(compare, now);
+              calculation = distance_between_two_points(goal, now);
               if (calculation < lowest) {
                 lowest = calculation;
                 which = now;
@@ -2092,24 +2092,18 @@
           }
         }
       }
-      if (lowest === 0) {
-        return -1;
-      }
       return which;
     };
-    Pathfinder.prototype.decide = function(x, y, goal) {
+    Pathfinder.prototype.decide = function(location, goal) {
       var positions, result;
-      result = {
-        x: x,
-        y: y
-      };
+      result = location;
       positions = [];
       while (true) {
-        result = nearest_position(result, goal);
-        if (result === -1) {
+        result = this.nearest_position(result, goal);
+        positions.push(result);
+        if (result.x === goal.x && result.y === goal.y) {
           break;
         }
-        positions.push(result);
       }
       return positions;
     };
