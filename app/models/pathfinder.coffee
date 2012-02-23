@@ -1,6 +1,6 @@
 class Pathfinder
   constructor: (@map) ->
-  positions: (x,y,goal) ->
+  nearest_position: (x,y,goal) ->
     compare = (x: goal.x, y: goal.y)
     lowest = distance_between_two_points((x: x, y: y),compare)
     which = null
