@@ -19,7 +19,7 @@ class Pathfinder
     result = (x: x, y: y)
     positions = []
     loop
-      result = nearest_position(result,goal)
+      result = this.nearest_position(result,goal)
       if result == -1
         break
       positions.push(result)
