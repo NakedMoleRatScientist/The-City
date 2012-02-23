@@ -1934,6 +1934,7 @@
     };
     Map.prototype.collide_check = function(x, y) {
       var m, _i, _len, _ref;
+      console.log(this.map[y][x].length);
       _ref = this.map[y][x];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         m = _ref[_i];
@@ -1957,7 +1958,7 @@
       }
       newpoint = new CrystalStock(x, y);
       collide = false;
-      if (this.stockpoints_collision_detect(newpoint) === true || this.collide_check() === true) {
+      if (this.stockpoints_collision_detect(newpoint) === true || this.collide_check(x, y) === true) {
         collide = true;
       }
       if (collide === false) {
@@ -1990,13 +1991,24 @@
         return this.camera_y -= y;
       }
     };
+    Map.prototype.select_by_name = function(name, x, y) {
+      var m, _i, _len, _ref;
+      _ref = this.map[y][x];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        m = _ref[_i];
+        if (m.name === name) {
+          return true;
+        }
+      }
+      return false;
+    };
     Map.prototype.propose_drop = function(x, y) {
       if (this.map[y][x].length === 0 || this.collide_check() === false) {
         return {
           x: x,
           y: y
         };
-      } else if (this.map[y][x].collide() === true && this.map[y][x].name === "crystal_stockpile") {
+      } else if (this.collide_check() === true && this.select_by_name("crystal_stockpile", x, y) === true) {
         return {
           x: x,
           y: y
@@ -2020,7 +2032,7 @@
             break;
           }
         }
-        if (this.map[y][x] === null || this.map[y][x].collide() === false) {
+        if (this.map[y][x].length === 0 || this.collide_check() === false) {
           locations.push({
             x: x,
             y: y
@@ -2031,7 +2043,7 @@
       return locations;
     };
     Map.prototype.acquire = function(x, y) {
-      return this.map[y][x].acquire();
+      return this.select_by_name("crystal_tree").acquire();
     };
     return Map;
   })();
@@ -2262,26 +2274,29 @@
     return true;
   };
   drawDirtyRects = function(dirty, map, p5) {
-    var coord, d, delay, location, result, _i, _j, _len, _len2, _results;
+    var coord, d, delay, item, location, result, _i, _j, _k, _len, _len2, _len3, _results;
     delay = [];
     for (_i = 0, _len = dirty.length; _i < _len; _i++) {
       d = dirty[_i];
       location = map.map[d.y][d.x];
       coord = translateIntoDrawCoord(d, map);
-      if (location !== null) {
-        result = determineRectDraw(location, coord.x, coord.y, p5);
-        if (result !== true) {
-          delay.push(result);
-        }
-      } else {
+      if (location.length === 0) {
         p5.noStroke();
         p5.fill(0);
         p5.rect(coord.x, coord.y, 20, 20);
+      } else {
+        for (_j = 0, _len2 = location.length; _j < _len2; _j++) {
+          item = location[_j];
+          result = determineRectDraw(item, coord.x, coord.y, p5);
+          if (result !== true) {
+            delay.push(result);
+          }
+        }
       }
     }
     _results = [];
-    for (_j = 0, _len2 = delay.length; _j < _len2; _j++) {
-      d = delay[_j];
+    for (_k = 0, _len3 = delay.length; _k < _len3; _k++) {
+      d = delay[_k];
       _results.push(crystal_stockpile_draw(p5, d.x, d.y));
     }
     return _results;
@@ -2317,7 +2332,7 @@
     return this.p5.text("Kills by Colonists Thus Far: " + kills, 400, 12);
   };
   mapDraw = function(map, p5) {
-    var d, delay, end_x, end_y, height, object, result, results, width, x, y, _i, _len, _ref, _ref2, _results;
+    var d, delay, end_x, end_y, height, item, objects, result, results, width, x, y, _i, _j, _len, _len2, _ref, _ref2, _results;
     p5.background(0);
     results = map.map;
     end_y = map.camera_y + 30 - 1;
@@ -2327,19 +2342,22 @@
       for (width = _ref2 = map.camera_x; _ref2 <= end_x ? width <= end_x : width >= end_x; _ref2 <= end_x ? width++ : width--) {
         x = 20 * (width - map.camera_x);
         y = 20 * (height - map.camera_y);
-        object = results[height][width];
+        objects = results[height][width];
         p5.noStroke();
-        if (object !== null) {
-          result = determineRectDraw(object, x, y, p5);
-          if (result !== true) {
-            delay.push(result);
+        if (objects.length !== 0) {
+          for (_i = 0, _len = objects.length; _i < _len; _i++) {
+            item = objects[_i];
+            result = determineRectDraw(item, x, y, p5);
+            if (result !== true) {
+              delay.push(result);
+            }
           }
         }
       }
     }
     _results = [];
-    for (_i = 0, _len = delay.length; _i < _len; _i++) {
-      d = delay[_i];
+    for (_j = 0, _len2 = delay.length; _j < _len2; _j++) {
+      d = delay[_j];
       _results.push(crystal_stockpile_draw(p5, d.x, d.y));
     }
     return _results;
