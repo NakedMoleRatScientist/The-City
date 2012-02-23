@@ -12,8 +12,6 @@ class Pathfinder
             if calculation < lowest
               lowest = calculation
               which = now
-    if lowest == 0
-      return -1
     which
   decide: (location,goal) ->
     result = location
