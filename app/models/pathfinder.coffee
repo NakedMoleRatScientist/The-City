@@ -8,7 +8,7 @@ class Pathfinder
         if !(x == location.x && y == location.y)
           if !@map.collide_check(x,y) #check if point is suitable
             now = (x: x, y: y)
-            calculation = distance_beteen_two_points(goal,now)
+            calculation = distance_between_two_points(goal,now)
             if calculation < lowest
               lowest = calculation
               which = now
