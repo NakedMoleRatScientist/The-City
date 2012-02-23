@@ -19,7 +19,7 @@ class Pathfinder
     loop
       result = this.nearest_position(result,goal)
       console.log("x: " + result.x + " y: " + result.y)
-      if result == -1
-        break
       positions.push(result)
+      if result.x == goal.x && result.y == goal.y
+        break
     positions
