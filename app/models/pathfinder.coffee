@@ -1,12 +1,12 @@
 class Pathfinder
   constructor: (@map) ->
-  nearest_position: (x,y,goal) ->
+  nearest_position: (location,goal) ->
     compare = (x: goal.x, y: goal.y)
     lowest = distance_between_two_points((x: x, y: y),compare)
     which = null
-    for hor  in [(x - 1)..(x + 1)]
-      for ver in [(y - 1)..(y + 1)]
-        if !(hor == x && ver == y)
+    for hor  in [(location.x - 1)..(location.x + 1)]
+      for ver in [(location.y - 1)..(location.y + 1)]
+        if !(hor == location.x && ver == location.y)
           if !@map.collide_check(hor,ver) #check if point is suitable
             now = (x: hor, y: ver)
             calculation = distance_beteen_two_points(compare,now)
