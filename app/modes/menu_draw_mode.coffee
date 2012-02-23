@@ -11,5 +11,5 @@ class MenuDrawMode
     @p5.text(" - up",515,100)
     boxedText(@p5,500,120,"s")
     @p5.text(" - down",515,120)
-    boxedText(@p5,500,140,"Enter")
+    boxedText(@p5,600,110,"Enter")
   input: (result) ->
