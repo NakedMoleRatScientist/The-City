@@ -4,11 +4,11 @@ class Pathfinder
     compare = (x: goal.x, y: goal.y)
     lowest = distance_between_two_points((x: location.x, y: location.y),compare)
     which = null
-    for hor  in [(location.x - 1)..(location.x + 1)]
-      for ver in [(location.y - 1)..(location.y + 1)]
-        if !(hor == location.x && ver == location.y)
-          if !@map.collide_check(hor,ver) #check if point is suitable
-            now = (x: hor, y: ver)
+    for x  in [(location.x - 1)..(location.x + 1)]
+      for y in [(location.y - 1)..(location.y + 1)]
+        if !(x == location.x && y == location.y)
+          if !@map.collide_check(x,y) #check if point is suitable
+            now = (x: x, y: y)
             calculation = distance_beteen_two_points(compare,now)
             if calculation < lowest
               lowest = calculation
