@@ -25,8 +25,10 @@ class Map
   create_wall: (x, y) ->
     @map[y][x].push(new Wall(x,y))
   create_crystal: (x,y) ->
-    @crystals.push (x: x, y: y)
-    @map[y][x].push(new Crystal(x,y))
+    crystal = new Crystal(x,y)
+    crystal.stack = @map[y][x].length
+    @crystals.push(crystal)
+    @map[y][x].push(crystal)
 
   items_total: () ->
     items = 0
