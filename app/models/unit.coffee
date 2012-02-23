@@ -42,8 +42,8 @@ class Unit
     @inventory.push(name)
   move: (finder) ->
     return if @body.leg == 2
-    if @y - @goal_y == 0 && @x - @goal_x == 0
-      this.next_order()
+    # if @y - @goal_y == 0 && @x - @goal_x == 0
+    #   this.next_order()
   next_order: () ->
     if @advance == false || @target != null
       return
