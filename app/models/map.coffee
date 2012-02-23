@@ -76,6 +76,11 @@ class Map
     @camera_y += y
     if @camera_y < 0 || @camera_y > 70
       @camera_y -= y
+  select_by_name: (name,x,y) ->
+    for m in @map[y][x]
+      if m.name == name
+        return true
+    false
   propose_drop: (x,y) ->
     if @map[y][x].length == 0 || this.collide_check() == false
       return (x: x, y: y)
