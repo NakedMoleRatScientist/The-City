@@ -16,9 +16,14 @@ class Pathfinder
   decide: (location,goal) ->
     result = location
     positions = []
+    limit = 0
     loop
+      if limit == 100
+        console.log("ERROR! CANNOT FIND PATH")
+        break
       result = this.nearest_position(result,goal)
       positions.push(result)
+      limit += 1
       if result.x == goal.x && result.y == goal.y
         break
     positions
