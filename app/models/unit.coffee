@@ -51,6 +51,7 @@ class Unit
       result = finder.decide(this,(x: @goal_x, y: @goal_y))
       if result != -1
         @move_list = result
+        @goal_x = -1
     else
       movement = @move_list[0]
       @x = movement.x
