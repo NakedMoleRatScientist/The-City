@@ -23,7 +23,7 @@ class Map
       @trees.push(tree)
 
   create_wall: (x, y) ->
-    @map[y][x] = new Wall()
+    @map[y][x] = new Wall(x,y)
   create_crystal: (x,y) ->
     @crystals.push (x: x, y: y)
     object = @map[y][x]
