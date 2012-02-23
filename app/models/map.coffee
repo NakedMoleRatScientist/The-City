@@ -29,6 +29,7 @@ class Map
     crystal.stack = @map[y][x].length
     @crystals.push(crystal)
     @map[y][x].push(crystal)
+    return crystal
 
   items_total: () ->
     items = 0
