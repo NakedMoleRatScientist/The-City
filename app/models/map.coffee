@@ -44,6 +44,8 @@ class Map
         return true
 
   collide_check: (x,y) ->
+    if y < 0 || y > 99 || x < 0 || x > 99
+      return false
     for m in @map[y][x]
       return true if m.collide() == true
     false
