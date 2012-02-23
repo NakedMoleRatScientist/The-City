@@ -42,6 +42,11 @@ class Map
           return false
         return true
 
+  collide_check: (x,y) ->
+    for m in @map[y][x]
+      return true if m.collide() == true
+    false
+
   add_stockpile:(mouse) ->
     x = mouse.x
     y = mouse.y
