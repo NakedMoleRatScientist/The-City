@@ -1049,7 +1049,7 @@
       this.map = map;
     }
     ScenarioInitialize.prototype.create = function(name) {
-      var begin, end, location;
+      var begin, bottom_begin, bottom_end, end, location, top_begin, top_end;
       switch (name) {
         case "combat":
           this.units.create(new Human(10, 10, "Miya", 1));
@@ -1090,7 +1090,7 @@
           return this.units.create(new Human(10, 10, "grumpy_killer", 0));
         case "pathfinding":
           this.units.create(new Human(10, 10, "pathfinder_one", 0));
-          this.units.create(new Human(10, 40, "pathfinder_two", 0));
+          this.units.create(new Human(10, 20, "pathfinder_two", 0));
           begin = {
             x: 15,
             y: 11
@@ -1102,7 +1102,25 @@
           this.map.sketch.draw(begin, end, "wall");
           this.units.units[0].set_move(20, 10);
           this.units.units[0].agility = 25;
-          this.units.units[1].set_move(40, 10);
+          top_begin = {
+            x: 13,
+            y: 14
+          };
+          top_end = {
+            x: 20,
+            y: 14
+          };
+          this.map.sketch.draw(top_begin, top_end, "wall");
+          bottom_begin = {
+            x: 13,
+            y: 25
+          };
+          bottom_end = {
+            x: 20,
+            y: 25
+          };
+          this.map.sketch.draw(bottom_begin, bottom_end, "wall");
+          this.units.units[1].set_move(25, 20);
           return this.units.units[1].agility = 25;
         default:
           this.units.create(new Human(10, 10, "Killy", 0));
@@ -2093,7 +2111,6 @@
         _results = [];
         for (_i = 0, _len = results.length; _i < _len; _i++) {
           location = results[_i];
-          console.log(location);
           _results.push((function() {
             switch (type) {
               case "wall":
