@@ -18,7 +18,7 @@ class Pathfinder
     positions = []
     limit = 0
     loop
-      if limit == 100
+      if limit == 1000
         console.log("ERROR! CANNOT FIND PATH")
         return -1
       result = this.nearest_position(result,goal)
