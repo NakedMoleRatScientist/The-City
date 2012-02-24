@@ -14,7 +14,7 @@ class Stockpile
       @finish = true
       return false
     location = nearest_object(this,locations)
-    @drop = map.create_crystal(location.x,location.y)
+    @drop = map.sketch.create_crystal(location.x,location.y)
   get_drop_location: (map) ->
     if @drop == null
       this.create_drop(map)
