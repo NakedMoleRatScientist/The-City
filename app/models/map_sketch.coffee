@@ -16,7 +16,6 @@ class MapSketch
     if results != -1
       results.push(point_a) #since starting positions aren't pushed in pathfinder
       for location in results
-        console.log(location)
         switch(type)
           when "wall"
             this.create_wall(location.x,location.y)
