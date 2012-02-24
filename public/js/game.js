@@ -1344,7 +1344,7 @@
       return this.inventory.push(name);
     };
     Unit.prototype.at_goal_check = function() {
-      if (this.y === this.goal_y && this.x === this.goal_x) {
+      if ((this.y === this.goal_y && this.x === this.goal_x) || this.goal_x === -1) {
         return true;
       }
       return false;
@@ -1362,9 +1362,10 @@
           x: this.goal_x,
           y: this.goal_y
         });
-        if (result !== -1) {
-          this.move_list = result;
+        if (result === -1) {
           return this.goal_x = -1;
+        } else {
+          return this.move_list = result;
         }
       } else {
         movement = this.move_list[0];
@@ -1527,7 +1528,7 @@
     };
     Stockpile.prototype.create_drop = function(map) {
       var location, locations;
-      locations = map.free_locations(this.x, this.y);
+      locations = map.free_locations(this.x, this.y, 2);
       if (locations.length === 0) {
         this.finish = true;
         return false;
@@ -1831,19 +1832,21 @@
       this.agility = 6;
     }
     Lightboar.prototype.set_action = function(map, controller) {
-      var object;
+      var choice, choices, crystal, object;
       if (this.act_on_queue()) {
         return;
       }
       switch (this.queue[this.order]) {
         case "decide":
-          object = nearest_object(this, map.crystals);
-          if (object === null) {
+          crystal = nearest_object(this, map.crystals);
+          if (crystal === null) {
             this.advance = false;
             return;
           }
           this.advance = true;
-          this.set_move(object.x, object.y);
+          choices = map.free_locations(crystal.x, crystal.y, 1);
+          choice = choices[random_number(choices.length)];
+          this.set_move(choice.x, choice.y);
           break;
         case "act":
           this.acquire_item(map.acquire(this.goal_x, this.goal_y));
@@ -2031,13 +2034,13 @@
       }
       return false;
     };
-    Map.prototype.free_locations = function(x, y) {
+    Map.prototype.free_locations = function(x, y, size) {
       var begin_x, end_x, end_y, locations;
-      end_x = x + 2;
-      begin_x = x - 2;
-      end_y = y + 2;
+      end_x = x + size;
+      begin_x = x - size;
+      end_y = y + size;
       x = begin_x;
-      y -= 2;
+      y -= size;
       locations = [];
       while (true) {
         if (x > end_x) {
