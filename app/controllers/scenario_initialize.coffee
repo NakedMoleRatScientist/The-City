@@ -37,12 +37,14 @@ class ScenarioInitialize
         @units.generate_boars()
         @units.create new Human(10,10, "grumpy_killer",0)
       when "pathfinding"
-        @units.create new Human(10,10, "pathfinder",0)
+        @units.create new Human(10,10, "pathfinder_one",0)
+        @units.create new Human(10,40, "pathfinder_two",0)
         begin = (x: 15, y: 11)
         end = (x: 15, y: 9)
         @map.sketch.draw(begin,end,"wall")
         @units.units[0].set_move(20,10)
         @units.units[0].agility = 25
+
       else
         @units.create new Human(10,10, "Killy",0)
         @units.units[0].stance = 1
