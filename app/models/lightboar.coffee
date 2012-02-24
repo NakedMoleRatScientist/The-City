@@ -27,7 +27,9 @@ class Lightboar extends Unit
           # @target = object
       when "act"
         this.acquire_item(map.acquire(@target_item.x,@target_item.y))
+        console.log(@order)
         this.next_order()
+        return #return before it reach the bottom. It will perform when @order and @perform are out of sync
       when "move_to_escape"
         object = nearest_edge(this)
         this.set_move(object.x,object.y)
