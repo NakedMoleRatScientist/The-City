@@ -1,6 +1,6 @@
 class MapSketch
   constructor: (@map) ->
-
+    @finder = new Pathfinder(@map)
   create_wall: (x, y) ->
     @map.map[y][x].push(new Wall(x,y))
 
@@ -12,4 +12,3 @@ class MapSketch
     return crystal
 
   draw: (point_a,point_b,type) ->
-    this.get_direction(point_a,point_b)
