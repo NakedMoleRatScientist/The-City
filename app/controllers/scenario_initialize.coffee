@@ -44,6 +44,12 @@ class ScenarioInitialize
         @map.sketch.draw(begin,end,"wall")
         @units.units[0].set_move(20,10)
         @units.units[0].agility = 25
+        top_begin = (x: 13, y: 10)
+        top_end = (x: 20, y: 30)
+        @map.sketch.draw(top_begin,top_end)
+        bottom_begin = (x: 13, y: 30)
+        bottom_end = (x: 20, y: 30)
+        @map_sketch.draw(bottom_begin,bottom_end)
         @units.units[1].set_move(25,20)
         @units.units[1].agility = 25
       else
