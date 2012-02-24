@@ -17,6 +17,7 @@ class Pathfinder
             #f determines the cost of movement
             f = g + h
             results.push(x: x, y: y, cost: f)
+    results
 
   calculate_path: (location,goal) ->
     result = location
