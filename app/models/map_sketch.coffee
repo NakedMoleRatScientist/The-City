@@ -12,3 +12,4 @@ class MapSketch
     return crystal
 
   draw: (point_a,point_b,type) ->
+    this.get_direction(point_a,point_b)
