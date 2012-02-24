@@ -2153,47 +2153,53 @@
     function Pathfinder(map) {
       this.map = map;
     }
-    Pathfinder.prototype.nearest_position = function(location, goal) {
-      var f, g, h, now, results, x, y, _ref, _ref2, _results;
+    Pathfinder.prototype.calculate_adjcent = function(location, goal) {
+      var f, g, h, now, results, x, y, _ref, _ref2, _ref3, _ref4;
       results = [];
-      _results = [];
       for (x = _ref = location.x - 1, _ref2 = location.x + 1; _ref <= _ref2 ? x <= _ref2 : x >= _ref2; _ref <= _ref2 ? x++ : x--) {
-        _results.push((function() {
-          var _ref3, _ref4, _results2;
-          _results2 = [];
-          for (y = _ref3 = location.y - 1, _ref4 = location.y + 1; _ref3 <= _ref4 ? y <= _ref4 : y >= _ref4; _ref3 <= _ref4 ? y++ : y--) {
-            _results2.push(!(x === location.x && y === location.y) ? !this.map.collide_check(x, y) ? (now = {
-              x: x,
-              y: y
-            }, h = distance_between_two_points(goal, now) * 10, x === location.x || y === location.y ? g = 10 : g = 14, f = g + h, results.push({
-              x: x,
-              y: y,
-              cost: f
-            })) : void 0 : void 0);
+        for (y = _ref3 = location.y - 1, _ref4 = location.y + 1; _ref3 <= _ref4 ? y <= _ref4 : y >= _ref4; _ref3 <= _ref4 ? y++ : y--) {
+          if (!(x === location.x && y === location.y)) {
+            if (!this.map.collide_check(x, y)) {
+              now = {
+                x: x,
+                y: y
+              };
+              h = distance_between_two_points(goal, now) * 10;
+              if (x === location.x || y === location.y) {
+                g = 10;
+              } else {
+                g = 14;
+              }
+              f = g + h;
+              results.push({
+                x: x,
+                y: y,
+                cost: f
+              });
+            }
           }
-          return _results2;
-        }).call(this));
+        }
       }
-      return _results;
+      return results;
     };
-    Pathfinder.prototype.decide = function(location, goal) {
-      var limit, positions, result;
-      result = location;
-      positions = [];
-      limit = 0;
-      while (true) {
-        if (limit === 1000) {
-          console.log("ERROR! CANNOT FIND PATH");
-          return -1;
+    Pathfinder.prototype.select_least_cost = function(locations) {
+      var i, l, select, _i, _len;
+      i = 0;
+      select = 0;
+      for (_i = 0, _len = locations.length; _i < _len; _i++) {
+        l = locations[_i];
+        if (l.cost < locations[select]) {
+          select = i;
         }
-        result = this.nearest_position(result, goal);
-        positions.push(result);
-        limit += 1;
-        if (result.x === goal.x && result.y === goal.y) {
-          break;
-        }
+        i += 1;
       }
-      return positions;
+      return select;
+    };
+    Pathfinder.prototype.calculate_path = function(location, goal) {
+      var close, open;
+      close = [];
+      open = this.calculate_adjcent(location, goal);
+      return close.push(this.select_least_cost(open));
     };
     return Pathfinder;
   })();
