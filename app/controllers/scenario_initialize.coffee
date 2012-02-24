@@ -38,9 +38,9 @@ class ScenarioInitialize
         @units.create new Human(10,10, "grumpy_killer",0)
       when "pathfinding"
         @units.create new Human(10,10, "pathfinder",0)
-        @map.sketch.create_wall(15,10)
-        @map.sketch.create_wall(15,11)
-        @map.sketch.create_wall(15,9)
+        begin = (x: 15, y: 11)
+        end = (x: 15, y: 9)
+        @map.sketch.draw(begin,end,"wall")
         @units.units[0].set_move(20,10)
         @units.units[0].agility = 25
       else
