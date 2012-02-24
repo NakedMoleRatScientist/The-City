@@ -90,7 +90,7 @@ class Map
     else if this.collide_check(x,y) == true && this.select_by_name("crystal_stockpile",x,y) == true
       return (x: x, y: y)
     return false
-  free_locations: (x,y) ->
+  free_locations: (x,y,size) ->
     end_x = x + 2
     begin_x = x - 2
     end_y = y + 2
