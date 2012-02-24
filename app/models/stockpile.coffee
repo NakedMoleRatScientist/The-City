@@ -9,7 +9,7 @@ class Stockpile
       return false
     return true
   create_drop: (map) ->
-    locations = map.free_locations(@x,@y)
+    locations = map.free_locations(@x,@y,2)
     if locations.length == 0
       @finish = true
       return false
