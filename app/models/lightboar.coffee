@@ -9,8 +9,8 @@ class Lightboar extends Unit
     return if this.act_on_queue()
     switch(@queue[@order])
       when "decide"
-        object = nearest_object(this,map.crystals)
-        if object == null
+        crystal = nearest_object(this,map.crystals)
+        if crystal == null
           @advance = false
           return
         @advance = true
