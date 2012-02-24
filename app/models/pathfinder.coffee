@@ -25,6 +25,7 @@ class Pathfinder
       if l.cost < locations[select]
         select = i
       i += 1
+    select
   calculate_path: (location,goal) ->
     close = []
     open = this.calculate_adjcent(location,goal)
