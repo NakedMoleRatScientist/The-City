@@ -19,4 +19,4 @@ class MapSketch
           when "wall"
             this.create_wall(location.x,location.y)
           when "crystal"
-            this.create_crystal(x,y)
+            this.create_crystal(location.x,location.y)
