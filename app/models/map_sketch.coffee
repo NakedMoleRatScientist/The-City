@@ -13,11 +13,10 @@ class MapSketch
 
   draw: (point_a,point_b,type) ->
     results = @finder.decide(point_a,point_b)
-    switch(type)
-      when "wall"
-        method = this.create_wall
-      when "crystal"
-        method = this.create_crystal
     if results != -1
       for location in results
-        method.call(location.x,location.y)
+        switch(type)
+          when "wall"
+            this.create_wall(location.x,location.y)
+          when "crystal"
+            this.create_crystal(x,y)
