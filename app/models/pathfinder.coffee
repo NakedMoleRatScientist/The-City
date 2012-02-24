@@ -1,26 +1,21 @@
 class Pathfinder
   constructor: (@map) ->
   nearest_position: (location,goal) ->
-    which = null
-    lowest = 1000
     for x  in [(location.x - 1)..(location.x + 1)]
       for y in [(location.y - 1)..(location.y + 1)]
         if !(x == location.x && y == location.y)
           if !@map.collide_check(x,y) #check if point is suitable
             now = (x: x, y: y)
-           #h is a heuristic that determine how far a given square is to its next destination.
+           #h is a heuristic that determines how far a given square is to its final destination
             h = distance_between_two_points(goal,now) * 10
-            #g determine cost of moving to the location
+            #g determines cost of moving to the location
             if (x == location.x || y == location.y)
               g = 10
             else
               g = 14
-            #f determine the cost of movement
+            #f determines the cost of movement
             f = g + h
-            if calculation < lowest
-              lowest = f
-              which = now
-    which
+
   decide: (location,goal) ->
     result = location
     positions = []
