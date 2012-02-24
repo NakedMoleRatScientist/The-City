@@ -1,6 +1,7 @@
 class Pathfinder
   constructor: (@map) ->
   nearest_position: (location,goal) ->
+    results = []
     for x  in [(location.x - 1)..(location.x + 1)]
       for y in [(location.y - 1)..(location.y + 1)]
         if !(x == location.x && y == location.y)
@@ -15,6 +16,7 @@ class Pathfinder
               g = 14
             #f determines the cost of movement
             f = g + h
+            results.push(x: x, y: y, cost: f)
 
   decide: (location,goal) ->
     result = location
