@@ -11,4 +11,4 @@ class MapSketch
     @map.map[y][x].push(crystal)
     return crystal
 
-  draw: (point_a,point_b) ->
+  draw: (point_a,point_b,type) ->
