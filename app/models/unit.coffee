@@ -49,9 +49,11 @@ class Unit
     return if this.at_goal_check()
     if @move_list.length == 0
       result = finder.decide(this,(x: @goal_x, y: @goal_y))
-      if result != -1
-        @move_list = result
+      if result == -1
         @goal_x = -1
+      else
+        @move_list = result
+
     else
       movement = @move_list[0]
       @x = movement.x
