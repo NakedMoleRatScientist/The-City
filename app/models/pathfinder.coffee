@@ -8,7 +8,13 @@ class Pathfinder
         if !(x == location.x && y == location.y)
           if !@map.collide_check(x,y) #check if point is suitable
             now = (x: x, y: y)
-            h = distance_between_two_points(goal,now) * 10 #h is a heuristic that determine how far a given square is to its next destination.
+           #h is a heuristic that determine how far a given square is to its next destination.
+            h = distance_between_two_points(goal,now) * 10
+            #g determine cost of moving to the location
+            if (x == location.x || y == location.y)
+              g = 10
+            else
+              g = 14
             if calculation < lowest
               lowest = h
               which = now
