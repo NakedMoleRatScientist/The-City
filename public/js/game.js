@@ -1049,7 +1049,7 @@
       this.map = map;
     }
     ScenarioInitialize.prototype.create = function(name) {
-      var location;
+      var begin, end, location;
       switch (name) {
         case "combat":
           this.units.create(new Human(10, 10, "Miya", 1));
@@ -1089,12 +1089,21 @@
           this.units.generate_boars();
           return this.units.create(new Human(10, 10, "grumpy_killer", 0));
         case "pathfinding":
-          this.units.create(new Human(10, 10, "pathfinder", 0));
-          this.map.sketch.create_wall(15, 10);
-          this.map.sketch.create_wall(15, 11);
-          this.map.sketch.create_wall(15, 9);
+          this.units.create(new Human(10, 10, "pathfinder_one", 0));
+          this.units.create(new Human(10, 40, "pathfinder_two", 0));
+          begin = {
+            x: 15,
+            y: 11
+          };
+          end = {
+            x: 15,
+            y: 9
+          };
+          this.map.sketch.draw(begin, end, "wall");
           this.units.units[0].set_move(20, 10);
-          return this.units.units[0].agility = 25;
+          this.units.units[0].agility = 25;
+          this.units.units[1].set_move(40, 10);
+          return this.units.units[1].agility = 25;
         default:
           this.units.create(new Human(10, 10, "Killy", 0));
           this.units.units[0].stance = 1;
@@ -2063,6 +2072,7 @@
   MapSketch = (function() {
     function MapSketch(map) {
       this.map = map;
+      this.finder = new Pathfinder(this.map);
     }
     MapSketch.prototype.create_wall = function(x, y) {
       return this.map.map[y][x].push(new Wall(x, y));
@@ -2076,7 +2086,25 @@
       return crystal;
     };
     MapSketch.prototype.draw = function(point_a, point_b, type) {
-      return this.get_direction(point_a, point_b);
+      var location, results, _i, _len, _results;
+      results = this.finder.decide(point_a, point_b);
+      if (results !== -1) {
+        results.push(point_a);
+        _results = [];
+        for (_i = 0, _len = results.length; _i < _len; _i++) {
+          location = results[_i];
+          console.log(location);
+          _results.push((function() {
+            switch (type) {
+              case "wall":
+                return this.create_wall(location.x, location.y);
+              case "crystal":
+                return this.create_crystal(location.x, location.y);
+            }
+          }).call(this));
+        }
+        return _results;
+      }
     };
     return MapSketch;
   })();
