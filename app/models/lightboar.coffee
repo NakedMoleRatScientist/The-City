@@ -35,6 +35,8 @@ class Lightboar extends Unit
         this.set_move(object.x,object.y)
       when "escape"
         controller.tells("escape",1)
+        console.log(name)
+        console.log("BEEP")
         @leave = true
     @perform = @order
   receive_msg: (msg) ->
