@@ -24,13 +24,6 @@ class Map
       @trees.push(tree)
 
 
-  create_crystal: (x,y) ->
-    crystal = new Crystal(x,y)
-    crystal.stack = @map[y][x].length
-    @crystals.push(crystal)
-    @map[y][x].push(crystal)
-    return crystal
-
   items_total: () ->
     items = 0
     for c in @crystals
