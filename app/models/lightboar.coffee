@@ -14,7 +14,7 @@ class Lightboar extends Unit
           @advance = false
           return
         @advance = true
-        choices = map.free_location(crystal.x,crystal.y,1)
+        choices = map.free_locations(crystal.x,crystal.y,1)
         choice = choices[random_number(choices.length)]
         this.set_move(choice.x,choice.y)
           # @decide = "attack"
