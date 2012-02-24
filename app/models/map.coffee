@@ -8,7 +8,7 @@ class Map
     @stockpoints = []
     @crystals = []
     @trees = []
-    @sketch = new MapSketch()
+    @sketch = new MapSketch(this)
   generate: ->
     for h in [0..@map.length] when h < @map.length
       for w in [0..@map[h].length] when w < @map[h].length
