@@ -18,7 +18,7 @@ class Pathfinder
             f = g + h
             results.push(x: x, y: y, cost: f)
 
-  decide: (location,goal) ->
+  calculate_path: (location,goal) ->
     result = location
     positions = []
     limit = 0
