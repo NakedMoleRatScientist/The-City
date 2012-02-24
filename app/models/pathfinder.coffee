@@ -15,8 +15,10 @@ class Pathfinder
               g = 10
             else
               g = 14
+            #f determine the cost of movement
+            f = g + h
             if calculation < lowest
-              lowest = h
+              lowest = f
               which = now
     which
   decide: (location,goal) ->
