@@ -8,6 +8,7 @@ class Map
     @stockpoints = []
     @crystals = []
     @trees = []
+    @sketch = new MapSketch()
   generate: ->
     for h in [0..@map.length] when h < @map.length
       for w in [0..@map[h].length] when w < @map[h].length
@@ -24,6 +25,7 @@ class Map
 
   create_wall: (x, y) ->
     @map[y][x].push(new Wall(x,y))
+
   create_crystal: (x,y) ->
     crystal = new Crystal(x,y)
     crystal.stack = @map[y][x].length
