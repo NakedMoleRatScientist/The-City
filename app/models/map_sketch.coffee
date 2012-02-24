@@ -1,0 +1,2 @@
+class MapSketch
+  constructor: (@map) ->
