@@ -18,6 +18,12 @@ class Pathfinder
             f = g + h
             results.push(x: x, y: y, cost: f)
     results
-
+  select_least_cost: (locations) ->
+    i = 0
+    select = 0
+    for l in locations
+      if l.cost < locations[select]
+        select = i
+      i += 1
   calculate_path: (location,goal) ->
     open = this.nearest_position(location,goal)
