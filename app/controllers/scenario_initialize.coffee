@@ -19,7 +19,7 @@ class ScenarioInitialize
         @units.units[1].order = null
         @units.units[2].order = null
         @units.units[3].order = null
-        @map.create_crystal(5,5)
+        @map.sketch.create_crystal(5,5)
         @map.drop_crystal(5,5)
       when "hand_disability_combat"
         @units.create new Human(10,10, "nofight",0)
@@ -32,15 +32,15 @@ class ScenarioInitialize
         location = (x: 300, y: 300)
         @map.add_stockpile(location)
       when "full_test_boars"
-        @map.create_crystal(20,20)
+        @map.sketch.create_crystal(20,20)
         @map.map[20][20].items = 50
         @units.generate_boars()
         @units.create new Human(10,10, "grumpy_killer",0)
       when "pathfinding"
         @units.create new Human(10,10, "pathfinder",0)
-        @map.create_wall(15,10)
-        @map.create_wall(15,11)
-        @map.create_wall(15,9)
+        @map.sketch.create_wall(15,10)
+        @map.sketch.create_wall(15,11)
+        @map.sketch.create_wall(15,9)
         @units.units[0].set_move(20,10)
         @units.units[0].agility = 25
       else
