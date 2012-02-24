@@ -44,7 +44,7 @@ class ScenarioInitialize
         @map.sketch.draw(begin,end,"wall")
         @units.units[0].set_move(20,10)
         @units.units[0].agility = 25
-        @units.units[1].set_move(40,10)
+        @units.units[1].set_move(40,40)
         @units.units[1].agility = 25
       else
         @units.create new Human(10,10, "Killy",0)
