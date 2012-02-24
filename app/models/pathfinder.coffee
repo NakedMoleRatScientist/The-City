@@ -27,3 +27,4 @@ class Pathfinder
       i += 1
   calculate_path: (location,goal) ->
     open = this.nearest_position(location,goal)
+    close = this.select_least_cost(open)
