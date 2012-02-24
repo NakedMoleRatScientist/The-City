@@ -27,5 +27,5 @@ class Pathfinder
       i += 1
   calculate_path: (location,goal) ->
     close = []
-    open = this.nearest_position(location,goal)
+    open = this.calculate_adjcent(location,goal)
     close.push(this.select_least_cost(open))
