@@ -41,7 +41,7 @@ class Unit
   acquire_item: (name) ->
     @inventory.push(name)
   at_goal_check: () ->
-    if (@y == @goal_y && @x == @goal_x)
+    if (@y == @goal_y && @x == @goal_x) || @goal_x == -1
       return true
     return false
   move: (finder) ->
