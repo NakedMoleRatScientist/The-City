@@ -28,6 +28,7 @@ class Pathfinder
     select
   calculate_path: (location,goal) ->
     close = []
+    close.push(location)
     open = this.calculate_adjcent(location,goal)
     location = open[this.select_least_open(open)]
     close.push(location)
