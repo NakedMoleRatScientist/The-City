@@ -26,7 +26,7 @@ class Lightboar extends Unit
           # @advance = true
           # @target = object
       when "act"
-        this.acquire_item(map.acquire(@goal_x,@goal_y))
+        this.acquire_item(map.acquire(@target_item.x,@target_item.y))
       when "move_to_escape"
         object = nearest_edge(this)
         this.set_move(object.x,object.y)
