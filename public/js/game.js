@@ -1049,7 +1049,7 @@
       this.map = map;
     }
     ScenarioInitialize.prototype.create = function(name) {
-      var begin, bottom_begin, bottom_end, end, location, top_begin, top_end;
+      var begin, bottom_begin, bottom_end, end, location, top_begin, top_end, vertical_begin, vertical_end;
       switch (name) {
         case "combat":
           this.units.create(new Human(10, 10, "Miya", 1));
@@ -1120,6 +1120,15 @@
             y: 25
           };
           this.map.sketch.draw(bottom_begin, bottom_end, "wall");
+          vertical_begin = {
+            x: 20,
+            y: 15
+          };
+          vertical_end = {
+            x: 20,
+            y: 24
+          };
+          this.map.sketch.draw(vertical_begin, vertical_end, "wall");
           this.units.units[1].set_move(25, 20);
           return this.units.units[1].agility = 25;
         default:
@@ -2145,27 +2154,27 @@
       this.map = map;
     }
     Pathfinder.prototype.nearest_position = function(location, goal) {
-      var calculation, lowest, now, which, x, y, _ref, _ref2, _ref3, _ref4;
-      which = null;
-      lowest = 1000;
+      var f, g, h, now, results, x, y, _ref, _ref2, _results;
+      results = [];
+      _results = [];
       for (x = _ref = location.x - 1, _ref2 = location.x + 1; _ref <= _ref2 ? x <= _ref2 : x >= _ref2; _ref <= _ref2 ? x++ : x--) {
-        for (y = _ref3 = location.y - 1, _ref4 = location.y + 1; _ref3 <= _ref4 ? y <= _ref4 : y >= _ref4; _ref3 <= _ref4 ? y++ : y--) {
-          if (!(x === location.x && y === location.y)) {
-            if (!this.map.collide_check(x, y)) {
-              now = {
-                x: x,
-                y: y
-              };
-              calculation = distance_between_two_points(goal, now);
-              if (calculation < lowest) {
-                lowest = calculation;
-                which = now;
-              }
-            }
+        _results.push((function() {
+          var _ref3, _ref4, _results2;
+          _results2 = [];
+          for (y = _ref3 = location.y - 1, _ref4 = location.y + 1; _ref3 <= _ref4 ? y <= _ref4 : y >= _ref4; _ref3 <= _ref4 ? y++ : y--) {
+            _results2.push(!(x === location.x && y === location.y) ? !this.map.collide_check(x, y) ? (now = {
+              x: x,
+              y: y
+            }, h = distance_between_two_points(goal, now) * 10, x === location.x || y === location.y ? g = 10 : g = 14, f = g + h, results.push({
+              x: x,
+              y: y,
+              cost: f
+            })) : void 0 : void 0);
           }
-        }
+          return _results2;
+        }).call(this));
       }
-      return which;
+      return _results;
     };
     Pathfinder.prototype.decide = function(location, goal) {
       var limit, positions, result;
@@ -2173,7 +2182,7 @@
       positions = [];
       limit = 0;
       while (true) {
-        if (limit === 100) {
+        if (limit === 1000) {
           console.log("ERROR! CANNOT FIND PATH");
           return -1;
         }
