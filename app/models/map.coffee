@@ -91,11 +91,11 @@ class Map
       return (x: x, y: y)
     return false
   free_locations: (x,y,size) ->
-    end_x = x + 2
-    begin_x = x - 2
-    end_y = y + 2
+    end_x = x + size
+    begin_x = x - size
+    end_y = y + size
     x = begin_x
-    y -= 2
+    y -= size
     locations = []
     loop
       if x > end_x
