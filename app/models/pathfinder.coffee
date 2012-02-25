@@ -64,4 +64,5 @@ class Pathfinder
           came_from.push(current)
           neighbor.g = tentative_g_score
           neighbor.cost = neighbor.g + neighbor.h
+          open[this.part_of(neighbor,open)] = neighbor
     false
