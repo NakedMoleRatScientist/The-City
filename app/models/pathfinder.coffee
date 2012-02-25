@@ -1,13 +1,13 @@
 class Pathfinder
   constructor: (@map) ->
-  calculate_adjacent: (location) ->
+  calculate_adjacent: (location,goal) ->
     results = []
     for x  in [(location.x - 1)..(location.x + 1)]
       for y in [(location.y - 1)..(location.y + 1)]
         if !(x == location.x && y == location.y)
           if !@map.collide_check(x,y) #check if point is suitable
             now = (x: x, y: y)
-            calculation = this.calculate_cost(now,final)
+            calculation = this.calculate_cost(now,goal)
             now.g = calculation.g
             now.h = calculation.h
             now.cost = calculation.cost
