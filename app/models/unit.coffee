@@ -48,7 +48,7 @@ class Unit
     return if @body.leg == 2
     return if this.at_goal_check()
     if @move_list.length == 0
-      result = finder.decide(this,(x: @goal_x, y: @goal_y))
+      result = finder.calculate_path(this,(x: @goal_x, y: @goal_y))
       if result == -1
         @goal_x = -1
       else
