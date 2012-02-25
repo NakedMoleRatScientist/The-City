@@ -51,3 +51,5 @@ class Pathfinder
         if this.part_of(neighbor,close) == true
           continue
         tentative_g_score = current.g_score + distance_between_two_points(current,neighbor) * 10
+        if this.part_of(neighbor,open) == false
+          open.push(neighbor)
