@@ -40,3 +40,10 @@ class Pathfinder
         this.reconstruct_path(came_from, came_from[goal])
       open.splice(location,1)
       close.push(current)
+      for neighbor in this.calculate_adjacent(current)
+        for o in open
+          if o.x == neighbor.x || o.y == neighbor.y
+            skip = true
+            break
+        if skip == true
+          continue
