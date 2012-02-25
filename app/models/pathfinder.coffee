@@ -59,7 +59,7 @@ class Pathfinder
         if this.part_of(neighbor,open) == false
           open.push(neighbor)
         else if tentative_g_score < neighbor.g
-          came_from[neighbor] = current
+          came_from.push(current)
           neighbor.g = tentative_g_score
           neighbor.cost = neighbor.g + neighbor.h
     false
