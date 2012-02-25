@@ -7,8 +7,7 @@ class Pathfinder
         if !(x == location.x && y == location.y)
           if !@map.collide_check(x,y) #check if point is suitable
             now = (x: x, y: y)
-            f = this.calculate_cost(now,goal)
-            results.push(x: x, y: y, cost: f)
+            results.push(x: x, y: y)
     results
   claculate_cost: (now,final) ->
     #h is a heuristic that determines how far a given square is to its final destination
