@@ -49,7 +49,7 @@ class Pathfinder
       location = this.select_least_cost(open)
       current = open[location]
       if current.x == goal.x && current.y == goal.y
-        return this.reconstruct_path(came_from, came_from[goal])
+        return came_from
       open.splice(location,1)
       close.push(current)
       for neighbor in this.calculate_adjacent(current,goal)
