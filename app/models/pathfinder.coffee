@@ -34,9 +34,11 @@ class Pathfinder
       i += 1
     select
   part_of: (item,list) ->
+    i = 0
     for l in list
       if item.x == l.x && item.y == l.y
-        return true
+        return i
+      i += 1
     false
   calculate_path: (start,goal) ->
     start.g = 0
