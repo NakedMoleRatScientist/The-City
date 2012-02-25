@@ -47,3 +47,4 @@ class Pathfinder
             break
         if skip == true
           continue
+        tentative_g_score = current.g_score + distance_between_two_points(current,neighbor) * 10
