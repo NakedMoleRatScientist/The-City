@@ -39,7 +39,3 @@ class Pathfinder
       current = open[location]
       if current.x == goal.x && current.y == goal.y
         this.reconstruct_path(came_from, came_from[goal])
-    close.push(location)
-    open = this.calculate_adjcent(location,goal)
-
-    close.push(location)
