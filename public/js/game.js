@@ -1394,7 +1394,7 @@
         return;
       }
       if (this.move_list.length === 0) {
-        result = finder.decide(this, {
+        result = finder.calculate_path(this, {
           x: this.goal_x,
           y: this.goal_y
         });
@@ -2114,7 +2114,7 @@
     };
     MapSketch.prototype.draw = function(point_a, point_b, type) {
       var location, results, _i, _len, _results;
-      results = this.finder.decide(point_a, point_b);
+      results = this.finder.calculate_path(point_a, point_b);
       if (results !== -1) {
         results.push(point_a);
         _results = [];
@@ -2153,8 +2153,8 @@
     function Pathfinder(map) {
       this.map = map;
     }
-    Pathfinder.prototype.calculate_adjcent = function(location, goal) {
-      var f, g, h, now, results, x, y, _ref, _ref2, _ref3, _ref4;
+    Pathfinder.prototype.calculate_adjacent = function(location, goal) {
+      var calculation, now, results, x, y, _ref, _ref2, _ref3, _ref4;
       results = [];
       for (x = _ref = location.x - 1, _ref2 = location.x + 1; _ref <= _ref2 ? x <= _ref2 : x >= _ref2; _ref <= _ref2 ? x++ : x--) {
         for (y = _ref3 = location.y - 1, _ref4 = location.y + 1; _ref3 <= _ref4 ? y <= _ref4 : y >= _ref4; _ref3 <= _ref4 ? y++ : y--) {
@@ -2164,23 +2164,27 @@
                 x: x,
                 y: y
               };
-              h = distance_between_two_points(goal, now) * 10;
-              if (x === location.x || y === location.y) {
-                g = 10;
-              } else {
-                g = 14;
-              }
-              f = g + h;
-              results.push({
-                x: x,
-                y: y,
-                cost: f
-              });
+              calculation = this.calculate_cost(now, location, goal);
+              now.g = calculation.g;
+              now.h = calculation.h;
+              now.cost = calculation.cost;
+              results.push(now);
             }
           }
         }
       }
       return results;
+    };
+    Pathfinder.prototype.calculate_cost = function(now, location, goal) {
+      var f, g, h;
+      h = distance_between_two_points(goal, now);
+      g = distance_between_two_points(now, location);
+      f = g + h;
+      return {
+        g: g,
+        h: h,
+        cost: f
+      };
     };
     Pathfinder.prototype.select_least_cost = function(locations) {
       var i, l, select, _i, _len;
@@ -2195,11 +2199,52 @@
       }
       return select;
     };
-    Pathfinder.prototype.calculate_path = function(location, goal) {
-      var close, open;
+    Pathfinder.prototype.part_of = function(item, list) {
+      var i, l, _i, _len;
+      i = 0;
+      for (_i = 0, _len = list.length; _i < _len; _i++) {
+        l = list[_i];
+        if (item.x === l.x && item.y === l.y) {
+          return i;
+        }
+        i += 1;
+      }
+      return false;
+    };
+    Pathfinder.prototype.calculate_path = function(start, goal) {
+      var came_from, close, current, location, neighbor, open, tentative_g_score, _i, _len, _ref;
+      start.g = 0;
+      start.h = distance_between_two_points(start, goal) * 10;
+      start.cost = start.g + start.h;
       close = [];
-      open = this.calculate_adjcent(location, goal);
-      return close.push(this.select_least_cost(open));
+      open = [start];
+      came_from = [];
+      while (open.length !== 0) {
+        location = this.select_least_cost(open);
+        current = open[location];
+        if (current.x === goal.x && current.y === goal.y) {
+          return came_from;
+        }
+        open.splice(location, 1);
+        close.push(current);
+        _ref = this.calculate_adjacent(current, goal);
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          neighbor = _ref[_i];
+          if (this.part_of(neighbor, close) !== false) {
+            continue;
+          }
+          tentative_g_score = current.g + distance_between_two_points(current, neighbor);
+          if (this.part_of(neighbor, open) === false) {
+            open.push(neighbor);
+          } else if (tentative_g_score < neighbor.g) {
+            came_from.push(current);
+            neighbor.g = tentative_g_score;
+            neighbor.cost = neighbor.g + neighbor.h;
+            open[this.part_of(neighbor, open)] = neighbor;
+          }
+        }
+      }
+      return false;
     };
     return Pathfinder;
   })();
