@@ -34,7 +34,8 @@ class Pathfinder
     open = [location]
     came_from = []
     while open.length != 0
-      current = open[this.select_least_open(open)]
+      location = this.select_least_cost(open)
+      current = open[location]
       if current.x == goal.x && current.y == goal.y
         this.reconstruct_path(came_from, came_from[goal])
     close.push(location)
