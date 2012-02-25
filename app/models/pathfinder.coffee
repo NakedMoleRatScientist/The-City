@@ -47,11 +47,6 @@ class Pathfinder
         this.reconstruct_path(came_from, came_from[goal])
       open.splice(location,1)
       close.push(current)
-      for neighbor in this.calculate_adjacent(current)
-        for c in close
-          if c.x == neighbor.x || c.y == neighbor.y
-            skip = true
-            break
-        if skip == true
-          continue
+      if this.part_of(current,close) == true
+        continue
         tentative_g_score = current.g_score + distance_between_two_points(current,neighbor) * 10
