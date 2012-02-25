@@ -28,6 +28,11 @@ class Pathfinder
         select = i
       i += 1
     select
+  part_of: (item,list) ->
+    for l in list ->
+      if item.x == l.x && item.y == l.y
+        return true
+    false
   calculate_path: (start,goal) ->
     start.g = 0
     start.h = distance_between_two_points(start,goal) * 10
