@@ -53,7 +53,7 @@ class Pathfinder
       open.splice(location,1)
       close.push(current)
       for neighbor in this.calculate_adjacent(current,goal)
-        if this.part_of(neighbor,close) == true
+        if this.part_of(neighbor,close) != false
           continue
         tentative_g_score = current.g_score + distance_between_two_points(current,neighbor) * 10
         if this.part_of(neighbor,open) == false
