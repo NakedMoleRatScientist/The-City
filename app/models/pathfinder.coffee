@@ -32,6 +32,7 @@ class Pathfinder
   calculate_path: (location,goal) ->
     close = []
     open = [location]
+    came_from = []
     while open.length != 0
       current = open[this.select_least_open(open)]
       if current.x == goal.x && current.y == goal.y
