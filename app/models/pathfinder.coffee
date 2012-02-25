@@ -13,7 +13,7 @@ class Pathfinder
             now.cost = calculation.cost
             results.push(now)
     results
-  calculate_cost: (now,final) ->
+  calculate_cost: (now,goal) ->
     #h is a heuristic that determines how far a given square is to its final destination
     h = distance_between_two_points(goal,now) * 10
     #g determines cost of moving to the location
