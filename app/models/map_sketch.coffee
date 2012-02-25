@@ -12,7 +12,7 @@ class MapSketch
     return crystal
 
   draw: (point_a,point_b,type) ->
-    results = @finder.decide(point_a,point_b)
+    results = @finder.calculate_path(point_a,point_b)
     if results != -1
       results.push(point_a) #since starting positions aren't pushed in pathfinder
       for location in results
