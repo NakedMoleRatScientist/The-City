@@ -63,3 +63,9 @@ class Pathfinder
           neighbor.g = tentative_g_score
           neighbor.cost = neighbor.g + neighbor.h
     false
+  reconstruct_path: (came_from,current) ->
+    if came_from[current] != null
+      p = this.reconstruct_path(came_from,came_from[current])
+      return (p + current)
+    else
+      return current
