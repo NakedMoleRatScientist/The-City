@@ -29,9 +29,9 @@ class Pathfinder
         select = i
       i += 1
     select
-  calculate_path: (location,goal) ->
+  calculate_path: (start,goal) ->
     close = []
-    open = [location]
+    open = [start]
     came_from = []
     while open.length != 0
       location = this.select_least_cost(open)
