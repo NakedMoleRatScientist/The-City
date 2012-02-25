@@ -32,7 +32,9 @@ class Pathfinder
   calculate_path: (location,goal) ->
     close = []
     open = [location]
+    while open.length != 0
+      current = open[this.select_least_open(open)]
     close.push(location)
     open = this.calculate_adjcent(location,goal)
-    location = open[this.select_least_open(open)]
+
     close.push(location)
