@@ -1,6 +1,6 @@
 class Pathfinder
   constructor: (@map) ->
-  calculate_adjcent: (location,goal) ->
+  calculate_adjcent: (location) ->
     results = []
     for x  in [(location.x - 1)..(location.x + 1)]
       for y in [(location.y - 1)..(location.y + 1)]
