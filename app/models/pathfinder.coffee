@@ -34,7 +34,7 @@ class Pathfinder
       i += 1
     select
   part_of: (item,list) ->
-    for l in list ->
+    for l in list
       if item.x == l.x && item.y == l.y
         return true
     false
