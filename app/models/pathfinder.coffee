@@ -29,7 +29,9 @@ class Pathfinder
       i += 1
     select
   calculate_path: (start,goal) ->
-    start.cost = 0 + distance_between_two_points(start,goal) * 10
+    start.g = 0
+    start.h = distance_between_two_points(start,goal) * 10
+    start.cost = start.g + start.h
     close = []
     open = [start]
     came_from = []
