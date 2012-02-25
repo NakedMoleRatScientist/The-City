@@ -15,7 +15,7 @@ class Pathfinder
     results
   calculate_cost: (now,location,goal) ->
     #h is a heuristic that determines how far a given square is to its final destination
-    h = distance_between_two_points(goal,now) * 10
+    h = distance_between_two_points(goal,now)
     #g determines cost of moving to the location
     if (now.x == location.x || now.y == location.y)
       g = 10
