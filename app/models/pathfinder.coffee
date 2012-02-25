@@ -34,6 +34,8 @@ class Pathfinder
     open = [location]
     while open.length != 0
       current = open[this.select_least_open(open)]
+      if current.x == goal.x && current.y == goal.y
+        this.reconstruct_path(came_from, came_from[goal])
     close.push(location)
     open = this.calculate_adjcent(location,goal)
 
