@@ -41,8 +41,8 @@ class Pathfinder
       open.splice(location,1)
       close.push(current)
       for neighbor in this.calculate_adjacent(current)
-        for o in open
-          if o.x == neighbor.x || o.y == neighbor.y
+        for c in close
+          if c.x == neighbor.x || c.y == neighbor.y
             skip = true
             break
         if skip == true
