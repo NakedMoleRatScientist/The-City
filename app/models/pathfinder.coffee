@@ -62,3 +62,4 @@ class Pathfinder
           came_from[neighbor] = current
           neighbor.g = tentative_g_score
           neighbor.cost = neighbor.g + neighbor.h
+  return false
