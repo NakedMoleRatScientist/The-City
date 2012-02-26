@@ -58,7 +58,7 @@ class Pathfinder
           open.push(neighbor)
         else if current.g < neighbor.g
           came_from.push(current)
-          neighbor.g = tentative_g_score
+          neighbor.g = current.g
           neighbor.cost = neighbor.g + neighbor.h
           open[this.part_of(neighbor,open)] = neighbor
     false
