@@ -39,7 +39,7 @@ class Pathfinder
     false
   calculate_path: (start,goal) ->
     start.g = 0
-    start.h = distance_between_two_points(start,goal) * 10
+    start.h = distance_between_two_points(start,goal)
     start.cost = start.g + start.h
     close = []
     open = [start]
