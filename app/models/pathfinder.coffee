@@ -17,7 +17,7 @@ class Pathfinder
     #h is a heuristic that determines how far a given square is to its final destination
     h = distance_between_two_points(goal,now)
     #g determines cost of moving to the location
-    g = distance_between_two_points(now,location)
+    g = 0
     #f determines the cost of movement
     f = g + h
     return (g: g, h: h, cost: f)
