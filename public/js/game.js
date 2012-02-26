@@ -1394,7 +1394,10 @@
         return;
       }
       if (this.move_list.length === 0) {
-        result = finder.calculate_path(this, {
+        result = finder.calculate_path({
+          x: this.x,
+          y: this.y
+        }, {
           x: this.goal_x,
           y: this.goal_y
         });
@@ -2178,7 +2181,7 @@
     Pathfinder.prototype.calculate_cost = function(now, location, goal) {
       var f, g, h;
       h = distance_between_two_points(goal, now);
-      g = distance_between_two_points(now, location);
+      g = distance_between_two_points(location, now);
       f = g + h;
       return {
         g: g,
@@ -2192,7 +2195,7 @@
       select = 0;
       for (_i = 0, _len = locations.length; _i < _len; _i++) {
         l = locations[_i];
-        if (l.cost < locations[select]) {
+        if (l.cost < locations[select].cost) {
           select = i;
         }
         i += 1;
@@ -2212,9 +2215,9 @@
       return false;
     };
     Pathfinder.prototype.calculate_path = function(start, goal) {
-      var came_from, close, current, location, neighbor, open, tentative_g_score, _i, _len, _ref;
+      var came_from, close, current, location, neighbor, open, _i, _len, _ref;
       start.g = 0;
-      start.h = distance_between_two_points(start, goal) * 10;
+      start.h = distance_between_two_points(start, goal);
       start.cost = start.g + start.h;
       close = [];
       open = [start];
@@ -2223,6 +2226,7 @@
         location = this.select_least_cost(open);
         current = open[location];
         if (current.x === goal.x && current.y === goal.y) {
+          came_from.push(current);
           return came_from;
         }
         open.splice(location, 1);
@@ -2233,14 +2237,10 @@
           if (this.part_of(neighbor, close) !== false) {
             continue;
           }
-          tentative_g_score = current.g + distance_between_two_points(current, neighbor);
           if (this.part_of(neighbor, open) === false) {
             open.push(neighbor);
-          } else if (tentative_g_score < neighbor.g) {
+          } else if (current.g < neighbor.g) {
             came_from.push(current);
-            neighbor.g = tentative_g_score;
-            neighbor.cost = neighbor.g + neighbor.h;
-            open[this.part_of(neighbor, open)] = neighbor;
           }
         }
       }
