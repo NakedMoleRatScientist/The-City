@@ -2226,6 +2226,7 @@
         location = this.select_least_cost(open);
         current = open[location];
         if (current.x === goal.x && current.y === goal.y) {
+          came_from.push(current);
           return came_from;
         }
         open.splice(location, 1);
@@ -2240,9 +2241,6 @@
             open.push(neighbor);
           } else if (current.g < neighbor.g) {
             came_from.push(current);
-            neighbor.g = tentative_g_score;
-            neighbor.cost = neighbor.g + neighbor.h;
-            open[this.part_of(neighbor, open)] = neighbor;
           }
         }
       }
