@@ -26,7 +26,7 @@ class Pathfinder
     i = 0
     select = 0
     for l in locations
-      if l.cost < locations[select]
+      if l.cost < locations[select].cost
         select = i
       i += 1
     select
