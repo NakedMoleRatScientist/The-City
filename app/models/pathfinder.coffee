@@ -49,7 +49,7 @@ class Pathfinder
       current = open[location]
       if current.x == goal.x && current.y == goal.y
         return came_from
-      open.splice(location,1)
+      open.splice(location,1) #Remove current from open set
       close.push(current)
       for neighbor in this.calculate_adjacent(current,goal)
         if this.part_of(neighbor,close) != false
