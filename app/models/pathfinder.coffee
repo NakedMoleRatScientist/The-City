@@ -48,18 +48,15 @@ class Pathfinder
       location = this.select_least_cost(open)
       current = open[location]
       if current.x == goal.x && current.y == goal.y
+        came_from.push(current)
         return came_from
       open.splice(location,1) #Remove current from open set
       close.push(current) #Push them to close
       for neighbor in this.calculate_adjacent(current,goal)
         if this.part_of(neighbor,close) != false
           continue
-        tentative_g_score = current.g + distance_between_two_points(current,neighbor)
         if this.part_of(neighbor,open) == false
           open.push(neighbor)
-        else if tentative_g_score < neighbor.g
+        else if current.g < neighbor.g
           came_from.push(current)
-          neighbor.g = tentative_g_score
-          neighbor.cost = neighbor.g + neighbor.h
-          open[this.part_of(neighbor,open)] = neighbor
     false
