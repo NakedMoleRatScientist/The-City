@@ -48,6 +48,7 @@ class Pathfinder
       location = this.select_least_cost(open)
       current = open[location]
       if current.x == goal.x && current.y == goal.y
+        came_from.push(current)
         return came_from
       open.splice(location,1) #Remove current from open set
       close.push(current) #Push them to close
@@ -58,7 +59,4 @@ class Pathfinder
           open.push(neighbor)
         else if current.g < neighbor.g
           came_from.push(current)
-          neighbor.g = current.g
-          neighbor.cost = neighbor.g + neighbor.h
-          open[this.part_of(neighbor,open)] = neighbor
     false
