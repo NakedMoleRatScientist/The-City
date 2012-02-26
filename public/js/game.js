@@ -2217,7 +2217,7 @@
     Pathfinder.prototype.calculate_path = function(start, goal) {
       var came_from, close, current, location, neighbor, open, _i, _len, _ref;
       start.g = 0;
-      start.h = distance_between_two_points(start, goal) * 10;
+      start.h = distance_between_two_points(start, goal);
       start.cost = start.g + start.h;
       close = [];
       open = [start];
