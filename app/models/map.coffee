@@ -85,8 +85,6 @@ class Map
   propose_drop: (x,y) ->
     if @map[y][x].length == 0 || this.collide_check(x,y) == false
       return (x: x, y: y)
-    else if this.collide_check(x,y) == true && this.select_by_name("crystal_stockpile",x,y) == true
-      return (x: x, y: y)
     return false
   free_locations: (x,y,size) ->
     end_x = x + size
