@@ -25,9 +25,7 @@ class Pathfinder
     close = []
     open = [start]
     while open.length > 0
-      location = this.select_least_cost(open)
-      current = open[location]
-
+      current = open[0]
       if current.x == goal.x && current.y == goal.y
         now = current
         results = []
