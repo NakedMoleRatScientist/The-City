@@ -1136,6 +1136,28 @@
           this.map.sketch.create_wall(20, 10);
           this.units.units[0].set_move(20, 10);
           return this.units.units[0].agility = 25;
+        case "unpathable_2":
+          this.map.width = 40;
+          this.map.height = 30;
+          this.map.size_map();
+          this.map.generate();
+          this.units.create(new Human(10, 10, "pathfinder_one", 0));
+          begin = {
+            x: 19,
+            y: 9
+          };
+          end = {
+            x: 21,
+            y: 9
+          };
+          this.map.sketch.draw(begin, end, "wall");
+          begin.y = 11;
+          end.y = 11;
+          this.map.sketch.draw(begin, end, "wall");
+          this.map.sketch.create_wall(19, 10);
+          this.map.sketch.create_wall(21, 10);
+          this.units.units[0].set_move(20, 10);
+          return this.units.units[0].agility = 25;
         default:
           this.units.create(new Human(10, 10, "Killy", 0));
           this.units.units[0].stance = 1;
@@ -1406,7 +1428,7 @@
           x: this.goal_x,
           y: this.goal_y
         });
-        if (result === -1) {
+        if (result === false) {
           return this.goal_x = -1;
         } else {
           return this.move_list = result;
@@ -1428,7 +1450,7 @@
       if (this.order !== null) {
         this.order += 1;
       }
-      if (this.order > this.queue.length) {
+      if (this.order === this.queue.length) {
         return this.order = 0;
       }
     };
@@ -1805,7 +1827,7 @@
       this.agility = 5;
     }
     Human.prototype.set_action = function(map) {
-      var object;
+      var choice, choices, object;
       if (this.act_on_queue()) {
         return;
       }
@@ -1815,24 +1837,33 @@
       switch (this.queue[this.order]) {
         case "move_to_drop":
           object = this.job.get_drop_location(map);
+          choices = map.free_locations(object.x, object.y, 1);
+          choice = choices[random_number(choices.length)];
           if (object === false) {
             this.job = null;
             this.queue = [];
             this.perform = null;
             return;
           }
-          this.set_move(object.x, object.y);
+          this.set_move(choice.x, choice.y);
           break;
         case "move_to_crystal":
           object = this.job.nearest;
-          this.set_move(object.x, object.y);
+          choices = map.free_locations(object.x, object.y, 1);
+          choice = choices[random_number(choices.length)];
+          this.set_move(choice.x, choice.y);
           break;
         case "gather_crystal":
           this.acquire_item(this.job.nearest.acquire());
-          break;
+          this.next_order();
+          return;
         case "drop_crystal":
           this.drop_item("crystal");
           map.drop_crystal(this.job.drop.x, this.job.drop.y);
+          console.log(this.order);
+          this.next_order();
+          console.log(this.order);
+          return;
       }
       return this.perform = this.order;
     };
@@ -1921,22 +1952,27 @@
   })();
   Map = (function() {
     function Map(width, height) {
-      var h, _ref;
       this.width = width;
       this.height = height;
       this.camera_x = 0;
       this.camera_y = 0;
       this.map = new Array(height);
-      for (h = 0, _ref = this.height; 0 <= _ref ? h <= _ref : h >= _ref; 0 <= _ref ? h++ : h--) {
-        if (h < this.height) {
-          this.map[h] = new Array(width);
-        }
-      }
+      this.size_map();
       this.stockpoints = [];
       this.crystals = [];
       this.trees = [];
       this.sketch = new MapSketch(this);
     }
+    Map.prototype.size_map = function() {
+      var h, _ref, _results;
+      _results = [];
+      for (h = 0, _ref = this.height; 0 <= _ref ? h <= _ref : h >= _ref; 0 <= _ref ? h++ : h--) {
+        if (h < this.height) {
+          _results.push(this.map[h] = new Array(this.width));
+        }
+      }
+      return _results;
+    };
     Map.prototype.generate = function() {
       var h, i, tree, w, x, y, _ref, _ref2, _results;
       for (h = 0, _ref = this.map.length; 0 <= _ref ? h <= _ref : h >= _ref; 0 <= _ref ? h++ : h--) {
@@ -1955,8 +1991,8 @@
       _results = [];
       for (i = 0; i <= 10; i++) {
         if (i < 10) {
-          x = Math.floor(Math.random() * 100);
-          y = Math.floor(Math.random() * 100);
+          x = Math.floor(Math.random() * this.width);
+          y = Math.floor(Math.random() * this.height);
           tree = new CrystalTree(x, y);
           this.map[y][x].push(tree);
           _results.push(this.trees.push(tree));
@@ -1992,7 +2028,7 @@
     Map.prototype.collide_check = function(x, y) {
       var m, _i, _len, _ref;
       if (y < 0 || y > this.width - 1 || x < 0 || x > this.height - 1) {
-        return false;
+        return true;
       }
       _ref = this.map[y][x];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -2185,18 +2221,8 @@
       }
       return results;
     };
-    Pathfinder.prototype.select_least_cost = function(locations) {
-      var i, l, select, _i, _len;
-      i = 0;
-      select = 0;
-      for (_i = 0, _len = locations.length; _i < _len; _i++) {
-        l = locations[_i];
-        if (l.f < locations[select].f) {
-          select = i;
-        }
-        i += 1;
-      }
-      return select;
+    Pathfinder.prototype.sort_by_least_cost = function(a, b) {
+      return a.f - b.f;
     };
     Pathfinder.prototype.part_of = function(item, list) {
       var i, l, _i, _len;
@@ -2211,15 +2237,19 @@
       return false;
     };
     Pathfinder.prototype.calculate_path = function(start, goal) {
-      var best_g_score, close, current, g_score, location, neighbor, now, open, results, _i, _len, _ref;
+      var best_g_score, close, current, end, g_score, neighbor, now, open, results, _i, _len, _ref;
+      if (this.map.collide_check(goal.x, goal.y)) {
+        return false;
+      }
       start.g = 0;
       start.h = distance_between_two_points(start, goal);
       start.f = start.g + start.h;
       close = [];
       open = [start];
+      start = new Date().getTime();
       while (open.length > 0) {
-        location = this.select_least_cost(open);
-        current = open[location];
+        open.sort(this.sort_by_least_cost);
+        current = open[0];
         if (current.x === goal.x && current.y === goal.y) {
           now = current;
           results = [];
@@ -2227,9 +2257,11 @@
             results.push(now);
             now = now.parent;
           }
+          end = new Date().getTime();
+          console.log("path calculation time in MS: " + (end - start));
           return results;
         }
-        open.splice(location, 1);
+        open.shift();
         close.push(current);
         _ref = this.calculate_adjacent(current, goal);
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -2258,7 +2290,7 @@
     return Pathfinder;
   })();
   scenarioList = function() {
-    return ["combat", "hand_disability_combat", "leg_disability", "pig_invasion", "hand_disability_gathering", "full_test_boars", "pathfinding", "unpathable_1"];
+    return ["combat", "hand_disability_combat", "leg_disability", "pig_invasion", "hand_disability_gathering", "full_test_boars", "pathfinding", "unpathable_1", "unpathable_2"];
   };
   Subpart = (function() {
     function Subpart(name, type) {
