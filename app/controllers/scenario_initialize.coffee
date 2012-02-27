@@ -55,6 +55,11 @@ class ScenarioInitialize
         @map.sketch.draw(vertical_begin,vertical_end,"wall")
         @units.units[1].set_move(25,20)
         @units.units[1].agility = 25
+      when "unpathable_1"
+        @units.create new Human(10,10, "pathfinder_one",0)
+        @map.sketch.create_wall(20,10)
+        @units.units[0].set_move(20,10)
+        @units.units[0].agility = 25
       else
         @units.create new Human(10,10, "Killy",0)
         @units.units[0].stance = 1
