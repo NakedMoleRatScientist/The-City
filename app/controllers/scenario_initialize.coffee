@@ -64,10 +64,10 @@ class ScenarioInitialize
         @units.create new Human(10,10, "pathfinder_one",0)
         begin = (x: 19, y: 9)
         end = (x: 21, y: 9 )
-        @map.sketch.create(begin,end,"wall")
+        @map.sketch.draw(begin,end,"wall")
         begin.y = 11
         end.y = 11
-        @map.sketch.create(begin,end,"wall")
+        @map.sketch.draw(begin,end,"wall")
         @map.sketch.create_wall(19,10)
         @map.sketch.create_wall(21,10)
       else
