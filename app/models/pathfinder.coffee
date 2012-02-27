@@ -9,14 +9,8 @@ class Pathfinder
             now = (x: x, y: y, parent: null, g: 0, f: 0, h: 0 )
             results.push(now)
     results
-  select_least_cost: (locations) ->
-    i = 0
-    select = 0
-    for l in locations
-      if l.f < locations[select].f
-        select = i
-      i += 1
-    select
+  sort_by_least_cost: (a,b) ->
+    a.f - b.f
   part_of: (item,list) ->
     i = 0
     for l in list
@@ -41,6 +35,8 @@ class Pathfinder
           results.push(now)
           now = now.parent
         return results
+      if open[location] == current
+        console.log("BEEP")
       open.splice(location,1) #Remove current from open set
       close.push(current) #Push them to close
       for neighbor in this.calculate_adjacent(current,goal)
