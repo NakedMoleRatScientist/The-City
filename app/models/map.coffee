@@ -3,12 +3,15 @@ class Map
     @camera_x = 0
     @camera_y = 0
     @map = new Array(height)
-    for h in [0..@height] when h < @height
-      @map[h] = new Array(width)
+    this.size_map()
     @stockpoints = []
     @crystals = []
     @trees = []
     @sketch = new MapSketch(this)
+  size_map: () ->
+    for h in [0..@height] when h < @height
+      @map[h] = new Array(width)
+
   generate: ->
     for h in [0..@map.length] when h < @map.length
       for w in [0..@map[h].length] when w < @map[h].length
