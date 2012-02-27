@@ -37,6 +37,7 @@ class Map
       if m.name == "crystal"
         if m.increase() == false
           return false
+        @redraw.push(x: x, y: y)
         return true
 
   collide_check: (x,y) ->
