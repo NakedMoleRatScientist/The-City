@@ -40,7 +40,6 @@ class Pathfinder
         while (now.parent)
           results.push(now)
           now = now.parent
-        console.log(results)
         return results
       open.splice(location,1) #Remove current from open set
       close.push(current) #Push them to close
