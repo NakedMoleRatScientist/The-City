@@ -64,6 +64,7 @@ class ScenarioInitialize
         @map.width = 40
         @map.height = 30
         @map.size_map()
+        @map.generate()
         @units.create new Human(10,10, "pathfinder_one",0)
         begin = (x: 19, y: 9)
         end = (x: 21, y: 9 )
