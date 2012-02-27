@@ -38,7 +38,7 @@ class Pathfinder
         end = new Date().getTime()
         console.log("path calculation time in MS: " + (end - start))
         return results
-      open.splice(0,1) #Remove current from open set
+      open.shift() #Remove current from open set
       close.push(current) #Push them to close
       for neighbor in this.calculate_adjacent(current,goal)
         if this.part_of(neighbor,close) != false
