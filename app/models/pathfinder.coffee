@@ -45,9 +45,6 @@ class Pathfinder
       close.push(current) #Push them to close
       for neighbor in this.calculate_adjacent(current,goal)
         if this.part_of(neighbor,close) != false
-          if neighbor.x == 15 && neighbor.y == 10
-            console.log("DEEP")
-
           continue
         g_score = current.g + distance_between_two_points(current,neighbor)
         best_g_score = false
