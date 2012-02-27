@@ -48,6 +48,7 @@ class Pathfinder
         if this.part_of(neighbor,open) == false
           neighbor.h = distance_between_two_points(neighbor,goal)
           open.push(neighbor)
+          open.sort(this.sort_by_least_cost)
           best_g_score = true
         else if g_score < neighbor.g
           best_g_score = true
