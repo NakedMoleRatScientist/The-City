@@ -6,27 +6,14 @@ class Pathfinder
       for y in [(location.y - 1)..(location.y + 1)]
         if !(x == location.x && y == location.y)
           if !@map.collide_check(x,y) #check if point is suitable
-            now = (x: x, y: y)
-            calculation = this.calculate_cost(now,location,goal)
-            now.g = calculation.g
-            now.h = calculation.h
-            now.cost = calculation.cost
+            now = (x: x, y: y, parent: null, g: 0, f: 0, h: 0 )
             results.push(now)
     results
-  calculate_cost: (now,location,goal) ->
-    #h is a heuristic that determines how far a given square is to its final destination
-    h = distance_between_two_points(goal,now)
-    #g determines cost of moving to the location
-    g = distance_between_two_points(location,now)
-    #f determines the cost of movement
-    f = g + h
-    return (g: g, h: h, cost: f)
-
   select_least_cost: (locations) ->
     i = 0
     select = 0
     for l in locations
-      if l.cost < locations[select].cost
+      if l.f < locations[select].f
         select = i
       i += 1
     select
@@ -40,23 +27,42 @@ class Pathfinder
   calculate_path: (start,goal) ->
     start.g = 0
     start.h = distance_between_two_points(start,goal)
-    start.cost = start.g + start.h
+    start.f = start.g + start.h
     close = []
     open = [start]
-    came_from = []
-    while open.length != 0
+    while open.length > 0
       location = this.select_least_cost(open)
       current = open[location]
+
       if current.x == goal.x && current.y == goal.y
-        came_from.push(current)
-        return came_from
+        now = current
+        results = []
+        while (now.parent)
+          results.push(now)
+          now = now.parent
+        console.log(results)
+        return results
       open.splice(location,1) #Remove current from open set
       close.push(current) #Push them to close
       for neighbor in this.calculate_adjacent(current,goal)
         if this.part_of(neighbor,close) != false
+          if neighbor.x == 15 && neighbor.y == 10
+            console.log("DEEP")
+
           continue
+        g_score = current.g + distance_between_two_points(current,neighbor)
+        best_g_score = false
+
         if this.part_of(neighbor,open) == false
+          neighbor.h = distance_between_two_points(neighbor,goal)
           open.push(neighbor)
-        else if current.g < neighbor.g
-          came_from.push(current)
+          best_g_score = true
+        else if g_score < neighbor.g
+          best_g_score = true
+
+
+        if best_g_score == true
+          neighbor.parent = current
+          neighbor.g = g_score
+          neighbor.f = neighbor.g + neighbor.h
     false
