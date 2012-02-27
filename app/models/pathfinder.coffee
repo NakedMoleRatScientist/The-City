@@ -34,6 +34,7 @@ class Pathfinder
         while (now.parent)
           results.push(now)
           now = now.parent
+        console.log("path calculation time in MS: " + (end - start))
         return results
       open.splice(0,1) #Remove current from open set
       close.push(current) #Push them to close
@@ -56,5 +57,4 @@ class Pathfinder
           neighbor.g = g_score
           neighbor.f = neighbor.g + neighbor.h
     end = new Date().getTime()
-    console.log("path calculation time in MS: " + (end - start))
     false
