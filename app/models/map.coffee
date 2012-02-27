@@ -37,7 +37,7 @@ class Map
         return true
 
   collide_check: (x,y) ->
-    if y < 0 || y > 99 || x < 0 || x > 99
+    if y < 0 || y > @width - 1 || x < 0 || x > @height - 1
       console.log("BEEP")
       return false
     for m in @map[y][x]
