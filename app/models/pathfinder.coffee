@@ -19,7 +19,7 @@ class Pathfinder
       i += 1
     false
   calculate_path: (start,goal) ->
-    return false if @map.collide(goal.x,goal.y)
+    return false if @map.collide_check(goal.x,goal.y)
     start.g = 0
     start.h = distance_between_two_points(start,goal)
     start.f = start.g + start.h
