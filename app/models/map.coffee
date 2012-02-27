@@ -38,7 +38,6 @@ class Map
 
   collide_check: (x,y) ->
     if y < 0 || y > @width - 1 || x < 0 || x > @height - 1
-      console.log("BEEP")
       return false
     for m in @map[y][x]
       return true if m.collide() == true
