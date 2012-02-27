@@ -61,6 +61,9 @@ class ScenarioInitialize
         @units.units[0].set_move(20,10)
         @units.units[0].agility = 25
       when "unpathable_2"
+        @map.width = 40
+        @map.height = 30
+        @map.size_map()
         @units.create new Human(10,10, "pathfinder_one",0)
         begin = (x: 19, y: 9)
         end = (x: 21, y: 9 )
