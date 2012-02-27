@@ -36,9 +36,9 @@ class Map
   drop_crystal: (x,y) ->
     for m in @map[y][x]
       if m.name == "crystal"
+        @redraw.push(x: x, y: y)
         if m.increase() == false
           return false
-        @redraw.push(x: x, y: y)
         return true
 
   collide_check: (x,y) ->
