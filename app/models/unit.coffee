@@ -49,7 +49,7 @@ class Unit
     return if this.at_goal_check()
     if @move_list.length == 0
       result = finder.calculate_path((x: @x, y: @y),(x: @goal_x, y: @goal_y))
-      if result == -1
+      if result == false
         @goal_x = -1
       else
         @move_list = result
