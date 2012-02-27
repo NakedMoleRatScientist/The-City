@@ -522,6 +522,8 @@
               y: unit.y
             });
           }
+          this.dirty_rects = this.dirty_rects.concat(map.redraw);
+          map.redraw = [];
           if (mouse.mode === 1) {
             x = Math.floor(this.p5.mouseX / 20) + map.camera_x;
             y = Math.floor(this.p5.mouseY / 20) + map.camera_y;
@@ -1300,7 +1302,7 @@
       return _results;
     };
     Units.prototype.generate_boars = function() {
-      var existing_boars, size, u, _i, _len, _ref, _results;
+      var existing_boars, name, size, u, _i, _len, _ref, _results;
       existing_boars = 0;
       _ref = this.units;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -1314,7 +1316,8 @@
         _results = [];
         while (existing_boars !== size + 1) {
           existing_boars += 1;
-          _results.push(this.units.push(new Lightboar(0, random_number(100), "lightboar" + existing_boars)));
+          name = random_number(100);
+          _results.push(this.units.push(new Lightboar(0, random_number(100), "lightboar" + name)));
         }
         return _results;
       }
@@ -1860,9 +1863,7 @@
         case "drop_crystal":
           this.drop_item("crystal");
           map.drop_crystal(this.job.drop.x, this.job.drop.y);
-          console.log(this.order);
           this.next_order();
-          console.log(this.order);
           return;
       }
       return this.perform = this.order;
@@ -1962,6 +1963,7 @@
       this.crystals = [];
       this.trees = [];
       this.sketch = new MapSketch(this);
+      this.redraw = [];
     }
     Map.prototype.size_map = function() {
       var h, _ref, _results;
@@ -2017,6 +2019,10 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         m = _ref[_i];
         if (m.name === "crystal") {
+          this.redraw.push({
+            x: x,
+            y: y
+          });
           if (m.increase() === false) {
             return false;
           }
@@ -2239,6 +2245,7 @@
     Pathfinder.prototype.calculate_path = function(start, goal) {
       var best_g_score, close, current, end, g_score, neighbor, now, open, results, _i, _len, _ref;
       if (this.map.collide_check(goal.x, goal.y)) {
+        console.log("Location is unwalkable!");
         return false;
       }
       start.g = 0;
@@ -2285,6 +2292,8 @@
           }
         }
       }
+      end = new Date().getTime();
+      console.log("can't find path. Calculation in MS: " + (end - start));
       return false;
     };
     return Pathfinder;
