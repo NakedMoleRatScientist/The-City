@@ -54,10 +54,10 @@ class Unit
       else
         @move_list = result
     else
-      movement = @move_list[0]
+      movement = @move_list[@move_list.length - 1]
       @x = movement.x
       @y = movement.y
-      @move_list.shift()
+      @move_list.pop()
       if this.at_goal_check()
         this.next_order()
 
