@@ -56,7 +56,7 @@ class Pathfinder
         if best_g_score == true
           neighbor.parent = current
           neighbor.g = g_score
-          neighbor.f = neighbor.g + neighbor.
+          neighbor.f = neighbor.g + neighbor.h
     end = new Date().getTime()
     console.log("can't find path. Calculation in MS: " + (end - start))
     false
