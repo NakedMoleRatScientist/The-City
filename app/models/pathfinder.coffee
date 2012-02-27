@@ -33,8 +33,6 @@ class Pathfinder
           results.push(now)
           now = now.parent
         return results
-      if open[location] == current
-        console.log("BEEP")
       open.splice(location,1) #Remove current from open set
       close.push(current) #Push them to close
       for neighbor in this.calculate_adjacent(current,goal)
