@@ -8,6 +8,7 @@ class Map
     @crystals = []
     @trees = []
     @sketch = new MapSketch(this)
+    @redraw = []
   size_map: () ->
     for h in [0..@height] when h < @height
       @map[h] = new Array(@width)
