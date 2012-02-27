@@ -1131,6 +1131,11 @@
           this.map.sketch.draw(vertical_begin, vertical_end, "wall");
           this.units.units[1].set_move(25, 20);
           return this.units.units[1].agility = 25;
+        case "unpathable_1":
+          this.units.create(new Human(10, 10, "pathfinder_one", 0));
+          this.map.sketch.create_wall(20, 10);
+          this.units.units[0].set_move(20, 10);
+          return this.units.units[0].agility = 25;
         default:
           this.units.create(new Human(10, 10, "Killy", 0));
           this.units.units[0].stance = 1;
@@ -1407,10 +1412,10 @@
           return this.move_list = result;
         }
       } else {
-        movement = this.move_list[0];
+        movement = this.move_list[this.move_list.length - 1];
         this.x = movement.x;
         this.y = movement.y;
-        this.move_list.shift();
+        this.move_list.pop();
         if (this.at_goal_check()) {
           return this.next_order();
         }
@@ -1916,12 +1921,14 @@
   })();
   Map = (function() {
     function Map(width, height) {
-      var h;
+      var h, _ref;
+      this.width = width;
+      this.height = height;
       this.camera_x = 0;
       this.camera_y = 0;
       this.map = new Array(height);
-      for (h = 0; 0 <= height ? h <= height : h >= height; 0 <= height ? h++ : h--) {
-        if (h < height) {
+      for (h = 0, _ref = this.height; 0 <= _ref ? h <= _ref : h >= _ref; 0 <= _ref ? h++ : h--) {
+        if (h < this.height) {
           this.map[h] = new Array(width);
         }
       }
@@ -1984,7 +1991,7 @@
     };
     Map.prototype.collide_check = function(x, y) {
       var m, _i, _len, _ref;
-      if (y < 0 || y > 99 || x < 0 || x > 99) {
+      if (y < 0 || y > this.width - 1 || x < 0 || x > this.height - 1) {
         return false;
       }
       _ref = this.map[y][x];
@@ -2157,7 +2164,7 @@
       this.map = map;
     }
     Pathfinder.prototype.calculate_adjacent = function(location, goal) {
-      var calculation, now, results, x, y, _ref, _ref2, _ref3, _ref4;
+      var now, results, x, y, _ref, _ref2, _ref3, _ref4;
       results = [];
       for (x = _ref = location.x - 1, _ref2 = location.x + 1; _ref <= _ref2 ? x <= _ref2 : x >= _ref2; _ref <= _ref2 ? x++ : x--) {
         for (y = _ref3 = location.y - 1, _ref4 = location.y + 1; _ref3 <= _ref4 ? y <= _ref4 : y >= _ref4; _ref3 <= _ref4 ? y++ : y--) {
@@ -2165,12 +2172,12 @@
             if (!this.map.collide_check(x, y)) {
               now = {
                 x: x,
-                y: y
+                y: y,
+                parent: null,
+                g: 0,
+                f: 0,
+                h: 0
               };
-              calculation = this.calculate_cost(now, location, goal);
-              now.g = calculation.g;
-              now.h = calculation.h;
-              now.cost = calculation.cost;
               results.push(now);
             }
           }
@@ -2178,24 +2185,13 @@
       }
       return results;
     };
-    Pathfinder.prototype.calculate_cost = function(now, location, goal) {
-      var f, g, h;
-      h = distance_between_two_points(goal, now);
-      g = distance_between_two_points(location, now);
-      f = g + h;
-      return {
-        g: g,
-        h: h,
-        cost: f
-      };
-    };
     Pathfinder.prototype.select_least_cost = function(locations) {
       var i, l, select, _i, _len;
       i = 0;
       select = 0;
       for (_i = 0, _len = locations.length; _i < _len; _i++) {
         l = locations[_i];
-        if (l.cost < locations[select].cost) {
+        if (l.f < locations[select].f) {
           select = i;
         }
         i += 1;
@@ -2215,19 +2211,23 @@
       return false;
     };
     Pathfinder.prototype.calculate_path = function(start, goal) {
-      var came_from, close, current, location, neighbor, open, _i, _len, _ref;
+      var best_g_score, close, current, g_score, location, neighbor, now, open, results, _i, _len, _ref;
       start.g = 0;
       start.h = distance_between_two_points(start, goal);
-      start.cost = start.g + start.h;
+      start.f = start.g + start.h;
       close = [];
       open = [start];
-      came_from = [];
-      while (open.length !== 0) {
+      while (open.length > 0) {
         location = this.select_least_cost(open);
         current = open[location];
         if (current.x === goal.x && current.y === goal.y) {
-          came_from.push(current);
-          return came_from;
+          now = current;
+          results = [];
+          while (now.parent) {
+            results.push(now);
+            now = now.parent;
+          }
+          return results;
         }
         open.splice(location, 1);
         close.push(current);
@@ -2237,10 +2237,19 @@
           if (this.part_of(neighbor, close) !== false) {
             continue;
           }
+          g_score = current.g + distance_between_two_points(current, neighbor);
+          best_g_score = false;
           if (this.part_of(neighbor, open) === false) {
+            neighbor.h = distance_between_two_points(neighbor, goal);
             open.push(neighbor);
-          } else if (current.g < neighbor.g) {
-            came_from.push(current);
+            best_g_score = true;
+          } else if (g_score < neighbor.g) {
+            best_g_score = true;
+          }
+          if (best_g_score === true) {
+            neighbor.parent = current;
+            neighbor.g = g_score;
+            neighbor.f = neighbor.g + neighbor.h;
           }
         }
       }
@@ -2249,7 +2258,7 @@
     return Pathfinder;
   })();
   scenarioList = function() {
-    return ["combat", "hand_disability_combat", "leg_disability", "pig_invasion", "hand_disability_gathering", "full_test_boars", "pathfinding"];
+    return ["combat", "hand_disability_combat", "leg_disability", "pig_invasion", "hand_disability_gathering", "full_test_boars", "pathfinding", "unpathable_1"];
   };
   Subpart = (function() {
     function Subpart(name, type) {
