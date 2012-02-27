@@ -66,7 +66,7 @@ class Unit
       return
     if @order != null
       @order += 1
-    if @order > @queue.length
+    if @order == @queue.length
       @order = 0
   is_next_to_target: () ->
     if distance_between_two_points(this,@target) == 1
