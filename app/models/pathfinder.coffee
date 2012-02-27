@@ -24,7 +24,9 @@ class Pathfinder
     start.f = start.g + start.h
     close = []
     open = [start]
+    start = new Date().getTime()
     while open.length > 0
+      open.sort(this.sort_by_least_cost)
       current = open[0]
       if current.x == goal.x && current.y == goal.y
         now = current
@@ -33,7 +35,7 @@ class Pathfinder
           results.push(now)
           now = now.parent
         return results
-      open.splice(location,1) #Remove current from open set
+      open.splice(0,1) #Remove current from open set
       close.push(current) #Push them to close
       for neighbor in this.calculate_adjacent(current,goal)
         if this.part_of(neighbor,close) != false
@@ -44,7 +46,6 @@ class Pathfinder
         if this.part_of(neighbor,open) == false
           neighbor.h = distance_between_two_points(neighbor,goal)
           open.push(neighbor)
-          open.sort(this.sort_by_least_cost)
           best_g_score = true
         else if g_score < neighbor.g
           best_g_score = true
@@ -54,4 +55,6 @@ class Pathfinder
           neighbor.parent = current
           neighbor.g = g_score
           neighbor.f = neighbor.g + neighbor.h
+    end = new Date().getTime()
+    console.log("path calculation time in MS: " + (end - start))
     false
