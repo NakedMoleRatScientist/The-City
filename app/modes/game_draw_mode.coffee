@@ -28,6 +28,8 @@ class GameDrawMode extends DrawMode
         @dirty_rects = []
         for unit in units
           @dirty_rects.push(x: unit.x, y: unit.y)
+        @dirty_rects.concat(map.redraw)
+        map.redraw = []
         if mouse.mode == 1
           x = Math.floor(@p5.mouseX / 20) + map.camera_x
           y = Math.floor(@p5.mouseY / 20) + map.camera_y
