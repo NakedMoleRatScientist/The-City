@@ -70,6 +70,8 @@ class ScenarioInitialize
         @map.sketch.draw(begin,end,"wall")
         @map.sketch.create_wall(19,10)
         @map.sketch.create_wall(21,10)
+        @units.units[0].set_move(20,10)
+        @units.units[0].agility = 25
       else
         @units.create new Human(10,10, "Killy",0)
         @units.units[0].stance = 1
