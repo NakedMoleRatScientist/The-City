@@ -25,7 +25,11 @@ class Human extends Unit
         this.set_move(choice.x,choice.y)
       when "gather_crystal"
         this.acquire_item(@job.nearest.acquire())
+        this.next_order()
+        return
       when "drop_crystal"
         this.drop_item("crystal")
         map.drop_crystal(@job.drop.x,@job.drop.y)
+        this.next_order()
+        return
     @perform = @order
