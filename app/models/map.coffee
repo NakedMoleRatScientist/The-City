@@ -10,7 +10,7 @@ class Map
     @sketch = new MapSketch(this)
   size_map: () ->
     for h in [0..@height] when h < @height
-      @map[h] = new Array(width)
+      @map[h] = new Array(@width)
 
   generate: ->
     for h in [0..@map.length] when h < @map.length
