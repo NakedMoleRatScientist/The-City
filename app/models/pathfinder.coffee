@@ -45,7 +45,6 @@ class Pathfinder
           continue
         g_score = current.g + distance_between_two_points(current,neighbor)
         best_g_score = false
-
         if this.part_of(neighbor,open) == false
           neighbor.h = distance_between_two_points(neighbor,goal)
           open.push(neighbor)
