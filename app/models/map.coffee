@@ -1,9 +1,9 @@
 class Map
-  constructor: (width, height) ->
+  constructor: (@width, @height) ->
     @camera_x = 0
     @camera_y = 0
     @map = new Array(height)
-    for h in [0..height] when h < height
+    for h in [0..@height] when h < @height
       @map[h] = new Array(width)
     @stockpoints = []
     @crystals = []
@@ -38,6 +38,7 @@ class Map
 
   collide_check: (x,y) ->
     if y < 0 || y > 99 || x < 0 || x > 99
+      console.log("BEEP")
       return false
     for m in @map[y][x]
       return true if m.collide() == true
