@@ -19,6 +19,7 @@ class Pathfinder
       i += 1
     false
   calculate_path: (start,goal) ->
+    return false if map.collide(goal.x,goal.y)
     start.g = 0
     start.h = distance_between_two_points(start,goal)
     start.f = start.g + start.h
@@ -34,9 +35,11 @@ class Pathfinder
         while (now.parent)
           results.push(now)
           now = now.parent
+        end = new Date().getTime()
         console.log("path calculation time in MS: " + (end - start))
         return results
       open.splice(0,1) #Remove current from open set
+      console.log(open.length)
       close.push(current) #Push them to close
       for neighbor in this.calculate_adjacent(current,goal)
         if this.part_of(neighbor,close) != false
@@ -56,5 +59,4 @@ class Pathfinder
           neighbor.parent = current
           neighbor.g = g_score
           neighbor.f = neighbor.g + neighbor.h
-    end = new Date().getTime()
     false
