@@ -1160,7 +1160,7 @@
           this.units.units[0].set_move(20, 10);
           return this.units.units[0].agility = 25;
         default:
-          this.map.generate.generate_trees();
+          this.map.generate.generate();
           this.units.create(new Human(10, 10, "Killy", 0));
           this.units.units[0].stance = 1;
           this.units.create(new Human(12, 10, "Cibo", 1));
@@ -1798,6 +1798,25 @@
       }
       return _results;
     };
+    GenerateMap.prototype.generate_floors = function() {
+      var free, i, locations, m, _i, _len, _ref, _ref2, _results;
+      locations = [];
+      _ref = this.map.trees;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        m = _ref[_i];
+        free = this.map.free_locations(m.x, m.y, 1);
+        locations.push(free[random_number(free.length)]);
+      }
+      _results = [];
+      for (i = 0, _ref2 = locations.length - 2; 0 <= _ref2 ? i <= _ref2 : i >= _ref2; 0 <= _ref2 ? i++ : i--) {
+        _results.push(this.sketch.draw(locations[i], locations[i + 1], "floor"));
+      }
+      return _results;
+    };
+    GenerateMap.prototype.generate = function() {
+      this.generate_trees();
+      return this.generate_floors();
+    };
     return GenerateMap;
   })();
   Head = (function() {
@@ -1869,6 +1888,12 @@
           break;
         case "move_to_crystal":
           object = this.job.nearest;
+          if (object === null) {
+            this.job = null;
+            this.queue = [];
+            this.perform = null;
+            return;
+          }
           choices = map.free_locations(object.x, object.y, 1);
           choice = choices[random_number(choices.length)];
           this.set_move(choice.x, choice.y);
@@ -2158,6 +2183,11 @@
       this.map.map[y][x].push(crystal);
       return crystal;
     };
+    MapSketch.prototype.create_floor = function(x, y) {
+      var floor;
+      floor = new Floor(x, y);
+      return this.map.map[y][x].push(floor);
+    };
     MapSketch.prototype.draw = function(point_a, point_b, type) {
       var location, results, _i, _len, _results;
       results = this.finder.calculate_path(point_a, point_b);
@@ -2172,6 +2202,8 @@
                 return this.create_wall(location.x, location.y);
               case "crystal":
                 return this.create_crystal(location.x, location.y);
+              case "floor":
+                return this.create_floor(location.x, location.y);
             }
           }).call(this));
         }
@@ -2530,7 +2562,7 @@
   };
   floor_draw = function(p5, x, y) {
     p5.noStroke();
-    p5.fill();
+    p5.fill(190, 190, 190);
     return p5.rect(x, y, 20, 20);
   };
   frameRateDraw = function(p5) {
