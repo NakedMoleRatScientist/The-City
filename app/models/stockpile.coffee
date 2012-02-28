@@ -17,7 +17,8 @@ class Stockpile
     @drop = map.sketch.create_crystal(location.x,location.y)
   get_drop_location: (map) ->
     if @drop == null
-      this.create_drop(map)
+      if this.create_drop(map) == false
+        return false
     else if @drop.fullness() == true
       if this.create_drop(map) == false
         return false
