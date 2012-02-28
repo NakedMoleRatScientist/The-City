@@ -22,7 +22,7 @@ class MapSketch
       diff_x = Math.abs(@last.x - floor.x)
       diff_y = Math.abs(@last.y - floor.y)
       if diff_x > 0
-        for i in [1..@thickness]
+        for i in [1..@thickness - 1]
           change_y = y - i
           newfloor = new Floor(x,change_y)
           if @map.inbound(x,change_y) == true
