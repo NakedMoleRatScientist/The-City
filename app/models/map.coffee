@@ -2,7 +2,7 @@ class Map
   constructor: (@width, @height) ->
     @camera_x = 0
     @camera_y = 0
-    @map = new Array(@height)
+    @map = []
     this.size_map()
     @stockpoints = []
     @crystals = []
@@ -10,10 +10,10 @@ class Map
     @sketch = new MapSketch(this)
     @redraw = []
   size_map: () ->
-    for y in @map
-      @map[y] = new Array(@width)
-      for x in @map[y]
-        x = []
+    for y in [0..@height - 1]
+      @map.push(new Array(@width))
+      for x in [0..@width - 1]
+        @map[y][x] = []
 
   items_total: () ->
     items = 0
