@@ -8,6 +8,7 @@ class Map
     @crystals = []
     @trees = []
     @sketch = new MapSketch(this)
+    @generate = new GenerateMap(this)
     @redraw = []
   size_map: () ->
     for y in [0..@height - 1]
