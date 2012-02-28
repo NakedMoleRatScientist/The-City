@@ -12,13 +12,9 @@ class Map
   size_map: () ->
     for h in [0..@height] when h < @height
       @map[h] = new Array(@width)
-
-  generate: ->
-    for h in [0..@map.length] when h < @map.length
-      for w in [0..@map[h].length] when w < @map[h].length
-        if (Math.random() * 10) > 5
-          @map[h][w] = [new Floor(w,h)]
-        else
+  setup_map:
+    for y in [0..@map.length - 1]
+      for x in [0..@map[h].length - 1]
           @map[h][w] = []
 
   items_total: () ->
