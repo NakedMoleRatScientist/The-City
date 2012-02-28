@@ -1820,7 +1820,7 @@
       }
       _results = [];
       for (i = 0, _ref2 = locations.length - 2; 0 <= _ref2 ? i <= _ref2 : i >= _ref2; 0 <= _ref2 ? i++ : i--) {
-        this.sketch.thickness = 3;
+        this.sketch.thicken = true;
         _results.push(this.sketch.draw(locations[i], locations[i + 1], "floor"));
       }
       return _results;
@@ -2185,23 +2185,26 @@
     function MapSketch(map) {
       this.map = map;
       this.finder = new Pathfinder(this.map);
-      this.thickness = 1;
+      this.thicken = false;
       this.last = null;
     }
     MapSketch.prototype.create_wall = function(x, y) {
-      return this.map.map[y][x].push(new Wall(x, y));
+      var wall;
+      wall = new Wall(x, y);
+      return this.push_to_map(x, y, wall);
     };
     MapSketch.prototype.create_tree = function(x, y) {
       var tree;
       tree = new CrystalTree(x, y);
-      this.map.map[y][x].push(tree);
-      return this.map.trees.push(tree);
+      if (this.push_to_map(x, y, tree) === true) {
+        return this.map.trees.push(tree);
+      }
     };
     MapSketch.prototype.create_crystal = function(x, y) {
       var crystal;
       crystal = new Crystal(x, y);
       crystal.stack = this.map.map[y][x].length;
-      if (this.push_to_map(crystal) === true) {
+      if (this.push_to_map(x, y, crystal) === true) {
         this.map.crystals.push(crystal);
       }
       return crystal;
@@ -2226,6 +2229,21 @@
       this.push_to_map(x, y, second_floor);
       return this.last = floor;
     };
+    MapSketch.prototype.rect_draw = function(begin, end, type) {
+      var x, y, _ref, _ref2, _results;
+      _results = [];
+      for (x = _ref = begin.x, _ref2 = end.x - 1; _ref <= _ref2 ? x <= _ref2 : x >= _ref2; _ref <= _ref2 ? x++ : x--) {
+        _results.push((function() {
+          var _ref3, _ref4, _results2;
+          _results2 = [];
+          for (y = _ref3 = begin.y, _ref4 = end.y - 1; _ref3 <= _ref4 ? y <= _ref4 : y >= _ref4; _ref3 <= _ref4 ? y++ : y--) {
+            _results2.push(this.draw_location(x, y, type));
+          }
+          return _results2;
+        }).call(this));
+      }
+      return _results;
+    };
     MapSketch.prototype.pathing = function(point_a, point_b) {
       var results;
       results = this.finder.calculate_path(point_a, point_b);
@@ -2234,21 +2252,22 @@
       }
       return results;
     };
+    MapSketch.prototype.determine = function(location, type) {
+      switch (type) {
+        case "wall":
+          return this.create_wall(location.x, location.y);
+        case "crystal":
+          return this.create_crystal(location.x, location.y);
+        case "floor":
+          return this.create_floor(location.x, location.y);
+      }
+    };
     MapSketch.prototype.draw = function(point_a, point_b, type) {
       var location, results, _i, _len;
       results = this.pathing(point_a, point_b);
       for (_i = 0, _len = results.length; _i < _len; _i++) {
         location = results[_i];
-        switch (type) {
-          case "wall":
-            this.create_wall(location.x, location.y);
-            break;
-          case "crystal":
-            this.create_crystal(location.x, location.y);
-            break;
-          case "floor":
-            this.create_floor(location.x, location.y);
-        }
+        this.determine(location, type);
       }
       return this.last = null;
     };
