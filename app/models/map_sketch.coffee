@@ -21,10 +21,11 @@ class MapSketch
       diff_x = Math.abs(@last.x - floor.x)
       diff_y = Math.abs(@last.y - floor.y)
       if diff_x > 0
-        for i in [0..@thickness - 1]
+        for i in [1..@thickness]
+          console.log("BEEP")
           new_floor = new Floor(x,y - i)
       else if diff_y > 0
-        for i in [0..@thickness - 1]
+        for i in [1..@thickness]
           new_floor = new Floor(x,y - i)
     @last = floor
   pathing: (point_a,point_b) ->
