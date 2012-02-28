@@ -10,7 +10,7 @@ class Map
     @sketch = new MapSketch(this)
     @redraw = []
   size_map: () ->
-    for y in [0..@height - 1]
+    for y in @map
       @map[y] = new Array(@width)
       for x in @map[y]
         x = []
