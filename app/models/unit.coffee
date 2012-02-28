@@ -54,9 +54,6 @@ class Unit
       result = finder.calculate_path((x: @x, y: @y),(x: @goal_x, y: @goal_y))
       if result == false
         @goal_x = -1
-      else if result.length == 0
-        console.log("BEEP")
-        this.next_order()
       else
         @move_list = result
     else
