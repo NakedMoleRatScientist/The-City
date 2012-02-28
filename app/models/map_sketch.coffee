@@ -1,7 +1,7 @@
 class MapSketch
   constructor: (@map) ->
     @finder = new Pathfinder(@map)
-    @thicken = 0
+    @thicken = false
     @last = null
   create_wall: (x, y) ->
     wall = new Wall(x,y)
