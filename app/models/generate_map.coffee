@@ -12,6 +12,7 @@ class GenerateMap
       free = @map.free_locations(m.x,m.y,1)
       locations.push(free[random_number(free.length)])
     for i in [0..locations.length - 2]
+      @sketch.thickness = 3
       @sketch.draw(locations[i],locations[i + 1],"floor")
   generate: () ->
     this.generate_trees()
