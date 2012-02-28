@@ -23,12 +23,12 @@ class MapSketch
       diff_y = Math.abs(@last.y - floor.y)
       if diff_x > 0
         for i in [1..@thickness]
-          console.log("BEEP")
-          new_floor = new Floor(x,y - i)
+          newfloor = new Floor(x,y - i)
+          @map.map[y][x].push(newfloor)
       else if diff_y > 0
         for i in [1..@thickness]
-          console.log("REEP")
-          new_floor = new Floor(x,y - i)
+          newfloor = new Floor(x,y - i)
+          @map.map[y][x].push(newfloor)
     @last = floor
   pathing: (point_a,point_b) ->
     results = @finder.calculate_path(point_a,point_b)
