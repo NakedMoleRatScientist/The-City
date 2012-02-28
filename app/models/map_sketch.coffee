@@ -27,8 +27,8 @@ class MapSketch
           @map.map[y][x].push(newfloor)
       else if diff_y > 0
         for i in [1..@thickness]
-          newfloor = new Floor(x - 1,y)
-          @map.map[y][x].push(newfloor)
+          newfloor = new Floor(x - i,y)
+          @map.map[y][x - i].push(newfloor)
     @last = floor
   pathing: (point_a,point_b) ->
     results = @finder.calculate_path(point_a,point_b)
