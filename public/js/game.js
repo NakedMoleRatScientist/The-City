@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw;
+  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -1772,6 +1772,17 @@
     };
     return CrystalTree;
   })();
+  DebugTile = (function() {
+    function DebugTile(x, y) {
+      this.x = x;
+      this.y = y;
+      this.name = "debug";
+    }
+    DebugTile.prototype.collide = function() {
+      return false;
+    };
+    return DebugTile;
+  })();
   Floor = (function() {
     function Floor(x, y) {
       this.x = x;
@@ -2190,40 +2201,29 @@
       var crystal;
       crystal = new Crystal(x, y);
       crystal.stack = this.map.map[y][x].length;
-      this.map.crystals.push(crystal);
-      this.map.map[y][x].push(crystal);
+      if (this.push_to_map(crystal) === true) {
+        this.map.crystals.push(crystal);
+      }
       return crystal;
     };
     MapSketch.prototype.push_to_map = function(x, y, item) {
-      if (this.map.map[y][x].length === 0) {
-        return this.map.map[y][x].push(item);
+      if (this.map.map[y][x].length === 0 && this.map.inbound(x, y) === true) {
+        this.map.map[y][x].push(item);
+        return true;
       }
+      return false;
     };
     MapSketch.prototype.create_floor = function(x, y) {
-      var change_x, change_y, diff_x, diff_y, floor, i, newfloor, _ref, _ref2;
+      var first_floor, floor, second_floor;
       floor = new Floor(x, y);
       this.push_to_map(x, y, floor);
-      if (this.last !== null) {
-        diff_x = Math.abs(this.last.x - floor.x);
-        diff_y = Math.abs(this.last.y - floor.y);
-        if (diff_x > 0) {
-          for (i = 1, _ref = this.thickness - 1; 1 <= _ref ? i <= _ref : i >= _ref; 1 <= _ref ? i++ : i--) {
-            change_y = y - i;
-            newfloor = new Floor(x, change_y);
-            if (this.map.inbound(x, change_y) === true) {
-              this.push_to_map(x, change_y, newfloor);
-            }
-          }
-        } else if (diff_y > 0) {
-          for (i = 1, _ref2 = this.thickness - 1; 1 <= _ref2 ? i <= _ref2 : i >= _ref2; 1 <= _ref2 ? i++ : i--) {
-            change_x = x - i;
-            newfloor = new Floor(change_x, y);
-            if (this.map.inbound(change_x, y) === true) {
-              this.push_to_map(change_x, y, newfloor);
-            }
-          }
-        }
-      }
+      x -= 1;
+      first_floor = new Floor(x, y);
+      this.push_to_map(x, y, first_floor);
+      x += 1;
+      y -= 1;
+      second_floor = new Floor(x, y);
+      this.push_to_map(x, y, second_floor);
       return this.last = floor;
     };
     MapSketch.prototype.pathing = function(point_a, point_b) {
@@ -2523,6 +2523,11 @@
     p5.fill(0, 0, 255);
     return p5.rect(x, y, 20, 20);
   };
+  debug_draw = function(p5, x, y) {
+    p5.noStroke();
+    p5.fill(255, 0, 0);
+    return p5.rect(x, y, 20, 20);
+  };
   determineCameraRedraw = function(map, old_camera) {
     if (old_camera.x === null || old_camera.y === null) {
       return true;
@@ -2574,6 +2579,9 @@
         break;
       case "wall":
         wallDraw(p5, x, y);
+        break;
+      case "debug":
+        debug_draw(p5, x, y);
     }
     return true;
   };
@@ -2625,6 +2633,7 @@
     menuTitleText(this.p5, "Game Menu");
     this.p5.fill(255, 255, 0);
     this.p5.text("b - build", x, y);
+    this.p5.text("v - view", x, y += height);
     return this.p5.text("m - hide menu", x, y += height);
   };
   instructionDraw = function(p5) {
