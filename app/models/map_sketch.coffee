@@ -22,11 +22,11 @@ class MapSketch
     floor = new Floor(x,y)
     this.push_to_map(x,y,floor)
     x -= 1
-    first_floor = new DebugTile(x,y)
+    first_floor = new Floor(x,y)
     this.push_to_map(x,y,first_floor)
     x += 1
     y -= 1
-    second_floor = new DebugTile(x,y)
+    second_floor = new Floor(x,y)
     this.push_to_map(x,y,second_floor)
     @last = floor
   pathing: (point_a,point_b) ->
