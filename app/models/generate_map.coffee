@@ -9,5 +9,5 @@ class GenerateMap
       @sketch.create_tree(x,y)
       places = @map.free_locations(x,y,1)
       locations.push(places[random_number(places.length)])
-    for i in [0..locations.length - 1] when i % 2 == 0
+    for i in [0..locations.length - 2]
       @sketch.draw(locations[i],locations[i + 1],"floor")
