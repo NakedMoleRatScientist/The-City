@@ -24,7 +24,7 @@ class MapSketch
       if diff_x > 0
         for i in [1..@thickness]
           change_y = y - i
-          newfloor = new Floor(x,y - i)
+          newfloor = new Floor(x,change_y)
           if @map.inbound(x,change_y) == true
             @map.map[change_y][x].push(newfloor)
       else if diff_y > 0
