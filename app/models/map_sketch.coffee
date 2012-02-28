@@ -12,7 +12,7 @@ class MapSketch
   create_crystal: (x,y) ->
     crystal = new Crystal(x,y)
     crystal.stack = @map.map[y][x].length
-    if this.push_to_map(crystal) == true
+    if this.push_to_map(x,y,crystal) == true
       @map.crystals.push(crystal)
     return crystal
   push_to_map: (x,y,item) ->
