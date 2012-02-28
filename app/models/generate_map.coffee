@@ -13,3 +13,6 @@ class GenerateMap
       locations.push(free[random_number(free.length)])
     for i in [0..locations.length - 2]
       @sketch.draw(locations[i],locations[i + 1],"floor")
+  generate: () ->
+    this.generate_trees()
+    this.generate_floors()
