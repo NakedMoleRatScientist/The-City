@@ -1,7 +1,6 @@
 class GameMode extends Mode
   constructor: ->
     @map = new Map(100,100)
-    @map.generate()
     @units = new Units(@map)
     @menu = 0
     @mouse = new Mouse()
