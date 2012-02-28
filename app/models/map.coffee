@@ -10,13 +10,10 @@ class Map
     @sketch = new MapSketch(this)
     @redraw = []
   size_map: () ->
-    for h in [0..@height] when h < @height
-      @map[h] = new Array(@width)
-    this.setup_map()
-  setup_map:
-    for y in [0..@map.length - 1]
-      for x in [0..@map[h].length - 1]
-          @map[y][x] = []
+    for y in [0..@height - 1]
+      @map[y] = new Array(@width)
+      for x in @map[y]
+        x = []
 
   items_total: () ->
     items = 0
