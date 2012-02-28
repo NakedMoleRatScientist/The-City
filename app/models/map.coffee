@@ -2,7 +2,7 @@ class Map
   constructor: (@width, @height) ->
     @camera_x = 0
     @camera_y = 0
-    @map = new Array(height)
+    @map = new Array(@height)
     this.size_map()
     @stockpoints = []
     @crystals = []
