@@ -45,3 +45,4 @@ class MapSketch
           this.create_crystal(location.x,location.y)
         when "floor"
           this.create_floor(location.x,location.y)
+    @last = null
