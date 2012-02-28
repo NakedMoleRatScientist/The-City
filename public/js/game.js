@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw;
+  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -628,7 +628,6 @@
     __extends(GameMode, Mode);
     function GameMode() {
       this.map = new Map(100, 100);
-      this.map.generate();
       this.units = new Units(this.map);
       this.menu = 0;
       this.mouse = new Mouse();
@@ -1161,6 +1160,7 @@
           this.units.units[0].set_move(20, 10);
           return this.units.units[0].agility = 25;
         default:
+          this.map.generate.generate_trees();
           this.units.create(new Human(10, 10, "Killy", 0));
           this.units.units[0].stance = 1;
           this.units.create(new Human(12, 10, "Cibo", 1));
@@ -1195,7 +1195,7 @@
         }
       }
       if (this.frame % 1000 === 0) {
-        if (this.map.items_total() > 50) {
+        if (this.map.items_total() > 50 && random_number(5) === 0) {
           this.generate_boars();
         }
       }
@@ -1421,6 +1421,7 @@
         return;
       }
       if (this.at_goal_check()) {
+        this.next_order();
         return;
       }
       if (this.move_list.length === 0) {
@@ -1440,10 +1441,7 @@
         movement = this.move_list[this.move_list.length - 1];
         this.x = movement.x;
         this.y = movement.y;
-        this.move_list.pop();
-        if (this.at_goal_check()) {
-          return this.next_order();
-        }
+        return this.move_list.pop();
       }
     };
     Unit.prototype.next_order = function() {
@@ -1607,7 +1605,9 @@
     };
     Stockpile.prototype.get_drop_location = function(map) {
       if (this.drop === null) {
-        this.create_drop(map);
+        if (this.create_drop(map) === false) {
+          return false;
+        }
       } else if (this.drop.fullness() === true) {
         if (this.create_drop(map) === false) {
           return false;
@@ -1783,6 +1783,23 @@
     };
     return Floor;
   })();
+  GenerateMap = (function() {
+    function GenerateMap(map) {
+      this.map = map;
+      this.sketch = this.map.sketch;
+    }
+    GenerateMap.prototype.generate_trees = function() {
+      var i, x, y, _results;
+      _results = [];
+      for (i = 0; i <= 9; i++) {
+        x = random_number(this.map.width);
+        y = random_number(this.map.height);
+        _results.push(this.sketch.create_tree(x, y));
+      }
+      return _results;
+    };
+    return GenerateMap;
+  })();
   Head = (function() {
     __extends(Head, Part);
     function Head() {
@@ -1858,13 +1875,10 @@
           break;
         case "gather_crystal":
           this.acquire_item(this.job.nearest.acquire());
-          this.next_order();
-          return;
+          break;
         case "drop_crystal":
           this.drop_item("crystal");
           map.drop_crystal(this.job.drop.x, this.job.drop.y);
-          this.next_order();
-          return;
       }
       return this.perform = this.order;
     };
@@ -1928,8 +1942,7 @@
           break;
         case "act":
           this.acquire_item(map.acquire(this.target_item.x, this.target_item.y));
-          this.next_order();
-          return;
+          break;
         case "move_to_escape":
           object = nearest_edge(this);
           this.set_move(object.x, object.y);
@@ -1957,48 +1970,28 @@
       this.height = height;
       this.camera_x = 0;
       this.camera_y = 0;
-      this.map = new Array(height);
+      this.map = [];
       this.size_map();
       this.stockpoints = [];
       this.crystals = [];
       this.trees = [];
       this.sketch = new MapSketch(this);
+      this.generate = new GenerateMap(this);
       this.redraw = [];
     }
     Map.prototype.size_map = function() {
-      var h, _ref, _results;
+      var x, y, _ref, _results;
       _results = [];
-      for (h = 0, _ref = this.height; 0 <= _ref ? h <= _ref : h >= _ref; 0 <= _ref ? h++ : h--) {
-        if (h < this.height) {
-          _results.push(this.map[h] = new Array(this.width));
-        }
-      }
-      return _results;
-    };
-    Map.prototype.generate = function() {
-      var h, i, tree, w, x, y, _ref, _ref2, _results;
-      for (h = 0, _ref = this.map.length; 0 <= _ref ? h <= _ref : h >= _ref; 0 <= _ref ? h++ : h--) {
-        if (h < this.map.length) {
-          for (w = 0, _ref2 = this.map[h].length; 0 <= _ref2 ? w <= _ref2 : w >= _ref2; 0 <= _ref2 ? w++ : w--) {
-            if (w < this.map[h].length) {
-              if ((Math.random() * 10) > 5) {
-                this.map[h][w] = [new Floor(w, h)];
-              } else {
-                this.map[h][w] = [];
-              }
-            }
+      for (y = 0, _ref = this.height - 1; 0 <= _ref ? y <= _ref : y >= _ref; 0 <= _ref ? y++ : y--) {
+        this.map.push(new Array(this.width));
+        _results.push((function() {
+          var _ref2, _results2;
+          _results2 = [];
+          for (x = 0, _ref2 = this.width - 1; 0 <= _ref2 ? x <= _ref2 : x >= _ref2; 0 <= _ref2 ? x++ : x--) {
+            _results2.push(this.map[y][x] = []);
           }
-        }
-      }
-      _results = [];
-      for (i = 0; i <= 10; i++) {
-        if (i < 10) {
-          x = Math.floor(Math.random() * this.width);
-          y = Math.floor(Math.random() * this.height);
-          tree = new CrystalTree(x, y);
-          this.map[y][x].push(tree);
-          _results.push(this.trees.push(tree));
-        }
+          return _results2;
+        }).call(this));
       }
       return _results;
     };
@@ -2109,11 +2102,6 @@
           x: x,
           y: y
         };
-      } else if (this.collide_check(x, y) === true && this.select_by_name("crystal_stockpile", x, y) === true) {
-        return {
-          x: x,
-          y: y
-        };
       }
       return false;
     };
@@ -2155,6 +2143,12 @@
     }
     MapSketch.prototype.create_wall = function(x, y) {
       return this.map.map[y][x].push(new Wall(x, y));
+    };
+    MapSketch.prototype.create_tree = function(x, y) {
+      var tree;
+      tree = new CrystalTree(x, y);
+      this.map.map[y][x].push(tree);
+      return this.map.trees.push(tree);
     };
     MapSketch.prototype.create_crystal = function(x, y) {
       var crystal;
@@ -2516,17 +2510,14 @@
       d = dirty[_i];
       location = map.map[d.y][d.x];
       coord = translateIntoDrawCoord(d, map);
-      if (location.length === 0) {
-        p5.noStroke();
-        p5.fill(0);
-        p5.rect(coord.x, coord.y, 20, 20);
-      } else {
-        for (_j = 0, _len2 = location.length; _j < _len2; _j++) {
-          item = location[_j];
-          result = determineRectDraw(item, coord.x, coord.y, p5);
-          if (result !== true) {
-            delay.push(result);
-          }
+      p5.noStroke();
+      p5.fill(0);
+      p5.rect(coord.x, coord.y, 20, 20);
+      for (_j = 0, _len2 = location.length; _j < _len2; _j++) {
+        item = location[_j];
+        result = determineRectDraw(item, coord.x, coord.y, p5);
+        if (result !== true) {
+          delay.push(result);
         }
       }
     }
