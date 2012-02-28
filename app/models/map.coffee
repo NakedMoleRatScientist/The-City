@@ -93,7 +93,7 @@ class Map
       if this.inbound(x,y)
         if @map[y][x].length == 0 || this.collide_check(x,y) == false
           locations.push((x: x,y: y))
-        x += 1
+      x += 1
     return locations
   acquire: (x,y) ->
     this.select_by_name("crystal",x,y).acquire()
