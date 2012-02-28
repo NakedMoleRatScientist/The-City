@@ -16,20 +16,18 @@ class MapSketch
     @map.map[y][x].push(crystal)
     return crystal
   push_to_map: (x,y,item) ->
-    if @map.map[y][x].length == 0
+    if @map.map[y][x].length == 0 && @map.inbound(x,y) == true
       @map.map[y][x].push(item)
   create_floor: (x,y) ->
     floor = new Floor(x,y)
     this.push_to_map(x,y,floor)
     x -= 1
     first_floor = new DebugTile(x,y)
-    if @map.inbound(x,y) == true
-      this.push_to_map(x,y,first_floor)
+    this.push_to_map(x,y,first_floor)
     x += 1
     y -= 1
     second_floor = new DebugTile(x,y)
-    if @map.inbound(x,y) == true
-      this.push_to_map(x,y,second_floor)
+    this.push_to_map(x,y,second_floor)
     @last = floor
   pathing: (point_a,point_b) ->
     results = @finder.calculate_path(point_a,point_b)
