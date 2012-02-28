@@ -13,6 +13,9 @@ class MapSketch
     @map.crystals.push(crystal)
     @map.map[y][x].push(crystal)
     return crystal
+  create_floor: (x,y) ->
+    floor = new Floor(x,y)
+    @map.map[y][x].push(floor)
 
   draw: (point_a,point_b,type) ->
     results = @finder.calculate_path(point_a,point_b)
