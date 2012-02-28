@@ -28,9 +28,12 @@ class Map
         if m.increase() == false
           return false
         return true
-
-  collide_check: (x,y) ->
+  inbound: () ->
     if y < 0 || y > @width - 1 || x < 0 || x > @height - 1
+      return true
+    false
+  collide_check: (x,y) ->
+    if this.inbound()
       return true
     for m in @map[y][x]
       return true if m.collide() == true
