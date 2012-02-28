@@ -10,4 +10,6 @@ determineRectDraw = (location,x,y,p5) ->
       crystal_draw(p5,x,y,location.items,location.background)
     when "wall"
       wallDraw(p5,x,y)
+    when "debug"
+      debug_draw(p5,x,y)
   return true
