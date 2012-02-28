@@ -20,13 +20,6 @@ class Map
           @map[h][w] = [new Floor(w,h)]
         else
           @map[h][w] = []
-    for i in [0..10] when i < 10
-      x = Math.floor(Math.random() * @width)
-      y = Math.floor(Math.random() * @height)
-      tree = new CrystalTree(x,y)
-      @map[y][x].push(tree)
-      @trees.push(tree)
-
 
   items_total: () ->
     items = 0
