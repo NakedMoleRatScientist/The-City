@@ -15,6 +15,8 @@ class MapSketch
     @map.crystals.push(crystal)
     @map.map[y][x].push(crystal)
     return crystal
+  push_to_map: (x,y,item) ->
+    @map.map[y][x].push(item)
   create_floor: (x,y) ->
     floor = new Floor(x,y)
     @map.map[y][x].push(floor)
