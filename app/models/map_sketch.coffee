@@ -4,7 +4,8 @@ class MapSketch
     @thickness = 1
     @last = null
   create_wall: (x, y) ->
-    @map.map[y][x].push(new Wall(x,y))
+    wall = new Wall(x,y)
+    this.push_to_map(x,y,wall)
   create_tree: (x, y) ->
     tree = new CrystalTree(x,y)
     if this.push_to_map(x,y,tree) == true
