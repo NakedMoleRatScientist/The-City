@@ -21,21 +21,15 @@ class MapSketch
   create_floor: (x,y) ->
     floor = new Floor(x,y)
     this.push_to_map(x,y,floor)
-    unless @last == null
-      diff_x = Math.abs(@last.x - floor.x)
-      diff_y = Math.abs(@last.y - floor.y)
-      if diff_x > 0
-        for i in [1..@thickness - 1]
-          change_y = y - i
-          newfloor = new Floor(x,change_y)
-          if @map.inbound(x,change_y) == true
-            this.push_to_map(x,change_y,newfloor)
-      else if diff_y > 0
-        for i in [1..@thickness - 1]
-          change_x = x - i
-          newfloor = new Floor(change_x,y)
-          if @map.inbound(change_x,y) == true
-            this.push_to_map(change_x,y,newfloor)
+    x -= 1
+    first_floor = new DebugTile(x,y)
+    if @map.inbound(x,y) == true
+      this.push_to_map(x,y,first_floor)
+    x += 1
+    y -= 1
+    second_floor = new DebugTile(x,y)
+    if @map.inbound(x,y) == true
+      this.push_to_map(x,y,second_floor)
     @last = floor
   pathing: (point_a,point_b) ->
     results = @finder.calculate_path(point_a,point_b)
