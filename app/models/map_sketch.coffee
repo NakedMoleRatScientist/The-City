@@ -32,6 +32,10 @@ class MapSketch
     second_floor = new Floor(x,y)
     this.push_to_map(x,y,second_floor)
     @last = floor
+  rect_draw: (begin,end,type) ->
+    for x in [begin.x..end.x - 1]
+      for y in [begin.y..end.y - 1]
+        this.draw_location(x,y,type)
   pathing: (point_a,point_b) ->
     results = @finder.calculate_path(point_a,point_b)
     if results != -1
