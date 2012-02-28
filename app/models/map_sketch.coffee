@@ -23,11 +23,11 @@ class MapSketch
       diff_y = Math.abs(@last.y - floor.y)
       if diff_x > 0
         for i in [1..@thickness]
-          newfloor = new Floor(x - i,y)
+          newfloor = new Floor(x,y - i)
           @map.map[y][x].push(newfloor)
       else if diff_y > 0
         for i in [1..@thickness]
-          newfloor = new Floor(x,y - i)
+          newfloor = new Floor(x - 1,y)
           @map.map[y][x].push(newfloor)
     @last = floor
   pathing: (point_a,point_b) ->
