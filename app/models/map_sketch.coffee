@@ -1,7 +1,7 @@
 class MapSketch
   constructor: (@map) ->
     @finder = new Pathfinder(@map)
-    @thickness = 0
+    @thickness = 1
   create_wall: (x, y) ->
     @map.map[y][x].push(new Wall(x,y))
   create_tree: (x, y) ->
