@@ -28,7 +28,7 @@ class Map
         if m.increase() == false
           return false
         return true
-  inbound: () ->
+  inbound: (x,y) ->
     if y < 0 || y > @width - 1 || x < 0 || x > @height - 1
       return true
     false
@@ -90,9 +90,10 @@ class Map
         y += 1
         if y > end_y
           break
-      if @map[y][x].length == 0 || this.collide_check(x,y) == false
-        locations.push((x: x,y: y))
-      x += 1
+      if this.inbound(x,y)
+        if @map[y][x].length == 0 || this.collide_check(x,y) == false
+          locations.push((x: x,y: y))
+        x += 1
     return locations
   acquire: (x,y) ->
     this.select_by_name("crystal",x,y).acquire()
