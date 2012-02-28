@@ -17,6 +17,7 @@ class MapSketch
   create_floor: (x,y) ->
     floor = new Floor(x,y)
     @map.map[y][x].push(floor)
+    @last = floor
   pathing: (point_a,point_b) ->
     results = @finder.calculate_path(point_a,point_b)
     if results != -1
