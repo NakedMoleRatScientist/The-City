@@ -2,6 +2,7 @@ class MapSketch
   constructor: (@map) ->
     @finder = new Pathfinder(@map)
     @thickness = 1
+    @last = null
   create_wall: (x, y) ->
     @map.map[y][x].push(new Wall(x,y))
   create_tree: (x, y) ->
@@ -26,6 +27,7 @@ class MapSketch
           new_floor = new Floor(x,y - i)
       else if diff_y > 0
         for i in [1..@thickness]
+          console.log("REEP")
           new_floor = new Floor(x,y - i)
     @last = floor
   pathing: (point_a,point_b) ->
