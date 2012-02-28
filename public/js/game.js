@@ -1809,6 +1809,7 @@
       }
       _results = [];
       for (i = 0, _ref2 = locations.length - 2; 0 <= _ref2 ? i <= _ref2 : i >= _ref2; 0 <= _ref2 ? i++ : i--) {
+        this.sketch.thickness = 3;
         _results.push(this.sketch.draw(locations[i], locations[i + 1], "floor"));
       }
       return _results;
@@ -2049,9 +2050,15 @@
       }
       return _results;
     };
+    Map.prototype.inbound = function(x, y) {
+      if (y < 0 || y > this.width - 1 || x < 0 || x > this.height - 1) {
+        return false;
+      }
+      return true;
+    };
     Map.prototype.collide_check = function(x, y) {
       var m, _i, _len, _ref;
-      if (y < 0 || y > this.width - 1 || x < 0 || x > this.height - 1) {
+      if (this.inbound(x, y) === false) {
         return true;
       }
       _ref = this.map[y][x];
@@ -2146,11 +2153,13 @@
             break;
           }
         }
-        if (this.map[y][x].length === 0 || this.collide_check(x, y) === false) {
-          locations.push({
-            x: x,
-            y: y
-          });
+        if (this.inbound(x, y) === true) {
+          if (this.map[y][x].length === 0 || this.collide_check(x, y) === false) {
+            locations.push({
+              x: x,
+              y: y
+            });
+          }
         }
         x += 1;
       }
@@ -2165,6 +2174,8 @@
     function MapSketch(map) {
       this.map = map;
       this.finder = new Pathfinder(this.map);
+      this.thickness = 1;
+      this.last = null;
     }
     MapSketch.prototype.create_wall = function(x, y) {
       return this.map.map[y][x].push(new Wall(x, y));
@@ -2183,32 +2194,63 @@
       this.map.map[y][x].push(crystal);
       return crystal;
     };
-    MapSketch.prototype.create_floor = function(x, y) {
-      var floor;
-      floor = new Floor(x, y);
-      return this.map.map[y][x].push(floor);
+    MapSketch.prototype.push_to_map = function(x, y, item) {
+      if (this.map.map[y][x].length === 0) {
+        return this.map.map[y][x].push(item);
+      }
     };
-    MapSketch.prototype.draw = function(point_a, point_b, type) {
-      var location, results, _i, _len, _results;
+    MapSketch.prototype.create_floor = function(x, y) {
+      var change_x, change_y, diff_x, diff_y, floor, i, newfloor, _ref, _ref2;
+      floor = new Floor(x, y);
+      this.push_to_map(x, y, floor);
+      if (this.last !== null) {
+        diff_x = Math.abs(this.last.x - floor.x);
+        diff_y = Math.abs(this.last.y - floor.y);
+        if (diff_x > 0) {
+          for (i = 1, _ref = this.thickness - 1; 1 <= _ref ? i <= _ref : i >= _ref; 1 <= _ref ? i++ : i--) {
+            change_y = y - i;
+            newfloor = new Floor(x, change_y);
+            if (this.map.inbound(x, change_y) === true) {
+              this.push_to_map(x, change_y, newfloor);
+            }
+          }
+        } else if (diff_y > 0) {
+          for (i = 1, _ref2 = this.thickness - 1; 1 <= _ref2 ? i <= _ref2 : i >= _ref2; 1 <= _ref2 ? i++ : i--) {
+            change_x = x - i;
+            newfloor = new Floor(change_x, y);
+            if (this.map.inbound(change_x, y) === true) {
+              this.push_to_map(change_x, y, newfloor);
+            }
+          }
+        }
+      }
+      return this.last = floor;
+    };
+    MapSketch.prototype.pathing = function(point_a, point_b) {
+      var results;
       results = this.finder.calculate_path(point_a, point_b);
       if (results !== -1) {
         results.push(point_a);
-        _results = [];
-        for (_i = 0, _len = results.length; _i < _len; _i++) {
-          location = results[_i];
-          _results.push((function() {
-            switch (type) {
-              case "wall":
-                return this.create_wall(location.x, location.y);
-              case "crystal":
-                return this.create_crystal(location.x, location.y);
-              case "floor":
-                return this.create_floor(location.x, location.y);
-            }
-          }).call(this));
-        }
-        return _results;
       }
+      return results;
+    };
+    MapSketch.prototype.draw = function(point_a, point_b, type) {
+      var location, results, _i, _len;
+      results = this.pathing(point_a, point_b);
+      for (_i = 0, _len = results.length; _i < _len; _i++) {
+        location = results[_i];
+        switch (type) {
+          case "wall":
+            this.create_wall(location.x, location.y);
+            break;
+          case "crystal":
+            this.create_crystal(location.x, location.y);
+            break;
+          case "floor":
+            this.create_floor(location.x, location.y);
+        }
+      }
+      return this.last = null;
     };
     return MapSketch;
   })();
