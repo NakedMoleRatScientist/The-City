@@ -27,3 +27,5 @@ class MapSketch
             this.create_wall(location.x,location.y)
           when "crystal"
             this.create_crystal(location.x,location.y)
+          when "floor"
+            this.create_floor(location.x,location.y)
