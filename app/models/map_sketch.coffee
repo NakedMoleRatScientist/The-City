@@ -7,7 +7,8 @@ class MapSketch
     @map.map[y][x].push(new Wall(x,y))
   create_tree: (x, y) ->
     tree = new CrystalTree(x,y)
-    @map.map[y][x].push(tree)
+    if this.push_to_map(x,y,tree) == true
+      @map.map[y][x].push(tree)
     @map.trees.push(tree)
   create_crystal: (x,y) ->
     crystal = new Crystal(x,y)
