@@ -30,10 +30,10 @@ class Map
         return true
   inbound: (x,y) ->
     if y < 0 || y > @width - 1 || x < 0 || x > @height - 1
-      return true
-    false
+      return false
+    true
   collide_check: (x,y) ->
-    if this.inbound(x,y)
+    if this.inbound(x,y) == false
       return true
     for m in @map[y][x]
       return true if m.collide() == true
@@ -90,7 +90,7 @@ class Map
         y += 1
         if y > end_y
           break
-      if this.inbound(x,y)
+      if this.inbound(x,y) == true
         if @map[y][x].length == 0 || this.collide_check(x,y) == false
           locations.push((x: x,y: y))
       x += 1
