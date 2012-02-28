@@ -1,6 +1,6 @@
 class GenerateMap
   constructor: (@map) ->
-    @pathfinder = new Pathfinder(@map) ->
+    @sketch = @map.sketch
   generate_trees: () ->
     for i in [0..9]
       x = random_number(@width)
