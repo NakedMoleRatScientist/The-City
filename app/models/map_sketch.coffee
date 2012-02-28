@@ -3,7 +3,10 @@ class MapSketch
     @finder = new Pathfinder(@map)
   create_wall: (x, y) ->
     @map.map[y][x].push(new Wall(x,y))
-
+  create_tree: (x, y) ->
+    tree = new CrystalTree(x,y)
+    @map.map[y][x].push(tree)
+    @trees.push(tree)
   create_crystal: (x,y) ->
     crystal = new Crystal(x,y)
     crystal.stack = @map.map[y][x].length
