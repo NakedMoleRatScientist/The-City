@@ -23,8 +23,10 @@ class MapSketch
       diff_y = Math.abs(@last.y - floor.y)
       if diff_x > 0
         for i in [1..@thickness]
+          change_y = y - i
           newfloor = new Floor(x,y - i)
-          @map.map[y][x].push(newfloor)
+          if @map.inbound(x,change_y) == true
+            @map.map[change_y][x].push(newfloor)
       else if diff_y > 0
         for i in [1..@thickness]
           change_x = x - i
