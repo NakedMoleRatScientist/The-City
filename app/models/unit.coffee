@@ -42,7 +42,6 @@ class Unit
     @inventory.push(name)
   at_goal_check: () ->
     if (@y == @goal_y && @x == @goal_x) || @goal_x == -1
-      console.log("DEEP")
       return true
     return false
   move: (finder) ->
