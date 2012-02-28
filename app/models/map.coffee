@@ -33,7 +33,7 @@ class Map
       return true
     false
   collide_check: (x,y) ->
-    if this.inbound()
+    if this.inbound(x,y)
       return true
     for m in @map[y][x]
       return true if m.collide() == true
