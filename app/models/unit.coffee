@@ -42,15 +42,21 @@ class Unit
     @inventory.push(name)
   at_goal_check: () ->
     if (@y == @goal_y && @x == @goal_x) || @goal_x == -1
+      console.log("DEEP")
       return true
     return false
   move: (finder) ->
     return if @body.leg == 2
-    return if this.at_goal_check()
+    if this.at_goal_check()
+      this.next_order()
+      return
     if @move_list.length == 0
       result = finder.calculate_path((x: @x, y: @y),(x: @goal_x, y: @goal_y))
       if result == false
         @goal_x = -1
+      else if result.length == 0
+        console.log("BEEP")
+        this.next_order()
       else
         @move_list = result
     else
@@ -58,8 +64,6 @@ class Unit
       @x = movement.x
       @y = movement.y
       @move_list.pop()
-      if this.at_goal_check()
-        this.next_order()
 
   next_order: () ->
     if @advance == false || @target != null
