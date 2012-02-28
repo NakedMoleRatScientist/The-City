@@ -16,7 +16,7 @@ class Map
   setup_map:
     for y in [0..@map.length - 1]
       for x in [0..@map[h].length - 1]
-          @map[h][w] = []
+          @map[y][x] = []
 
   items_total: () ->
     items = 0
