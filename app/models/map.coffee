@@ -85,7 +85,7 @@ class Map
         if y > end_y
           break
       if this.inbound(x,y) == true
-        if this.propose_drop() != false
+        if this.propose_drop(x,y) != false
           locations.push((x: x,y: y))
       x += 1
     return locations
