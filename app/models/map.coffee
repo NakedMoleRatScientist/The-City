@@ -100,4 +100,5 @@ class Map
   select_last: (x,y) ->
     unless @map[y][x].length == 0
       l = @map[y][x].length - 1
-      @map[y][x][l]
+      return @map[y][x][l]
+    false
