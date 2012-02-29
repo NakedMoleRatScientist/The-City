@@ -1,3 +1,3 @@
 class HelpDrawMinorMode
-  constructor: (@p5)
+  constructor: (@p5) ->
   draw: (object) ->
