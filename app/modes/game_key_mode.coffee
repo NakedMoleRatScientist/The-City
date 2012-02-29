@@ -28,7 +28,7 @@ class GameKeyMode extends KeyMode
             return "menu"
           else
             return false
-      return super(state)
+    return super(state)
 
   mouse_pressed: (state) ->
     switch(state)
