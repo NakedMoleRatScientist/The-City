@@ -20,7 +20,7 @@ mouseDraw = (@p5,mouse,units,map) ->
         @p5.noStroke()
         @p5.fill(255,0,0)
         #compensate for underscore being too low by fudging by -3
-        if item.items != null
+        if item.name == "crystal"
           msg = item.name + " : " + item.items
         @p5.text(msg,x * 20, y * 20 - 3)
         width = @p5.textWidth(msg)
