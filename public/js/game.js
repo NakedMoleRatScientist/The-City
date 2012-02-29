@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw;
+  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -525,8 +525,8 @@
           }
           this.dirty_rects = this.dirty_rects.concat(map.redraw);
           map.redraw = [];
-          x = Math.floor(this.p5.mouseX / 20) + map.camera_x;
-          y = Math.floor(this.p5.mouseY / 20) + map.camera_y;
+          x = Math.floor(this.p5.mouseX / 20) + map.camera.x;
+          y = Math.floor(this.p5.mouseY / 20) + map.camera.y;
           this.dirty_rects.push({
             x: x,
             y: y
@@ -541,8 +541,8 @@
               }
             }
           }
-          this.camera.x = map.camera_x;
-          this.camera.y = map.camera_y;
+          this.camera.x = map.camera.x;
+          this.camera.y = map.camera.y;
           this.dirty_menu = object.menu;
           this.mouse_width = mouseDraw(this.p5, object.mouse, map);
           frameRateDraw(this.p5);
@@ -631,16 +631,16 @@
       if (this.state === -1) {
         switch (result) {
           case "down":
-            this.map.move_camera(0, -1);
+            this.map.camera.move(0, -1);
             break;
           case "up":
-            this.map.move_camera(0, 1);
+            this.map.camera.move(0, 1);
             break;
           case "right":
-            this.map.move_camera(-1, 0);
+            this.map.camera.move(-1, 0);
             break;
           case "left":
-            this.map.move_camera(1, 0);
+            this.map.camera.move(1, 0);
             break;
           case "crystal":
             if (this.menu === 1) {
@@ -1685,6 +1685,23 @@
     };
     return Body;
   })();
+  Camera = (function() {
+    function Camera() {
+      this.x = 0;
+      this.y = 0;
+    }
+    Camera.prototype.move = function(x, y) {
+      this.x += x;
+      if (this.x < 0 || this.x > 60) {
+        this.x -= x;
+      }
+      this.y += y;
+      if (this.y < 0 || this.y > 70) {
+        return this.y -= y;
+      }
+    };
+    return Camera;
+  })();
   CombatRelation = (function() {
     __extends(CombatRelation, Relation);
     function CombatRelation(actors) {
@@ -1990,8 +2007,6 @@
     function Map(width, height) {
       this.width = width;
       this.height = height;
-      this.camera_x = 0;
-      this.camera_y = 0;
       this.map = [];
       this.size_map();
       this.stockpoints = [];
@@ -1999,6 +2014,7 @@
       this.trees = [];
       this.sketch = new MapSketch(this);
       this.generate = new GenerateMap(this);
+      this.camera = new Camera();
       this.redraw = [];
     }
     Map.prototype.size_map = function() {
@@ -2070,8 +2086,8 @@
       var collide, newpoint, x, y;
       x = mouse.x;
       y = mouse.y;
-      x = Math.floor(x / 20) + this.camera_x;
-      y = Math.floor(y / 20) + this.camera_y;
+      x = Math.floor(x / 20) + this.camera.x;
+      y = Math.floor(y / 20) + this.camera.y;
       if (x < 2 || x > 97) {
         return;
       }
@@ -2102,16 +2118,6 @@
         }
       }
       return false;
-    };
-    Map.prototype.move_camera = function(x, y) {
-      this.camera_x += x;
-      if (this.camera_x < 0 || this.camera_x > 60) {
-        this.camera_x -= x;
-      }
-      this.camera_y += y;
-      if (this.camera_y < 0 || this.camera_y > 70) {
-        return this.camera_y -= y;
-      }
     };
     Map.prototype.select_by_name = function(name, x, y) {
       var m, _i, _len, _ref;
@@ -2150,7 +2156,7 @@
           }
         }
         if (this.inbound(x, y) === true) {
-          if (this.map[y][x].length === 0 || this.collide_check(x, y) === false) {
+          if (this.propose_drop(x, y) !== false) {
             locations.push({
               x: x,
               y: y
@@ -2180,6 +2186,7 @@
       this.finder = new Pathfinder(this.map);
       this.thicken = false;
       this.last = null;
+      this.paths = [];
     }
     MapSketch.prototype.create_wall = function(x, y) {
       var wall;
@@ -2204,7 +2211,7 @@
     };
     MapSketch.prototype.push_to_map = function(x, y, item) {
       if (this.map.inbound(x, y) === true) {
-        if (this.map.map[y][x].length === 0) {
+        if (this.map.map[y][x].length === 0 || item.name === "crystal") {
           this.map.map[y][x].push(item);
           return true;
         }
@@ -2542,7 +2549,7 @@
   determineCameraRedraw = function(map, old_camera) {
     if (old_camera.x === null || old_camera.y === null) {
       return true;
-    } else if (old_camera.x !== map.camera_x || old_camera.y !== map.camera_y) {
+    } else if (old_camera.x !== map.camera.x || old_camera.y !== map.camera.y) {
       return true;
     }
   };
@@ -2665,13 +2672,13 @@
     var d, delay, end_x, end_y, height, item, objects, result, results, width, x, y, _i, _j, _len, _len2, _ref, _ref2, _results;
     p5.background(0);
     results = map.map;
-    end_y = map.camera_y + 30 - 1;
-    end_x = map.camera_x + 40 - 1;
+    end_y = map.camera.y + 30 - 1;
+    end_x = map.camera.x + 40 - 1;
     delay = [];
-    for (height = _ref = map.camera_y; _ref <= end_y ? height <= end_y : height >= end_y; _ref <= end_y ? height++ : height--) {
-      for (width = _ref2 = map.camera_x; _ref2 <= end_x ? width <= end_x : width >= end_x; _ref2 <= end_x ? width++ : width--) {
-        x = 20 * (width - map.camera_x);
-        y = 20 * (height - map.camera_y);
+    for (height = _ref = map.camera.y; _ref <= end_y ? height <= end_y : height >= end_y; _ref <= end_y ? height++ : height--) {
+      for (width = _ref2 = map.camera.x; _ref2 <= end_x ? width <= end_x : width >= end_x; _ref2 <= end_x ? width++ : width--) {
+        x = 20 * (width - map.camera.x);
+        y = 20 * (height - map.camera.y);
         objects = results[height][width];
         p5.noStroke();
         if (objects.length !== 0) {
@@ -2725,7 +2732,7 @@
       case 0:
         x = location_x;
         y = location_y;
-        item = map.select_last(x + map.camera_x, y + map.camera_y);
+        item = map.select_last(x + map.camera.x, y + map.camera.y);
         if (item !== false) {
           this.p5.noStroke();
           this.p5.fill(255, 0, 0);
@@ -2759,8 +2766,8 @@
   translateIntoDrawCoord = function(object, map) {
     var transform;
     return transform = {
-      x: (object.x - map.camera_x) * 20,
-      y: (object.y - map.camera_y) * 20
+      x: (object.x - map.camera.x) * 20,
+      y: (object.y - map.camera.y) * 20
     };
   };
   unitDraw = function(p5, units, map) {
@@ -2768,8 +2775,8 @@
     _results = [];
     for (_i = 0, _len = units.length; _i < _len; _i++) {
       unit = units[_i];
-      x = (unit.x - map.camera_x) * 20 + 5;
-      y = (unit.y - map.camera_y) * 20 + 20;
+      x = (unit.x - map.camera.x) * 20 + 5;
+      y = (unit.y - map.camera.y) * 20 + 20;
       pink = p5.color(255, 192, 203);
       blue = p5.color(0, 0, 255);
       if (unit.gender === 0) {
