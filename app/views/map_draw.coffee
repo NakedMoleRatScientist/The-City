@@ -5,10 +5,10 @@ mapDraw = (map,p5) ->
     end_y = map.camera_y + 30 - 1
     end_x = map.camera_x + 40 - 1
     delay = []
-    for height in [map.camera_y..end_y]
-      for width in [map.camera_x..end_x]
-        x = 20 * (width - map.camera_x)
-        y = 20 * (height - map.camera_y)
+    for height in [map.camera.y..end_y]
+      for width in [map.camera.x..end_x]
+        x = 20 * (width - map.camera.x)
+        y = 20 * (height - map.camera.y)
         objects = results[height][width]
         p5.noStroke()
         if objects.length != 0
