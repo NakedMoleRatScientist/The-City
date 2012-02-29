@@ -7,3 +7,4 @@ class HelpKeyMinorMode
         return "select"
       when 113
         return "back"
+    false
