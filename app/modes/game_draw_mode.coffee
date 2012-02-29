@@ -36,7 +36,7 @@ class GameDrawMode extends DrawMode
           y = Math.floor(@p5.mouseY / 20) + map.camera_y
           @dirty_rects.push(x: x, y: y)
           if y > 0
-            for x in [x..(x + (@mouse_width - 1)]
+            for x in [x..(x + (@mouse_width - 1))]
               @dirty_rects.push(x: x, y: y - 1) if x < 99
         @camera.x = map.camera_x
         @camera.y = map.camera_y
