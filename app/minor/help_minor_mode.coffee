@@ -6,4 +6,4 @@ class HelpMinorMode
       when "back"
         @parent.state = -1
   update_draw: () ->
-    return (state: 0)
+    return (state: 1)
