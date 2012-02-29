@@ -3,6 +3,7 @@ class MapSketch
     @finder = new Pathfinder(@map)
     @thicken = false
     @last = null
+    @paths = []
   create_wall: (x, y) ->
     wall = new Wall(x,y)
     this.push_to_map(x,y,wall)
