@@ -4,6 +4,7 @@ class GameDrawMode extends DrawMode
     @dirty_menu = -1
     @redraw = false
     @camera = (x: null, y: null)
+    @mouse_width = 0
     super("game",@p5)
   draw: (object) ->
     switch (object.state)
