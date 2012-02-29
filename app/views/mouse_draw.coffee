@@ -8,7 +8,7 @@ mouseDraw = (@p5,mouse,map) ->
     when 0 #what is it
       x = location_x
       y = location_y
-      item = map.select_last(x + map.camera_x,y + map.camera_y)
+      item = map.select_last(x + map.camera.x,y + map.camera.y)
       unless item == false
         @p5.noStroke()
         @p5.fill(255,0,0)
