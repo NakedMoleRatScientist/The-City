@@ -31,13 +31,12 @@ class GameDrawMode extends DrawMode
           @dirty_rects.push(x: unit.x, y: unit.y)
         @dirty_rects = @dirty_rects.concat(map.redraw)
         map.redraw = []
-        if mouse.mode == 1
-          x = Math.floor(@p5.mouseX / 20) + map.camera_x
-          y = Math.floor(@p5.mouseY / 20) + map.camera_y
-          @dirty_rects.push(x: x, y: y)
-          if y > 0
-            for x in [x..(x + (@mouse_width - 1))]
-              @dirty_rects.push(x: x, y: y - 1) if x < 99
+        x = Math.floor(@p5.mouseX / 20) + map.camera_x
+        y = Math.floor(@p5.mouseY / 20) + map.camera_y
+        @dirty_rects.push(x: x, y: y)
+        if y > 0
+          for i in [0..@mouse_width]
+            @dirty_rects.push(x: x + i, y: y - 1) if x + i < 99
         @camera.x = map.camera_x
         @camera.y = map.camera_y
         @dirty_menu = object.menu
