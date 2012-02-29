@@ -1,14 +1,19 @@
-mouseDraw = (@p5,mouse,map) ->
+mouseDraw = (@p5,mouse,units,map) ->
   x = @p5.mouseX
   y = @p5.mouseY
   location_x = Math.floor(x / 20)
   location_y = Math.floor(y / 20)
   width = 0
+  item = false
   switch(mouse.mode)
     when 0 #what is it
       x = location_x
       y = location_y
-      item = map.select_last(x + map.camera.x,y + map.camera.y)
+
+      for u in units
+        if u.x == x && u.y == y
+          item = u.name
+      item = map.select_last(x + map.camera.x,y + map.camera.y) unless item != false
       unless item == false
         @p5.noStroke()
         @p5.fill(255,0,0)
