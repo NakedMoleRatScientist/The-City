@@ -1,7 +1,5 @@
 class Map
   constructor: (@width, @height) ->
-    @camera_x = 0
-    @camera_y = 0
     @map = []
     this.size_map()
     @stockpoints = []
