@@ -8,4 +8,5 @@ class HelpDrawMinorMode
     boxedText(@p5,30,120,"w")
     boxedText(@p5,10,140,"a")
     boxedText(@p5,30,140,"s")
+    boxedText(@p5,50,140,"d")
     @p5.text(" - up",515,100)
