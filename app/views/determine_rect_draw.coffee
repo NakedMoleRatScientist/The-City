@@ -3,7 +3,7 @@ determineRectDraw = (location,x,y,p5) ->
     when "floor"
       floorDraw(p5,x,y)
     when "crystal_tree" #Crystal tree
-      crystal_tree_draw(p5,x,y)
+      crystalTreeDraw(p5,x,y)
     when "crystal_stockpile" #Crystal stockpile
       return (x: x, y: y)
     when "crystal"
