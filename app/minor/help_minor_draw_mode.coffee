@@ -13,3 +13,5 @@ class HelpDrawMinorMode
     @p5.text("a - left",10,180)
     @p5.text("s - down",10,200)
     @p5.text("d - right",10,220)
+    @p5.textFont("monospace",20)
+    @p5.text("Tiles",10,240)
