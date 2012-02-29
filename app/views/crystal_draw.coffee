@@ -1,4 +1,4 @@
-crystal_draw = (p5,x,y,fullness,background) ->
+crystalDraw = (p5,x,y,fullness,background) ->
   fullness *= 3
   if background == "floor"
     floor_draw(p5,x,y)
