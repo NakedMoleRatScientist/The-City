@@ -491,10 +491,11 @@
         x: null,
         y: null
       };
+      this.mouse_width = 0;
       GameDrawMode.__super__.constructor.call(this, "game", this.p5);
     }
     GameDrawMode.prototype.draw = function(object) {
-      var map, mouse, msg, unit, units, x, y, _i, _len;
+      var i, map, mouse, msg, unit, units, x, y, _i, _len, _ref;
       switch (object.state) {
         case -1:
           map = object.map;
@@ -524,33 +525,17 @@
           }
           this.dirty_rects = this.dirty_rects.concat(map.redraw);
           map.redraw = [];
-          if (mouse.mode === 1) {
-            x = Math.floor(this.p5.mouseX / 20) + map.camera_x;
-            y = Math.floor(this.p5.mouseY / 20) + map.camera_y;
-            this.dirty_rects.push({
-              x: x,
-              y: y
-            });
-            if (y > 0) {
-              this.dirty_rects.push({
-                x: x,
-                y: y - 1
-              });
-              if (x + 1 < 99) {
+          x = Math.floor(this.p5.mouseX / 20) + map.camera_x;
+          y = Math.floor(this.p5.mouseY / 20) + map.camera_y;
+          this.dirty_rects.push({
+            x: x,
+            y: y
+          });
+          if (y > 0) {
+            for (i = 0, _ref = this.mouse_width; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
+              if (x + i < 99) {
                 this.dirty_rects.push({
-                  x: x + 1,
-                  y: y - 1
-                });
-              }
-              if (x + 2 < 99) {
-                this.dirty_rects.push({
-                  x: x + 2,
-                  y: y - 1
-                });
-              }
-              if (x + 3 < 99) {
-                this.dirty_rects.push({
-                  x: x + 3,
+                  x: x + i,
                   y: y - 1
                 });
               }
@@ -559,7 +544,7 @@
           this.camera.x = map.camera_x;
           this.camera.y = map.camera_y;
           this.dirty_menu = object.menu;
-          mouseDraw(this.p5, object.mouse, map.camera_x, map.camera_y);
+          this.mouse_width = mouseDraw(this.p5, object.mouse, map);
           frameRateDraw(this.p5);
           if (msg !== -1) {
             return messageDraw(this.p5, msg);
@@ -2179,6 +2164,14 @@
     Map.prototype.acquire = function(x, y) {
       return this.select_by_name("crystal", x, y).acquire();
     };
+    Map.prototype.select_last = function(x, y) {
+      var l;
+      if (this.map[y][x].length !== 0) {
+        l = this.map[y][x].length - 1;
+        return this.map[y][x][l];
+      }
+      return false;
+    };
     return Map;
   })();
   MapSketch = (function() {
@@ -2721,21 +2714,36 @@
     p5.fill(255, 0, 0);
     return p5.text(msg, 5, 595);
   };
-  mouseDraw = function(p5, mouse) {
-    var location_x, location_y, x, y;
+  mouseDraw = function(p5, mouse, map) {
+    var item, location_x, location_y, msg, width, x, y;
     this.p5 = p5;
     x = this.p5.mouseX;
     y = this.p5.mouseY;
     location_x = Math.floor(x / 20);
     location_y = Math.floor(y / 20);
+    width = 0;
     switch (mouse.mode) {
+      case 0:
+        x = location_x;
+        y = location_y;
+        item = map.select_last(x + map.camera_x, y + map.camera_y);
+        if (item !== false) {
+          this.p5.noStroke();
+          this.p5.fill(255, 0, 0);
+          this.p5.text(item.name, x * 20, y * 20);
+          width = this.p5.textWidth(item.name);
+        }
+        break;
       case 1:
         this.p5.noStroke();
         this.p5.fill(128, 128, 128);
         this.p5.rect(location_x * 20, location_y * 20, 20, 20);
         this.p5.fill(255, 0, 0);
-        return this.p5.text("Crystal Pile", location_x * 20, location_y * 20);
+        msg = "Crystal Pile";
+        this.p5.text(msg, location_x * 20, location_y * 20);
+        width = this.p5.textWidth(msg);
     }
+    return Math.ceil(width / 20);
   };
   scrollDraw = function(p5, select) {
     this.p5 = p5;
