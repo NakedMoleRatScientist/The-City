@@ -1,2 +1,2 @@
 gameMinorModeList = () ->
-  ["CombatReport"]
+  ["CombatReport","Help"]
