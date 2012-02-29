@@ -17,3 +17,4 @@ class HelpDrawMinorMode
     @p5.text("Tiles",10,250)
     floorDraw(@p5,10,260)
     wallDraw(@p5,10,290)
+    crystalDraw(@p5,10,320,0,null)
