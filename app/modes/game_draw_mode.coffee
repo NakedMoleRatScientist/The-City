@@ -42,11 +42,10 @@ class GameDrawMode extends DrawMode
         @camera.y = map.camera.y
         @dirty_menu = object.menu
       #Draw ALL the time
-        @mouse_width = mouseDraw(@p5,object.mouse,map)
+        @mouse_width = mouseDraw(@p5,object.mouse,units,map)
         frameRateDraw(@p5)
         if msg != -1
           messageDraw(@p5,msg)
-
       when 0
         @redraw = true
         super(object)
