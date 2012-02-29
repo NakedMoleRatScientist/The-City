@@ -4,5 +4,5 @@ class HelpMinorMode
   input: (result) ->
   update_draw: () ->
     switch(@state)
-    when -1
-      return (options: @options.options)
+      when -1
+        return (options: @options.options)
