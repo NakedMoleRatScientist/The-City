@@ -35,6 +35,7 @@ class GameDrawMode extends DrawMode
         y = Math.floor(@p5.mouseY / 20) + map.camera_y
         @dirty_rects.push(x: x, y: y)
         if y > 0
+          #Add fudge factor to @mouse_width to account for the inaccurate math
           for i in [0..@mouse_width + 1]
             @dirty_rects.push(x: x + i, y: y - 1) if x + i < 100
         @camera.x = map.camera_x
