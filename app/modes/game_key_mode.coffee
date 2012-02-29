@@ -14,6 +14,8 @@ class GameKeyMode extends KeyMode
             return "crystal"
           when 100
             return "left"
+          when 104
+            return "help"
           when 113
             return "back"
           when 114
