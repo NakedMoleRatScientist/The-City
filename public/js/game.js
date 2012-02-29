@@ -532,8 +532,8 @@
             y: y
           });
           if (y > 0) {
-            for (i = 0, _ref = this.mouse_width; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
-              if (x + i < 99) {
+            for (i = 0, _ref = this.mouse_width + 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
+              if (x + i < 100) {
                 this.dirty_rects.push({
                   x: x + i,
                   y: y - 1
@@ -2203,24 +2203,19 @@
       return crystal;
     };
     MapSketch.prototype.push_to_map = function(x, y, item) {
-      if (this.map.map[y][x].length === 0 && this.map.inbound(x, y) === true) {
-        this.map.map[y][x].push(item);
-        return true;
+      if (this.map.inbound(x, y) === true) {
+        if (this.map.map[y][x].length === 0) {
+          this.map.map[y][x].push(item);
+          return true;
+        }
+        return false;
       }
-      return false;
     };
     MapSketch.prototype.create_floor = function(x, y) {
-      var first_floor, floor, second_floor;
+      var floor;
       floor = new Floor(x, y);
       this.push_to_map(x, y, floor);
-      x -= 1;
-      first_floor = new Floor(x, y);
-      this.push_to_map(x, y, first_floor);
-      x += 1;
-      y -= 1;
-      second_floor = new Floor(x, y);
-      this.push_to_map(x, y, second_floor);
-      return this.last = floor;
+      return floor;
     };
     MapSketch.prototype.rect_draw = function(begin, end, type) {
       var x, y, _ref, _ref2, _results;
@@ -2252,7 +2247,11 @@
         case "crystal":
           return this.create_crystal(location.x, location.y);
         case "floor":
-          return this.create_floor(location.x, location.y);
+          this.last = this.create_floor(location.x, location.y);
+          if (this.thicken === true) {
+            this.create_floor(this.last.x - 1, this.last.y);
+            return this.create_floor(this.last.x, this.last.y - 1);
+          }
       }
     };
     MapSketch.prototype.draw = function(point_a, point_b, type) {
@@ -2633,7 +2632,7 @@
     this.p5.noStroke();
     this.p5.rect(200, 0, 50, 20);
     this.p5.fill(255);
-    this.p5.textSize(15);
+    this.p5.textSize("monospace", 15);
     return this.p5.text("FPS: " + Math.floor(this.p5.__frameRate), 200, 15);
   };
   gameMenuDraw = function(p5) {
@@ -2730,7 +2729,7 @@
         if (item !== false) {
           this.p5.noStroke();
           this.p5.fill(255, 0, 0);
-          this.p5.text(item.name, x * 20, y * 20);
+          this.p5.text(item.name, x * 20, y * 20 - 3);
           width = this.p5.textWidth(item.name);
         }
         break;
