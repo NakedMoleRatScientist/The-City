@@ -31,15 +31,15 @@ class GameDrawMode extends DrawMode
           @dirty_rects.push(x: unit.x, y: unit.y)
         @dirty_rects = @dirty_rects.concat(map.redraw)
         map.redraw = []
-        x = Math.floor(@p5.mouseX / 20) + map.camera_x
-        y = Math.floor(@p5.mouseY / 20) + map.camera_y
+        x = Math.floor(@p5.mouseX / 20) + map.camera.x
+        y = Math.floor(@p5.mouseY / 20) + map.camera.y
         @dirty_rects.push(x: x, y: y)
         if y > 0
           #Add fudge factor to @mouse_width to account for the inaccurate math
           for i in [0..@mouse_width + 1]
             @dirty_rects.push(x: x + i, y: y - 1) if x + i < 100
-        @camera.x = map.camera_x
-        @camera.y = map.camera_y
+        @camera.x = map.camera.x
+        @camera.y = map.camera.y
         @dirty_menu = object.menu
       #Draw ALL the time
         @mouse_width = mouseDraw(@p5,object.mouse,map)
