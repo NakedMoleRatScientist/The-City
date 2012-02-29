@@ -5,3 +5,5 @@ class HelpKeyMinorMode
     switch (@p5.key.code)
       when 10
         return "select"
+      when 113
+        return "back"
