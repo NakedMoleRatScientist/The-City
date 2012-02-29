@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystal_draw, crystal_stockpile_draw, crystal_tree_draw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floor_draw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw;
+  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalTreeDraw, crystal_stockpile_draw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -544,16 +544,16 @@
           this.camera.x = map.camera.x;
           this.camera.y = map.camera.y;
           this.dirty_menu = object.menu;
-          this.mouse_width = mouseDraw(this.p5, object.mouse, map);
+          this.mouse_width = mouseDraw(this.p5, object.mouse, units, map);
           frameRateDraw(this.p5);
           if (msg !== -1) {
-            return messageDraw(this.p5, msg);
+            messageDraw(this.p5, msg);
           }
           break;
-        case 0:
+        default:
           this.redraw = true;
-          return GameDrawMode.__super__.draw.call(this, object);
       }
+      return GameDrawMode.__super__.draw.call(this, object);
     };
     GameDrawMode.prototype.input = function(result) {
       return GameDrawMode.__super__.input.call(this, result);
@@ -579,6 +579,8 @@
               return "crystal";
             case 100:
               return "left";
+            case 104:
+              return "help";
             case 113:
               return "back";
             case 114:
@@ -592,11 +594,8 @@
             default:
               return false;
           }
-          break;
-        case 0:
-          return GameKeyMode.__super__.key_pressed.call(this, state);
       }
-      return false;
+      return GameKeyMode.__super__.key_pressed.call(this, state);
     };
     GameKeyMode.prototype.mouse_pressed = function(state) {
       switch (state) {
@@ -652,6 +651,9 @@
             this.state = 0;
             this.minor.update();
             break;
+          case "help":
+            this.state = 1;
+            break;
           case "build":
             if (this.menu === 0) {
               this.menu = 1;
@@ -668,6 +670,7 @@
           case "back":
             if (this.menu === 1) {
               this.menu = 0;
+              this.mouse.mode = 0;
             }
         }
       }
@@ -2521,7 +2524,7 @@
     scrollDraw(this.p5, true);
     return this.p5.text("k - kill lists", 345, 580);
   };
-  crystal_draw = function(p5, x, y, fullness, background) {
+  crystalDraw = function(p5, x, y, fullness, background) {
     fullness *= 3;
     if (background === "floor") {
       floor_draw(p5, x, y);
@@ -2537,7 +2540,7 @@
     p5.fill(135, 206, 255);
     return p5.rect(x, y, 20, 20);
   };
-  crystal_tree_draw = function(p5, x, y) {
+  crystalTreeDraw = function(p5, x, y) {
     p5.fill(0, 0, 255);
     return p5.rect(x, y, 20, 20);
   };
@@ -2582,10 +2585,10 @@
   determineRectDraw = function(location, x, y, p5) {
     switch (location.name) {
       case "floor":
-        floor_draw(p5, x, y);
+        floorDraw(p5, x, y);
         break;
       case "crystal_tree":
-        crystal_tree_draw(p5, x, y);
+        crystalTreeDraw(p5, x, y);
         break;
       case "crystal_stockpile":
         return {
@@ -2593,7 +2596,7 @@
           y: y
         };
       case "crystal":
-        crystal_draw(p5, x, y, location.items, location.background);
+        crystalDraw(p5, x, y, location.items, location.background);
         break;
       case "wall":
         wallDraw(p5, x, y);
@@ -2628,7 +2631,7 @@
     }
     return _results;
   };
-  floor_draw = function(p5, x, y) {
+  floorDraw = function(p5, x, y) {
     p5.noStroke();
     p5.fill(190, 190, 190);
     return p5.rect(x, y, 20, 20);
@@ -2651,7 +2654,7 @@
     menuTitleText(this.p5, "Game Menu");
     this.p5.fill(255, 255, 0);
     this.p5.text("b - build", x, y);
-    this.p5.text("v - view", x, y += height);
+    this.p5.text("h - help", x, y += height);
     return this.p5.text("m - hide menu", x, y += height);
   };
   instructionDraw = function(p5) {
@@ -2720,24 +2723,38 @@
     p5.fill(255, 0, 0);
     return p5.text(msg, 5, 595);
   };
-  mouseDraw = function(p5, mouse, map) {
-    var item, location_x, location_y, msg, width, x, y;
+  mouseDraw = function(p5, mouse, units, map) {
+    var item, location_x, location_y, msg, u, width, x, y, _i, _len;
     this.p5 = p5;
     x = this.p5.mouseX;
     y = this.p5.mouseY;
     location_x = Math.floor(x / 20);
     location_y = Math.floor(y / 20);
     width = 0;
+    item = false;
     switch (mouse.mode) {
       case 0:
         x = location_x;
         y = location_y;
-        item = map.select_last(x + map.camera.x, y + map.camera.y);
+        for (_i = 0, _len = units.length; _i < _len; _i++) {
+          u = units[_i];
+          if (u.x === x + map.camera.x && u.y === y + map.camera.y) {
+            item = u;
+            break;
+          }
+        }
+        if (item === false) {
+          item = map.select_last(x + map.camera.x, y + map.camera.y);
+        }
+        msg = item.name;
         if (item !== false) {
           this.p5.noStroke();
           this.p5.fill(255, 0, 0);
-          this.p5.text(item.name, x * 20, y * 20 - 3);
-          width = this.p5.textWidth(item.name);
+          if (item.name === "crystal") {
+            msg = item.name + " : " + item.items;
+          }
+          this.p5.text(msg, x * 20, y * 20 - 3);
+          width = this.p5.textWidth(msg);
         }
         break;
       case 1:
@@ -2860,6 +2877,7 @@
         case 107:
           return "kills";
       }
+      return false;
     };
     return CombatReportKeyMinorMode;
   })();
@@ -2967,8 +2985,69 @@
     return CombatReportMinorMode;
   })();
   gameMinorModeList = function() {
-    return ["CombatReport"];
+    return ["CombatReport", "Help"];
   };
+  HelpKeyMinorMode = (function() {
+    function HelpKeyMinorMode(p5) {
+      this.p5 = p5;
+    }
+    HelpKeyMinorMode.prototype.key_pressed = function() {
+      console.log(this.p5.key.code);
+      switch (this.p5.key.code) {
+        case 10:
+          return "select";
+        case 113:
+          return "back";
+      }
+      return false;
+    };
+    return HelpKeyMinorMode;
+  })();
+  HelpDrawMinorMode = (function() {
+    function HelpDrawMinorMode(p5) {
+      this.p5 = p5;
+    }
+    HelpDrawMinorMode.prototype.draw = function(object) {
+      this.p5.background(0);
+      this.p5.fill(255);
+      this.p5.textFont("monospace", 20);
+      this.p5.text("Map Navigation", 10, 100);
+      this.p5.textFont("monospace", 15);
+      boxedText(this.p5, 30, 120, "w");
+      boxedText(this.p5, 10, 140, "a");
+      boxedText(this.p5, 30, 140, "s");
+      boxedText(this.p5, 50, 140, "d");
+      this.p5.text("w - up", 10, 160);
+      this.p5.text("a - left", 10, 180);
+      this.p5.text("s - down", 10, 200);
+      this.p5.text("d - right", 10, 220);
+      this.p5.textFont("monospace", 20);
+      this.p5.text("Tiles", 10, 250);
+      floorDraw(this.p5, 10, 260);
+      wallDraw(this.p5, 10, 290);
+      crystalDraw(this.p5, 10, 320, 0, null);
+      return crystalTreeDraw(this.p5, 10, 350);
+    };
+    return HelpDrawMinorMode;
+  })();
+  HelpMinorMode = (function() {
+    function HelpMinorMode(parent) {
+      this.parent = parent;
+    }
+    HelpMinorMode.prototype.act = function() {};
+    HelpMinorMode.prototype.input = function(result) {
+      switch (result) {
+        case "back":
+          return this.parent.state = -1;
+      }
+    };
+    HelpMinorMode.prototype.update_draw = function() {
+      return {
+        state: 1
+      };
+    };
+    return HelpMinorMode;
+  })();
   menuMinorModeList = function() {
     return [];
   };
