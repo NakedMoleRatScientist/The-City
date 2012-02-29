@@ -18,7 +18,7 @@ class MapSketch
     return crystal
   push_to_map: (x,y,item) ->
     if @map.inbound(x,y) == true
-      if @map.map[y][x].length == 0
+      if @map.map[y][x].length == 0 || item.name == "crystal"
         @map.map[y][x].push(item)
         return true
       false
