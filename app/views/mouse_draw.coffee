@@ -12,7 +12,7 @@ mouseDraw = (@p5,mouse,units,map) ->
 
       for u in units
         if u.x == x + map.camera.x && u.y == y + map.camera.y
-          item = u.name
+          item = u
           break
       item = map.select_last(x + map.camera.x,y + map.camera.y) unless item != false
       unless item == false
