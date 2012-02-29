@@ -43,6 +43,7 @@ class GameMode extends Mode
         when "back"
           if @menu == 1
             @menu = 0
+            @mouse.mode =  0
     (change: false)
   mouse_input: (result) ->
     if @state == -1
