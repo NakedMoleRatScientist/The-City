@@ -46,9 +46,9 @@ class GameDrawMode extends DrawMode
         frameRateDraw(@p5)
         if msg != -1
           messageDraw(@p5,msg)
-      when 0
+      else
         @redraw = true
-        super(object)
+    super(object.state)
 
   input: (result) ->
     super(result)
