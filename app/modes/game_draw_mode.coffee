@@ -48,7 +48,7 @@ class GameDrawMode extends DrawMode
           messageDraw(@p5,msg)
       else
         @redraw = true
-    super(object.state)
+    super(object)
 
   input: (result) ->
     super(result)
