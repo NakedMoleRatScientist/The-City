@@ -11,8 +11,9 @@ mouseDraw = (@p5,mouse,units,map) ->
       y = location_y
 
       for u in units
-        if u.x == x && u.y == y
+        if u.x == x + map.camera.x && u.y == y + map.camera.y
           item = u.name
+          break
       item = map.select_last(x + map.camera.x,y + map.camera.y) unless item != false
       unless item == false
         @p5.noStroke()
