@@ -61,13 +61,6 @@ class Map
       if circle_to_circle_collision(newpoint,point) == true #It's not actually a circle anymore
         return true
     return false
-  move_camera: (x,y) ->
-    @camera_x += x
-    if @camera_x < 0 || @camera_x > 60
-      @camera_x -= x
-    @camera_y += y
-    if @camera_y < 0 || @camera_y > 70
-      @camera_y -= y
   select_by_name: (name,x,y) ->
     for m in @map[y][x]
       if m.name == name
