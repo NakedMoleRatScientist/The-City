@@ -9,6 +9,7 @@ class Map
     @trees = []
     @sketch = new MapSketch(this)
     @generate = new GenerateMap(this)
+    @camera = new Camera()
     @redraw = []
   size_map: () ->
     for y in [0..@height - 1]
