@@ -12,7 +12,8 @@ mouseDraw = (@p5,mouse,map) ->
       unless item == false
         @p5.noStroke()
         @p5.fill(255,0,0)
-        @p5.text(item.name,x * 20, y * 20)
+        #compensate for underscore being too low by fudging by -3
+        @p5.text(item.name,x * 20, y * 20 - 3)
         width = @p5.textWidth(item.name)
     when 1 #build
       @p5.noStroke()
