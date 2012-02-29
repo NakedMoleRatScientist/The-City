@@ -1,4 +1,4 @@
-mouseDraw = (@p5,mouse) ->
+mouseDraw = (@p5,mouse,map) ->
   x = @p5.mouseX
   y = @p5.mouseY
   location_x = Math.floor(x / 20)
@@ -7,7 +7,7 @@ mouseDraw = (@p5,mouse) ->
     when 0 #what is it
       x = location_x + map.camera_x
       y = location_y + map.cmaera_y
-      item = @map.select_last(x,y)
+      item = map.select_last(x,y)
       unless item == false
         @p5.noStroke()
         @p5.fill(255,0,0)
