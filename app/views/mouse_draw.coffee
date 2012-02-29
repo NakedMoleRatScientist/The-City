@@ -22,3 +22,4 @@ mouseDraw = (@p5,mouse,map) ->
       msg = "Crystal Pile"
       @p5.text(msg,location_x * 20,location_y * 20)
       width = @p5.textWidth(msg)
+  width = 0
