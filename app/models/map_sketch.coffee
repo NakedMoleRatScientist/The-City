@@ -43,7 +43,7 @@ class MapSketch
         this.create_crystal(location.x,location.y)
       when "floor"
         @last = this.create_floor(location.x,location.y)
-        if thicken == true
+        if @thicken == true
           this.create_floor(@last.x - 1,@last.y)
           this.create_floor(@last.x,@last.y - 1)
   draw: (point_a,point_b,type) ->
