@@ -17,10 +17,11 @@ class MapSketch
       @map.crystals.push(crystal)
     return crystal
   push_to_map: (x,y,item) ->
-    if @map.map[y][x].length == 0 && @map.inbound(x,y) == true
-      @map.map[y][x].push(item)
-      return true
-    false
+    if @map.inbound(x,y) == true
+      if @map.map[y][x].length == 0
+        @map.map[y][x].push(item)
+        return true
+      false
   create_floor: (x,y) ->
     floor = new Floor(x,y)
     this.push_to_map(x,y,floor)
