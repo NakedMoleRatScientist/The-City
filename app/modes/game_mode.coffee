@@ -31,6 +31,8 @@ class GameMode extends Mode
         when "report"
           @state = 0
           @minor.update()
+        when "help"
+          @state = 1
         when "build"
           if @menu == 0
             @menu = 1
