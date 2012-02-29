@@ -43,8 +43,8 @@ class Map
   add_stockpile:(mouse) ->
     x = mouse.x
     y = mouse.y
-    x = Math.floor(x / 20) + @camera_x
-    y = Math.floor(y / 20) + @camera_y
+    x = Math.floor(x / 20) + @camera.x
+    y = Math.floor(y / 20) + @camera.y
     return if x < 2 || x > 97
     return if y < 2 || y > 97
     newpoint = new CrystalStock(x,y)
