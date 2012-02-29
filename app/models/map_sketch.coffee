@@ -25,14 +25,7 @@ class MapSketch
   create_floor: (x,y) ->
     floor = new Floor(x,y)
     this.push_to_map(x,y,floor)
-    x -= 1
-    first_floor = new Floor(x,y)
-    this.push_to_map(x,y,first_floor)
-    x += 1
-    y -= 1
-    second_floor = new Floor(x,y)
-    this.push_to_map(x,y,second_floor)
-    @last = floor
+    floor
   rect_draw: (begin,end,type) ->
     for x in [begin.x..end.x - 1]
       for y in [begin.y..end.y - 1]
@@ -49,7 +42,10 @@ class MapSketch
       when "crystal"
         this.create_crystal(location.x,location.y)
       when "floor"
-        this.create_floor(location.x,location.y)
+        @last = this.create_floor(location.x,location.y)
+        if thickness == true
+          this.create_floor(@last.x - 1,@last.y)
+          this.create_floor(@last.x,@last.y - 1)
   draw: (point_a,point_b,type) ->
     results = this.pathing(point_a,point_b)
     for location in results
