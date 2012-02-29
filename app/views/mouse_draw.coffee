@@ -3,6 +3,7 @@ mouseDraw = (@p5,mouse,map) ->
   y = @p5.mouseY
   location_x = Math.floor(x / 20)
   location_y = Math.floor(y / 20)
+  width = 0
   switch(mouse.mode)
     when 0 #what is it
       x = location_x + map.camera_x
@@ -12,6 +13,7 @@ mouseDraw = (@p5,mouse,map) ->
         @p5.noStroke()
         @p5.fill(255,0,0)
         @p5.text(item.name,x * 20, y * 20)
+        width = @p5.textWidth(item.name)
     when 1 #build
       @p5.noStroke()
       @p5.fill(128,128,128)
