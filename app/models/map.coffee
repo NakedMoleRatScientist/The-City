@@ -97,3 +97,6 @@ class Map
     return locations
   acquire: (x,y) ->
     this.select_by_name("crystal",x,y).acquire()
+  select_last: (x,y) ->
+    l = @map[y][x].length - 1
+    @map[y][x][l]
