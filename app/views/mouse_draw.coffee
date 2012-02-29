@@ -15,12 +15,15 @@ mouseDraw = (@p5,mouse,units,map) ->
           item = u
           break
       item = map.select_last(x + map.camera.x,y + map.camera.y) unless item != false
+      msg = item.name
       unless item == false
         @p5.noStroke()
         @p5.fill(255,0,0)
         #compensate for underscore being too low by fudging by -3
-        @p5.text(item.name,x * 20, y * 20 - 3)
-        width = @p5.textWidth(item.name)
+        if item.items != null
+          msg = item.name + " : " + item.items
+        @p5.text(msg,x * 20, y * 20 - 3)
+        width = @p5.textWidth(msg)
     when 1 #build
       @p5.noStroke()
       @p5.fill(128,128,128)
