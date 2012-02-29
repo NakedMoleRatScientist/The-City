@@ -91,7 +91,7 @@ class Map
         if y > end_y
           break
       if this.inbound(x,y) == true
-        if @map[y][x].length == 0 || this.collide_check(x,y) == false
+        if this.propose_drop() == false
           locations.push((x: x,y: y))
       x += 1
     return locations
