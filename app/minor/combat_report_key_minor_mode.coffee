@@ -15,3 +15,4 @@ class CombatReportKeyMinorMode
         return "previous"
       when 107
         return "kills"
+    false
