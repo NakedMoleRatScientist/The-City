@@ -17,4 +17,4 @@ mapDraw = (map,p5) ->
             if result != true
               delay.push(result)
     for d in delay
-      crystal_stockpile_draw(p5,d.x,d.y)
+      crystalStockpileDraw(p5,d.x,d.y)
