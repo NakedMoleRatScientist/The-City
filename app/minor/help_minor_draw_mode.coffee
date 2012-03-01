@@ -20,3 +20,4 @@ class HelpDrawMinorMode
     wallDraw(@p5,10,290)
     crystalDraw(@p5,10,320,0,null)
     crystalTreeDraw(@p5,10,350)
+    crystalStockpileDraw(@p5,10,400)
