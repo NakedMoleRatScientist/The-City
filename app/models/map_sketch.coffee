@@ -11,6 +11,8 @@ class MapSketch
     tree = new CrystalTree(x,y)
     if this.push_to_map(x,y,tree) == true
       @map.trees.push(tree)
+      return true
+    false
   create_crystal: (x,y) ->
     crystal = new Crystal(x,y)
     crystal.stack = @map.map[y][x].length
