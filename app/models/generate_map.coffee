@@ -18,12 +18,12 @@ class GenerateMap
     begin = (x: 3, y: 3)
     end = (x: begin.x + size, y: begin.y + size )
     @sketch.rect_draw(begin,end,"floor")
-    vert_a = (x: begin.x - 1, y: begin.y)
+    vert_a = (x: begin.x - 1, y: begin.y - 1)
     vert_b = (x: begin.x - 1, y: end.y + 1)
     #draw right side
     @sketch.draw(vert_a,vert_b,"wall")
     #draw left side
-    vert_a = (x: end.x + 1, y: begin.y)
+    vert_a = (x: end.x + 1, y: begin.y - 1)
     vert_b = (x: end.x + 1, y: end.y + 1)
     @sketch.draw(vert_a,vert_b,"wall")
   generate: () ->
