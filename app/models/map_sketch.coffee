@@ -36,7 +36,7 @@ class MapSketch
     if results != -1
       results.push(point_a) #since starting positions aren't pushed in pathfinder
     results
-  determine: (location,type) ->
+  draw_location: (location,type) ->
     switch(type)
       when "wall"
         this.create_wall(location.x,location.y)
