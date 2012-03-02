@@ -8,7 +8,8 @@ class GenerateMap
     for i in [0..9]
       x = random_number(@map.width)
       y = random_number(@map.height)
-      @sketch.create_tree(x,y)
+      unless rect_to_many_rect_collision((x: x, y: y, width: 0, height: 0),@collide)
+        @sketch.create_tree(x,y)
   generate_paths: () ->
     locations = []
     for m in @map.trees
