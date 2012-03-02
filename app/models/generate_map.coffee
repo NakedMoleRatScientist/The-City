@@ -24,7 +24,7 @@ class GenerateMap
       locations.push(free[random_number(free.length)])
     for i in [0..locations.length - 2]
       @sketch.draw(locations[i],locations[i + 1],"floor",true)
-  generate_buildings: () ->
+  create_building: () ->
     size = random_number(3) + 1
     rect = new Rect(2,2,size + 1,size + 1)
 #    this.forbid(rect)
@@ -47,6 +47,7 @@ class GenerateMap
     wall_b = (x: end.x, y: end.y + 1)
     #draw the bottom
     @sketch.draw(wall_a,wall_b,"wall")
+  generate_buildings: () ->
   generate: () ->
     this.generate_buildings()
     this.generate_trees()
