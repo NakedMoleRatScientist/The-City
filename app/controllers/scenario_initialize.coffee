@@ -1,7 +1,10 @@
 class ScenarioInitialize
   constructor: (@units,@map) ->
   create: (name) ->
-    switch(name)
+    @name = name
+    this.run()
+  run: () ->
+    switch(@name)
       when "combat"
         @units.create new Human(10,10,"Miya",1)
         @units.create new Human(10,20, "John",0)
