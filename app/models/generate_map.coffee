@@ -9,7 +9,7 @@ class GenerateMap
     loop
       x = random_number(@map.width)
       y = random_number(@map.height)
-      if @sketch.create_tree(x,y) == true
+      if @sketch.create_tree(x,y,@collide) == true
         success += 1
       if success == 10
         break
