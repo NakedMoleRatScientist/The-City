@@ -1,6 +1,7 @@
 class GenerateMap
   constructor: (@map) ->
     @sketch = @map.sketch
+    @forbid = []
   generate_trees: () ->
     for i in [0..9]
       x = random_number(@map.width)
