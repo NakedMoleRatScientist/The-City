@@ -1,5 +1,7 @@
 class Map
   constructor: (@width, @height) ->
+    this.setup()
+  setup: () ->
     @map = []
     this.size_map()
     @stockpoints = []
