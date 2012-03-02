@@ -4,5 +4,5 @@ class ScenarioTester
   input: (result) ->
     if @status == true
       switch(result)
-        when "refresh"
+        when "undo"
           console.log("REFRESH SCENARIO")
