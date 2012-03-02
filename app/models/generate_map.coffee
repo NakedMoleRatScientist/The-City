@@ -6,7 +6,7 @@ class GenerateMap
       x = random_number(@map.width)
       y = random_number(@map.height)
       @sketch.create_tree(x,y)
-  generate_floors: () ->
+  generate_paths: () ->
     locations = []
     for m in @map.trees
       free = @map.free_locations(m.x,m.y,1)
@@ -16,4 +16,8 @@ class GenerateMap
       @sketch.draw(locations[i],locations[i + 1],"floor")
   generate: () ->
     this.generate_trees()
-    this.generate_floors()
+    this.generate_paths()
+    begin = (x: 10, y: 10)
+    end = (x: 20,y: 20)
+    @sketch.thicken = false
+    @sketch.rect_draw(begin,end,"floor")
