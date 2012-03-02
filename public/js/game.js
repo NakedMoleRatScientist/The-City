@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw,
+  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -1452,6 +1452,8 @@
           return this.units.units[0].agility = 25;
         default:
           this.map.generate.generate();
+          this.map.generate.forbid(new Rect(10, 10, 1, 1));
+          this.map.generate.forbid(new Rect(12, 10, 1, 1));
           this.units.create(new Human(10, 10, "Killy", 0));
           this.units.units[0].stance = 1;
           this.units.create(new Human(12, 10, "Cibo", 1));
@@ -2523,8 +2525,12 @@
     function GenerateMap(map) {
       this.map = map;
       this.sketch = this.map.sketch;
-      this.forbid = [];
+      this.collide = [];
     }
+
+    GenerateMap.prototype.forbid = function(rect) {
+      return this.collide.push(rect);
+    };
 
     GenerateMap.prototype.generate_trees = function() {
       var i, x, y, _results;
@@ -2554,8 +2560,10 @@
     };
 
     GenerateMap.prototype.generate_buildings = function() {
-      var begin, end, size, wall_a, wall_b;
+      var begin, end, rect, size, wall_a, wall_b;
       size = random_number(3) + 1;
+      rect = new Rect(2, 2, size + 1, size + 1);
+      this.forbid(rect);
       begin = {
         x: 3,
         y: 3
@@ -3007,6 +3015,19 @@
     parts.push(new Leg("hind_right_leg"));
     return parts;
   };
+
+  Rect = (function() {
+
+    function Rect(x, y, width, height) {
+      this.x = x;
+      this.y = y;
+      this.width = width;
+      this.height = height;
+    }
+
+    return Rect;
+
+  })();
 
   human_body = function() {
     var parts;
