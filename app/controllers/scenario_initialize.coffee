@@ -77,8 +77,8 @@ class ScenarioInitialize
         @units.units[0].set_move(20,10)
         @units.units[0].agility = 25
       else
-        @map.generate.forbid(new Rect(10,10,1,1))
-        @map.generate.forbid(new Rect(12,10,1,1))
+        @map.generate.forbid(new Rect(10,10,0,0))
+        @map.generate.forbid(new Rect(12,10,0,0))
         @map.generate.generate()
         @units.create new Human(10,10, "Killy",0)
         @units.units[0].stance = 1
