@@ -10,6 +10,5 @@ rect_to_rect_collision = (one,two) ->
 
   two_y = two.y
   two_y2 = two.y + two.height
-
-  return true if one_x > two_x2 && one_y2 > two_y
+  return true if one_x >= two_x && one_y2 >= two_y
   false
