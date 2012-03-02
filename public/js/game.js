@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw,
+  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -400,7 +400,8 @@
 
     ModeManager.prototype.game_mode = function(name) {
       this.name = name;
-      return this.modes[0].scenario.create(this.name);
+      this.modes[0].scenario.create(this.name);
+      if (this.name === "game") return this.modes[0].tester.status = false;
     };
 
     ModeManager.prototype.mouse_input = function(result) {
@@ -1244,6 +1245,7 @@
       this.mouse = new Mouse();
       this.jobs = new JobsManager(this.map, this.units.units);
       this.scenario = new ScenarioInitialize(this.units, this.map);
+      this.tester = new ScenarioTester();
       GameMode.__super__.constructor.call(this, "game");
     }
 
@@ -1356,6 +1358,26 @@
 
   })(KeyMode);
 
+  ScenarioTester = (function() {
+
+    function ScenarioTester(parent) {
+      this.parent = parent;
+      this.status = true;
+    }
+
+    ScenarioTester.prototype.input = function(result) {
+      if (this.status === true) {
+        switch (result) {
+          case "refresh":
+            return console.log("REFRESH SCENARIO");
+        }
+      }
+    };
+
+    return ScenarioTester;
+
+  })();
+
   ScenarioInitialize = (function() {
 
     function ScenarioInitialize(units, map) {
@@ -1364,8 +1386,13 @@
     }
 
     ScenarioInitialize.prototype.create = function(name) {
+      this.name = name;
+      return this.run();
+    };
+
+    ScenarioInitialize.prototype.run = function() {
       var begin, bottom_begin, bottom_end, end, location, top_begin, top_end, vertical_begin, vertical_end;
-      switch (name) {
+      switch (this.name) {
         case "combat":
           this.units.create(new Human(10, 10, "Miya", 1));
           this.units.create(new Human(10, 20, "John", 0));
@@ -1473,6 +1500,8 @@
           this.map.sketch.create_wall(21, 10);
           this.units.units[0].set_move(20, 10);
           return this.units.units[0].agility = 25;
+        case "terrain_test":
+          return this.map.generate.create_building(10, 10, 3);
         default:
           this.map.generate.forbid(new Rect(10, 10, 0, 0));
           this.map.generate.forbid(new Rect(12, 10, 0, 0));
@@ -1689,13 +1718,17 @@
 
     function Units(map) {
       this.map = map;
+      this.setup();
+    }
+
+    Units.prototype.setup = function() {
       this.units = [];
       this.msg_manager = new MsgManager();
       this.fatalities = 0;
       this.advance = true;
       this.frame = 0;
-      this.finder = new Pathfinder(this.map);
-    }
+      return this.finder = new Pathfinder(this.map);
+    };
 
     Units.prototype.create = function(unit) {
       return this.units.push(unit);
@@ -2556,18 +2589,29 @@
     };
 
     GenerateMap.prototype.generate_trees = function() {
-      var i, x, y, _results;
+      var c, success, x, y, _i, _len, _ref, _results;
+      success = 0;
       _results = [];
-      for (i = 0; i <= 9; i++) {
+      while (true) {
         x = random_number(this.map.width);
         y = random_number(this.map.height);
-        if (!rect_to_many_rect_collision({
-          x: x,
-          y: y,
-          width: 0,
-          height: 0
-        }, this.collide)) {
-          _results.push(this.sketch.create_tree(x, y));
+        _ref = this.collide;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          c = _ref[_i];
+          if (pointToRectCollision({
+            x: x,
+            y: y,
+            width: 0,
+            height: 0
+          }, c)) {
+            console.log("fail!");
+          } else {
+            this.sketch.create_tree(x, y);
+            success += 1;
+          }
+        }
+        if (success === 10) {
+          break;
         } else {
           _results.push(void 0);
         }
@@ -2591,14 +2635,12 @@
       return _results;
     };
 
-    GenerateMap.prototype.generate_buildings = function() {
-      var begin, end, rect, size, wall_a, wall_b;
-      size = random_number(3) + 1;
+    GenerateMap.prototype.create_building = function(x, y, size) {
+      var begin, end, rect, wall_a, wall_b;
       rect = new Rect(2, 2, size + 1, size + 1);
-      this.forbid(rect);
       begin = {
-        x: 3,
-        y: 3
+        x: x,
+        y: y
       };
       end = {
         x: begin.x + size,
@@ -2643,9 +2685,11 @@
       return this.sketch.draw(wall_a, wall_b, "wall");
     };
 
+    GenerateMap.prototype.generate_buildings = function() {};
+
     GenerateMap.prototype.generate = function() {
-      this.generate_trees();
       this.generate_buildings();
+      this.generate_trees();
       return this.generate_paths();
     };
 
@@ -2957,7 +3001,7 @@
   })(Relation);
 
   scenarioList = function() {
-    return ["combat", "hand_disability_combat", "leg_disability", "pig_invasion", "hand_disability_gathering", "full_test_boars", "pathfinding", "unpathable_1", "unpathable_2"];
+    return ["combat", "hand_disability_combat", "leg_disability", "pig_invasion", "hand_disability_gathering", "full_test_boars", "pathfinding", "unpathable_1", "unpathable_2", "terrain_test"];
   };
 
   Human = (function(_super) {
