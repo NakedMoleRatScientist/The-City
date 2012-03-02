@@ -26,6 +26,9 @@ class GenerateMap
     vert_a = (x: end.x + 1, y: begin.y - 1)
     vert_b = (x: end.x + 1, y: end.y + 1)
     @sketch.draw(vert_a,vert_b,"wall")
+    vert_a = (x: begin.x, y: begin.y - 1)
+    vert_b = (x: end.x, y: begin.y - 1)
+    @sketch.draw(vert_a,vert_b,"wall")
   generate: () ->
     this.generate_trees()
     this.generate_paths()
