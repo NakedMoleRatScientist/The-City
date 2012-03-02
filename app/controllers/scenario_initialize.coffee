@@ -76,6 +76,8 @@ class ScenarioInitialize
         @map.sketch.create_wall(21,10)
         @units.units[0].set_move(20,10)
         @units.units[0].agility = 25
+      when "terrain_test"
+        @map.generate.create_building(10,10,3)
       else
         @map.generate.forbid(new Rect(10,10,0,0))
         @map.generate.forbid(new Rect(12,10,0,0))
