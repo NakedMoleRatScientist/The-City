@@ -50,5 +50,5 @@ class MapSketch
   draw: (point_a,point_b,type) ->
     results = this.pathing(point_a,point_b)
     for location in results
-      this.determine(location,type)
+      this.draw_location(location,type)
     @last = null
