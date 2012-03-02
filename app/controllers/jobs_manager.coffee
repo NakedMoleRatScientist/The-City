@@ -1,5 +1,7 @@
 class JobsManager
   constructor: (@map,@units) ->
+    this.setup()
+  setup: () ->
     @queue = []
   assigns: () ->
     return -1 if @queue.length == 0
