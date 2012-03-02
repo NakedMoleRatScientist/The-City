@@ -24,11 +24,10 @@ class GenerateMap
       locations.push(free[random_number(free.length)])
     for i in [0..locations.length - 2]
       @sketch.draw(locations[i],locations[i + 1],"floor",true)
-  create_building: () ->
-    size = random_number(3) + 1
+  create_building: (x,y,size) ->
     rect = new Rect(2,2,size + 1,size + 1)
 #    this.forbid(rect)
-    begin = (x: 3, y: 3)
+    begin = (x: x, y: y)
     end = (x: begin.x + size, y: begin.y + size )
     @sketch.rect_draw(begin,end,"floor")
     wall_a = (x: begin.x - 1, y: begin.y - 1)
