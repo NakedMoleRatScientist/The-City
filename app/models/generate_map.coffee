@@ -12,12 +12,12 @@ class GenerateMap
       free = @map.free_locations(m.x,m.y,1)
       locations.push(free[random_number(free.length)])
     for i in [0..locations.length - 2]
-      @sketch.thicken = true
-      @sketch.draw(locations[i],locations[i + 1],"floor")
+      @sketch.draw(locations[i],locations[i + 1],"floor",true)
+  generate_buildings: () ->
+    size = 3
+    begin = (x: 3, y: 3)
+    end = (x: begin.x + size, y: begin.y + size )
+    @sketch.rect_draw(begin,end,"floor")
   generate: () ->
     this.generate_trees()
     this.generate_paths()
-    begin = (x: 10, y: 10)
-    end = (x: 20,y: 20)
-    @sketch.thicken = false
-    @sketch.rect_draw(begin,end,"floor")
