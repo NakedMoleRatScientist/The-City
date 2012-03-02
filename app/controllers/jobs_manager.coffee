@@ -25,3 +25,5 @@ class JobsManager
         if @queue.length == length
           @queue.push(count)
       count += 1
+  reset: () ->
+    this.setup()
