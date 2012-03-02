@@ -6,6 +6,7 @@ class GameMode extends Mode
     @mouse = new Mouse()
     @jobs = new JobsManager(@map,@units.units)
     @scenario = new ScenarioInitialize(@units,@map)
+    @tester = new ScenarioTester()
     super("game")
   act: ->
     @units.move()
