@@ -11,7 +11,7 @@ class GameMode extends Mode
   reset: () ->
     @map.reset()
     @units.reset()
-    @job.reset()
+    @jobs.reset()
     @scenario.run()
   act: ->
     @units.move()
