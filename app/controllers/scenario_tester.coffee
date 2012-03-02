@@ -1,6 +1,6 @@
 class ScenarioTester
   constructor: () ->
-    @status = false
+    @status = true
   input: (result) ->
     if @status == true
       switch(result)
