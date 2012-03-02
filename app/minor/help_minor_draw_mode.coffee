@@ -28,5 +28,5 @@ class HelpDrawMinorMode
     @p5.text("crystal", 35,340)
     crystalTreeDraw(@p5,10,350)
     @p5.fill(255)
-    @p5.text("crystal tree: where you get your crystals")
+    @p5.text("crystal tree: where you get your crystals",35,370)
     crystalStockpileDraw(@p5,10,400)
