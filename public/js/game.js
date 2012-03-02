@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw,
+  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -323,6 +323,15 @@
 
   })();
 
+  rect_to_many_rect_collision = function(individual, many) {
+    var against, _i, _len;
+    for (_i = 0, _len = many.length; _i < _len; _i++) {
+      against = many[_i];
+      if (rect_to_rect_collision(individual, against)) return true;
+    }
+    return false;
+  };
+
   TextOptions = (function() {
 
     function TextOptions() {
@@ -511,6 +520,20 @@
       _results.push(eval(object));
     }
     return _results;
+  };
+
+  rect_to_rect_collision = function(one, two) {
+    var one_x, one_x2, one_y, one_y2, two_x, two_x2, two_y, two_y2;
+    one_x = one.x;
+    one_x2 = two.x + one.width;
+    one_y = one.y;
+    one_y2 = one.y + one.height;
+    two_x = two.x;
+    two_x2 = two.x + two.width;
+    two_y = two.y;
+    two_y2 = two.y + two.height;
+    if (one_x >= two_x && one_y2 >= two_y) return true;
+    return false;
   };
 
   initializeDrawMinorModes = function(name, p5) {
@@ -1451,9 +1474,9 @@
           this.units.units[0].set_move(20, 10);
           return this.units.units[0].agility = 25;
         default:
+          this.map.generate.forbid(new Rect(10, 10, 0, 0));
+          this.map.generate.forbid(new Rect(12, 10, 0, 0));
           this.map.generate.generate();
-          this.map.generate.forbid(new Rect(10, 10, 1, 1));
-          this.map.generate.forbid(new Rect(12, 10, 1, 1));
           this.units.create(new Human(10, 10, "Killy", 0));
           this.units.units[0].stance = 1;
           this.units.create(new Human(12, 10, "Cibo", 1));
@@ -2538,7 +2561,16 @@
       for (i = 0; i <= 9; i++) {
         x = random_number(this.map.width);
         y = random_number(this.map.height);
-        _results.push(this.sketch.create_tree(x, y));
+        if (!rect_to_many_rect_collision({
+          x: x,
+          y: y,
+          width: 0,
+          height: 0
+        }, this.collide)) {
+          _results.push(this.sketch.create_tree(x, y));
+        } else {
+          _results.push(void 0);
+        }
       }
       return _results;
     };
