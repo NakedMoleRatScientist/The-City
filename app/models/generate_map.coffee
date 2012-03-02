@@ -2,7 +2,7 @@ class GenerateMap
   constructor: (@map) ->
     @sketch = @map.sketch
     @collide = []
-  forbid: (x,y) ->
+  forbid: (x,y,) ->
     @collide.push(x: x, y: y)
   generate_trees: () ->
     for i in [0..9]
@@ -18,7 +18,7 @@ class GenerateMap
       @sketch.draw(locations[i],locations[i + 1],"floor",true)
   generate_buildings: () ->
     size = random_number(3) + 1
-    rect = (x: 2, y: 2, width: size + 2, height: size + 2)
+    rect = (x: 2, y: 2, width: size + 1, height: size + 1)
     begin = (x: 3, y: 3)
     end = (x: begin.x + size, y: begin.y + size )
     @sketch.rect_draw(begin,end,"floor")
