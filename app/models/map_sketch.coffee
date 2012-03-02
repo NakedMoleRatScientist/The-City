@@ -30,7 +30,7 @@ class MapSketch
   rect_draw: (begin,end,type) ->
     for x in [begin.x..end.x - 1]
       for y in [begin.y..end.y - 1]
-        this.draw_location(x,y,type)
+        this.draw_location((x: x, y: y),type)
   pathing: (point_a,point_b) ->
     results = @finder.calculate_path(point_a,point_b)
     if results != -1
