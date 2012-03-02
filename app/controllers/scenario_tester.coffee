@@ -1,5 +1,5 @@
 class ScenarioTester
-  constructor: () ->
+  constructor: (@parent) ->
     @status = true
   input: (result) ->
     if @status == true
