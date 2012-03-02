@@ -36,5 +36,5 @@ class GenerateMap
     @sketch.draw(wall_a,wall_b,"wall")
   generate: () ->
     this.generate_trees()
-    this.generate_paths()
     this.generate_buildings()
+    this.generate_paths()
