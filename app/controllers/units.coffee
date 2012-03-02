@@ -1,11 +1,13 @@
 class Units
   constructor: (@map) ->
+    this.setup()
+    @finder = new Pathfinder(@map)
+  setup: () ->
     @units = []
     @msg_manager = new MsgManager()
     @fatalities = 0
     @advance = true
     @frame = 0
-    @finder = new Pathfinder(@map)
   create: (unit) ->
     @units.push(unit)
   move: () ->
