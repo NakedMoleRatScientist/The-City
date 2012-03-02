@@ -27,7 +27,7 @@ class GenerateMap
   generate_buildings: () ->
     size = random_number(3) + 1
     rect = new Rect(2,2,size + 1,size + 1)
-    this.forbid(rect)
+#    this.forbid(rect)
     begin = (x: 3, y: 3)
     end = (x: begin.x + size, y: begin.y + size )
     @sketch.rect_draw(begin,end,"floor")
