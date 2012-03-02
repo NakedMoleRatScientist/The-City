@@ -36,7 +36,7 @@ class MapSketch
     if results != -1
       results.push(point_a) #since starting positions aren't pushed in pathfinder
     results
-  draw_location: (location,type) ->
+  draw_location: (location,type,thicken = false) ->
     switch(type)
       when "wall"
         this.create_wall(location.x,location.y)
@@ -44,11 +44,11 @@ class MapSketch
         this.create_crystal(location.x,location.y)
       when "floor"
         @last = this.create_floor(location.x,location.y)
-        if @thicken == true
+        if thicken == true
           this.create_floor(@last.x - 1,@last.y)
           this.create_floor(@last.x,@last.y - 1)
-  draw: (point_a,point_b,type) ->
+  draw: (point_a,point_b,type,thicken) ->
     results = this.pathing(point_a,point_b)
     for location in results
-      this.draw_location(location,type)
+      this.draw_location(location,type,thicken)
     @last = null
