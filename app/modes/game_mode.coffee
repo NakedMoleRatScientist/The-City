@@ -8,6 +8,9 @@ class GameMode extends Mode
     @scenario = new ScenarioInitialize(@units,@map)
     @tester = new ScenarioTester(this)
     super("game")
+  reset: () ->
+    @map.reset()
+    @units.reset()
   act: ->
     @units.move()
     @units.clean()
