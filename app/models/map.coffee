@@ -94,3 +94,5 @@ class Map
       l = @map[y][x].length - 1
       return @map[y][x][l]
     false
+  reset: () ->
+    this.setup()
