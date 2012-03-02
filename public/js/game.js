@@ -1251,6 +1251,13 @@
       GameMode.__super__.constructor.call(this, "game");
     }
 
+    GameMode.prototype.reset = function() {
+      this.map.reset();
+      this.units.reset();
+      this.jobs.reset();
+      return this.scenario.run();
+    };
+
     GameMode.prototype.act = function() {
       this.units.move();
       this.units.clean();
@@ -1372,7 +1379,7 @@
       if (this.status === true) {
         switch (result) {
           case "undo":
-            return console.log("REFRESH SCENARIO");
+            return this.parent.reset();
         }
       }
     };
@@ -1525,8 +1532,12 @@
     function JobsManager(map, units) {
       this.map = map;
       this.units = units;
-      this.queue = [];
+      this.setup();
     }
+
+    JobsManager.prototype.setup = function() {
+      return this.queue = [];
+    };
 
     JobsManager.prototype.assigns = function() {
       var u, _i, _len, _ref, _results;
@@ -1576,6 +1587,10 @@
         _results.push(count += 1);
       }
       return _results;
+    };
+
+    JobsManager.prototype.reset = function() {
+      return this.setup();
     };
 
     return JobsManager;
@@ -2596,27 +2611,13 @@
     };
 
     GenerateMap.prototype.generate_trees = function() {
-      var c, success, x, y, _i, _len, _ref, _results;
+      var success, x, y, _results;
       success = 0;
       _results = [];
       while (true) {
         x = random_number(this.map.width);
         y = random_number(this.map.height);
-        _ref = this.collide;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          c = _ref[_i];
-          if (pointToRectCollision({
-            x: x,
-            y: y,
-            width: 0,
-            height: 0
-          }, c)) {
-            console.log("fail!");
-          } else {
-            this.sketch.create_tree(x, y);
-            success += 1;
-          }
-        }
+        if (this.sketch.create_tree(x, y, this.collide) === true) success += 1;
         if (success === 10) {
           break;
         } else {
@@ -2806,10 +2807,15 @@
       return this.push_to_map(x, y, wall);
     };
 
-    MapSketch.prototype.create_tree = function(x, y) {
+    MapSketch.prototype.create_tree = function(x, y, collide) {
       var tree;
+      if (collide == null) collide = false;
       tree = new CrystalTree(x, y);
-      if (this.push_to_map(x, y, tree) === true) return this.map.trees.push(tree);
+      if (this.push_to_map(x, y, tree) === true) {
+        this.map.trees.push(tree);
+        return true;
+      }
+      return false;
     };
 
     MapSketch.prototype.create_crystal = function(x, y) {
