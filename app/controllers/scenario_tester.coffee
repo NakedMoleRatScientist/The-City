@@ -5,4 +5,4 @@ class ScenarioTester
     if @status == true
       switch(result)
         when "undo"
-          console.log("REFRESH SCENARIO")
+          @parent.reset()
