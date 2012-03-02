@@ -9,12 +9,8 @@ class GenerateMap
     loop
       x = random_number(@map.width)
       y = random_number(@map.height)
-      for c in @collide
-        if pointToRectCollision((x: x, y: y, width: 0, height: 0),c)
-          console.log("fail!")
-        else
-          @sketch.create_tree(x,y)
-          success += 1
+      if @sketch.create_tree(x,y) == true
+        success += 1
       if success == 10
         break
   generate_paths: () ->
