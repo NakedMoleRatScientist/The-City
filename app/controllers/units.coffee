@@ -1,13 +1,13 @@
 class Units
   constructor: (@map) ->
     this.setup()
-    @finder = new Pathfinder(@map)
   setup: () ->
     @units = []
     @msg_manager = new MsgManager()
     @fatalities = 0
     @advance = true
     @frame = 0
+    @finder = new Pathfinder(@map)
   create: (unit) ->
     @units.push(unit)
   move: () ->
@@ -59,5 +59,3 @@ class Units
         existing_boars += 1
         name = random_number(100)
         @units.push new Lightboar(0,random_number(100),"lightboar" + name)
-  clean: () ->
-    this.setup()
