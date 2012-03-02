@@ -1072,6 +1072,8 @@
               return "report";
             case 115:
               return "up";
+            case 117:
+              return "undo";
             case 119:
               return "down";
             case 109:
@@ -1245,7 +1247,7 @@
       this.mouse = new Mouse();
       this.jobs = new JobsManager(this.map, this.units.units);
       this.scenario = new ScenarioInitialize(this.units, this.map);
-      this.tester = new ScenarioTester();
+      this.tester = new ScenarioTester(this);
       GameMode.__super__.constructor.call(this, "game");
     }
 
@@ -1302,6 +1304,7 @@
               this.mouse.mode = 0;
             }
         }
+        this.tester.input(result);
       }
       return {
         change: false
@@ -1368,7 +1371,7 @@
     ScenarioTester.prototype.input = function(result) {
       if (this.status === true) {
         switch (result) {
-          case "refresh":
+          case "undo":
             return console.log("REFRESH SCENARIO");
         }
       }
@@ -1866,6 +1869,10 @@
         }
         return _results;
       }
+    };
+
+    Units.prototype.reset = function() {
+      return this.setup();
     };
 
     return Units;
@@ -3170,6 +3177,10 @@
     function Map(width, height) {
       this.width = width;
       this.height = height;
+      this.setup();
+    }
+
+    Map.prototype.setup = function() {
       this.map = [];
       this.size_map();
       this.stockpoints = [];
@@ -3178,8 +3189,8 @@
       this.sketch = new MapSketch(this);
       this.generate = new GenerateMap(this);
       this.camera = new Camera();
-      this.redraw = [];
-    }
+      return this.redraw = [];
+    };
 
     Map.prototype.size_map = function() {
       var x, y, _ref, _results;
@@ -3332,6 +3343,10 @@
         return this.map[y][x][l];
       }
       return false;
+    };
+
+    Map.prototype.reset = function() {
+      return this.setup();
     };
 
     return Map;
