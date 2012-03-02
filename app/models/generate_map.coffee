@@ -5,11 +5,17 @@ class GenerateMap
   forbid: (rect) ->
     @collide.push(rect)
   generate_trees: () ->
-    for i in [0..9]
+    success = 0
+    loop
       x = random_number(@map.width)
       y = random_number(@map.height)
-      unless rect_to_many_rect_collision((x: x, y: y, width: 0, height: 0),@collide)
+      if rect_to_many_rect_collision((x: x, y: y, width: 0, height: 0),@collide)
+        console.log("fail!")
+      else
         @sketch.create_tree(x,y)
+        success += 1
+      if success == 10
+        break
   generate_paths: () ->
     locations = []
     for m in @map.trees
