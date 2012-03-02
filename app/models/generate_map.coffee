@@ -18,7 +18,7 @@ class GenerateMap
       @sketch.draw(locations[i],locations[i + 1],"floor",true)
   generate_buildings: () ->
     size = random_number(3) + 1
-    rect = (x: 2, y: 2, width: size + 1, height: size + 1)
+    rect = new Rect(2,2,size + 1,size + 1)
     this.forbid(rect)
     begin = (x: 3, y: 3)
     end = (x: begin.x + size, y: begin.y + size )
