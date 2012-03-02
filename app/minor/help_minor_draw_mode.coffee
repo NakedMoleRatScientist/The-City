@@ -24,6 +24,7 @@ class HelpDrawMinorMode
     @p5.fill(255)
     @p5.text("wall", 35,310)
     crystalDraw(@p5,10,320,0,null)
+    @p5.fill(255)
     @p5.text("crystal piles", 35,340)
     crystalTreeDraw(@p5,10,350)
     crystalStockpileDraw(@p5,10,400)
