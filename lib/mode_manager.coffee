@@ -12,6 +12,8 @@ class ModeManager
     return @modes[@n].update_draw()
   game_mode: (@name) ->
     @modes[0].scenario.create(@name)
+    if @name == "game"
+      @modes[0].tester.status = false
   mouse_input:(result) ->
     @modes[@n].mouse_input(result)
   switch_mode: (object) ->
