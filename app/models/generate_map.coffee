@@ -21,3 +21,4 @@ class GenerateMap
   generate: () ->
     this.generate_trees()
     this.generate_paths()
+    this.generate_buildings()
