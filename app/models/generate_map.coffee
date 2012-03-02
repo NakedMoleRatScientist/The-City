@@ -14,7 +14,7 @@ class GenerateMap
     for i in [0..locations.length - 2]
       @sketch.draw(locations[i],locations[i + 1],"floor",true)
   generate_buildings: () ->
-    size = 3
+    size = random_number(3) + 1
     begin = (x: 3, y: 3)
     end = (x: begin.x + size, y: begin.y + size )
     @sketch.rect_draw(begin,end,"floor")
