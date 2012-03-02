@@ -18,13 +18,10 @@ class GenerateMap
     begin = (x: 3, y: 3)
     end = (x: begin.x + size, y: begin.y + size )
     @sketch.rect_draw(begin,end,"floor")
-    vert_a = begin
-    vert_a.x -= 1
-    vert_b = end
-    vert_b.x = vert_a.x
-    vert_b.y += 1
+    vert_a = (x: begin.x - 1, y: begin.y)
+    vert_b = (x: begin.x - 1, y: end.y + 1)
+    #draw right side
     @sketch.draw(vert_a,vert_b,"wall")
-
   generate: () ->
     this.generate_trees()
     this.generate_paths()
