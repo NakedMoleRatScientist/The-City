@@ -1,8 +1,6 @@
 class GenerateMap
   constructor: (@map) ->
     @sketch = @map.sketch
-  forbid: (rect) ->
-    @collide.push(rect)
   generate_trees: () ->
     success = 0
     loop
@@ -21,7 +19,7 @@ class GenerateMap
       @sketch.draw(locations[i],locations[i + 1],"floor",true)
   create_building: (x,y,size) ->
     rect = new Rect(2,2,size + 1,size + 1)
-#    this.forbid(rect)
+    @sketch.forbid(rect)
     begin = (x: x, y: y)
     end = (x: begin.x + size, y: begin.y + size )
     @sketch.rect_draw(begin,end,"floor")
