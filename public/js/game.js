@@ -1511,10 +1511,12 @@
           this.units.units[0].set_move(20, 10);
           return this.units.units[0].agility = 25;
         case "terrain_test":
-          return this.map.generate.create_building(10, 10, 3);
+          this.map.generate.create_building(10, 10, 3);
+          this.map.sketch.create_crystal(11, 11);
+          return this.map.generate.create_building(9, 9, 1);
         default:
-          this.map.generate.forbid(new Rect(10, 10, 0, 0));
-          this.map.generate.forbid(new Rect(12, 10, 0, 0));
+          this.map.sketch.forbid(new Rect(10, 10, 0, 0));
+          this.map.sketch.forbid(new Rect(12, 10, 0, 0));
           this.map.generate.generate();
           this.units.create(new Human(10, 10, "Killy", 0));
           this.units.units[0].stance = 1;
@@ -2603,12 +2605,7 @@
     function GenerateMap(map) {
       this.map = map;
       this.sketch = this.map.sketch;
-      this.collide = [];
     }
-
-    GenerateMap.prototype.forbid = function(rect) {
-      return this.collide.push(rect);
-    };
 
     GenerateMap.prototype.generate_trees = function() {
       var success, x, y, _results;
@@ -2617,7 +2614,7 @@
       while (true) {
         x = random_number(this.map.width);
         y = random_number(this.map.height);
-        if (this.sketch.create_tree(x, y, this.collide) === true) success += 1;
+        if (this.sketch.create_tree(x, y) === true) success += 1;
         if (success === 10) {
           break;
         } else {
@@ -2646,6 +2643,7 @@
     GenerateMap.prototype.create_building = function(x, y, size) {
       var begin, end, rect, wall_a, wall_b;
       rect = new Rect(2, 2, size + 1, size + 1);
+      this.sketch.forbid(rect);
       begin = {
         x: x,
         y: y
@@ -2799,7 +2797,12 @@
       this.thicken = false;
       this.last = null;
       this.paths = [];
+      this.collide = [];
     }
+
+    MapSketch.prototype.forbid = function(rect) {
+      return this.collide.push(rect);
+    };
 
     MapSketch.prototype.create_wall = function(x, y) {
       var wall;
@@ -2895,6 +2898,16 @@
         this.draw_location(location, type, thicken);
       }
       return this.last = null;
+    };
+
+    MapSketch.prototype.check_collision = function(individual) {
+      var c, _i, _len, _ref;
+      _ref = this.collide;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        c = _ref[_i];
+        if (rect_to_rect_collision(individual, c) === true) return true;
+      }
+      return false;
     };
 
     return MapSketch;
