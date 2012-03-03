@@ -5,6 +5,8 @@ class MapSketch
     @last = null
     @paths = []
     @collide = []
+  forbid: (rect) ->
+    @collide.push(rect)
   create_wall: (x, y) ->
     wall = new Wall(x,y)
     this.push_to_map(x,y,wall)
