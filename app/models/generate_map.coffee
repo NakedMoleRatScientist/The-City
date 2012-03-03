@@ -1,7 +1,6 @@
 class GenerateMap
   constructor: (@map) ->
     @sketch = @map.sketch
-    @collide = []
   forbid: (rect) ->
     @collide.push(rect)
   generate_trees: () ->
