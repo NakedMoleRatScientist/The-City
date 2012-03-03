@@ -82,8 +82,8 @@ class ScenarioInitialize
       when "terrain_test"
         @map.generate.create_building(10,10,3)
       else
-        @map.generate.forbid(new Rect(10,10,0,0))
-        @map.generate.forbid(new Rect(12,10,0,0))
+        @map.sketch.forbid(new Rect(10,10,0,0))
+        @map.sketch.forbid(new Rect(12,10,0,0))
         @map.generate.generate()
         @units.create new Human(10,10, "Killy",0)
         @units.units[0].stance = 1
