@@ -25,6 +25,6 @@ mouseDraw = (@p5,mouse,units,map) ->
       @p5.rect(x * 20,y * 20,20,20)
       @p5.fill(255,0,0)
       msg = "Crystal Pile"
-      @p5.text(msg,x * 20,y * 20)
-      width = @p5.textWidth(msg)
+  @p5.text(msg,x * 20,y * 20 - 3)
+  width = @p5.textWidth(msg)
   Math.ceil(width / 20)
