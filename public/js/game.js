@@ -774,21 +774,19 @@
   };
 
   mouseDraw = function(p5, mouse, units, map) {
-    var item, location_x, location_y, msg, u, width, x, y, _i, _len;
+    var cam_x, cam_y, item, msg, u, width, x, y, _i, _len;
     this.p5 = p5;
-    x = this.p5.mouseX;
-    y = this.p5.mouseY;
-    location_x = Math.floor(x / 20);
-    location_y = Math.floor(y / 20);
+    x = Math.floor(this.p5.mouseX / 20);
+    y = Math.floor(this.p5.mouseY / 20);
     width = 0;
     item = false;
     switch (mouse.mode) {
       case 0:
-        x = location_x;
-        y = location_y;
+        cam_x = x + map.camera.x;
+        cam_y = y + map.camera.y;
         for (_i = 0, _len = units.length; _i < _len; _i++) {
           u = units[_i];
-          if (u.x === x + map.camera.x && u.y === y + map.camera.y) {
+          if (u.x === cam_x && u.y === y + cam_y) {
             item = u;
             break;
           }
@@ -801,19 +799,18 @@
           this.p5.noStroke();
           this.p5.fill(255, 0, 0);
           if (item.name === "crystal") msg = item.name + " : " + item.items;
-          this.p5.text(msg, x * 20, y * 20 - 3);
-          width = this.p5.textWidth(msg);
+          msg += " (" + cam_x + "," + cam_y + ")";
         }
         break;
       case 1:
         this.p5.noStroke();
         this.p5.fill(128, 128, 128);
-        this.p5.rect(location_x * 20, location_y * 20, 20, 20);
+        this.p5.rect(x * 20, y * 20, 20, 20);
         this.p5.fill(255, 0, 0);
         msg = "Crystal Pile";
-        this.p5.text(msg, location_x * 20, location_y * 20);
-        width = this.p5.textWidth(msg);
     }
+    this.p5.text(msg, x * 20, y * 20 - 3);
+    width = this.p5.textWidth(msg);
     return Math.ceil(width / 20);
   };
 
@@ -1515,7 +1512,8 @@
           this.map.generate.create_building(10, 10, 3);
           this.map.sketch.create_crystal(11, 11);
           this.map.generate.create_building(9, 9, 1);
-          return this.map.generate.create_building(14, 15, 3);
+          this.map.generate.create_building(13, 14, 3);
+          return this.map.sketch.create_crystal(10, 10);
         default:
           this.map.sketch.forbid(new Rect(10, 10, 0, 0));
           this.map.sketch.forbid(new Rect(12, 10, 0, 0));
@@ -2904,11 +2902,8 @@
     };
 
     MapSketch.prototype.check_collision = function(individual) {
-      var c, _i, _len, _ref;
-      _ref = this.collide;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        c = _ref[_i];
-        if (rect_to_rect_collision(individual, c) === true) return true;
+      if (rect_to_many_rect_collision(individual, this.collide) === true) {
+        return true;
       }
       return false;
     };
