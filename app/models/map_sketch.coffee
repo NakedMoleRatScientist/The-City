@@ -58,7 +58,6 @@ class MapSketch
       this.draw_location(location,type,thicken)
     @last = null
   check_collision: (individual) ->
-    for c in @collide
-      if rect_to_rect_collision(individual,c) == true
-        return true
+    if rect_to_many_rect_collision(individual,@collide) == true
+      return true
     false
