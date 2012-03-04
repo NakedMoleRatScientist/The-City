@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw,
+  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -1366,536 +1366,6 @@
 
   })(KeyMode);
 
-  ScenarioTester = (function() {
-
-    function ScenarioTester(parent) {
-      this.parent = parent;
-      this.status = true;
-    }
-
-    ScenarioTester.prototype.input = function(result) {
-      if (this.status === true) {
-        switch (result) {
-          case "undo":
-            return this.parent.reset();
-        }
-      }
-    };
-
-    return ScenarioTester;
-
-  })();
-
-  ScenarioInitialize = (function() {
-
-    function ScenarioInitialize(units, map) {
-      this.units = units;
-      this.map = map;
-    }
-
-    ScenarioInitialize.prototype.create = function(name) {
-      this.name = name;
-      return this.run();
-    };
-
-    ScenarioInitialize.prototype.run = function() {
-      var begin, bottom_begin, bottom_end, end, location, top_begin, top_end, vertical_begin, vertical_end;
-      switch (this.name) {
-        case "combat":
-          this.units.create(new Human(10, 10, "Miya", 1));
-          this.units.create(new Human(10, 20, "John", 0));
-          this.units.units[0].target = this.units.units[1];
-          return this.units.units[1].stance = 1;
-        case "leg_disability":
-          this.units.create(new Human(10, 10, "Can'tWalk", 0));
-          this.units.units[0].body.leg = 2;
-          return this.units.units[0].set_move(20, 20);
-        case "pig_invasion":
-          this.units.create(new Lightboar(0, 4, "pigboy", 0));
-          this.units.create(new Lightboar(3, 3, "pigone", 0));
-          this.units.create(new Lightboar(2, 3, "pigtwo", 0));
-          this.units.create(new Lightboar(20, 15, "pigthree", 0));
-          this.units.units[1].order = null;
-          this.units.units[2].order = null;
-          this.units.units[3].order = null;
-          this.map.sketch.create_crystal(5, 5);
-          return this.map.drop_crystal(5, 5);
-        case "hand_disability_combat":
-          this.units.create(new Human(10, 10, "nofight", 0));
-          this.units.create(new Human(10, 20, "Target", 1));
-          this.units.units[0].body.hand = 2;
-          return this.units.units[0].target = this.units.units[1];
-        case "hand_disability_gathering":
-          this.units.create(new Human(10, 10, "gatherer", 0));
-          this.units.units[0].body.hand = 2;
-          location = {
-            x: 300,
-            y: 300
-          };
-          return this.map.add_stockpile(location);
-        case "full_test_boars":
-          this.map.sketch.create_crystal(20, 20);
-          this.map.map[20][20].items = 50;
-          this.units.generate_boars();
-          return this.units.create(new Human(10, 10, "grumpy_killer", 0));
-        case "pathfinding":
-          this.units.create(new Human(10, 10, "pathfinder_one", 0));
-          this.units.create(new Human(10, 20, "pathfinder_two", 0));
-          begin = {
-            x: 15,
-            y: 11
-          };
-          end = {
-            x: 15,
-            y: 9
-          };
-          this.map.sketch.draw(begin, end, "wall");
-          this.units.units[0].set_move(20, 10);
-          this.units.units[0].agility = 25;
-          top_begin = {
-            x: 13,
-            y: 14
-          };
-          top_end = {
-            x: 20,
-            y: 14
-          };
-          this.map.sketch.draw(top_begin, top_end, "wall");
-          bottom_begin = {
-            x: 13,
-            y: 25
-          };
-          bottom_end = {
-            x: 20,
-            y: 25
-          };
-          this.map.sketch.draw(bottom_begin, bottom_end, "wall");
-          vertical_begin = {
-            x: 20,
-            y: 15
-          };
-          vertical_end = {
-            x: 20,
-            y: 24
-          };
-          this.map.sketch.draw(vertical_begin, vertical_end, "wall");
-          this.units.units[1].set_move(25, 20);
-          return this.units.units[1].agility = 25;
-        case "unpathable_1":
-          this.units.create(new Human(10, 10, "pathfinder_one", 0));
-          this.map.sketch.create_wall(20, 10);
-          this.units.units[0].set_move(20, 10);
-          return this.units.units[0].agility = 25;
-        case "unpathable_2":
-          this.map.width = 40;
-          this.map.height = 30;
-          this.map.size_map();
-          this.units.create(new Human(10, 10, "pathfinder_one", 0));
-          begin = {
-            x: 19,
-            y: 9
-          };
-          end = {
-            x: 21,
-            y: 9
-          };
-          this.map.sketch.draw(begin, end, "wall");
-          begin.y = 11;
-          end.y = 11;
-          this.map.sketch.draw(begin, end, "wall");
-          this.map.sketch.create_wall(19, 10);
-          this.map.sketch.create_wall(21, 10);
-          this.units.units[0].set_move(20, 10);
-          return this.units.units[0].agility = 25;
-        case "terrain_test":
-          this.map.generate.create_building(10, 10, 3);
-          this.map.sketch.create_crystal(11, 11);
-          this.map.generate.create_building(9, 9, 1);
-          this.map.generate.create_building(13, 14, 3);
-          this.map.sketch.create_crystal(10, 10);
-          return this.map.generate.create_building(20, 20, 2);
-        default:
-          this.map.sketch.forbid(new Rect(10, 10, 0, 0));
-          this.map.sketch.forbid(new Rect(12, 10, 0, 0));
-          this.map.generate.generate();
-          this.units.create(new Human(10, 10, "Killy", 0));
-          this.units.units[0].stance = 1;
-          this.units.create(new Human(12, 10, "Cibo", 1));
-          return this.units.units[1].stance = 1;
-      }
-    };
-
-    return ScenarioInitialize;
-
-  })();
-
-  JobsManager = (function() {
-
-    function JobsManager(map, units) {
-      this.map = map;
-      this.units = units;
-      this.setup();
-    }
-
-    JobsManager.prototype.setup = function() {
-      return this.queue = [];
-    };
-
-    JobsManager.prototype.assigns = function() {
-      var u, _i, _len, _ref, _results;
-      if (this.queue.length === 0) return -1;
-      _ref = this.units;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        u = _ref[_i];
-        if (u.job === null) {
-          u.set_job(this.map.stockpoints[this.queue[0]]);
-          u.order = 0;
-          this.map.stockpoints[this.queue[0]].persons.push(u);
-          this.queue.shift();
-          if (this.queue.length === 0) {
-            break;
-          } else {
-            _results.push(void 0);
-          }
-        } else {
-          _results.push(void 0);
-        }
-      }
-      return _results;
-    };
-
-    JobsManager.prototype.queuing = function() {
-      var count, i, length, q, s, _i, _j, _len, _len2, _ref, _ref2, _results;
-      count = 0;
-      this.queue = [];
-      _ref = this.map.stockpoints;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        s = _ref[_i];
-        if (s.check_assign() === false && s.finish === false) {
-          i = 0;
-          length = this.queue.length;
-          _ref2 = this.queue;
-          for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-            q = _ref2[_j];
-            if (q.priority < s.priority) {
-              this.queue.splice(i, 0, count);
-              i += 1;
-            }
-          }
-          if (this.queue.length === length) this.queue.push(count);
-        }
-        _results.push(count += 1);
-      }
-      return _results;
-    };
-
-    JobsManager.prototype.reset = function() {
-      return this.setup();
-    };
-
-    return JobsManager;
-
-  })();
-
-  MsgManager = (function() {
-
-    function MsgManager() {
-      this.relations = [];
-      this.last_status = -1;
-    }
-
-    MsgManager.prototype.create_combat_relation = function(unit_one, unit_two) {
-      this.relations.push(new CombatRelation([unit_one, unit_two]));
-      return this.relations.length - 1;
-    };
-
-    MsgManager.prototype.find_relation = function(unit_one, unit_two) {
-      var n, r, _i, _len, _ref;
-      n = 0;
-      _ref = this.relations;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        r = _ref[_i];
-        if (__indexOf.call(r.actors, unit_one) >= 0 && __indexOf.call(r.actors, unit_two) >= 0) {
-          return n;
-        }
-        n += 1;
-      }
-      return false;
-    };
-
-    MsgManager.prototype.find_or_create_combat_relation = function(unit_one, unit_two) {
-      var n;
-      n = this.find_relation(unit_one, unit_two);
-      if (n === false) return this.create_combat_relation(unit_one, unit_two);
-      return n;
-    };
-
-    MsgManager.prototype.msg = function(unit_one, unit_two, msg) {
-      var n;
-      n = this.find_or_create_combat_relation(unit_one, unit_two);
-      this.relations[n].add_msg(msg);
-      this.last_status = n;
-      return n;
-    };
-
-    MsgManager.prototype.get_last_update = function() {
-      if (this.last_status === -1) return -1;
-      return this.relations[this.last_status].last();
-    };
-
-    MsgManager.prototype.combat_death = function(object) {
-      var msg;
-      if (object === false) return;
-      switch (object.action) {
-        case "killed":
-          msg = object.actors[0] + " " + object.action + " " + object.actors[1];
-          break;
-        case "escaped":
-          msg = object.actors[1] + " " + object.action + " from the grasp of " + object.actors[0];
-      }
-      return this.msg(object.actors[0], object.actors[1], msg);
-    };
-
-    MsgManager.prototype.dodge = function(object) {
-      var msg;
-      if (object.ability === false) {
-        msg = object.actors[0] + " can't dodge!";
-      } else {
-        msg = object.actors[0] + " dodges " + object.actors[1] + "'s strike";
-      }
-      return this.msg(object.actors[0], object.actors[1], msg);
-    };
-
-    MsgManager.prototype.determine_combat_msg = function(objects) {
-      var o, _i, _len, _results;
-      if (objects === -1) return;
-      _results = [];
-      for (_i = 0, _len = objects.length; _i < _len; _i++) {
-        o = objects[_i];
-        switch (o.action) {
-          case "strike":
-            _results.push(this.strike(o));
-            break;
-          case "dodge":
-            _results.push(this.dodge(o));
-            break;
-          default:
-            _results.push(void 0);
-        }
-      }
-      return _results;
-    };
-
-    MsgManager.prototype.strike = function(object) {
-      var attack_msg, damage_msg, m, msgs, part, _i, _len, _results;
-      part = object.part;
-      msgs = [];
-      attack_msg = object.actors[0] + " strikes!";
-      msgs.push(attack_msg);
-      damage_msg = object.actors[1] + "'s " + part + " suffers damage!";
-      switch (object.type) {
-        case 0:
-          msgs.push(damage_msg);
-          break;
-        case 1:
-          msgs.push(damage_msg);
-          msgs.push(object.actors[1] + " dies of " + object.cause);
-          break;
-        case 2:
-          msgs.push(damage_msg);
-          break;
-        case 3:
-          msgs.push(object.actors[1] + "'s " + part + " was protected by his " + object.protect);
-      }
-      switch (object.special) {
-        case 0:
-          msgs.push(object.actors[1] + " losts some hand functionality");
-          break;
-        case 1:
-          msgs.push(object.actors[1] + " suffers hand disability");
-          break;
-        case 2:
-          msgs.push(object.actors[1] + " losts some leg functionality");
-          break;
-        case 3:
-          msgs.push(object.actors[1] + " losts all leg functionality");
-      }
-      _results = [];
-      for (_i = 0, _len = msgs.length; _i < _len; _i++) {
-        m = msgs[_i];
-        _results.push(this.msg(object.actors[0], object.actors[1], m));
-      }
-      return _results;
-    };
-
-    return MsgManager;
-
-  })();
-
-  Units = (function() {
-
-    function Units(map) {
-      this.map = map;
-      this.setup();
-    }
-
-    Units.prototype.setup = function() {
-      this.units = [];
-      this.msg_manager = new MsgManager();
-      this.fatalities = 0;
-      this.advance = true;
-      this.frame = 0;
-      return this.finder = new Pathfinder(this.map);
-    };
-
-    Units.prototype.create = function(unit) {
-      return this.units.push(unit);
-    };
-
-    Units.prototype.move = function() {
-      var unit, _i, _j, _len, _len2, _ref, _ref2;
-      _ref = this.units;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        unit = _ref[_i];
-        if (this.frame % unit.agility === 0) {
-          unit.set_action(this.map, this);
-          unit.auto_detect_target(this);
-          this.msg_manager.determine_combat_msg(unit.attack());
-          unit.move(this.finder);
-        }
-      }
-      if (this.frame % 1000 === 0) {
-        if (this.map.items_total() > 50 && random_number(5) === 0) {
-          this.generate_boars();
-        }
-      }
-      _ref2 = this.units;
-      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-        unit = _ref2[_j];
-        this.msg_manager.combat_death(unit.nullify_target());
-      }
-      return this.frame += 1;
-    };
-
-    Units.prototype.clean = function() {
-      var unit, _i, _len, _ref;
-      _ref = this.units;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        unit = _ref[_i];
-        if (unit.body.check_death() === true && unit.hostility === 0) {
-          this.fatalities += 1;
-        }
-      }
-      this.units = (function() {
-        var _j, _len2, _ref2, _results;
-        _ref2 = this.units;
-        _results = [];
-        for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-          unit = _ref2[_j];
-          if (unit.body.check_death() === false) _results.push(unit);
-        }
-        return _results;
-      }).call(this);
-      return this.units = (function() {
-        var _j, _len2, _ref2, _results;
-        _ref2 = this.units;
-        _results = [];
-        for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-          unit = _ref2[_j];
-          if (unit.leave === false) _results.push(unit);
-        }
-        return _results;
-      }).call(this);
-    };
-
-    Units.prototype.kills = function() {
-      var k, u, _i, _len, _ref;
-      k = 0;
-      _ref = this.units;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        u = _ref[_i];
-        if (u.hostility === 0) k += u.kills.length;
-      }
-      return k;
-    };
-
-    Units.prototype.hostile_filter = function(hostile) {
-      var u, _i, _len, _ref, _results;
-      _ref = this.units;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        u = _ref[_i];
-        if (u.hostility === hostile) _results.push(u);
-      }
-      return _results;
-    };
-
-    Units.prototype.killers = function() {
-      var killers, u, _i, _len, _ref;
-      killers = [];
-      _ref = this.units;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        u = _ref[_i];
-        if (u.hostility === 0) {
-          killers.push({
-            name: u.name,
-            kills: u.kills.length
-          });
-        }
-      }
-      return killers;
-    };
-
-    Units.prototype.find_killer = function(name) {
-      var u, _i, _len, _ref;
-      _ref = this.units;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        u = _ref[_i];
-        if (u.hostility === 0) if (u.name === name) return u.kills;
-      }
-    };
-
-    Units.prototype.tells = function(msg, type) {
-      var u, units, _i, _len, _results;
-      units = this.hostile_filter(type);
-      _results = [];
-      for (_i = 0, _len = units.length; _i < _len; _i++) {
-        u = units[_i];
-        _results.push(u.receive_msg(msg));
-      }
-      return _results;
-    };
-
-    Units.prototype.generate_boars = function() {
-      var existing_boars, name, size, u, _i, _len, _ref, _results;
-      existing_boars = 0;
-      _ref = this.units;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        u = _ref[_i];
-        if (u.type === 2) existing_boars += 1;
-      }
-      if (existing_boars === 0) {
-        size = random_number(3);
-        _results = [];
-        while (existing_boars !== size + 1) {
-          existing_boars += 1;
-          name = random_number(100);
-          _results.push(this.units.push(new Lightboar(0, random_number(100), "lightboar" + name)));
-        }
-        return _results;
-      }
-    };
-
-    Units.prototype.reset = function() {
-      return this.setup();
-    };
-
-    return Units;
-
-  })();
-
   CombatReportMinorMode = (function() {
 
     function CombatReportMinorMode(parent) {
@@ -2643,7 +2113,9 @@
     GenerateMap.prototype.create_building = function(x, y, size) {
       var begin, end, rect, wall_a, wall_b;
       rect = new Rect(x, y, size, size);
-      if (this.sketch.check_collision(rect) === true) return;
+      if (this.sketch.check_collision(rect) === true || this.map.inbound(x, y) === false) {
+        return;
+      }
       this.sketch.forbid(rect);
       begin = {
         x: x + 1,
@@ -2692,7 +2164,13 @@
       return this.sketch.draw(wall_a, wall_b, "wall");
     };
 
-    GenerateMap.prototype.generate_buildings = function() {};
+    GenerateMap.prototype.generate_buildings = function() {
+      var size, x, y;
+      x = random_number(100);
+      y = random_number(100);
+      size = random_number(5);
+      return this.create_building(x, y, size);
+    };
 
     GenerateMap.prototype.generate = function() {
       this.generate_buildings();
@@ -3579,5 +3057,541 @@
     return Leg;
 
   })(Part);
+
+  combat = function(units, map) {
+    units.create(new Human(10, 10, "Miya", 1));
+    units.create(new Human(10, 20, "John", 0));
+    units.units[0].target = units.units[1];
+    return units.units[1].stance = 1;
+  };
+
+  ScenarioTester = (function() {
+
+    function ScenarioTester(parent) {
+      this.parent = parent;
+      this.status = true;
+    }
+
+    ScenarioTester.prototype.input = function(result) {
+      if (this.status === true) {
+        switch (result) {
+          case "undo":
+            return this.parent.reset();
+        }
+      }
+    };
+
+    return ScenarioTester;
+
+  })();
+
+  ScenarioInitialize = (function() {
+
+    function ScenarioInitialize(units, map) {
+      this.units = units;
+      this.map = map;
+    }
+
+    ScenarioInitialize.prototype.create = function(name) {
+      this.name = name;
+      return this.run();
+    };
+
+    ScenarioInitialize.prototype.run = function() {
+      var begin, bottom_begin, bottom_end, end, location, top_begin, top_end, vertical_begin, vertical_end;
+      switch (this.name) {
+        case "combat":
+          return combat(this.units, this.map);
+        case "leg_disability":
+          this.units.create(new Human(10, 10, "Can'tWalk", 0));
+          this.units.units[0].body.leg = 2;
+          return this.units.units[0].set_move(20, 20);
+        case "pig_invasion":
+          this.units.create(new Lightboar(0, 4, "pigboy", 0));
+          this.units.create(new Lightboar(3, 3, "pigone", 0));
+          this.units.create(new Lightboar(2, 3, "pigtwo", 0));
+          this.units.create(new Lightboar(20, 15, "pigthree", 0));
+          this.units.units[1].order = null;
+          this.units.units[2].order = null;
+          this.units.units[3].order = null;
+          this.map.sketch.create_crystal(5, 5);
+          return this.map.drop_crystal(5, 5);
+        case "hand_disability_combat":
+          this.units.create(new Human(10, 10, "nofight", 0));
+          this.units.create(new Human(10, 20, "Target", 1));
+          this.units.units[0].body.hand = 2;
+          return this.units.units[0].target = this.units.units[1];
+        case "hand_disability_gathering":
+          this.units.create(new Human(10, 10, "gatherer", 0));
+          this.units.units[0].body.hand = 2;
+          location = {
+            x: 300,
+            y: 300
+          };
+          return this.map.add_stockpile(location);
+        case "full_test_boars":
+          this.map.sketch.create_crystal(20, 20);
+          this.map.map[20][20].items = 50;
+          this.units.generate_boars();
+          return this.units.create(new Human(10, 10, "grumpy_killer", 0));
+        case "pathfinding":
+          this.units.create(new Human(10, 10, "pathfinder_one", 0));
+          this.units.create(new Human(10, 20, "pathfinder_two", 0));
+          begin = {
+            x: 15,
+            y: 11
+          };
+          end = {
+            x: 15,
+            y: 9
+          };
+          this.map.sketch.draw(begin, end, "wall");
+          this.units.units[0].set_move(20, 10);
+          this.units.units[0].agility = 25;
+          top_begin = {
+            x: 13,
+            y: 14
+          };
+          top_end = {
+            x: 20,
+            y: 14
+          };
+          this.map.sketch.draw(top_begin, top_end, "wall");
+          bottom_begin = {
+            x: 13,
+            y: 25
+          };
+          bottom_end = {
+            x: 20,
+            y: 25
+          };
+          this.map.sketch.draw(bottom_begin, bottom_end, "wall");
+          vertical_begin = {
+            x: 20,
+            y: 15
+          };
+          vertical_end = {
+            x: 20,
+            y: 24
+          };
+          this.map.sketch.draw(vertical_begin, vertical_end, "wall");
+          this.units.units[1].set_move(25, 20);
+          return this.units.units[1].agility = 25;
+        case "unpathable_1":
+          this.units.create(new Human(10, 10, "pathfinder_one", 0));
+          this.map.sketch.create_wall(20, 10);
+          this.units.units[0].set_move(20, 10);
+          return this.units.units[0].agility = 25;
+        case "unpathable_2":
+          this.map.width = 40;
+          this.map.height = 30;
+          this.map.size_map();
+          this.units.create(new Human(10, 10, "pathfinder_one", 0));
+          begin = {
+            x: 19,
+            y: 9
+          };
+          end = {
+            x: 21,
+            y: 9
+          };
+          this.map.sketch.draw(begin, end, "wall");
+          begin.y = 11;
+          end.y = 11;
+          this.map.sketch.draw(begin, end, "wall");
+          this.map.sketch.create_wall(19, 10);
+          this.map.sketch.create_wall(21, 10);
+          this.units.units[0].set_move(20, 10);
+          return this.units.units[0].agility = 25;
+        case "terrain_test":
+          this.map.generate.create_building(10, 10, 3);
+          this.map.sketch.create_crystal(11, 11);
+          this.map.generate.create_building(9, 9, 1);
+          this.map.generate.create_building(13, 14, 3);
+          this.map.sketch.create_crystal(10, 10);
+          this.map.sketch.forbid(new Rect(20, 20, 0, 0));
+          this.map.generate.create_building(20, 20, 2);
+          return this.map.generate.create_building(-1, 0, 2);
+        default:
+          this.map.sketch.forbid(new Rect(10, 10, 0, 0));
+          this.map.sketch.forbid(new Rect(12, 10, 0, 0));
+          this.map.generate.generate();
+          this.units.create(new Human(10, 10, "Killy", 0));
+          this.units.units[0].stance = 1;
+          this.units.create(new Human(12, 10, "Cibo", 1));
+          return this.units.units[1].stance = 1;
+      }
+    };
+
+    return ScenarioInitialize;
+
+  })();
+
+  JobsManager = (function() {
+
+    function JobsManager(map, units) {
+      this.map = map;
+      this.units = units;
+      this.setup();
+    }
+
+    JobsManager.prototype.setup = function() {
+      return this.queue = [];
+    };
+
+    JobsManager.prototype.assigns = function() {
+      var u, _i, _len, _ref, _results;
+      if (this.queue.length === 0) return -1;
+      _ref = this.units;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        u = _ref[_i];
+        if (u.job === null) {
+          u.set_job(this.map.stockpoints[this.queue[0]]);
+          u.order = 0;
+          this.map.stockpoints[this.queue[0]].persons.push(u);
+          this.queue.shift();
+          if (this.queue.length === 0) {
+            break;
+          } else {
+            _results.push(void 0);
+          }
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    };
+
+    JobsManager.prototype.queuing = function() {
+      var count, i, length, q, s, _i, _j, _len, _len2, _ref, _ref2, _results;
+      count = 0;
+      this.queue = [];
+      _ref = this.map.stockpoints;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        s = _ref[_i];
+        if (s.check_assign() === false && s.finish === false) {
+          i = 0;
+          length = this.queue.length;
+          _ref2 = this.queue;
+          for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+            q = _ref2[_j];
+            if (q.priority < s.priority) {
+              this.queue.splice(i, 0, count);
+              i += 1;
+            }
+          }
+          if (this.queue.length === length) this.queue.push(count);
+        }
+        _results.push(count += 1);
+      }
+      return _results;
+    };
+
+    JobsManager.prototype.reset = function() {
+      return this.setup();
+    };
+
+    return JobsManager;
+
+  })();
+
+  MsgManager = (function() {
+
+    function MsgManager() {
+      this.relations = [];
+      this.last_status = -1;
+    }
+
+    MsgManager.prototype.create_combat_relation = function(unit_one, unit_two) {
+      this.relations.push(new CombatRelation([unit_one, unit_two]));
+      return this.relations.length - 1;
+    };
+
+    MsgManager.prototype.find_relation = function(unit_one, unit_two) {
+      var n, r, _i, _len, _ref;
+      n = 0;
+      _ref = this.relations;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        r = _ref[_i];
+        if (__indexOf.call(r.actors, unit_one) >= 0 && __indexOf.call(r.actors, unit_two) >= 0) {
+          return n;
+        }
+        n += 1;
+      }
+      return false;
+    };
+
+    MsgManager.prototype.find_or_create_combat_relation = function(unit_one, unit_two) {
+      var n;
+      n = this.find_relation(unit_one, unit_two);
+      if (n === false) return this.create_combat_relation(unit_one, unit_two);
+      return n;
+    };
+
+    MsgManager.prototype.msg = function(unit_one, unit_two, msg) {
+      var n;
+      n = this.find_or_create_combat_relation(unit_one, unit_two);
+      this.relations[n].add_msg(msg);
+      this.last_status = n;
+      return n;
+    };
+
+    MsgManager.prototype.get_last_update = function() {
+      if (this.last_status === -1) return -1;
+      return this.relations[this.last_status].last();
+    };
+
+    MsgManager.prototype.combat_death = function(object) {
+      var msg;
+      if (object === false) return;
+      switch (object.action) {
+        case "killed":
+          msg = object.actors[0] + " " + object.action + " " + object.actors[1];
+          break;
+        case "escaped":
+          msg = object.actors[1] + " " + object.action + " from the grasp of " + object.actors[0];
+      }
+      return this.msg(object.actors[0], object.actors[1], msg);
+    };
+
+    MsgManager.prototype.dodge = function(object) {
+      var msg;
+      if (object.ability === false) {
+        msg = object.actors[0] + " can't dodge!";
+      } else {
+        msg = object.actors[0] + " dodges " + object.actors[1] + "'s strike";
+      }
+      return this.msg(object.actors[0], object.actors[1], msg);
+    };
+
+    MsgManager.prototype.determine_combat_msg = function(objects) {
+      var o, _i, _len, _results;
+      if (objects === -1) return;
+      _results = [];
+      for (_i = 0, _len = objects.length; _i < _len; _i++) {
+        o = objects[_i];
+        switch (o.action) {
+          case "strike":
+            _results.push(this.strike(o));
+            break;
+          case "dodge":
+            _results.push(this.dodge(o));
+            break;
+          default:
+            _results.push(void 0);
+        }
+      }
+      return _results;
+    };
+
+    MsgManager.prototype.strike = function(object) {
+      var attack_msg, damage_msg, m, msgs, part, _i, _len, _results;
+      part = object.part;
+      msgs = [];
+      attack_msg = object.actors[0] + " strikes!";
+      msgs.push(attack_msg);
+      damage_msg = object.actors[1] + "'s " + part + " suffers damage!";
+      switch (object.type) {
+        case 0:
+          msgs.push(damage_msg);
+          break;
+        case 1:
+          msgs.push(damage_msg);
+          msgs.push(object.actors[1] + " dies of " + object.cause);
+          break;
+        case 2:
+          msgs.push(damage_msg);
+          break;
+        case 3:
+          msgs.push(object.actors[1] + "'s " + part + " was protected by his " + object.protect);
+      }
+      switch (object.special) {
+        case 0:
+          msgs.push(object.actors[1] + " losts some hand functionality");
+          break;
+        case 1:
+          msgs.push(object.actors[1] + " suffers hand disability");
+          break;
+        case 2:
+          msgs.push(object.actors[1] + " losts some leg functionality");
+          break;
+        case 3:
+          msgs.push(object.actors[1] + " losts all leg functionality");
+      }
+      _results = [];
+      for (_i = 0, _len = msgs.length; _i < _len; _i++) {
+        m = msgs[_i];
+        _results.push(this.msg(object.actors[0], object.actors[1], m));
+      }
+      return _results;
+    };
+
+    return MsgManager;
+
+  })();
+
+  Units = (function() {
+
+    function Units(map) {
+      this.map = map;
+      this.setup();
+    }
+
+    Units.prototype.setup = function() {
+      this.units = [];
+      this.msg_manager = new MsgManager();
+      this.fatalities = 0;
+      this.advance = true;
+      this.frame = 0;
+      return this.finder = new Pathfinder(this.map);
+    };
+
+    Units.prototype.create = function(unit) {
+      return this.units.push(unit);
+    };
+
+    Units.prototype.move = function() {
+      var unit, _i, _j, _len, _len2, _ref, _ref2;
+      _ref = this.units;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        unit = _ref[_i];
+        if (this.frame % unit.agility === 0) {
+          unit.set_action(this.map, this);
+          unit.auto_detect_target(this);
+          this.msg_manager.determine_combat_msg(unit.attack());
+          unit.move(this.finder);
+        }
+      }
+      if (this.frame % 1000 === 0) {
+        if (this.map.items_total() > 50 && random_number(5) === 0) {
+          this.generate_boars();
+        }
+      }
+      _ref2 = this.units;
+      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+        unit = _ref2[_j];
+        this.msg_manager.combat_death(unit.nullify_target());
+      }
+      return this.frame += 1;
+    };
+
+    Units.prototype.clean = function() {
+      var unit, _i, _len, _ref;
+      _ref = this.units;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        unit = _ref[_i];
+        if (unit.body.check_death() === true && unit.hostility === 0) {
+          this.fatalities += 1;
+        }
+      }
+      this.units = (function() {
+        var _j, _len2, _ref2, _results;
+        _ref2 = this.units;
+        _results = [];
+        for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+          unit = _ref2[_j];
+          if (unit.body.check_death() === false) _results.push(unit);
+        }
+        return _results;
+      }).call(this);
+      return this.units = (function() {
+        var _j, _len2, _ref2, _results;
+        _ref2 = this.units;
+        _results = [];
+        for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+          unit = _ref2[_j];
+          if (unit.leave === false) _results.push(unit);
+        }
+        return _results;
+      }).call(this);
+    };
+
+    Units.prototype.kills = function() {
+      var k, u, _i, _len, _ref;
+      k = 0;
+      _ref = this.units;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        u = _ref[_i];
+        if (u.hostility === 0) k += u.kills.length;
+      }
+      return k;
+    };
+
+    Units.prototype.hostile_filter = function(hostile) {
+      var u, _i, _len, _ref, _results;
+      _ref = this.units;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        u = _ref[_i];
+        if (u.hostility === hostile) _results.push(u);
+      }
+      return _results;
+    };
+
+    Units.prototype.killers = function() {
+      var killers, u, _i, _len, _ref;
+      killers = [];
+      _ref = this.units;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        u = _ref[_i];
+        if (u.hostility === 0) {
+          killers.push({
+            name: u.name,
+            kills: u.kills.length
+          });
+        }
+      }
+      return killers;
+    };
+
+    Units.prototype.find_killer = function(name) {
+      var u, _i, _len, _ref;
+      _ref = this.units;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        u = _ref[_i];
+        if (u.hostility === 0) if (u.name === name) return u.kills;
+      }
+    };
+
+    Units.prototype.tells = function(msg, type) {
+      var u, units, _i, _len, _results;
+      units = this.hostile_filter(type);
+      _results = [];
+      for (_i = 0, _len = units.length; _i < _len; _i++) {
+        u = units[_i];
+        _results.push(u.receive_msg(msg));
+      }
+      return _results;
+    };
+
+    Units.prototype.generate_boars = function() {
+      var existing_boars, name, size, u, _i, _len, _ref, _results;
+      existing_boars = 0;
+      _ref = this.units;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        u = _ref[_i];
+        if (u.type === 2) existing_boars += 1;
+      }
+      if (existing_boars === 0) {
+        size = random_number(3);
+        _results = [];
+        while (existing_boars !== size + 1) {
+          existing_boars += 1;
+          name = random_number(100);
+          _results.push(this.units.push(new Lightboar(0, random_number(100), "lightboar" + name)));
+        }
+        return _results;
+      }
+    };
+
+    Units.prototype.reset = function() {
+      return this.setup();
+    };
+
+    return Units;
+
+  })();
 
 }).call(this);
