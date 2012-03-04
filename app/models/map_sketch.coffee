@@ -22,7 +22,7 @@ class MapSketch
     if this.push_to_map(x,y,crystal) == true
       @map.crystals.push(crystal)
     return crystal
-  check_compatiblity: (item) ->
+  check_compatibility: (item) ->
     for m in @map.map[y][x]
       if m.name == "wall"
         return false
