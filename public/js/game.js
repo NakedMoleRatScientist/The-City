@@ -810,7 +810,6 @@
         msg = "Crystal Pile";
     }
     this.p5.text(msg, x * 20, y * 20 - 3);
-    width = this.p5.textWidth(msg);
     return Math.ceil(width / 20);
   };
 
@@ -1164,7 +1163,7 @@
     }
 
     GameDrawMode.prototype.draw = function(object) {
-      var i, map, mouse, msg, unit, units, x, y, _i, _len, _ref;
+      var i, map, mouse, msg, unit, units, x, y, _i, _len;
       switch (object.state) {
         case -1:
           map = object.map;
@@ -1201,7 +1200,7 @@
             y: y
           });
           if (y > 0) {
-            for (i = 0, _ref = this.mouse_width + 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
+            for (i = 0; i <= 30; i++) {
               if (x + i < 100) {
                 this.dirty_rects.push({
                   x: x + i,
@@ -1513,7 +1512,8 @@
           this.map.sketch.create_crystal(11, 11);
           this.map.generate.create_building(9, 9, 1);
           this.map.generate.create_building(13, 14, 3);
-          return this.map.sketch.create_crystal(10, 10);
+          this.map.sketch.create_crystal(10, 10);
+          return this.map.generate.create_building(20, 20, 2);
         default:
           this.map.sketch.forbid(new Rect(10, 10, 0, 0));
           this.map.sketch.forbid(new Rect(12, 10, 0, 0));
@@ -2832,9 +2832,19 @@
       return crystal;
     };
 
+    MapSketch.prototype.check_compatibility = function(item, map) {
+      var m, _i, _len;
+      for (_i = 0, _len = map.length; _i < _len; _i++) {
+        m = map[_i];
+        if (m.name === "wall") return false;
+      }
+      if (item.name === "crystal") return true;
+      return false;
+    };
+
     MapSketch.prototype.push_to_map = function(x, y, item) {
       if (this.map.inbound(x, y) === true) {
-        if (this.map.map[y][x].length === 0 || item.name === "crystal") {
+        if (this.map.map[y][x].length === 0 || this.check_compatibility(item, this.map.map[y][x])) {
           this.map.map[y][x].push(item);
           return true;
         }
