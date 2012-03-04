@@ -533,7 +533,9 @@
     two_x2 = two.x + two.width;
     two_y = two.y;
     two_y2 = two.y + two.height;
-    if (one_x >= two_x && one_y2 >= two_y) return true;
+    if ((one_x2 >= two_x && one_x <= two_x2) && (one_y2 >= two_y && one_y <= two_y2)) {
+      return true;
+    }
     return false;
   };
 
@@ -1492,7 +1494,6 @@
           this.map.width = 40;
           this.map.height = 30;
           this.map.size_map();
-          this.map.generate();
           this.units.create(new Human(10, 10, "pathfinder_one", 0));
           begin = {
             x: 19,
@@ -1513,7 +1514,8 @@
         case "terrain_test":
           this.map.generate.create_building(10, 10, 3);
           this.map.sketch.create_crystal(11, 11);
-          return this.map.generate.create_building(9, 9, 1);
+          this.map.generate.create_building(9, 9, 1);
+          return this.map.generate.create_building(14, 15, 3);
         default:
           this.map.sketch.forbid(new Rect(10, 10, 0, 0));
           this.map.sketch.forbid(new Rect(12, 10, 0, 0));
@@ -2642,15 +2644,16 @@
 
     GenerateMap.prototype.create_building = function(x, y, size) {
       var begin, end, rect, wall_a, wall_b;
-      rect = new Rect(2, 2, size + 1, size + 1);
+      rect = new Rect(x, y, size, size);
+      if (this.sketch.check_collision(rect) === true) return;
       this.sketch.forbid(rect);
       begin = {
-        x: x,
-        y: y
+        x: x + 1,
+        y: y + 1
       };
       end = {
-        x: begin.x + size,
-        y: begin.y + size
+        x: begin.x + (size - 2),
+        y: begin.y + (size - 2)
       };
       this.sketch.rect_draw(begin, end, "floor");
       wall_a = {
