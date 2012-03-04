@@ -1,15 +1,10 @@
 mouseDraw = (@p5,mouse,units,map) ->
-  x = @p5.mouseX
-  y = @p5.mouseY
-  location_x = Math.floor(x / 20)
-  location_y = Math.floor(y / 20)
+  x = Math.floor(@p5.mouseX / 20)
+  y = Math.floor(@p5.mouseY / 20)
   width = 0
   item = false
   switch(mouse.mode)
     when 0 #what is it
-      x = location_x
-      y = location_y
-
       for u in units
         if u.x == x + map.camera.x && u.y == y + map.camera.y
           item = u
