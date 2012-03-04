@@ -22,8 +22,8 @@ class MapSketch
     if this.push_to_map(x,y,crystal) == true
       @map.crystals.push(crystal)
     return crystal
-  check_compatibility: (item) ->
-    for m in @map.map[y][x]
+  check_compatibility: (item,map) ->
+    for m in map
       if m.name == "wall"
         return false
     if item.name == "crystal"
@@ -31,7 +31,7 @@ class MapSketch
     false
   push_to_map: (x,y,item) ->
     if @map.inbound(x,y) == true
-      if @map.map[y][x].length == 0 || this.check_compatibility(item)
+      if @map.map[y][x].length == 0 || this.check_compatibility(item,@map.map[y][x])
         @map.map[y][x].push(item)
         return true
       false
