@@ -31,7 +31,7 @@ class MapSketch
     false
   push_to_map: (x,y,item) ->
     if @map.inbound(x,y) == true
-      if @map.map[y][x].length == 0 || item.name == "crystal"
+      if @map.map[y][x].length == 0 || this.check_compatibility(item)
         @map.map[y][x].push(item)
         return true
       false
