@@ -11,5 +11,5 @@ rect_to_rect_collision = (one,two) ->
   two_y = two.y
   two_y2 = two.y + two.height
   #buggy collision detection. need some testing.
-  return true if (one_x2 > two_x && one_x < two_x2) && (one_y2 > two_y && one_y < two_y2)
+  return true if (one_x2 >= two_x && one_x <= two_x2) && (one_y2 >= two_y && one_y <= two_y2)
   false
