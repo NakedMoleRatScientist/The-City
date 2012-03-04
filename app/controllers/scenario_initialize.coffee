@@ -84,6 +84,7 @@ class ScenarioInitialize
         #This building won't be generated
         @map.generate.create_building(9,9,1)
         @map.generate.create_building(13,14,3)
+        @map.sketch.create_crystal(10,10)
       else
         @map.sketch.forbid(new Rect(10,10,0,0))
         @map.sketch.forbid(new Rect(12,10,0,0))
