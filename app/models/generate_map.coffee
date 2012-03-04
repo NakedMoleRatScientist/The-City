@@ -23,7 +23,7 @@ class GenerateMap
       return
     @sketch.forbid(rect)
     begin = (x: x, y: y)
-    end = (x: begin.x + (size - 1), y: begin.y + (size - 1) )
+    end = (x: begin.x + (size - 2), y: begin.y + (size - 2) )
     @sketch.rect_draw(begin,end,"floor")
     wall_a = (x: begin.x - 1, y: begin.y - 1)
     wall_b = (x: begin.x - 1, y: end.y + 1)
