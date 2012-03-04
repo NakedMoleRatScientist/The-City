@@ -18,7 +18,7 @@ class GenerateMap
     for i in [0..locations.length - 2]
       @sketch.draw(locations[i],locations[i + 1],"floor",true)
   create_building: (x,y,size) ->
-    rect = new Rect(x,y,size + 1,size + 1)
+    rect = new Rect(x,y,size,size)
     if @sketch.check_collision(rect) == true
       return
     @sketch.forbid(rect)
