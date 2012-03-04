@@ -27,8 +27,8 @@ class MapSketch
       if m.name == "wall"
         return false
     if item.name == "crystal"
-      return false
-    true
+      return true
+    false
   push_to_map: (x,y,item) ->
     if @map.inbound(x,y) == true
       if @map.map[y][x].length == 0 || item.name == "crystal"
