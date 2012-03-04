@@ -81,6 +81,7 @@ class ScenarioInitialize
       when "terrain_test"
         @map.generate.create_building(10,10,3)
         @map.sketch.create_crystal(11,11)
+        #This building won't be generated
         @map.generate.create_building(9,9,1)
         @map.generate.create_building(13,14,3)
       else
