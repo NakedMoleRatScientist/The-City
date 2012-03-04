@@ -86,7 +86,7 @@ class ScenarioInitialize
         @map.generate.create_building(13,14,3)
         #creating crystal pile on wall shouldn't be possible
         @map.sketch.create_crystal(10,10)
-        #this building is on top of a forbidden position
+        #on top of a forbidden position, a building can't be generated
         @map.generate.create_building(20,20,2)
       else
         @map.sketch.forbid(new Rect(10,10,0,0))
