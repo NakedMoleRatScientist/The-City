@@ -90,7 +90,7 @@ class ScenarioInitialize
         @map.sketch.forbid(new Rect(20,20,0,0))
         @map.generate.create_building(20,20,2)
         #attempt to generate a building out of bound
-        @map.generate.create_building(0,0,2)
+        @map.generate.create_building(-1,0,2)
       else
         @map.sketch.forbid(new Rect(10,10,0,0))
         @map.sketch.forbid(new Rect(12,10,0,0))
