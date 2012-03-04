@@ -22,7 +22,7 @@ class GenerateMap
     if @sketch.check_collision(rect) == true
       return
     @sketch.forbid(rect)
-    begin = (x: x, y: y)
+    begin = (x: x + 1, y: y + 1)
     end = (x: begin.x + (size - 2), y: begin.y + (size - 2) )
     @sketch.rect_draw(begin,end,"floor")
     wall_a = (x: begin.x - 1, y: begin.y - 1)
