@@ -87,7 +87,7 @@ class ScenarioInitialize
         #creating crystal pile on wall shouldn't be possible
         @map.sketch.create_crystal(10,10)
       when
-        @map.sketch.forbid(new rect(10,10,0,0))
+        @map.sketch.forbid(new Rect(10,10,0,0))
         @map.sketch.forbid(new Rect(12,10,0,0))
         @map.generate.generate()
         @units.create new Human(10,10, "Killy",0)
