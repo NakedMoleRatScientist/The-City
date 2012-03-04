@@ -6,7 +6,9 @@ mouseDraw = (@p5,mouse,units,map) ->
   switch(mouse.mode)
     when 0 #what is it
       for u in units
-        if u.x == x + map.camera.x && u.y == y + map.camera.y
+        cam_x = x + map.camera_x
+        cam_y = y + map.camera_y
+        if u.x == cam_x && u.y == y + cam_y
           item = u
           break
       item = map.select_last(x + map.camera.x,y + map.camera.y) unless item != false
