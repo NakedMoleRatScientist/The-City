@@ -85,9 +85,9 @@ class ScenarioInitialize
         @map.generate.create_building(9,9,1)
         @map.generate.create_building(13,14,3)
         #creating crystal pile on wall shouldn't be possible
-        @Map.Sketch.Create_Crystal(10,10)
+        @map.sketch.create_crystal(10,10)
       when
-        @Map.Sketch.Forbid(New Rect(10,10,0,0))
+        @map.sketch.forbid(new rect(10,10,0,0))
         @map.sketch.forbid(new Rect(12,10,0,0))
         @map.generate.generate()
         @units.create new Human(10,10, "Killy",0)
