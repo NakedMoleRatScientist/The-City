@@ -22,9 +22,9 @@ mouseDraw = (@p5,mouse,units,map) ->
     when 1 #build
       @p5.noStroke()
       @p5.fill(128,128,128)
-      @p5.rect(location_x * 20,location_y * 20,20,20)
+      @p5.rect(x * 20,y * 20,20,20)
       @p5.fill(255,0,0)
       msg = "Crystal Pile"
-      @p5.text(msg,location_x * 20,location_y * 20)
+      @p5.text(msg,x * 20,y * 20)
       width = @p5.textWidth(msg)
   Math.ceil(width / 20)
