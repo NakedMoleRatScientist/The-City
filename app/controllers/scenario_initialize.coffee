@@ -14,10 +14,7 @@ class ScenarioInitialize
       when "hand_disability_combat"
         handDisabilityCombat(@units,@map)
       when "hand_disability_gathering"
-        @units.create new Human(10,10,"gatherer",0)
-        @units.units[0].body.hand = 2
-        location = (x: 300, y: 300)
-        @map.add_stockpile(location)
+        handDisabilityGathering(@units,@map)
       when "full_test_boars"
         @map.sketch.create_crystal(20,20)
         @map.map[20][20].items = 50
