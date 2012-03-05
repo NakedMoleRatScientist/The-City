@@ -1,4 +1,4 @@
-pathfinding = () ->
+pathfinding = (units,map) ->
   units.create new Human(10,10, "pathfinder_one",0)
   units.create new Human(10,20, "pathfinder_two",0)
   begin = (x: 15, y: 11)
