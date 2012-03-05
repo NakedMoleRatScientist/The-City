@@ -10,7 +10,7 @@ class ScenarioInitialize
       when "leg_disability"
         legDisability(@units,@map)
       when "pig_invasion"
-        pigInvasion = (@units,@map)
+        pigInvasion(@units,@map)
       when "hand_disability_combat"
         handDisabilityCombat(@units,@map)
       when "hand_disability_gathering"
