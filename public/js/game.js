@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw,
+  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, titleDraw, translateIntoDrawCoord, unitDraw, unpathable1, unpathable2, wallDraw,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -3076,6 +3076,76 @@
     return map.add_stockpile(location);
   };
 
+  pathfinding = function(units, map) {
+    var begin, bottom_begin, bottom_end, end, top_begin, top_end, vertical_begin, vertical_end;
+    units.create(new Human(10, 10, "pathfinder_one", 0));
+    units.create(new Human(10, 20, "pathfinder_two", 0));
+    begin = {
+      x: 15,
+      y: 11
+    };
+    end = {
+      x: 15,
+      y: 9
+    };
+    map.sketch.draw(begin, end, "wall");
+    units.units[0].set_move(20, 10);
+    units.units[0].agility = 25;
+    top_begin = {
+      x: 13,
+      y: 14
+    };
+    top_end = {
+      x: 20,
+      y: 14
+    };
+    map.sketch.draw(top_begin, top_end, "wall");
+    bottom_begin = {
+      x: 13,
+      y: 25
+    };
+    bottom_end = {
+      x: 20,
+      y: 25
+    };
+    map.sketch.draw(bottom_begin, bottom_end, "wall");
+    vertical_begin = {
+      x: 20,
+      y: 15
+    };
+    vertical_end = {
+      x: 20,
+      y: 24
+    };
+    map.sketch.draw(vertical_begin, vertical_end, "wall");
+    units.units[1].set_move(25, 20);
+    return units.units[1].agility = 25;
+  };
+
+  unpathable2 = function(units, map) {
+    var begin, end;
+    map.width = 40;
+    map.height = 30;
+    map.size_map();
+    units.create(new Human(10, 10, "pathfinder_one", 0));
+    begin = {
+      x: 19,
+      y: 9
+    };
+    end = {
+      x: 21,
+      y: 9
+    };
+    map.sketch.draw(begin, end, "wall");
+    begin.y = 11;
+    end.y = 11;
+    map.sketch.draw(begin, end, "wall");
+    map.sketch.create_wall(19, 10);
+    map.sketch.create_wall(21, 10);
+    units.units[0].set_move(20, 10);
+    return units.units[0].agility = 25;
+  };
+
   legDisability = function(units, map) {
     units.create(new Human(10, 10, "Can'tWalk", 0));
     units.units[0].body.leg = 2;
@@ -3094,11 +3164,36 @@
     return map.drop_crystal(5, 5);
   };
 
+  fullTestBoars = function(units, map) {
+    map.sketch.create_crystal(20, 20);
+    map.map[20][20].items = 50;
+    units.generate_boars();
+    return units.create(new Human(10, 10, "grumpy_killer", 0));
+  };
+
   handDisabilityCombat = function(units, map) {
     units.create(new Human(10, 10, "nofight", 0));
     units.create(new Human(10, 20, "Target", 1));
     units.units[0].body.hand = 2;
     return units.units[0].target = units.units[1];
+  };
+
+  terrainTest = function(units, map) {
+    map.generate.create_building(10, 10, 3);
+    map.sketch.create_crystal(11, 11);
+    map.generate.create_building(9, 9, 1);
+    map.generate.create_building(13, 14, 3);
+    map.sketch.create_crystal(10, 10);
+    map.sketch.forbid(new Rect(20, 20, 0, 0));
+    map.generate.create_building(20, 20, 2);
+    return map.generate.create_building(-1, 0, 2);
+  };
+
+  unpathable1 = function(units, map) {
+    units.create(new Human(10, 10, "pathfinder_one", 0));
+    map.sketch.create_wall(20, 10);
+    units.units[0].set_move(20, 10);
+    return units.units[0].agility = 25;
   };
 
   ScenarioTester = (function() {
@@ -3134,7 +3229,6 @@
     };
 
     ScenarioInitialize.prototype.run = function() {
-      var begin, bottom_begin, bottom_end, end, top_begin, top_end, vertical_begin, vertical_end;
       switch (this.name) {
         case "combat":
           return combat(this.units, this.map);
@@ -3147,88 +3241,15 @@
         case "hand_disability_gathering":
           return handDisabilityGathering(this.units, this.map);
         case "full_test_boars":
-          this.map.sketch.create_crystal(20, 20);
-          this.map.map[20][20].items = 50;
-          this.units.generate_boars();
-          return this.units.create(new Human(10, 10, "grumpy_killer", 0));
+          return fullTestBoars(this.units, this.map);
         case "pathfinding":
-          this.units.create(new Human(10, 10, "pathfinder_one", 0));
-          this.units.create(new Human(10, 20, "pathfinder_two", 0));
-          begin = {
-            x: 15,
-            y: 11
-          };
-          end = {
-            x: 15,
-            y: 9
-          };
-          this.map.sketch.draw(begin, end, "wall");
-          this.units.units[0].set_move(20, 10);
-          this.units.units[0].agility = 25;
-          top_begin = {
-            x: 13,
-            y: 14
-          };
-          top_end = {
-            x: 20,
-            y: 14
-          };
-          this.map.sketch.draw(top_begin, top_end, "wall");
-          bottom_begin = {
-            x: 13,
-            y: 25
-          };
-          bottom_end = {
-            x: 20,
-            y: 25
-          };
-          this.map.sketch.draw(bottom_begin, bottom_end, "wall");
-          vertical_begin = {
-            x: 20,
-            y: 15
-          };
-          vertical_end = {
-            x: 20,
-            y: 24
-          };
-          this.map.sketch.draw(vertical_begin, vertical_end, "wall");
-          this.units.units[1].set_move(25, 20);
-          return this.units.units[1].agility = 25;
+          return pathfinding(this.units, this.map);
         case "unpathable_1":
-          this.units.create(new Human(10, 10, "pathfinder_one", 0));
-          this.map.sketch.create_wall(20, 10);
-          this.units.units[0].set_move(20, 10);
-          return this.units.units[0].agility = 25;
+          return unpathable1(this.units, this.map);
         case "unpathable_2":
-          this.map.width = 40;
-          this.map.height = 30;
-          this.map.size_map();
-          this.units.create(new Human(10, 10, "pathfinder_one", 0));
-          begin = {
-            x: 19,
-            y: 9
-          };
-          end = {
-            x: 21,
-            y: 9
-          };
-          this.map.sketch.draw(begin, end, "wall");
-          begin.y = 11;
-          end.y = 11;
-          this.map.sketch.draw(begin, end, "wall");
-          this.map.sketch.create_wall(19, 10);
-          this.map.sketch.create_wall(21, 10);
-          this.units.units[0].set_move(20, 10);
-          return this.units.units[0].agility = 25;
+          return unpathable2(this.units, this.map);
         case "terrain_test":
-          this.map.generate.create_building(10, 10, 3);
-          this.map.sketch.create_crystal(11, 11);
-          this.map.generate.create_building(9, 9, 1);
-          this.map.generate.create_building(13, 14, 3);
-          this.map.sketch.create_crystal(10, 10);
-          this.map.sketch.forbid(new Rect(20, 20, 0, 0));
-          this.map.generate.create_building(20, 20, 2);
-          return this.map.generate.create_building(-1, 0, 2);
+          return terrainTest(this.units, this.map);
         default:
           this.map.sketch.forbid(new Rect(10, 10, 0, 0));
           this.map.sketch.forbid(new Rect(12, 10, 0, 0));
