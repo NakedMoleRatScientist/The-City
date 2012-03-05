@@ -16,7 +16,7 @@ class ScenarioInitialize
       when "hand_disability_gathering"
         handDisabilityGathering(@units,@map)
       when "full_test_boars"
-        fullTestboars(@units,@map)
+        fullTestBoars(@units,@map)
       when "pathfinding"
         @units.create new Human(10,10, "pathfinder_one",0)
         @units.create new Human(10,20, "pathfinder_two",0)
