@@ -20,10 +20,7 @@ class ScenarioInitialize
       when "pathfinding"
         pathfinding(@units,@map)
       when "unpathable_1"
-        @units.create new Human(10,10, "pathfinder_one",0)
-        @map.sketch.create_wall(20,10)
-        @units.units[0].set_move(20,10)
-        @units.units[0].agility = 25
+        unpathable1(@units,@map)
       when "unpathable_2"
         @map.width = 40
         @map.height = 30
