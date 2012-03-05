@@ -12,10 +12,7 @@ class ScenarioInitialize
       when "pig_invasion"
         pigInvasion = (@units,@map)
       when "hand_disability_combat"
-        @units.create new Human(10,10, "nofight",0)
-        @units.create new Human(10,20, "Target",1)
-        @units.units[0].body.hand = 2
-        @units.units[0].target = @units.units[1]
+        handDisabilityCombat(@units,@map)
       when "hand_disability_gathering"
         @units.create new Human(10,10,"gatherer",0)
         @units.units[0].body.hand = 2
