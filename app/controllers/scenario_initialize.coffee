@@ -16,10 +16,7 @@ class ScenarioInitialize
       when "hand_disability_gathering"
         handDisabilityGathering(@units,@map)
       when "full_test_boars"
-        @map.sketch.create_crystal(20,20)
-        @map.map[20][20].items = 50
-        @units.generate_boars()
-        @units.create new Human(10,10, "grumpy_killer",0)
+        fullTestboars(@units,@map)
       when "pathfinding"
         @units.create new Human(10,10, "pathfinder_one",0)
         @units.create new Human(10,20, "pathfinder_two",0)
