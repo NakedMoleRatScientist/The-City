@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, gameMenuDraw, gameMinorModeList, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw,
+  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, titleDraw, translateIntoDrawCoord, unitDraw, wallDraw,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -3065,6 +3065,42 @@
     return units.units[1].stance = 1;
   };
 
+  handDisabilityGathering = function(units, map) {
+    var location;
+    units.create(new Human(10, 10, "gatherer", 0));
+    units.units[0].body.hand = 2;
+    location = {
+      x: 300,
+      y: 300
+    };
+    return map.add_stockpile(location);
+  };
+
+  legDisability = function(units, map) {
+    units.create(new Human(10, 10, "Can'tWalk", 0));
+    units.units[0].body.leg = 2;
+    return units.units[0].set_move(20, 20);
+  };
+
+  pigInvasion = function(units, map) {
+    unit.create(new Lightboar(0, 4, "pigboy", 0));
+    unit.create(new Lightboar(3, 3, "pigone", 0));
+    unit.create(new Lightboar(2, 3, "pigtwo", 0));
+    unit.create(new Lightboar(20, 15, "pigthree", 0));
+    unit.units[1].order = null;
+    unit.units[2].order = null;
+    unit.units[3].order = null;
+    map.sketch.create_crystal(5, 5);
+    return map.drop_crystal(5, 5);
+  };
+
+  handDisabilityCombat = function(units, map) {
+    units.create(new Human(10, 10, "nofight", 0));
+    units.create(new Human(10, 20, "Target", 1));
+    units.units[0].body.hand = 2;
+    return units.units[0].target = units.units[1];
+  };
+
   ScenarioTester = (function() {
 
     function ScenarioTester(parent) {
@@ -3098,37 +3134,18 @@
     };
 
     ScenarioInitialize.prototype.run = function() {
-      var begin, bottom_begin, bottom_end, end, location, top_begin, top_end, vertical_begin, vertical_end;
+      var begin, bottom_begin, bottom_end, end, top_begin, top_end, vertical_begin, vertical_end;
       switch (this.name) {
         case "combat":
           return combat(this.units, this.map);
         case "leg_disability":
-          this.units.create(new Human(10, 10, "Can'tWalk", 0));
-          this.units.units[0].body.leg = 2;
-          return this.units.units[0].set_move(20, 20);
+          return legDisability(this.units, this.map);
         case "pig_invasion":
-          this.units.create(new Lightboar(0, 4, "pigboy", 0));
-          this.units.create(new Lightboar(3, 3, "pigone", 0));
-          this.units.create(new Lightboar(2, 3, "pigtwo", 0));
-          this.units.create(new Lightboar(20, 15, "pigthree", 0));
-          this.units.units[1].order = null;
-          this.units.units[2].order = null;
-          this.units.units[3].order = null;
-          this.map.sketch.create_crystal(5, 5);
-          return this.map.drop_crystal(5, 5);
+          return pigInvasion(this.units, this.map);
         case "hand_disability_combat":
-          this.units.create(new Human(10, 10, "nofight", 0));
-          this.units.create(new Human(10, 20, "Target", 1));
-          this.units.units[0].body.hand = 2;
-          return this.units.units[0].target = this.units.units[1];
+          return handDisabilityCombat(this.units, this.map);
         case "hand_disability_gathering":
-          this.units.create(new Human(10, 10, "gatherer", 0));
-          this.units.units[0].body.hand = 2;
-          location = {
-            x: 300,
-            y: 300
-          };
-          return this.map.add_stockpile(location);
+          return handDisabilityGathering(this.units, this.map);
         case "full_test_boars":
           this.map.sketch.create_crystal(20, 20);
           this.map.map[20][20].items = 50;
