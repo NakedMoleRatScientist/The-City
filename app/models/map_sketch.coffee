@@ -87,6 +87,6 @@ class MapSketch
     n = 0
     for m in @map.map[y][x]
       if m.name == type
-        return n
+        break
       n += 1
-    @map.map[y][x].slice(n,0)
+    @map.map[y][x].splice(n,1)
