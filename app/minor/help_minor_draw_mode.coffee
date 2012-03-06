@@ -2,6 +2,7 @@ class HelpDrawMinorMode
   constructor: (@p5) ->
   draw: (object) ->
     @p5.background(0)
+    frameRateDraw(@p5)
     @p5.fill(255)
     @p5.textFont("monospace",20)
     @p5.text("Map Navigation",10,100)
@@ -16,6 +17,7 @@ class HelpDrawMinorMode
     @p5.text("d - right",10,220)
     @p5.textFont("monospace",20)
     @p5.text("Tiles",10,250)
+    @p5.line(0,250,500,250)
     floorDraw(@p5,10,260)
     @p5.textFont("monospace",15)
     @p5.fill(255)
