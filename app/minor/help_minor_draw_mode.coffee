@@ -42,6 +42,8 @@ class HelpDrawMinorMode
     @p5.textFont("monospace",15)
     @p5.text("All units are colorcoded by their gender. Blue is for male. Pink is for female.",10,550)
     h = new Human(10,570,"blah",0)
+    @p5.fill(255)
+    @p5.text(" stands for human.",25,570)
     unitDraw(@p5,h,h.x,h.y)
     backgroundMenuDraw(@p5)
     helpMenuDraw(@p5)
