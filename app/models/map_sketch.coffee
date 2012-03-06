@@ -68,3 +68,18 @@ class MapSketch
     if rect_to_many_rect_collision(individual,@collide) == true
       return true
     false
+  add_stockpile:(mouse) ->
+    x = mouse.x
+    y = mouse.y
+    x = Math.floor(x / 20) + @map.camera.x
+    y = Math.floor(y / 20) + @map.camera.y
+    return if x < 2 || x > 97
+    return if y < 2 || y > 97
+    newpoint = new CrystalStock(x,y)
+    collide = false
+    if @map.stockpoints_collision_detect(newpoint) == true || @map.collide_check(x,y) == true
+      collide = true
+    if collide == false
+      @map.map[y][x].push(newpoint)
+      newpoint.nearest = nearest_object(newpoint,@map.trees)
+      @map.stockpoints.push(newpoint)
