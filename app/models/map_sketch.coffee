@@ -83,3 +83,10 @@ class MapSketch
       @map.map[y][x].push(newpoint)
       newpoint.nearest = nearest_object(newpoint,@map.trees)
       @map.stockpoints.push(newpoint)
+  delete: (x,y,type) ->
+    n = 0
+    for m in @map.map[y][x]
+      if m.name == type
+        return n
+      n += 1
+    @map.map[y][x].slice(n,0)
