@@ -18,6 +18,7 @@ class HelpDrawMinorMode
     @p5.textFont("monospace",20)
     @p5.text("Tiles",10,250)
     @p5.line(0,250,500,250)
+    @p5.line(0,100,500,100)
     floorDraw(@p5,10,260)
     @p5.textFont("monospace",15)
     @p5.fill(255)
