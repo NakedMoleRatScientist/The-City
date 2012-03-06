@@ -45,7 +45,7 @@ class GenerateMap
     direction = 0
     switch(direction)
       when 0
-        x = 0
+        x = begin.x - 1
         y = size / 2
     @sketch.delete(x,y,"wall")
   generate_buildings: () ->
