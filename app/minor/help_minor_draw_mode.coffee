@@ -17,6 +17,7 @@ class HelpDrawMinorMode
     @p5.text("d - right",10,220)
     @p5.textFont("monospace",20)
     @p5.text("Tiles",10,250)
+    #lines up the category
     @p5.line(0,250,500,250)
     @p5.line(0,100,500,100)
     floorDraw(@p5,10,260)
