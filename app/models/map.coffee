@@ -40,22 +40,6 @@ class Map
       return true if m.collide() == true
     false
 
-  add_stockpile:(mouse) ->
-    x = mouse.x
-    y = mouse.y
-    x = Math.floor(x / 20) + @camera.x
-    y = Math.floor(y / 20) + @camera.y
-    return if x < 2 || x > 97
-    return if y < 2 || y > 97
-    newpoint = new CrystalStock(x,y)
-    collide = false
-    if this.stockpoints_collision_detect(newpoint) == true || this.collide_check(x,y) == true
-      collide = true
-    if collide == false
-      @map[y][x].push(newpoint)
-      newpoint.nearest = nearest_object(newpoint,@trees)
-      @stockpoints.push(newpoint)
-
   stockpoints_collision_detect: (newpoint) ->
     return false if @stockpoints.length == 0
     for point in @stockpoints
