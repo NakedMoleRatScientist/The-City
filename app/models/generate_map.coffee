@@ -1,7 +1,7 @@
 class GenerateMap
   constructor: (@map) ->
     @sketch = @map.sketch
-  generate_trees: () ->
+  generate_crystal_trees: () ->
     success = 0
     loop
       x = random_number(@map.width)
