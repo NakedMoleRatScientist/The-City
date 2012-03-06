@@ -2113,9 +2113,10 @@
     };
 
     GenerateMap.prototype.create_building = function(x, y, size) {
-      var begin, end, rect, wall_a, wall_b;
+      var begin, direction, end, rect, wall_a, wall_b;
       rect = new Rect(x, y, size, size);
       if (this.sketch.check_collision(rect) === true || this.map.rect_inbound(rect) === false) {
+        console.log("ROLL");
         return;
       }
       this.sketch.forbid(rect);
@@ -2163,7 +2164,14 @@
         x: end.x,
         y: end.y + 1
       };
-      return this.sketch.draw(wall_a, wall_b, "wall");
+      this.sketch.draw(wall_a, wall_b, "wall");
+      direction = 0;
+      switch (direction) {
+        case 0:
+          x = begin.x - 1;
+          y = begin.y + Math.ceil(size / 3);
+      }
+      return this.sketch["delete"](x, y, "wall");
     };
 
     GenerateMap.prototype.generate_buildings = function() {
@@ -2416,6 +2424,18 @@
         newpoint.nearest = nearest_object(newpoint, this.map.trees);
         return this.map.stockpoints.push(newpoint);
       }
+    };
+
+    MapSketch.prototype["delete"] = function(x, y, type) {
+      var m, n, _i, _len, _ref;
+      n = 0;
+      _ref = this.map.map[y][x];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        m = _ref[_i];
+        if (m.name === type) break;
+        n += 1;
+      }
+      return this.map.map[y][x].splice(n, 1);
     };
 
     return MapSketch;
@@ -3206,7 +3226,10 @@
     map.sketch.forbid(new Rect(20, 20, 0, 0));
     map.generate.create_building(20, 20, 2);
     map.generate.create_building(-1, 0, 2);
-    return map.generate.create_building(99, 0, 2);
+    map.generate.create_building(99, 0, 2);
+    map.generate.create_building(23, 23, 1);
+    console.log("BEEP");
+    return map.generate.create_building(10, 23, 2);
   };
 
   unpathable1 = function(units, map) {
