@@ -41,6 +41,13 @@ class GenerateMap
     wall_b = (x: end.x, y: end.y + 1)
     #draw the bottom
     @sketch.draw(wall_a,wall_b,"wall")
+    #create entry to the building
+    direction = 0
+    switch(direction)
+      when 0
+        x = 0
+        y = size / 2
+    @sketch.delete(x,y,"wall")
   generate_buildings: () ->
     x = random_number(100)
     y = random_number(100)
