@@ -11,7 +11,7 @@ class MapSketch
     wall = new Wall(x,y)
     this.push_to_map(x,y,wall)
   create_tree: (x, y) ->
-     tree = new Tree(x,y)
+    tree = new Tree(x,y)
     if this.push_to_map(x,y,tree) == true
       @map.trees.push(tree)
       return true
