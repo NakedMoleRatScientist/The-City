@@ -14,7 +14,7 @@ terrainTest = (units,map) ->
   map.generate.create_building(-1,0,2)
   #creating a building out of bound on the other side
   map.generate.create_building(99,0,2)
-  #generate a building this size: 1
+  #a building this size can't be generated
   map.generate.create_building(23,23,1)
   #generate a building this size: 2
   map.generate.create_building(10,23,2)
