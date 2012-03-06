@@ -2113,10 +2113,9 @@
     };
 
     GenerateMap.prototype.create_building = function(x, y, size) {
-      var begin, direction, end, rect, wall_a, wall_b;
+      var begin, choices, direction, end, rect, wall_a, wall_b, _i, _j, _k, _l, _ref, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _results, _results2, _results3, _results4;
       rect = new Rect(x, y, size, size);
-      if (this.sketch.check_collision(rect) === true || this.map.rect_inbound(rect) === false) {
-        console.log("ROLL");
+      if (this.sketch.check_collision(rect) === true || this.map.rect_inbound(rect) === false || size < 2) {
         return;
       }
       this.sketch.forbid(rect);
@@ -2165,11 +2164,51 @@
         y: end.y + 1
       };
       this.sketch.draw(wall_a, wall_b, "wall");
-      direction = 0;
+      direction = random_number(4);
       switch (direction) {
         case 0:
           x = begin.x - 1;
-          y = begin.y + Math.ceil(size / 3);
+          choices = (function() {
+            _results = [];
+            for (var _i = _ref = begin.y - 1, _ref2 = end.y + 1; _ref <= _ref2 ? _i <= _ref2 : _i >= _ref2; _ref <= _ref2 ? _i++ : _i--){ _results.push(_i); }
+            return _results;
+          }).apply(this);
+          choices.pop();
+          choices.shift();
+          y = choices[random_number(choices.length)];
+          break;
+        case 1:
+          x = end.x + 1;
+          choices = (function() {
+            _results2 = [];
+            for (var _j = _ref3 = begin.y - 1, _ref4 = end.y + 1; _ref3 <= _ref4 ? _j <= _ref4 : _j >= _ref4; _ref3 <= _ref4 ? _j++ : _j--){ _results2.push(_j); }
+            return _results2;
+          }).apply(this);
+          choices.pop();
+          choices.shift();
+          y = choices[random_number(choices.length)];
+          break;
+        case 2:
+          y = begin.y - 1;
+          choices = (function() {
+            _results3 = [];
+            for (var _k = _ref5 = begin.x - 1, _ref6 = end.x + 1; _ref5 <= _ref6 ? _k <= _ref6 : _k >= _ref6; _ref5 <= _ref6 ? _k++ : _k--){ _results3.push(_k); }
+            return _results3;
+          }).apply(this);
+          choices.pop();
+          choices.shift();
+          x = choices[random_number(choices.length)];
+          break;
+        case 3:
+          y = end.y + 1;
+          choices = (function() {
+            _results4 = [];
+            for (var _l = _ref7 = begin.x - 1, _ref8 = end.x + 1; _ref7 <= _ref8 ? _l <= _ref8 : _l >= _ref8; _ref7 <= _ref8 ? _l++ : _l--){ _results4.push(_l); }
+            return _results4;
+          }).apply(this);
+          choices.pop();
+          choices.shift();
+          x = choices[random_number(choices.length)];
       }
       return this.sketch["delete"](x, y, "wall");
     };
@@ -3228,8 +3267,8 @@
     map.generate.create_building(-1, 0, 2);
     map.generate.create_building(99, 0, 2);
     map.generate.create_building(23, 23, 1);
-    console.log("BEEP");
-    return map.generate.create_building(10, 23, 2);
+    map.generate.create_building(10, 23, 2);
+    return map.generate.create_building(14, 23, 5);
   };
 
   unpathable1 = function(units, map) {
