@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, titleDraw, translateIntoDrawCoord, unitDraw, unpathable1, unpathable2, wallDraw,
+  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, titleDraw, translateIntoDrawCoord, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -715,32 +715,18 @@
     return this.p5.text("q - back", x, y);
   };
 
-  unitDraw = function(p5, units, map) {
-    var blue, pink, unit, x, y, _i, _len, _results;
-    _results = [];
-    for (_i = 0, _len = units.length; _i < _len; _i++) {
-      unit = units[_i];
-      x = (unit.x - map.camera.x) * 20 + 5;
-      y = (unit.y - map.camera.y) * 20 + 20;
-      pink = p5.color(255, 192, 203);
-      blue = p5.color(0, 0, 255);
-      if (unit.gender === 0) {
-        p5.fill(blue);
-      } else {
-        p5.fill(pink);
-      }
-      switch (unit.type) {
-        case 1:
-          _results.push(p5.text("H", x, y));
-          break;
-        case 2:
-          _results.push(p5.text("B", x, y));
-          break;
-        default:
-          _results.push(void 0);
-      }
+  unitDraw = function(p5, unit, x, y) {
+    switch (unit.gender) {
+      case 0:
+        p5.fill(0, 0, 25);
+        break;
+      case 1:
+        p5.fill(255, 192, 203);
     }
-    return _results;
+    switch (unit.type) {
+      case 1:
+        return p5.text("H", x, y);
+    }
   };
 
   combatMainMenuDraw = function(p5) {
@@ -937,6 +923,34 @@
     this.p5.text("s - scroll down", 0, 580);
     this.p5.text("w - scroll up", 100, 580);
     if (select === true) return this.p5.text("return/enter - select", 200, 580);
+  };
+
+  unitsDraw = function(p5, units, map) {
+    var blue, pink, unit, x, y, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = units.length; _i < _len; _i++) {
+      unit = units[_i];
+      x = (unit.x - map.camera.x) * 20 + 5;
+      y = (unit.y - map.camera.y) * 20 + 20;
+      pink = p5.color(255, 192, 203);
+      blue = p5.color(0, 0, 255);
+      if (unit.gender === 0) {
+        p5.fill(blue);
+      } else {
+        p5.fill(pink);
+      }
+      switch (unit.type) {
+        case 1:
+          _results.push(p5.text("H", x, y));
+          break;
+        case 2:
+          _results.push(p5.text("B", x, y));
+          break;
+        default:
+          _results.push(void 0);
+      }
+    }
+    return _results;
   };
 
   ScenarioMode = (function(_super) {
@@ -1187,7 +1201,7 @@
             this.redraw = false;
           }
           drawDirtyRects(this.dirty_rects, map, this.p5);
-          unitDraw(this.p5, units, map);
+          unitsDraw(this.p5, units, map);
           determineCollisionRedraw(this.p5, this.dirty_rects, map);
           menuDraw(object.menu, this.p5);
           if (this.dirty_menu !== object.menu) {
@@ -1663,6 +1677,8 @@
       this.p5.text("crystal stockpile destination area. This is where all your crystals will be gathered", 35, 450);
       this.p5.textFont("monospace", 20);
       this.p5.text("Units", 10, 525);
+      h(new Human(10, 500, "blah", 0));
+      unitDraw(this.p5, h, x, y);
       backgroundMenuDraw(this.p5);
       return helpMenuDraw(this.p5);
     };
@@ -3244,13 +3260,13 @@
   };
 
   pigInvasion = function(units, map) {
-    unit.create(new Lightboar(0, 4, "pigboy", 0));
-    unit.create(new Lightboar(3, 3, "pigone", 0));
-    unit.create(new Lightboar(2, 3, "pigtwo", 0));
-    unit.create(new Lightboar(20, 15, "pigthree", 0));
-    unit.units[1].order = null;
-    unit.units[2].order = null;
-    unit.units[3].order = null;
+    units.create(new Lightboar(0, 4, "pigboy", 0));
+    units.create(new Lightboar(3, 3, "pigone", 0));
+    units.create(new Lightboar(2, 3, "pigtwo", 0));
+    units.create(new Lightboar(20, 15, "pigthree", 0));
+    units.units[1].order = null;
+    units.units[2].order = null;
+    units.units[3].order = null;
     map.sketch.create_crystal(5, 5);
     return map.drop_crystal(5, 5);
   };
