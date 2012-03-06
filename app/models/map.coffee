@@ -33,8 +33,6 @@ class Map
     if y < 0 || y > @width - 1 || x < 0 || x > @height - 1
       return false
     true
-  rect_inbound: (rect) ->
-    rect_to_rect_collision(rect,this)
   collide_check: (x,y) ->
     if this.inbound(x,y) == false
       return true
