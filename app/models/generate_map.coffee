@@ -78,5 +78,5 @@ class GenerateMap
       this.create_building(x,y,size)
   generate: () ->
     this.generate_buildings()
-    this.generate_trees()
+    this.generate_crystal_trees()
     this.generate_paths()
