@@ -1,4 +1,4 @@
-pigInvasion = (unitss,map) ->
+pigInvasion = (units,map) ->
   units.create new Lightboar(0,4, "pigboy",0)
   units.create new Lightboar(3,3, "pigone",0)
   units.create new Lightboar(2,3, "pigtwo",0)
