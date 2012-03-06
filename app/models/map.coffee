@@ -6,6 +6,7 @@ class Map
     this.size_map()
     @stockpoints = []
     @crystals = []
+    @crystal_trees = []
     @trees = []
     @sketch = new MapSketch(this)
     @generate = new GenerateMap(this)
