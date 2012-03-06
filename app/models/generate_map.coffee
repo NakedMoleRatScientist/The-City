@@ -42,10 +42,16 @@ class GenerateMap
     #draw the bottom
     @sketch.draw(wall_a,wall_b,"wall")
     #create entry to the building
-    direction = 0
+    direction = random_number(2)
     switch(direction)
       when 0
         x = begin.x - 1
+        choices = [(begin.y - 1)..(end.y + 1)]
+        choices.pop()
+        choices.shift()
+        y = choices[random_number(choices.length)]
+      when 1
+        x = end.x + 1
         choices = [(begin.y - 1)..(end.y + 1)]
         choices.pop()
         choices.shift()
