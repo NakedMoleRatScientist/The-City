@@ -2,7 +2,7 @@ unitDraw = (p5,unit,x,y) ->
   switch unit.gender
     when 0
       #blue
-      p5.fill(0,0,25)
+      p5.fill(0,0,255)
     when 1
       #pink
       p5.fill(255,192,203)
