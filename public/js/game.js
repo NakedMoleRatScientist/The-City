@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, titleDraw, translateIntoDrawCoord, unitDraw, unpathable1, unpathable2, wallDraw,
+  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, titleDraw, translateIntoDrawCoord, unitDraw, unpathable1, unpathable2, wallDraw,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -702,6 +702,17 @@
       })());
     }
     return _results;
+  };
+
+  helpMenuDraw = function(p5) {
+    var height, x, y;
+    this.p5 = p5;
+    x = 705;
+    y = 140;
+    height = 15;
+    menuTitleText(this.p5, "Help Menu");
+    this.p5.fill(255, 255, 0);
+    return this.p5.text("q - back", x, y);
   };
 
   unitDraw = function(p5, units, map) {
@@ -1616,6 +1627,7 @@
 
     HelpDrawMinorMode.prototype.draw = function(object) {
       this.p5.background(0);
+      frameRateDraw(this.p5);
       this.p5.fill(255);
       this.p5.textFont("monospace", 20);
       this.p5.text("Map Navigation", 10, 100);
@@ -1630,6 +1642,9 @@
       this.p5.text("d - right", 10, 220);
       this.p5.textFont("monospace", 20);
       this.p5.text("Tiles", 10, 250);
+      this.p5.line(0, 250, 500, 250);
+      this.p5.line(0, 100, 500, 100);
+      this.p5.line(0, 525, 500, 525);
       floorDraw(this.p5, 10, 260);
       this.p5.textFont("monospace", 15);
       this.p5.fill(255);
@@ -1645,7 +1660,11 @@
       this.p5.text("crystal tree: where you get your crystals", 35, 370);
       crystalStockpileDraw(this.p5, 10, 430);
       this.p5.fill(255);
-      return this.p5.text("crystal stockpile destination area. This is where all your crystals will be gathered", 35, 450);
+      this.p5.text("crystal stockpile destination area. This is where all your crystals will be gathered", 35, 450);
+      this.p5.textFont("monospace", 20);
+      this.p5.text("Units", 10, 525);
+      backgroundMenuDraw(this.p5);
+      return helpMenuDraw(this.p5);
     };
 
     return HelpDrawMinorMode;
@@ -2214,11 +2233,15 @@
     };
 
     GenerateMap.prototype.generate_buildings = function() {
-      var size, x, y;
-      x = random_number(100);
-      y = random_number(100);
-      size = random_number(5);
-      return this.create_building(x, y, size);
+      var i, size, x, y, _results;
+      _results = [];
+      for (i = 0; i <= 15; i++) {
+        x = random_number(100);
+        y = random_number(100);
+        size = random_number(5);
+        _results.push(this.create_building(x, y, size));
+      }
+      return _results;
     };
 
     GenerateMap.prototype.generate = function() {
