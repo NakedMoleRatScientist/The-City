@@ -1,5 +1,5 @@
-unitDraw = (p5,unit,x,y)
-  case unit.gender
+unitDraw = (p5,unit,x,y) ->
+  switch unit.gender
     when 0
       #blue
       p5.fill(0,0,25)
