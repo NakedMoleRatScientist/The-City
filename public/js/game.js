@@ -718,7 +718,7 @@
   unitDraw = function(p5, unit, x, y) {
     switch (unit.gender) {
       case 0:
-        p5.fill(0, 0, 25);
+        p5.fill(0, 0, 255);
         break;
       case 1:
         p5.fill(255, 192, 203);
@@ -726,6 +726,8 @@
     switch (unit.type) {
       case 1:
         return p5.text("H", x, y);
+      case 2:
+        return p5.text("B", x, y);
     }
   };
 
@@ -926,29 +928,13 @@
   };
 
   unitsDraw = function(p5, units, map) {
-    var blue, pink, unit, x, y, _i, _len, _results;
+    var unit, x, y, _i, _len, _results;
     _results = [];
     for (_i = 0, _len = units.length; _i < _len; _i++) {
       unit = units[_i];
       x = (unit.x - map.camera.x) * 20 + 5;
       y = (unit.y - map.camera.y) * 20 + 20;
-      pink = p5.color(255, 192, 203);
-      blue = p5.color(0, 0, 255);
-      if (unit.gender === 0) {
-        p5.fill(blue);
-      } else {
-        p5.fill(pink);
-      }
-      switch (unit.type) {
-        case 1:
-          _results.push(p5.text("H", x, y));
-          break;
-        case 2:
-          _results.push(p5.text("B", x, y));
-          break;
-        default:
-          _results.push(void 0);
-      }
+      _results.push(unitDraw(p5, unit, x, y));
     }
     return _results;
   };
@@ -1640,6 +1626,7 @@
     }
 
     HelpDrawMinorMode.prototype.draw = function(object) {
+      var h, p;
       this.p5.background(0);
       frameRateDraw(this.p5);
       this.p5.fill(255);
@@ -1677,8 +1664,16 @@
       this.p5.text("crystal stockpile destination area. This is where all your crystals will be gathered", 35, 450);
       this.p5.textFont("monospace", 20);
       this.p5.text("Units", 10, 525);
-      h(new Human(10, 500, "blah", 0));
-      unitDraw(this.p5, h, x, y);
+      this.p5.textFont("monospace", 15);
+      this.p5.text("All units are colorcoded by their gender. Blue is for male. Pink is for female.", 10, 550);
+      h = new Human(10, 570, "blah", 0);
+      this.p5.fill(255);
+      this.p5.text(" stands for human.", 25, 570);
+      unitDraw(this.p5, h, h.x, h.y);
+      p = new Lightboar(10, 590, "pig", 1);
+      unitDraw(this.p5, p, p.x, p.y);
+      this.p5.fill(255);
+      this.p5.text(" stands for lightboars.", 25, 590);
       backgroundMenuDraw(this.p5);
       return helpMenuDraw(this.p5);
     };
@@ -3180,7 +3175,7 @@
       x: 300,
       y: 300
     };
-    return map.add_stockpile(location);
+    return map.sketch.add_stockpile(location);
   };
 
   pathfinding = function(units, map) {
