@@ -71,10 +71,11 @@ class GenerateMap
 
     @sketch.delete(x,y,"wall")
   generate_buildings: () ->
-    x = random_number(100)
-    y = random_number(100)
-    size = random_number(5)
-    this.create_building(x,y,size)
+    for i in [0..15]
+      x = random_number(100)
+      y = random_number(100)
+      size = random_number(5)
+      this.create_building(x,y,size)
   generate: () ->
     this.generate_buildings()
     this.generate_trees()
