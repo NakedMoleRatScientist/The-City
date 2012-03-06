@@ -20,6 +20,7 @@ class HelpDrawMinorMode
     #lines up the category
     @p5.line(0,250,500,250)
     @p5.line(0,100,500,100)
+    @p5.line(0,525,500,525)
     floorDraw(@p5,10,260)
     @p5.textFont("monospace",15)
     @p5.fill(255)
