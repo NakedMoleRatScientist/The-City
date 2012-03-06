@@ -9,3 +9,5 @@ unitDraw = (p5,unit,x,y) ->
   switch unit.type
     when 1
       p5.text("H",x,y)
+    when 2
+      p5.text("B",x,y)
