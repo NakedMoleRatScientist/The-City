@@ -29,6 +29,11 @@ class Map
         if m.increase() == false
           return false
         return true
+  rect_inbound: (rect) ->
+    return false if this.inbound(rect.x,rect.y)
+    return false if this.inbound(rect.x + rect.width,rect.y)
+    return false if this.inbound(rect.x,rect.y + rect.y + rect.height)
+    true
   inbound: (x,y) ->
     if y < 0 || y > @width - 1 || x < 0 || x > @height - 1
       return false
