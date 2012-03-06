@@ -47,5 +47,7 @@ class HelpDrawMinorMode
     unitDraw(@p5,h,h.x,h.y)
     p = new Lightboar(10,590,"pig",1)
     unitDraw(@p5,p,p.x,p.y)
+    @p5.fill(255)
+    @p5.text(" stands for lightboars.",25,590)
     backgroundMenuDraw(@p5)
     helpMenuDraw(@p5)
