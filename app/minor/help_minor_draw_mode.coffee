@@ -36,5 +36,7 @@ class HelpDrawMinorMode
     crystalStockpileDraw(@p5,10,430)
     @p5.fill(255)
     @p5.text("crystal stockpile destination area. This is where all your crystals will be gathered",35,450)
+    @p5.textFont("monospace",20)
+    @p5.text("Units",10,525)
     backgroundMenuDraw(@p5)
     helpMenuDraw(@p5)
