@@ -78,6 +78,8 @@ class MapSketch
     switch(mouse.build)
       when "tree"
         return new TreeStock(x,y)
+      when "crystal"
+        return new CrystalStock(x,y)
 
   add_stockpile:(mouse) ->
     x = mouse.x
