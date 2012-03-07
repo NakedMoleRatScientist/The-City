@@ -8,4 +8,4 @@ class CrystalStock extends Stockpile
     @queue = false
     @orders = ["move_to_crystal","gather_crystal","move_to_drop","drop_crystal"]
   collide: () ->
-    return true
+    true
