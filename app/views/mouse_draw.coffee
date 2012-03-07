@@ -22,10 +22,7 @@ mouseDraw = (@p5,mouse,units,map) ->
           msg = item.name + " : " + item.items
         msg += " (" + cam_x + "," + cam_y + ")"
     when 1 #build
-      @p5.noStroke()
-      @p5.fill(128,128,128)
-      @p5.rect(x * 20,y * 20,20,20)
-      @p5.fill(255,0,0)
+      build_rect(@p5,x,y)
       msg = "Crystal Pile"
   @p5.text(msg,x * 20,y * 20 - 3)
   # width = @p5.textWidth(msg)
