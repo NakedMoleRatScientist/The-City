@@ -17,7 +17,7 @@ class GenerateMap
         break
   generate_paths: () ->
     locations = []
-    for m in @map.trees
+    for m in @map.crystal_trees
       free = @map.free_locations(m.x,m.y,1)
       locations.push(free[random_number(free.length)])
     for i in [0..locations.length - 2]
