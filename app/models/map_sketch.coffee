@@ -81,10 +81,8 @@ class MapSketch
         return new CrystalStock(x,y)
 
   add_stockpile:(mouse) ->
-    x = mouse.x
-    y = mouse.y
-    x = Math.floor(x / 20) + @map.camera.x
-    y = Math.floor(y / 20) + @map.camera.y
+    x = Math.floor(mouse.x / 20) + @map.camera.x
+    y = Math.floor(mouse.y / 20) + @map.camera.y
     return if x < 2 || x > 97
     return if y < 2 || y > 97
     newpoint = this.decide_stock(mouse,x,y)
