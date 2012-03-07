@@ -35,7 +35,7 @@ class MapSketch
       return true
     false
   push_to_map: (x,y,item) ->
-    if @map.inbound(x,y) == true
+    if @map.collision.inbound(x,y) == true
       if @map.map[y][x].length == 0 || this.check_compatibility(item,@map.map[y][x])
         @map.map[y][x].push(item)
         return true
