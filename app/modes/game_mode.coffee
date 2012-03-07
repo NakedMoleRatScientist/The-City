@@ -36,7 +36,7 @@ class GameMode extends Mode
             @mouse.build = "crystal"
         when "tree"
           if @menu == 1
-            @mouse.mode = 2
+            @mouse.mode = 1
             @mouse.build = "tree"
         when "report"
           @state = 0
