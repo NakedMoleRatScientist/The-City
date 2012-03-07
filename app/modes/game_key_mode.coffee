@@ -22,6 +22,8 @@ class GameKeyMode extends KeyMode
             return "report"
           when 115
             return "up"
+          when 116
+            return "tree"
           when 117
             return "undo"
           when 119
