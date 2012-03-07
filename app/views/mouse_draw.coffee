@@ -23,7 +23,10 @@ mouseDraw = (@p5,mouse,units,map) ->
         msg += " (" + cam_x + "," + cam_y + ")"
     when 1 #build
       build_rect(@p5,x,y)
-      msg = "Crystal Pile"
+      if mouse.build == "crystal"
+        msg = "Crystal Pile"
+      else
+        msg = "Tree Pile"
   @p5.text(msg,x * 20,y * 20 - 3)
   # width = @p5.textWidth(msg)
   # @p5.textWidth seems to be incredibly inaccurate
