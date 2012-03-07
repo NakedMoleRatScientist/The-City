@@ -1,0 +1,2 @@
+class Collision
+  constructor: (@map) ->
