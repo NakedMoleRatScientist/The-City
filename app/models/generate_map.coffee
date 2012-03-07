@@ -26,7 +26,7 @@ class GenerateMap
     rect = new Rect(x,y,size,size)
     if @map.collision.collide_check(rect) == true || @map.rect_inbound(rect) == false || size < 2
       return
-    @sketch.forbid(rect)
+    @map.collision.forbid(rect)
     begin = (x: x + 1, y: y + 1)
     end = (x: begin.x + (size - 2), y: begin.y + (size - 2) )
     @sketch.rect_draw(begin,end,"floor")
