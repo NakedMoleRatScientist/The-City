@@ -2401,7 +2401,6 @@
     function MapSketch(map) {
       this.map = map;
       this.finder = new Pathfinder(this.map);
-      this.thicken = false;
       this.last = null;
       this.paths = [];
       this.collide = [];
@@ -2534,22 +2533,34 @@
       return false;
     };
 
+    MapSketch.prototype.decide_stock = function(mouse, x, y) {
+      switch (mouse.build) {
+        case "tree":
+          return new TreeStock(x, y);
+        case "crystal":
+          return new CrystalStock(x, y);
+      }
+    };
+
+    MapSketch.prototype.decide_list = function(mouse) {
+      switch (mouse.build) {
+        case "tree":
+          return this.map.trees;
+        case "crystal":
+          return this.map.crystal_trees;
+      }
+    };
+
     MapSketch.prototype.add_stockpile = function(mouse) {
-      var collide, newpoint, x, y;
-      x = mouse.x;
-      y = mouse.y;
-      x = Math.floor(x / 20) + this.map.camera.x;
-      y = Math.floor(y / 20) + this.map.camera.y;
+      var newpoint, x, y;
+      x = Math.floor(mouse.x / 20) + this.map.camera.x;
+      y = Math.floor(mouse.y / 20) + this.map.camera.y;
       if (x < 2 || x > 97) return;
       if (y < 2 || y > 97) return;
-      newpoint = new CrystalStock(x, y);
-      collide = false;
-      if (this.map.stockpoints_collision_detect(newpoint) === true || this.map.collide_check(x, y) === true) {
-        collide = true;
-      }
-      if (collide === false) {
+      newpoint = this.decide_stock(mouse, x, y);
+      if (!(this.map.stockpoints_collision_detect(newpoint) === true || this.map.collide_check(x, y) === true)) {
         this.map.map[y][x].push(newpoint);
-        newpoint.nearest = nearest_object(newpoint, this.map.crystal_trees);
+        newpoint.nearest = nearest_object(newpoint, this.decide_list(mouse));
         return this.map.stockpoints.push(newpoint);
       }
     };
