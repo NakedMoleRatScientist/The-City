@@ -12,4 +12,6 @@ determineRectDraw = (location,x,y,p5) ->
       wallDraw(p5,x,y)
     when "debug"
       debug_draw(p5,x,y)
+    when "tree"
+      treeDraw(p5,x,y)
   return true
