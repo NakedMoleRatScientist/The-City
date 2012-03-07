@@ -19,7 +19,7 @@ class MapSketch
   create_crystal_tree: (x, y, collide = false) ->
     tree = new CrystalTree(x,y)
     if this.push_to_map(x,y,tree) == true
-      @map.trees.push(tree)
+      @map.crystal_trees.push(tree)
       return true
     false
   create_crystal: (x,y) ->
@@ -87,7 +87,7 @@ class MapSketch
       collide = true
     if collide == false
       @map.map[y][x].push(newpoint)
-      newpoint.nearest = nearest_object(newpoint,@map.trees)
+      newpoint.nearest = nearest_object(newpoint,@map.crystal_trees)
       @map.stockpoints.push(newpoint)
   delete: (x,y,type) ->
     n = 0
