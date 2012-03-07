@@ -1,6 +1,6 @@
 normalScenario = (units,map) ->
-  map.sketch.forbid(new Rect(10,10,0,0))
-  map.sketch.forbid(new Rect(12,10,0,0))
+  map.collision.forbid(new Rect(10,10,0,0))
+  map.collision.forbid(new Rect(12,10,0,0))
   map.generate.generate()
   units.create new Human(10,10, "Killy",0)
   units.units[0].stance = 1
