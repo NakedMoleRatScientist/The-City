@@ -32,12 +32,12 @@ class Map
           return false
         return true
   rect_inbound: (rect) ->
-    return false if !this.inbound(rect.x,rect.y)
-    return false if !this.inbound(rect.x + rect.width,rect.y)
-    return false if !this.inbound(rect.x,rect.y + rect.y + rect.height)
+    return false if !@collision.inbound(rect.x,rect.y)
+    return false if !@collision.inbound(rect.x + rect.width,rect.y)
+    return false if !@collision.inbound(rect.x,rect.y + rect.y + rect.height)
     true
   collide_check: (x,y) ->
-    if this.inbound(x,y) == false
+    if @collision.inbound(x,y) == false
       return true
     for m in @map[y][x]
       return true if m.collide() == true
@@ -71,7 +71,7 @@ class Map
         y += 1
         if y > end_y
           break
-      if this.inbound(x,y) == true
+      if @collision.inbound(x,y) == true
         if this.propose_drop(x,y) != false
           locations.push((x: x,y: y))
       x += 1
