@@ -74,6 +74,11 @@ class MapSketch
     if rect_to_many_rect_collision(individual,@collide) == true
       return true
     false
+  decide_stock: (mouse,x,y) ->
+    switch(mouse.build)
+      when "tree"
+        return new TreeStock(x,y)
+
   add_stockpile:(mouse) ->
     x = mouse.x
     y = mouse.y
