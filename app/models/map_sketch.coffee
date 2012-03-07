@@ -70,8 +70,7 @@ class MapSketch
       this.draw_location(location,type,thicken)
     @last = null
   check_collision: (individual) ->
-    if rect_to_many_rect_collision(individual,@collide) == true
-      return true
+    return true if rect_to_many_rect_collision(individual,@collide) == true
     false
   decide_stock: (mouse,x,y) ->
     switch(mouse.build)
