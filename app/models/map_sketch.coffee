@@ -13,7 +13,7 @@ class MapSketch
       @map.trees.push(tree)
       return true
     false
-  create_crystal_tree: (x, y, collide = false) ->
+  create_crystal_tree: (x, y) ->
     tree = new CrystalTree(x,y)
     if this.push_to_map(x,y,tree) == true
       @map.crystal_trees.push(tree)
