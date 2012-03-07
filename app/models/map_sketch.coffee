@@ -1,7 +1,6 @@
 class MapSketch
   constructor: (@map) ->
     @finder = new Pathfinder(@map)
-    @thicken = false
     @last = null
     @paths = []
     @collide = []
