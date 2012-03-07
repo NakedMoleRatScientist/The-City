@@ -8,6 +8,7 @@ class Map
     @crystals = []
     @crystal_trees = []
     @trees = []
+    @collision = new Collision(this)
     @sketch = new MapSketch(this)
     @generate = new GenerateMap(this)
     @camera = new Camera()
