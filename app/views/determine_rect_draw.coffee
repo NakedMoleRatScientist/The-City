@@ -14,4 +14,6 @@ determineRectDraw = (location,x,y,p5) ->
       debug_draw(p5,x,y)
     when "tree"
       treeDraw(p5,x,y)
+    when "tree_stockpile"
+      treeStockpileDraw(p5,x,y)
   return true
