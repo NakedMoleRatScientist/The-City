@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Tree, TreeStock, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, titleDraw, translateIntoDrawCoord, treeDraw, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw,
+  var Arm, Body, Camera, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Tree, TreeStock, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, build_rect, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, titleDraw, translateIntoDrawCoord, treeDraw, treeStockpileDraw, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -652,6 +652,9 @@
         break;
       case "tree":
         treeDraw(p5, x, y);
+        break;
+      case "tree_stockpile":
+        treeStockpileDraw(p5, x, y);
     }
     return true;
   };
@@ -761,6 +764,7 @@
     menuTitleText(this.p5, "Build Menu");
     this.p5.fill(255, 255, 0);
     this.p5.text("c - crystal pile", x, y);
+    this.p5.text("t - tree pile", x, y += height);
     this.p5.text("m - hide menu", x, y += height);
     return this.p5.text("q - back", x, y += height);
   };
@@ -810,10 +814,7 @@
         }
         break;
       case 1:
-        this.p5.noStroke();
-        this.p5.fill(128, 128, 128);
-        this.p5.rect(x * 20, y * 20, 20, 20);
-        this.p5.fill(255, 0, 0);
+        build_rect(this.p5, x, y);
         msg = "Crystal Pile";
     }
     this.p5.text(msg, x * 20, y * 20 - 3);
@@ -899,6 +900,21 @@
     p5.stroke(255);
     p5.fill(fullness % 255 / 10, fullness % 255 / 10, fullness % 255);
     return p5.triangle(x, y + 20, x + 10, y, x + 20, y + 20);
+  };
+
+  treeStockpileDraw = function(p5, x, y) {
+    p5.noFill();
+    p5.stroke(0, 100, 0);
+    p5.rect(x - 39, y - 39, 99, 99);
+    p5.fill(0, 100, 0);
+    return p5.rect(x, y, 20, 20);
+  };
+
+  build_rect = function(p5, x, y) {
+    p5.noStroke();
+    p5.fill(128, 128, 128);
+    p5.rect(x * 20, y * 20, 20, 20);
+    return p5.fill(255, 0, 0);
   };
 
   crystalStockpileDraw = function(p5, x, y) {
@@ -1304,6 +1320,12 @@
               this.mouse.build = "crystal";
             }
             break;
+          case "tree":
+            if (this.menu === 1) {
+              this.mouse.mode = 1;
+              this.mouse.build = "tree";
+            }
+            break;
           case "report":
             this.state = 0;
             this.minor.update();
@@ -1340,7 +1362,10 @@
         this.mouse.x = result.x;
         this.mouse.y = result.y;
         if (this.mouse.mode === 1) {
-          return this.map.sketch.add_stockpile(this.mouse);
+          switch (this.mouse.build) {
+            case "crystal":
+              return this.map.sketch.add_stockpile(this.mouse);
+          }
         }
       }
     };
