@@ -78,7 +78,12 @@ class MapSketch
         return new TreeStock(x,y)
       when "crystal"
         return new CrystalStock(x,y)
-
+  decide_list: (mouse) ->
+    switch(mouse.build)
+      when "tree"
+        return @map.trees
+      when "crystal"
+        return @map.crystal_trees
   add_stockpile:(mouse) ->
     x = Math.floor(mouse.x / 20) + @map.camera.x
     y = Math.floor(mouse.y / 20) + @map.camera.y
@@ -87,7 +92,7 @@ class MapSketch
     newpoint = this.decide_stock(mouse,x,y)
     unless @map.stockpoints_collision_detect(newpoint) == true || @map.collide_check(x,y) == true
       @map.map[y][x].push(newpoint)
-      newpoint.nearest = nearest_object(newpoint,@map.crystal_trees)
+      newpoint.nearest = nearest_object(newpoint,this.decide_list(mouse))
       @map.stockpoints.push(newpoint)
   delete: (x,y,type) ->
     n = 0
