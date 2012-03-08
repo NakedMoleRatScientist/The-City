@@ -1988,6 +1988,7 @@
       this.nearest = null;
       this.drop = null;
       this.finish = false;
+      this.orders = ["move_to_source", "gather_item", "move_to_drop", "drop_item"];
     }
 
     Stockpile.prototype.check_assign = function() {
@@ -2715,7 +2716,7 @@
           }
           this.set_move(choice.x, choice.y);
           break;
-        case "move_to_crystal":
+        case "move_to_source":
           object = this.job.nearest;
           if (object === null) {
             this.job = null;
@@ -2727,11 +2728,11 @@
           choice = choices[random_number(choices.length)];
           this.set_move(choice.x, choice.y);
           break;
-        case "gather_crystal":
+        case "gather_item":
           this.acquire_item(this.job.nearest.acquire());
           break;
-        case "drop_crystal":
-          this.drop_item("crystal");
+        case "drop_item":
+          this.drop_item(this.job.store);
           map.drop_crystal(this.job.drop.x, this.job.drop.y);
       }
       return this.perform = this.order;
@@ -2748,11 +2749,11 @@
     function CrystalStock(x, y) {
       CrystalStock.__super__.constructor.call(this, x, y);
       this.name = "crystal_stockpile";
+      this.store = "crystal";
       this.priority = 4;
       this.diameter = 5;
       this.size = 10;
       this.queue = false;
-      this.orders = ["move_to_crystal", "gather_crystal", "move_to_drop", "drop_crystal"];
     }
 
     CrystalStock.prototype.collide = function() {
@@ -2898,12 +2899,12 @@
       return items;
     };
 
-    Map.prototype.drop_crystal = function(x, y) {
+    Map.prototype.drop_item = function(x, y, item) {
       var m, _i, _len, _ref;
       _ref = this.map[y][x];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         m = _ref[_i];
-        if (m.name === "crystal") {
+        if (m.name === item) {
           this.redraw.push({
             x: x,
             y: y
@@ -3146,6 +3147,7 @@
     function TreeStock(x, y) {
       TreeStock.__super__.constructor.call(this, x, y);
       this.name = "tree_stockpile";
+      this.store = "wood";
       this.priority = 4;
       this.diameter = 5;
       this.size = 10;
