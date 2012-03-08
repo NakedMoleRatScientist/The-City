@@ -68,7 +68,7 @@ class MapSketch
   decide_stock: (mouse,x,y) ->
     switch(mouse.build)
       when "tree"
-        return new TreeStock(x,y)
+        return new WoodStock(x,y)
       when "crystal"
         return new CrystalStock(x,y)
   decide_list: (mouse) ->
