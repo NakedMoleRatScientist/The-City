@@ -21,7 +21,7 @@ class MapSketch
     wood = new Wood(x,y)
     wood.stack = @map.map[y][x].length
     if this.push_to_map(x,y,wood) == true
-      @map.wood.push(wood)
+      @map.woods.push(wood)
     return wood
   create_crystal: (x,y) ->
     crystal = new Crystal(x,y)
