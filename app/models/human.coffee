@@ -32,5 +32,5 @@ class Human extends Unit
         this.acquire_item(@job.nearest.acquire())
       when "drop_item"
         this.drop_item(@job.store)
-        map.drop_crystal(@job.drop.x,@job.drop.y)
+        map.drop_item(@job.drop.x,@job.drop.y,@job.store)
     @perform = @order
