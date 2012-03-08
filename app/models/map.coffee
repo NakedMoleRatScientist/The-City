@@ -6,6 +6,7 @@ class Map
     this.size_map()
     @stockpoints = []
     @crystals = []
+    @woods = []
     @crystal_trees = []
     @trees = []
     @collision = new Collision(this)
