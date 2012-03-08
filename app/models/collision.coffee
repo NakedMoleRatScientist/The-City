@@ -13,6 +13,8 @@ class Collision
         return false
     if item.name == "crystal"
       return true
+    else if item.name == "wood"
+      return true
     false
   collide_check: (individual) ->
     return true if rect_to_many_rect_collision(individual,@collide) == true
