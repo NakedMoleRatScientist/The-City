@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, Collision, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Tree, TreeStock, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, build_rect, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, mapDraw, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, titleDraw, translateIntoDrawCoord, treeDraw, treeStockpileDraw, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw,
+  var Arm, Body, Camera, Collision, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, Item, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Tree, Unit, Units, Wall, Wood, WoodStock, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, build_rect, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, mapDraw, mapViewer, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, titleDraw, translateIntoDrawCoord, treeDraw, treeStockpileDraw, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw, woodDraw,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -653,8 +653,11 @@
       case "tree":
         treeDraw(p5, x, y);
         break;
-      case "tree_stockpile":
-        treeStockpileDraw(p5, x, y);
+      case "wood_stockpile":
+        woodStockpileDraw(p5, x, y);
+        break;
+      case "wood":
+        woodDraw(p5, x, y);
     }
     return true;
   };
@@ -699,7 +702,11 @@
             height: 100
           };
           if (pointToRectCollision(coord, rect) === true) {
-            _results2.push(crystalStockpileDraw(p5, location.x, location.y));
+            if (s.name === "crystal_stockpile") {
+              _results2.push(crystalStockpileDraw(p5, location.x, location.y));
+            } else {
+              _results2.push(treeStockpileDraw(p5, location.x, location.y));
+            }
           } else {
             _results2.push(void 0);
           }
@@ -735,6 +742,10 @@
       case 2:
         return p5.text("B", x, y);
     }
+  };
+
+  mapViewer = function(p5, x, y, map) {
+    return p5.rect(700, 400, 100, 100);
   };
 
   combatMainMenuDraw = function(p5) {
@@ -774,6 +785,11 @@
     return p5.ellipse(x + 10, y + 10, 10, 10);
   };
 
+  woodDraw = function(p5, x, y) {
+    p5.fill(0, 100, 0);
+    return p5.rect(x, y + 5, 20, 5);
+  };
+
   instructionDraw = function(p5) {
     this.p5 = p5;
     boxedText(this.p5, 500, 100, "w");
@@ -809,7 +825,9 @@
         if (item !== false) {
           this.p5.noStroke();
           this.p5.fill(255, 0, 0);
-          if (item.name === "crystal") msg = item.name + " : " + item.items;
+          if (item.name === "crystal" || item.name === "wood") {
+            msg = item.name + " : " + item.items;
+          }
           msg += " (" + cam_x + "," + cam_y + ")";
         }
         break;
@@ -866,6 +884,14 @@
     return p5.rect(x, y, 20, 20);
   };
 
+  treeStockpileDraw = function(p5, x, y) {
+    p5.noFill();
+    p5.stroke(0, 100, 0);
+    p5.rect(x - 39, y - 39, 99, 99);
+    p5.fill(0, 100, 0);
+    return p5.rect(x, y, 20, 20);
+  };
+
   translateIntoDrawCoord = function(object, map) {
     var transform;
     return transform = {
@@ -904,14 +930,6 @@
     p5.stroke(255);
     p5.fill(fullness % 255 / 10, fullness % 255 / 10, fullness % 255);
     return p5.triangle(x, y + 20, x + 10, y, x + 20, y + 20);
-  };
-
-  treeStockpileDraw = function(p5, x, y) {
-    p5.noFill();
-    p5.stroke(0, 100, 0);
-    p5.rect(x - 39, y - 39, 99, 99);
-    p5.fill(0, 100, 0);
-    return p5.rect(x, y, 20, 20);
   };
 
   build_rect = function(p5, x, y) {
@@ -2004,7 +2022,12 @@
         return false;
       }
       location = nearest_object(this, locations);
-      return this.drop = map.sketch.create_crystal(location.x, location.y);
+      switch (this.store) {
+        case "crystal":
+          return this.drop = map.sketch.create_crystal(location.x, location.y);
+        case "wood":
+          return this.drop = map.sketch.create_wood(location.x, location.y);
+      }
     };
 
     Stockpile.prototype.get_drop_location = function(map) {
@@ -2017,6 +2040,42 @@
     };
 
     return Stockpile;
+
+  })();
+
+  Item = (function() {
+
+    function Item(x, y) {
+      this.x = x;
+      this.y = y;
+      this.items = 0;
+      this.background = null;
+      this.stack = 0;
+    }
+
+    Item.prototype.collide = function() {
+      return true;
+    };
+
+    Item.prototype.fullness = function() {
+      if (this.items < 50) return false;
+      return true;
+    };
+
+    Item.prototype.increase = function() {
+      if (this.fullness() === false) {
+        this.items += 1;
+        return true;
+      }
+      return false;
+    };
+
+    Item.prototype.acquire = function() {
+      this.items -= 1;
+      return this.name;
+    };
+
+    return Item;
 
   })();
 
@@ -2406,7 +2465,6 @@
       this.map = map;
       this.finder = new Pathfinder(this.map);
       this.last = null;
-      this.paths = [];
     }
 
     MapSketch.prototype.create_wall = function(x, y) {
@@ -2435,6 +2493,14 @@
       return false;
     };
 
+    MapSketch.prototype.create_wood = function(x, y) {
+      var wood;
+      wood = new Wood(x, y);
+      wood.stack = this.map.map[y][x].length;
+      if (this.push_to_map(x, y, wood) === true) this.map.woods.push(wood);
+      return wood;
+    };
+
     MapSketch.prototype.create_crystal = function(x, y) {
       var crystal;
       crystal = new Crystal(x, y);
@@ -2445,19 +2511,9 @@
       return crystal;
     };
 
-    MapSketch.prototype.check_compatibility = function(item, map) {
-      var m, _i, _len;
-      for (_i = 0, _len = map.length; _i < _len; _i++) {
-        m = map[_i];
-        if (m.name === "wall") return false;
-      }
-      if (item.name === "crystal") return true;
-      return false;
-    };
-
     MapSketch.prototype.push_to_map = function(x, y, item) {
       if (this.map.collision.inbound(x, y) === true) {
-        if (this.map.map[y][x].length === 0 || this.check_compatibility(item, this.map.map[y][x])) {
+        if (this.map.map[y][x].length === 0 || this.map.collision.check_compatibility(item, this.map.map[y][x])) {
           this.map.map[y][x].push(item);
           return true;
         }
@@ -2527,7 +2583,7 @@
     MapSketch.prototype.decide_stock = function(mouse, x, y) {
       switch (mouse.build) {
         case "tree":
-          return new TreeStock(x, y);
+          return new WoodStock(x, y);
         case "crystal":
           return new CrystalStock(x, y);
       }
@@ -2733,7 +2789,7 @@
           break;
         case "drop_item":
           this.drop_item(this.job.store);
-          map.drop_crystal(this.job.drop.x, this.job.drop.y);
+          map.drop_item(this.job.drop.x, this.job.drop.y, this.job.store);
       }
       return this.perform = this.order;
     };
@@ -2862,6 +2918,7 @@
       this.size_map();
       this.stockpoints = [];
       this.crystals = [];
+      this.woods = [];
       this.crystal_trees = [];
       this.trees = [];
       this.collision = new Collision(this);
@@ -3070,6 +3127,20 @@
       return true;
     };
 
+    Collision.prototype.check_compatibility = function(item, map) {
+      var m, _i, _len;
+      for (_i = 0, _len = map.length; _i < _len; _i++) {
+        m = map[_i];
+        if (m.name === "wall") return false;
+      }
+      if (item.name === "crystal") {
+        return true;
+      } else if (item.name === "wood") {
+        return true;
+      }
+      return false;
+    };
+
     Collision.prototype.collide_check = function(individual) {
       if (rect_to_many_rect_collision(individual, this.collide) === true) {
         return true;
@@ -3081,42 +3152,20 @@
 
   })();
 
-  Crystal = (function() {
+  Crystal = (function(_super) {
+
+    __extends(Crystal, _super);
 
     function Crystal(x, y) {
       this.x = x;
       this.y = y;
-      this.items = 0;
       this.name = "crystal";
-      this.background = null;
-      this.stack = 0;
+      Crystal.__super__.constructor.call(this, this.x, this.y);
     }
-
-    Crystal.prototype.collide = function() {
-      return true;
-    };
-
-    Crystal.prototype.fullness = function() {
-      if (this.items < 50) return false;
-      return true;
-    };
-
-    Crystal.prototype.increase = function() {
-      if (this.fullness() === false) {
-        this.items += 1;
-        return true;
-      }
-      return false;
-    };
-
-    Crystal.prototype.acquire = function() {
-      this.items -= 1;
-      return "crystal";
-    };
 
     return Crystal;
 
-  })();
+  })(Item);
 
   CrystalTree = (function() {
 
@@ -3140,13 +3189,13 @@
 
   })();
 
-  TreeStock = (function(_super) {
+  WoodStock = (function(_super) {
 
-    __extends(TreeStock, _super);
+    __extends(WoodStock, _super);
 
-    function TreeStock(x, y) {
-      TreeStock.__super__.constructor.call(this, x, y);
-      this.name = "tree_stockpile";
+    function WoodStock(x, y) {
+      WoodStock.__super__.constructor.call(this, x, y);
+      this.name = "wood_stockpile";
       this.store = "wood";
       this.priority = 4;
       this.diameter = 5;
@@ -3154,13 +3203,28 @@
       this.queue = false;
     }
 
-    TreeStock.prototype.collide = function() {
+    WoodStock.prototype.collide = function() {
       return true;
     };
 
-    return TreeStock;
+    return WoodStock;
 
   })(Stockpile);
+
+  Wood = (function(_super) {
+
+    __extends(Wood, _super);
+
+    function Wood(x, y) {
+      this.x = x;
+      this.y = y;
+      this.name = "wood";
+      Wood.__super__.constructor.call(this, this.x, this.y);
+    }
+
+    return Wood;
+
+  })(Item);
 
   Wall = (function() {
 
@@ -3423,7 +3487,7 @@
     map.generate.create_building(9, 9, 1);
     map.generate.create_building(13, 14, 3);
     map.sketch.create_crystal(10, 10);
-    map.sketch.forbid(new Rect(20, 20, 0, 0));
+    map.collision.forbid(new Rect(20, 20, 0, 0));
     map.generate.create_building(20, 20, 2);
     map.generate.create_building(-1, 0, 2);
     map.generate.create_building(99, 0, 2);
