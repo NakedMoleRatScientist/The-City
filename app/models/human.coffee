@@ -18,7 +18,7 @@ class Human extends Unit
           @perform = null
           return
         this.set_move(choice.x,choice.y)
-      when "move_to_crystal"
+      when "move_to_source"
         object = @job.nearest
         if object == null
           @job = null
@@ -28,9 +28,9 @@ class Human extends Unit
         choices = map.free_locations(object.x,object.y,1)
         choice = choices[random_number(choices.length)]
         this.set_move(choice.x,choice.y)
-      when "gather_crystal"
+      when "gather_item"
         this.acquire_item(@job.nearest.acquire())
-      when "drop_crystal"
-        this.drop_item("crystal")
+      when "drop_item"
+        this.drop_item(@job.store)
         map.drop_crystal(@job.drop.x,@job.drop.y)
     @perform = @order
