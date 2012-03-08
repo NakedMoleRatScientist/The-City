@@ -6,7 +6,7 @@ class Item
   collide: () ->
     true
   fullness: () ->
-    if @items < 50
+    if @items < @limit
       return false
     true
   increase: () ->
