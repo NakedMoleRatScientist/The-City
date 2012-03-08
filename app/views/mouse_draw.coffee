@@ -18,7 +18,7 @@ mouseDraw = (@p5,mouse,units,map) ->
         @p5.noStroke()
         @p5.fill(255,0,0)
         #compensate for underscore being too low by fudging by -3
-        if item.name == "crystal"
+        if item.name == "crystal" || item.name == "wood"
           msg = item.name + " : " + item.items
         msg += " (" + cam_x + "," + cam_y + ")"
     when 1 #build
