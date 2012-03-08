@@ -7,6 +7,6 @@ class TreeStock extends Stockpile
     @diameter = 5
     @size = 10
     @queue = false
-    @orders = ["move_to_crystal","gather_crystal","move_to_drop","drop_crystal"]
+    @orders = ["move_to_source","gather_item","move_to_drop","drop_item"]
   collide: () ->
     true
