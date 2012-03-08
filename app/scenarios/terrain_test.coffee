@@ -8,7 +8,7 @@ terrainTest = (units,map) ->
   #creating crystal pile on wall shouldn't be possible
   map.sketch.create_crystal(10,10)
   #on top of a forbidden position, a building can't be generated
-  map.sketch.forbid(new Rect(20,20,0,0))
+  map.collision.forbid(new Rect(20,20,0,0))
   map.generate.create_building(20,20,2)
   #creating a building out of bound should not work
   map.generate.create_building(-1,0,2)
