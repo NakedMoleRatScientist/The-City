@@ -1,7 +1,7 @@
 class WoodStock extends Stockpile
   constructor: (x,y) ->
     super(x,y)
-    @name = "tree_stockpile"
+    @name = "wood_stockpile"
     @store = "wood"
     @priority = 4
     @diameter = 5
