@@ -26,7 +26,7 @@ mouseDraw = (@p5,mouse,units,map) ->
       if mouse.build == "crystal"
         msg = "Crystal Pile"
       else
-        msg = "Tree Pile"
+        msg = "Wood Pile"
   @p5.text(msg,x * 20,y * 20 - 3)
   # width = @p5.textWidth(msg)
   # @p5.textWidth seems to be incredibly inaccurate
