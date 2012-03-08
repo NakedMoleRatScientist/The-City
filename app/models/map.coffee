@@ -24,9 +24,9 @@ class Map
     for c in @crystals
      items += @map[c.y][c.x][c.stack].items
     items
-  drop_crystal: (x,y) ->
+  drop_item: (x,y,item) ->
     for m in @map[y][x]
-      if m.name == "crystal"
+      if m.name == item
         @redraw.push(x: x, y: y)
         if m.increase() == false
           return false
