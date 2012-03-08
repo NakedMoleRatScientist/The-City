@@ -16,4 +16,6 @@ determineRectDraw = (location,x,y,p5) ->
       treeDraw(p5,x,y)
     when "tree_stockpile"
       treeStockpileDraw(p5,x,y)
+    when "wood"
+      woodDraw(p5,x,y)
   return true
