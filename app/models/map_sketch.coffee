@@ -2,7 +2,6 @@ class MapSketch
   constructor: (@map) ->
     @finder = new Pathfinder(@map)
     @last = null
-    @paths = []
   create_wall: (x, y) ->
     wall = new Wall(x,y)
     this.push_to_map(x,y,wall)
