@@ -11,7 +11,7 @@ class Item
     true
   increase: () ->
     if this.fullness() == false
-      @item += 1
+      @items += 1
       return true
     false
   acquire: () ->
