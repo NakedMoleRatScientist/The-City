@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, Collision, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, Item, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Tree, Unit, Units, Wall, Wood, WoodStock, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, build_rect, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, mapDraw, mapViewer, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, titleDraw, translateIntoDrawCoord, treeDraw, treeStockpileDraw, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw, woodDraw,
+  var Arm, Body, Camera, Collision, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, Item, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Tree, Unit, Units, Wall, Wood, WoodStock, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, build_rect, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, mapDraw, mapViewer, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, titleDraw, translateIntoDrawCoord, treeDraw, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw, woodDraw, woodStockpileDraw,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -657,7 +657,7 @@
         woodStockpileDraw(p5, x, y);
         break;
       case "wood":
-        woodDraw(p5, x, y);
+        woodDraw(p5, x, y, location.items);
     }
     return true;
   };
@@ -705,7 +705,7 @@
             if (s.name === "crystal_stockpile") {
               _results2.push(crystalStockpileDraw(p5, location.x, location.y));
             } else {
-              _results2.push(treeStockpileDraw(p5, location.x, location.y));
+              _results2.push(woodStockpileDraw(p5, location.x, location.y));
             }
           } else {
             _results2.push(void 0);
@@ -785,9 +785,10 @@
     return p5.ellipse(x + 10, y + 10, 10, 10);
   };
 
-  woodDraw = function(p5, x, y) {
-    p5.fill(0, 100, 0);
-    return p5.rect(x, y + 5, 20, 5);
+  woodDraw = function(p5, x, y, items) {
+    p5.fill(0, items * 20, 0);
+    p5.stroke(0, 100, 0);
+    return p5.rect(x, y + 5, 19, 5);
   };
 
   instructionDraw = function(p5) {
@@ -836,7 +837,7 @@
         if (mouse.build === "crystal") {
           msg = "Crystal Pile";
         } else {
-          msg = "Tree Pile";
+          msg = "Wood Pile";
         }
     }
     this.p5.text(msg, x * 20, y * 20 - 3);
@@ -884,7 +885,7 @@
     return p5.rect(x, y, 20, 20);
   };
 
-  treeStockpileDraw = function(p5, x, y) {
+  woodStockpileDraw = function(p5, x, y) {
     p5.noFill();
     p5.stroke(0, 100, 0);
     p5.rect(x - 39, y - 39, 99, 99);
@@ -2058,7 +2059,7 @@
     };
 
     Item.prototype.fullness = function() {
-      if (this.items < 50) return false;
+      if (this.items < this.limit) return false;
       return true;
     };
 
@@ -3160,6 +3161,7 @@
       this.x = x;
       this.y = y;
       this.name = "crystal";
+      this.limit = 50;
       Crystal.__super__.constructor.call(this, this.x, this.y);
     }
 
@@ -3219,6 +3221,7 @@
       this.x = x;
       this.y = y;
       this.name = "wood";
+      this.limit = 5;
       Wood.__super__.constructor.call(this, this.x, this.y);
     }
 
