@@ -73,4 +73,7 @@ class MapSketch
   cut_down: (x,y,d) ->
     object = @map.select_by_name("tree",x,y)
     unless object == false
-      this.create_log(d)
+      for i in [0..4]
+        this.create_log(x,y)
+        x += d.x
+        y += d.y
