@@ -1,6 +1,6 @@
 class Log
   constructor: (@x,@y) ->
-    @pile = 5
+    @pile = 1
     @name = "log"
   collide: () ->
     true
