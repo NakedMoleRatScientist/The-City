@@ -25,5 +25,7 @@ class ScenarioInitialize
         unpathable2(@units,@map)
       when "terrain_test"
         terrainTest(@units,@map)
+      when "cuttingDown"
+        cuttingDown(@units,@map)
       else
         normalScenario(@units,@map)
