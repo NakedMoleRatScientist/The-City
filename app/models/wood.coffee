@@ -1,5 +1,5 @@
-class Wood extends Item
+class Timber extends Item
   constructor: (@x,@y) ->
-    @name = "wood"
-    @limit = 5
+    @name = "timber"
+    @limit = 1
     super(@x,@y)
