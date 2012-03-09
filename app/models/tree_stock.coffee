@@ -1,4 +1,4 @@
-class WoodStock extends Stockpile
+class timberStock extends Stockpile
   constructor: (x,y) ->
     super(x,y)
     @name = "wood_stockpile"
