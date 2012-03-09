@@ -6,4 +6,4 @@ class Log
     true
   acquire: () ->
     @pile -= 1
-    return "wood"
+    return "timber"
