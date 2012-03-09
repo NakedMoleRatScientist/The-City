@@ -24,4 +24,4 @@ class Collision
       return true
     false
   create_check: (x,y,item) ->
-    (this.check_compatibility(item,x,y) || this.check_length(x,y)) && this.inbound(x,y)
+    this.inbound(x,y) && (this.check_compatibility(item,x,y) || this.check_length(x,y))
