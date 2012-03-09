@@ -94,3 +94,7 @@ class MapSketch
         break
       n += 1
     @map.map[y][x].splice(n,1)
+  cut_down: (x,y,d) ->
+    object = @map.select_by_name("tree",x,y)
+    unless object == false
+      this.create_log(d)
