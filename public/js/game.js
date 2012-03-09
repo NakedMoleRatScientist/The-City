@@ -653,11 +653,11 @@
       case "tree":
         treeDraw(p5, x, y);
         break;
-      case "wood_stockpile":
+      case "timber_stockpile":
         timberStockpileDraw(p5, x, y);
         break;
-      case "wood":
-        timberDraw(p5, x, y, location.items);
+      case "timber":
+        timberDraw(p5, x, y);
     }
     return true;
   };
@@ -705,7 +705,7 @@
             if (s.name === "crystal_stockpile") {
               _results2.push(crystalStockpileDraw(p5, location.x, location.y));
             } else {
-              _results2.push(woodStockpileDraw(p5, location.x, location.y));
+              _results2.push(timberStockpileDraw(p5, location.x, location.y));
             }
           } else {
             _results2.push(void 0);
@@ -717,8 +717,7 @@
     return _results;
   };
 
-  timberDraw = function(p5, x, y, items) {
-    p5.fill(0, items * 20, 0);
+  timberDraw = function(p5, x, y) {
     p5.stroke(0, 100, 0);
     return p5.rect(x, y + 5, 19, 5);
   };
@@ -2024,7 +2023,7 @@
       switch (this.store) {
         case "crystal":
           return this.drop = map.sketch.create_crystal(location.x, location.y);
-        case "wood":
+        case "timber":
           return this.drop = map.sketch.create_wood(location.x, location.y);
       }
     };
@@ -2535,11 +2534,11 @@
     };
 
     MapSketch.prototype.create_wood = function(x, y) {
-      var wood;
-      wood = new Wood(x, y);
-      wood.stack = this.map.map[y][x].length;
-      if (this.push_to_map(x, y, wood) === true) this.map.woods.push(wood);
-      return wood;
+      var timber;
+      timber = new Timber(x, y);
+      timber.stack = this.map.map[y][x].length;
+      if (this.push_to_map(x, y, timber) === true) this.map.timbers.push(timber);
+      return timber;
     };
 
     MapSketch.prototype.create_crystal = function(x, y) {
@@ -2981,7 +2980,7 @@
       this.size_map();
       this.stockpoints = [];
       this.crystals = [];
-      this.woods = [];
+      this.timbers = [];
       this.crystal_trees = [];
       this.trees = [];
       this.collision = new Collision(this);
