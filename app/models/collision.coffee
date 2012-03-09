@@ -8,7 +8,7 @@ class Collision
       return false
     true
   check_compatibility: (item,x,y) ->
-    for m in @map[y][x]
+    for m in @map.map[y][x]
       if m.name == "wall"
         return false
     if item.name == "crystal"
