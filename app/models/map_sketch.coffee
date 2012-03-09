@@ -18,11 +18,11 @@ class MapSketch
       return true
     false
   create_wood: (x,y) ->
-    wood = new Timber(x,y)
-    wood.stack = @map.map[y][x].length
+    timber = new Timber(x,y)
+    timber.stack = @map.map[y][x].length
     if this.push_to_map(x,y,timber) == true
       @map.woods.push(timber)
-    return wood
+    return timber
   create_crystal: (x,y) ->
     crystal = new Crystal(x,y)
     crystal.stack = @map.map[y][x].length
