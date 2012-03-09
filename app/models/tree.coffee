@@ -4,8 +4,5 @@ class Tree
     @name = "tree"
   collide: () ->
     true
-  acquire: () ->
-    @pile -= 1
-    return "tree"
   action: () ->
     "cut_down"
