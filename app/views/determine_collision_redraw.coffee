@@ -8,4 +8,4 @@ determineCollisionRedraw = (p5,dirty,map) ->
         if s.name == "crystal_stockpile"
           crystalStockpileDraw(p5,location.x,location.y)
         else
-          woodStockpileDraw(p5,location.x,location.y)
+          timberStockpileDraw(p5,location.x,location.y)
