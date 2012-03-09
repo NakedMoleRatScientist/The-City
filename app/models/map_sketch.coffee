@@ -30,7 +30,7 @@ class MapSketch
       @map.crystals.push(crystal)
     return crystal
   push_to_map: (x,y,item) ->
-    if @map.collision.create_check() == true
+    if @map.collision.create_check(x,y,item) == true
       @map.map[y][x].push(item)
       return true
     false
