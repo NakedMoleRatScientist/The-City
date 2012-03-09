@@ -5,3 +5,5 @@ class Tree
     true
   action: () ->
     "cut_down"
+  acquire: () ->
+    return "tree"
