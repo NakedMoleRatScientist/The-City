@@ -14,8 +14,8 @@ determineRectDraw = (location,x,y,p5) ->
       debug_draw(p5,x,y)
     when "tree"
       treeDraw(p5,x,y)
-    when "wood_stockpile"
+    when "timber_stockpile"
       timberStockpileDraw(p5,x,y)
-    when "wood"
+    when "timber"
       timberDraw(p5,x,y,location.items)
   return true
