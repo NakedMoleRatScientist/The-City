@@ -7,3 +7,5 @@ class Tree
   acquire: () ->
     @pile -= 1
     return "tree"
+  action: () ->
+    "cut_down"
