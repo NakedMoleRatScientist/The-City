@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, Collision, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, Item, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Map, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timer, Torso, Tree, Unit, Units, Wall, Wood, WoodStock, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, build_rect, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, mapDraw, mapViewer, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, titleDraw, translateIntoDrawCoord, treeDraw, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw, woodDraw, woodStockpileDraw,
+  var Arm, Body, Camera, Collision, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, Item, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Log, Map, MapDestinate, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timber, Timer, Torso, Tree, Unit, Units, Wall, WoodStock, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, build_rect, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, cuttingDown, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, mapDraw, mapViewer, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, titleDraw, translateIntoDrawCoord, treeDraw, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw, woodDraw, woodStockpileDraw,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -717,6 +717,12 @@
     return _results;
   };
 
+  woodDraw = function(p5, x, y, items) {
+    p5.fill(0, items * 20, 0);
+    p5.stroke(0, 100, 0);
+    return p5.rect(x, y + 5, 19, 5);
+  };
+
   helpMenuDraw = function(p5) {
     var height, x, y;
     this.p5 = p5;
@@ -726,6 +732,14 @@
     menuTitleText(this.p5, "Help Menu");
     this.p5.fill(255, 255, 0);
     return this.p5.text("q - back", x, y);
+  };
+
+  woodStockpileDraw = function(p5, x, y) {
+    p5.noFill();
+    p5.stroke(0, 100, 0);
+    p5.rect(x - 39, y - 39, 99, 99);
+    p5.fill(0, 100, 0);
+    return p5.rect(x, y, 20, 20);
   };
 
   unitDraw = function(p5, unit, x, y) {
@@ -783,12 +797,6 @@
   treeDraw = function(p5, x, y) {
     p5.fill(0, 100, 0);
     return p5.ellipse(x + 10, y + 10, 10, 10);
-  };
-
-  woodDraw = function(p5, x, y, items) {
-    p5.fill(0, items * 20, 0);
-    p5.stroke(0, 100, 0);
-    return p5.rect(x, y + 5, 19, 5);
   };
 
   instructionDraw = function(p5) {
@@ -882,14 +890,6 @@
 
   crystalTreeDraw = function(p5, x, y) {
     p5.fill(0, 0, 255);
-    return p5.rect(x, y, 20, 20);
-  };
-
-  woodStockpileDraw = function(p5, x, y) {
-    p5.noFill();
-    p5.stroke(0, 100, 0);
-    p5.rect(x - 39, y - 39, 99, 99);
-    p5.fill(0, 100, 0);
     return p5.rect(x, y, 20, 20);
   };
 
@@ -1386,9 +1386,7 @@
       if (this.state === -1) {
         this.mouse.x = result.x;
         this.mouse.y = result.y;
-        if (this.mouse.mode === 1) {
-          return this.map.sketch.add_stockpile(this.mouse);
-        }
+        if (this.mouse.mode === 1) return this.map.dest.add_stockpile(this.mouse);
       }
     };
 
@@ -2080,6 +2078,28 @@
 
   })();
 
+  Log = (function() {
+
+    function Log(x, y) {
+      this.x = x;
+      this.y = y;
+      this.pile = 1;
+      this.name = "log";
+    }
+
+    Log.prototype.collide = function() {
+      return true;
+    };
+
+    Log.prototype.acquire = function() {
+      this.pile -= 1;
+      return "timber";
+    };
+
+    return Log;
+
+  })();
+
   Pathfinder = (function() {
 
     function Pathfinder(map) {
@@ -2513,11 +2533,9 @@
     };
 
     MapSketch.prototype.push_to_map = function(x, y, item) {
-      if (this.map.collision.inbound(x, y) === true) {
-        if (this.map.map[y][x].length === 0 || this.map.collision.check_compatibility(item, this.map.map[y][x])) {
-          this.map.map[y][x].push(item);
-          return true;
-        }
+      if (this.map.collision.create_check(x, y, item) === true) {
+        this.map.map[y][x].push(item);
+        return true;
       }
       return false;
     };
@@ -2581,7 +2599,43 @@
       return this.last = null;
     };
 
-    MapSketch.prototype.decide_stock = function(mouse, x, y) {
+    MapSketch.prototype["delete"] = function(x, y, type) {
+      var m, n, _i, _len, _ref;
+      n = 0;
+      _ref = this.map.map[y][x];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        m = _ref[_i];
+        if (m.name === type) break;
+        n += 1;
+      }
+      return this.map.map[y][x].splice(n, 1);
+    };
+
+    MapSketch.prototype.cut_down = function(x, y, d) {
+      var i, object, _results;
+      object = this.map.select_by_name("tree", x, y);
+      if (object !== false) {
+        _results = [];
+        for (i = 0; i <= 4; i++) {
+          this.create_log(x, y);
+          x += d.x;
+          _results.push(y += d.y);
+        }
+        return _results;
+      }
+    };
+
+    return MapSketch;
+
+  })();
+
+  MapDestinate = (function() {
+
+    function MapDestinate(map) {
+      this.map = map;
+    }
+
+    MapDestinate.prototype.decide_stock = function(mouse, x, y) {
       switch (mouse.build) {
         case "tree":
           return new WoodStock(x, y);
@@ -2590,7 +2644,7 @@
       }
     };
 
-    MapSketch.prototype.decide_list = function(mouse) {
+    MapDestinate.prototype.decide_list = function(mouse) {
       switch (mouse.build) {
         case "tree":
           return this.map.trees;
@@ -2599,7 +2653,7 @@
       }
     };
 
-    MapSketch.prototype.add_stockpile = function(mouse) {
+    MapDestinate.prototype.add_stockpile = function(mouse) {
       var newpoint, x, y;
       x = Math.floor(mouse.x / 20) + this.map.camera.x;
       y = Math.floor(mouse.y / 20) + this.map.camera.y;
@@ -2613,19 +2667,7 @@
       }
     };
 
-    MapSketch.prototype["delete"] = function(x, y, type) {
-      var m, n, _i, _len, _ref;
-      n = 0;
-      _ref = this.map.map[y][x];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        m = _ref[_i];
-        if (m.name === type) break;
-        n += 1;
-      }
-      return this.map.map[y][x].splice(n, 1);
-    };
-
-    return MapSketch;
+    return MapDestinate;
 
   })();
 
@@ -2742,7 +2784,7 @@
   })(Relation);
 
   scenarioList = function() {
-    return ["combat", "hand_disability_combat", "leg_disability", "pig_invasion", "hand_disability_gathering", "full_test_boars", "pathfinding", "unpathable_1", "unpathable_2", "terrain_test"];
+    return ["combat", "hand_disability_combat", "leg_disability", "pig_invasion", "hand_disability_gathering", "full_test_boars", "pathfinding", "unpathable_1", "unpathable_2", "terrain_test", "cuttingDown"];
   };
 
   Human = (function(_super) {
@@ -2925,6 +2967,7 @@
       this.collision = new Collision(this);
       this.sketch = new MapSketch(this);
       this.generate = new GenerateMap(this);
+      this.dest = new MapDestinate(this);
       this.camera = new Camera();
       return this.redraw = [];
     };
@@ -3077,7 +3120,6 @@
     function Tree(x, y) {
       this.x = x;
       this.y = y;
-      this.pile = 50;
       this.name = "tree";
     }
 
@@ -3085,8 +3127,11 @@
       return true;
     };
 
+    Tree.prototype.action = function() {
+      return "cut_down";
+    };
+
     Tree.prototype.acquire = function() {
-      this.pile -= 1;
       return "tree";
     };
 
@@ -3110,6 +3155,22 @@
 
   })();
 
+  Timber = (function(_super) {
+
+    __extends(Timber, _super);
+
+    function Timber(x, y) {
+      this.x = x;
+      this.y = y;
+      this.name = "timber";
+      this.limit = 1;
+      Timber.__super__.constructor.call(this, this.x, this.y);
+    }
+
+    return Timber;
+
+  })(Item);
+
   Collision = (function() {
 
     function Collision(map) {
@@ -3128,10 +3189,11 @@
       return true;
     };
 
-    Collision.prototype.check_compatibility = function(item, map) {
-      var m, _i, _len;
-      for (_i = 0, _len = map.length; _i < _len; _i++) {
-        m = map[_i];
+    Collision.prototype.check_compatibility = function(item, x, y) {
+      var m, _i, _len, _ref;
+      _ref = this.map.map[y][x];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        m = _ref[_i];
         if (m.name === "wall") return false;
       }
       if (item.name === "crystal") {
@@ -3147,6 +3209,15 @@
         return true;
       }
       return false;
+    };
+
+    Collision.prototype.check_length = function(x, y) {
+      if (this.map.map[y][x].length === 0) return true;
+      return false;
+    };
+
+    Collision.prototype.create_check = function(x, y, item) {
+      return this.inbound(x, y) && (this.check_compatibility(item, x, y) || this.check_length(x, y));
     };
 
     return Collision;
@@ -3212,22 +3283,6 @@
     return WoodStock;
 
   })(Stockpile);
-
-  Wood = (function(_super) {
-
-    __extends(Wood, _super);
-
-    function Wood(x, y) {
-      this.x = x;
-      this.y = y;
-      this.name = "wood";
-      this.limit = 5;
-      Wood.__super__.constructor.call(this, this.x, this.y);
-    }
-
-    return Wood;
-
-  })(Item);
 
   Wall = (function() {
 
@@ -3369,7 +3424,7 @@
       x: 300,
       y: 300
     };
-    return map.sketch.add_stockpile(location);
+    return map.dest.add_stockpile(location);
   };
 
   pathfinding = function(units, map) {
@@ -3446,6 +3501,16 @@
     units.create(new Human(10, 10, "Can'tWalk", 0));
     units.units[0].body.leg = 2;
     return units.units[0].set_move(20, 20);
+  };
+
+  cuttingDown = function(units, map) {
+    map.sketch.create_tree(10, 10);
+    units.create(new Human(20, 10, "logger", 1));
+    return map.dest.add_stockpile({
+      x: 400,
+      y: 100,
+      build: "tree"
+    });
   };
 
   pigInvasion = function(units, map) {
@@ -3560,6 +3625,8 @@
           return unpathable2(this.units, this.map);
         case "terrain_test":
           return terrainTest(this.units, this.map);
+        case "cuttingDown":
+          return cuttingDown(this.units, this.map);
         default:
           return normalScenario(this.units, this.map);
       }
