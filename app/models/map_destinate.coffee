@@ -1,0 +1,2 @@
+class MapDestinate
+  constructor: (@map) ->
