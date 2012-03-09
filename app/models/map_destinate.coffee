@@ -3,7 +3,7 @@ class MapDestinate
   decide_stock: (mouse,x,y) ->
     switch(mouse.build)
       when "tree"
-        return new WoodStock(x,y)
+        return new timberStock(x,y)
       when "crystal"
         return new CrystalStock(x,y)
   decide_list: (mouse) ->
