@@ -90,3 +90,9 @@ class Map
     false
   reset: () ->
     this.setup()
+  decide_list: (which) ->
+    switch(which)
+      when "tree"
+        return @map.trees
+      when "crystal"
+        return @map.crystal_trees
