@@ -93,6 +93,6 @@ class Map
   decide_list: (which) ->
     switch(which)
       when "tree"
-        return @map.trees
+        return @trees
       when "crystal"
-        return @map.crystal_trees
+        return @crystal_trees
