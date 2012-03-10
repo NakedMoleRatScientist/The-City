@@ -4,9 +4,7 @@ class Human extends Unit
     @hostility = 0
     @advance = true
     @agility = 5
-  set_action: (map) ->
-    return if this.act_on_queue()
-    return if @body.hand == 2
+  gather_action: () ->
     switch(@queue[@order])
       when "move_to_drop"
         object = @job.get_drop_location(map)
@@ -33,4 +31,8 @@ class Human extends Unit
       when "drop_item"
         this.drop_item(@job.store)
         map.drop_item(@job.drop.x,@job.drop.y,@job.store)
+  set_action: (map) ->
+    return if this.act_on_queue()
+    return if @body.hand == 2
+    this.gather_action()
     @perform = @order
