@@ -89,6 +89,7 @@ class MapSketch
       object = @map.select_by_name("log",x,y)
     else
       object = tree
+      this.delete_tree(x,y)
     this.delete(x,y,object.name)
     x += d.x
     y += d.y
