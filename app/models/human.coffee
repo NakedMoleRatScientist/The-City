@@ -39,7 +39,7 @@ class Human extends Unit
           @job = null
           @queue = []
           @perform = null
-         this.set_move(object.x,object.y)
+        this.set_move(object.x,object.y)
       when "cut"
         console.log("DEEP")
   set_action: (map) ->
