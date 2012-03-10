@@ -76,20 +76,18 @@ class MapSketch
         break
       n += 1
     @map.map[y][x].splice(n,1)
-  delete_tree: (x,y) ->
     n = 0
-    for t in @map.trees
-      if t.x == x && t.y == y
+    for m in @map.decide_list(type)
+      if m.x == x && m.y == y
         break
       n += 1
-    @map.trees.splice(n,1)
+    @map.decide_list(type).splice(n,1)
   cut_down: (x,y,d) ->
     tree = @map.select_by_name("tree",x,y)
     if tree == false
       object = @map.select_by_name("log",x,y)
     else
       object = tree
-      this.delete_tree(x,y)
     this.delete(x,y,object.name)
     x += d.x
     y += d.y
