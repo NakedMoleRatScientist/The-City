@@ -2229,6 +2229,9 @@
       this.diameter = 5;
       this.size = 10;
       this.queue = false;
+      this.times = 24;
+      this.type = "cut";
+      this.orders = ["find", "cut_down"];
     }
 
     timberStock.prototype.collide = function() {
@@ -2818,23 +2821,20 @@
       this.agility = 5;
     }
 
-    Human.prototype.set_action = function(map) {
+    Human.prototype.gather_action = function() {
       var choice, choices, object;
-      if (this.act_on_queue()) return;
-      if (this.body.hand === 2) return;
       switch (this.queue[this.order]) {
         case "move_to_drop":
           object = this.job.get_drop_location(map);
-          choices = map.free_locations(object.x, object.y, 1);
-          choice = choices[random_number(choices.length)];
           if (object === false) {
             this.job = null;
             this.queue = [];
             this.perform = null;
             return;
           }
-          this.set_move(choice.x, choice.y);
-          break;
+          choices = map.free_locations(object.x, object.y, 1);
+          choice = choices[random_number(choices.length)];
+          return this.set_move(choice.x, choice.y);
         case "move_to_source":
           object = this.job.nearest;
           if (object === null) {
@@ -2845,14 +2845,24 @@
           }
           choices = map.free_locations(object.x, object.y, 1);
           choice = choices[random_number(choices.length)];
-          this.set_move(choice.x, choice.y);
-          break;
+          return this.set_move(choice.x, choice.y);
         case "gather_item":
-          this.acquire_item(this.job.nearest.acquire());
-          break;
+          return this.acquire_item(this.job.nearest.acquire());
         case "drop_item":
           this.drop_item(this.job.store);
-          map.drop_item(this.job.drop.x, this.job.drop.y, this.job.store);
+          return map.drop_item(this.job.drop.x, this.job.drop.y, this.job.store);
+      }
+    };
+
+    Human.prototype.set_action = function(map) {
+      if (this.act_on_queue()) return;
+      if (this.body.hand === 2) return;
+      switch (this.job.type) {
+        case "gather":
+          this.gather_action();
+          break;
+        case "cut":
+          this.cut_action();
       }
       return this.perform = this.order;
     };
