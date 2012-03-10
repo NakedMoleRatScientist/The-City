@@ -83,3 +83,4 @@ class MapSketch
         this.create_log(x,y)
         x += d.x
         y += d.y
+    this.delete(x,y,"tree")
