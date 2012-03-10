@@ -2240,12 +2240,16 @@
       this.queue = false;
       this.times = 24;
       this.type = "cut";
+      this.target = null;
       this.orders = ["find", "cut_down"];
     }
 
     timberStock.prototype.find_nearest_cut = function(map) {
       this.targets = map.trees.concat(map.logs);
-      if (this.targets.length !== 0) return nearest_object(this, this.targets);
+      if (this.targets.length !== 0) {
+        this.target = nearest_object(this, this.targets);
+        return this.target;
+      }
       return false;
     };
 
@@ -2659,17 +2663,40 @@
       return this.map.map[y][x].splice(n, 1);
     };
 
+    MapSketch.prototype.delete_type = function(x, y, type) {
+      var m, n, _i, _len, _ref;
+      n = 0;
+      _ref = this.map.decide_list(type);
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        m = _ref[_i];
+        if (m.x === x && m.y === y) break;
+        n += 1;
+      }
+      return this.map.decide_list(type).splice(n, 1);
+    };
+
     MapSketch.prototype.cut_down = function(x, y, d) {
-      var i, object, _results;
-      object = this.map.select_by_name("tree", x, y);
-      if (object !== false) {
-        _results = [];
+      var i, object, tree;
+      tree = this.map.select_by_name("tree", x, y);
+      if (tree === false) {
+        object = this.map.select_by_name("log", x, y);
+      } else {
+        object = tree;
+      }
+      this["delete"](x, y, object.name);
+      this.delete_type(x, y, object.name);
+      x += d.x;
+      y += d.y;
+      if (object.name === "tree") {
         for (i = 0; i <= 4; i++) {
-          this.create_log(x, y);
+          if (this.create_log(x, y) === true) this.map.new_object(x, y);
           x += d.x;
-          _results.push(y += d.y);
+          y += d.y;
         }
-        return _results;
+      }
+      if (object.name === "log") {
+        this.create_wood(x, y);
+        return this.map.new_object(x, y);
       }
     };
 
@@ -2692,15 +2719,6 @@
       }
     };
 
-    MapDestinate.prototype.decide_list = function(mouse) {
-      switch (mouse.build) {
-        case "tree":
-          return this.map.trees;
-        case "crystal":
-          return this.map.crystal_trees;
-      }
-    };
-
     MapDestinate.prototype.add_stockpile = function(mouse) {
       var newpoint, x, y;
       x = Math.floor(mouse.x / 20) + this.map.camera.x;
@@ -2710,7 +2728,7 @@
       newpoint = this.decide_stock(mouse, x, y);
       if (!(this.map.stockpoints_collision_detect(newpoint) === true || this.map.collide_check(x, y) === true)) {
         this.map.map[y][x].push(newpoint);
-        newpoint.nearest = nearest_object(newpoint, this.decide_list(mouse));
+        newpoint.nearest = nearest_object(newpoint, this.map.decide_list(mouse.build));
         return this.map.stockpoints.push(newpoint);
       }
     };
@@ -2897,7 +2915,7 @@
             x: -1,
             y: 0
           };
-          return map.sketch.cut_down(x, y, direction);
+          return map.sketch.cut_down(this.job.target.x, this.job.target.y, direction);
       }
     };
 
@@ -3094,6 +3112,13 @@
       }
     };
 
+    Map.prototype.new_object = function(x, y) {
+      return this.redraw.push({
+        x: x,
+        y: y
+      });
+    };
+
     Map.prototype.rect_inbound = function(rect) {
       if (!this.collision.inbound(rect.x, rect.y)) return false;
       if (!this.collision.inbound(rect.x + rect.width, rect.y)) return false;
@@ -3187,6 +3212,17 @@
 
     Map.prototype.reset = function() {
       return this.setup();
+    };
+
+    Map.prototype.decide_list = function(which) {
+      switch (which) {
+        case "tree":
+          return this.trees;
+        case "crystal":
+          return this.crystal_trees;
+        case "log":
+          return this.logs;
+      }
     };
 
     return Map;
