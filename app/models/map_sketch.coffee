@@ -82,7 +82,7 @@ class MapSketch
       if t.x == x && t.y == y
         break
       n += 1
-    @map.trees.splice(1)
+    @map.trees.splice(n,1)
   cut_down: (x,y,d) ->
     tree = @map.select_by_name("tree",x,y)
     if tree == false
