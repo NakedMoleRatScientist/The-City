@@ -2234,6 +2234,12 @@
       this.orders = ["find", "cut_down"];
     }
 
+    timberStock.prototype.find_nearest_cut = function(map) {
+      this.targets = map.trees.concat(map.logs);
+      if (this.target.length !== 0) return nearest_object(this, this.targets);
+      return false;
+    };
+
     timberStock.prototype.collide = function() {
       return true;
     };
@@ -2854,15 +2860,31 @@
       }
     };
 
+    Human.prototype.cut_action = function(map) {
+      var object;
+      switch (this.queue[this.order]) {
+        case "find":
+          object = this.job.find_nearest_cut(map);
+          if (object === false) {
+            this.job = null;
+            this.queue = [];
+            this.perform = null;
+          }
+          return this.set_move(object.x, object.y);
+        case "cut":
+          return console.log("DEEP");
+      }
+    };
+
     Human.prototype.set_action = function(map) {
       if (this.act_on_queue()) return;
       if (this.body.hand === 2) return;
       switch (this.job.type) {
         case "gather":
-          this.gather_action();
+          this.gather_action(map);
           break;
         case "cut":
-          this.cut_action();
+          this.cut_action(map);
       }
       return this.perform = this.order;
     };
@@ -2992,6 +3014,7 @@
       this.stockpoints = [];
       this.crystals = [];
       this.timbers = [];
+      this.logs = [];
       this.crystal_trees = [];
       this.trees = [];
       this.collision = new Collision(this);
