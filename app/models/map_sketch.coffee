@@ -78,6 +78,8 @@ class MapSketch
     @map.map[y][x].splice(n,1)
   cut_down: (x,y,d) ->
     object = @map.select_by_name("tree",x,y)
+    x += d.x
+    y += d.y
     unless object == false
       for i in [0..4]
         this.create_log(x,y)
