@@ -10,5 +10,8 @@ class timberStock extends Stockpile
     @times = 24
     @type = "cut"
     @orders = ["find", "cut_down"]
+  find_nearest_cut: (map) ->
+    @targets = map.trees.concat(map.logs)
+    nearest_object(this,@targets)
   collide: () ->
     true
