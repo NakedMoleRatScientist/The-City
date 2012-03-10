@@ -49,5 +49,5 @@ class Human extends Unit
       when "gather"
         this.gather_action()
       when "cut"
-        this.cut_action()
+        this.cut_action(map)
     @perform = @order
