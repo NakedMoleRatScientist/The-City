@@ -4,7 +4,7 @@ class Human extends Unit
     @hostility = 0
     @advance = true
     @agility = 5
-  gather_action: () ->
+  gather_action: (map) ->
     switch(@queue[@order])
       when "move_to_drop"
         object = @job.get_drop_location(map)
