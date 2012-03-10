@@ -82,7 +82,8 @@ class MapSketch
     y += d.y
     unless object == false
       for i in [0..4]
-        this.create_log(x,y)
+        if this.create_log(x,y) == true
+          @map.new_object(x,y)
         x += d.x
         y += d.y
     this.delete(x,y,"tree")
