@@ -31,10 +31,15 @@ class Human extends Unit
       when "drop_item"
         this.drop_item(@job.store)
         map.drop_item(@job.drop.x,@job.drop.y,@job.store)
-  cut_action: () ->
+  cut_action: (map) ->
     switch(@queue[@order])
       when "find"
-        console.log("BEEP")
+        object = find_nearest_cut(map)
+        if object == false
+          @job = null
+          @queue = []
+          @perform = null
+         this.set_move(object.x,object.y)
       when "cut"
         console.log("DEEP")
   set_action: (map) ->
