@@ -42,7 +42,7 @@ class Human extends Unit
         choices = map.free_locations(object.x,object.y,1)
         choice = choices[random_number(choices.length)]
         this.set_move(choice.x,choice.y)
-      when "cut"
+      when "cut_down"
         console.log("DEEP")
   set_action: (map) ->
     return if this.act_on_queue()
