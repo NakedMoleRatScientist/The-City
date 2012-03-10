@@ -78,6 +78,7 @@ class MapSketch
     @map.map[y][x].splice(n,1)
   cut_down: (x,y,d) ->
     object = @map.select_by_name("tree",x,y)
+    this.delete(x,y,"tree")
     x += d.x
     y += d.y
     unless object == false
@@ -86,4 +87,3 @@ class MapSketch
           @map.new_object(x,y)
         x += d.x
         y += d.y
-    this.delete(x,y,"tree")
