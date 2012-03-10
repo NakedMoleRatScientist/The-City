@@ -31,6 +31,12 @@ class Human extends Unit
       when "drop_item"
         this.drop_item(@job.store)
         map.drop_item(@job.drop.x,@job.drop.y,@job.store)
+  cut_action: () ->
+    switch(@queue[@order])
+      when "find"
+        console.log("BEEP")
+      when "cut"
+        console.log("DEEP")
   set_action: (map) ->
     return if this.act_on_queue()
     return if @body.hand == 2
