@@ -99,3 +99,6 @@ class MapSketch
           @map.new_object(x,y)
         x += d.x
         y += d.y
+    if object.name == "log"
+      this.create_wood(x,y)
+      @map.new_object(x,y)
