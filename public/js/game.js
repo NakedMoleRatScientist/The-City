@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, Collision, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, Item, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Log, Map, MapDestinate, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timber, Timer, Torso, Tree, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, build_rect, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, cuttingDown, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, mapDraw, mapViewer, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, timberDraw, timberStock, timberStockpileDraw, titleDraw, translateIntoDrawCoord, treeDraw, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw,
+  var Arm, Body, Camera, Collision, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, Item, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Log, Map, MapDestinate, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timber, Timer, Torso, Tree, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, build_rect, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, cuttingDown, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, logDraw, mapDraw, mapViewer, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, timberDraw, timberStock, timberStockpileDraw, titleDraw, translateIntoDrawCoord, treeDraw, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -658,6 +658,9 @@
         break;
       case "timber":
         timberDraw(p5, x, y);
+        break;
+      case "log":
+        logDraw(p5, x, y);
     }
     return true;
   };
@@ -905,6 +908,12 @@
     this.p5 = p5;
     this.p5.fill(255, 0, 0);
     return this.p5.text(name, 715, 115);
+  };
+
+  logDraw = function(p5, x, y) {
+    p5.stroke(0, 100, 0);
+    p5.fill(0);
+    return p5.rect(x + 5, y, 10, 20);
   };
 
   frameRateDraw = function(p5) {
@@ -2236,7 +2245,7 @@
 
     timberStock.prototype.find_nearest_cut = function(map) {
       this.targets = map.trees.concat(map.logs);
-      if (this.target.length !== 0) return nearest_object(this, this.targets);
+      if (this.targets.length !== 0) return nearest_object(this, this.targets);
       return false;
     };
 
@@ -2521,6 +2530,16 @@
       var wall;
       wall = new Wall(x, y);
       return this.push_to_map(x, y, wall);
+    };
+
+    MapSketch.prototype.create_log = function(x, y) {
+      var log;
+      log = new Log(x, y);
+      if (this.push_to_map(x, y, log) === true) {
+        this.map.logs.push(log);
+        return true;
+      }
+      return false;
     };
 
     MapSketch.prototype.create_tree = function(x, y) {
@@ -2827,7 +2846,7 @@
       this.agility = 5;
     }
 
-    Human.prototype.gather_action = function() {
+    Human.prototype.gather_action = function(map) {
       var choice, choices, object;
       switch (this.queue[this.order]) {
         case "move_to_drop":
@@ -2861,7 +2880,7 @@
     };
 
     Human.prototype.cut_action = function(map) {
-      var object;
+      var choice, choices, direction, object;
       switch (this.queue[this.order]) {
         case "find":
           object = this.job.find_nearest_cut(map);
@@ -2870,9 +2889,15 @@
             this.queue = [];
             this.perform = null;
           }
-          return this.set_move(object.x, object.y);
-        case "cut":
-          return console.log("DEEP");
+          choices = map.free_locations(object.x, object.y, 1);
+          choice = choices[random_number(choices.length)];
+          return this.set_move(choice.x, choice.y);
+        case "cut_down":
+          direction = {
+            x: -1,
+            y: 0
+          };
+          return map.sketch.cut_down(x, y, direction);
       }
     };
 
