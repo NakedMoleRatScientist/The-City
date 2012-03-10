@@ -44,7 +44,7 @@ class Human extends Unit
         this.set_move(choice.x,choice.y)
       when "cut_down"
         direction = (x: -1, y: 0)
-        map.sketch.cut_down(x,y,direction)
+        map.sketch.cut_down(@job.target.x,@job.target.y,direction)
   set_action: (map) ->
     return if this.act_on_queue()
     return if @body.hand == 2
