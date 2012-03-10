@@ -34,7 +34,7 @@ class Human extends Unit
   cut_action: (map) ->
     switch(@queue[@order])
       when "find"
-        object = find_nearest_cut(map)
+        object = @job.find_nearest_cut(map)
         if object == false
           @job = null
           @queue = []
