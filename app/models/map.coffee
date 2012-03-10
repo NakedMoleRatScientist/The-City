@@ -96,3 +96,5 @@ class Map
         return @trees
       when "crystal"
         return @crystal_trees
+      when "log"
+        return @logs
