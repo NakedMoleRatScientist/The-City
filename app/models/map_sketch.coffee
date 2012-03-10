@@ -76,6 +76,7 @@ class MapSketch
         break
       n += 1
     @map.map[y][x].splice(n,1)
+  delete_type: (x,y,type) ->
     n = 0
     for m in @map.decide_list(type)
       if m.x == x && m.y == y
@@ -88,6 +89,7 @@ class MapSketch
       object = @map.select_by_name("log",x,y)
     else
       object = tree
+      this.delete_type(x,y,"tree")
     this.delete(x,y,object.name)
     x += d.x
     y += d.y
