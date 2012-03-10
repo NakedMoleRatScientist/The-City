@@ -47,7 +47,7 @@ class Human extends Unit
     return if @body.hand == 2
     switch (@job.type)
       when "gather"
-        this.gather_action()
+        this.gather_action(map)
       when "cut"
         this.cut_action(map)
     @perform = @order
