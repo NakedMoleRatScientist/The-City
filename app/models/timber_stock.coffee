@@ -8,6 +8,7 @@ class timberStock extends Stockpile
     @size = 10
     @queue = false
     @times = 24
+    @type = "cut"
     @orders = ["find", "cut_down"]
   collide: () ->
     true
