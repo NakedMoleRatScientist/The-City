@@ -77,11 +77,15 @@ class MapSketch
       n += 1
     @map.map[y][x].splice(n,1)
   cut_down: (x,y,d) ->
-    object = @map.select_by_name("tree",x,y)
-    this.delete(x,y,"tree")
+    tree = @map.select_by_name("tree",x,y)
+    if tree == false
+      object = @map.select_by_name("log",x,y)
+    else
+      object = tree
+    this.delete(x,y,object.name)
     x += d.x
     y += d.y
-    unless object == false
+    if object.name == "tree"
       for i in [0..4]
         if this.create_log(x,y) == true
           @map.new_object(x,y)
