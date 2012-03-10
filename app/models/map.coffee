@@ -34,6 +34,8 @@ class Map
         if m.increase() == false
           return false
         return true
+  new_object: (x,y) ->
+    @redraw.push(x: x, y: y)
   rect_inbound: (rect) ->
     return false if !@collision.inbound(rect.x,rect.y)
     return false if !@collision.inbound(rect.x + rect.width,rect.y)
