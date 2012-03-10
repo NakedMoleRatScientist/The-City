@@ -7,6 +7,7 @@ class Map
     @stockpoints = []
     @crystals = []
     @timbers = []
+    @logs = []
     @crystal_trees = []
     @trees = []
     @collision = new Collision(this)
