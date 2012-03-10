@@ -5,6 +5,12 @@ class MapSketch
   create_wall: (x, y) ->
     wall = new Wall(x,y)
     this.push_to_map(x,y,wall)
+  create_log: (x, y) ->
+    log = new Log(x,y)
+    if this.push_to_map(x,y,log) == true
+      @map.logs.push(log)
+      return true
+    false
   create_tree: (x, y) ->
     tree = new Tree(x,y)
     if this.push_to_map(x,y,tree) == true
