@@ -34,5 +34,9 @@ class Human extends Unit
   set_action: (map) ->
     return if this.act_on_queue()
     return if @body.hand == 2
-    this.gather_action()
+    case (@job.type)
+      when "gather"
+        this.gather_action()
+      when "cut"
+        this.cut_down()
     @perform = @order
