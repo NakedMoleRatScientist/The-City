@@ -10,12 +10,6 @@ class MapSketch
         result.push(object)
       return true
     false
-  create_crystal: (x,y) ->
-    crystal = new Crystal(x,y)
-    crystal.stack = @map.map[y][x].length
-    if this.push_to_map(x,y,crystal) == true
-      @map.crystals.push(crystal)
-    return crystal
   push_to_map: (x,y,item) ->
     if @map.collision.create_check(x,y,item) == true
       @map.map[y][x].push(item)
