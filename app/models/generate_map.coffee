@@ -11,13 +11,13 @@ class GenerateMap
     loop
       x = random_number(@map.width)
       y = random_number(@map.height)
-      if @sketch.create_crystal_tree(x,y) == true
+      if @sketch.create("crystalTree",x,y) == true
         success += 1
       if success == 10
         break
   generate_paths: () ->
     locations = []
-    for m in @map.crystal_trees
+    for m in @map.crystalTrees
       free = @map.free_locations(m.x,m.y,1)
       locations.push(free[random_number(free.length)])
     for i in [0..locations.length - 2]
