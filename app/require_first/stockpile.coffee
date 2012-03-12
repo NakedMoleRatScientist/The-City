@@ -4,7 +4,8 @@ class Stockpile
     @nearest = null
     @drop = null
     @finish = false
-    @orders = ["move_to_source","gather_item","move_to_drop","drop_item"]
+    @jobs = []
+    @jobs.push(["move_to_source","gather_item","move_to_drop","drop_item"])
   check_assign: () ->
     if @persons.length == 0
       return false
