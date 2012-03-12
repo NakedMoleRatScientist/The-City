@@ -8,6 +8,6 @@ class CrystalStock extends Stockpile
     @size = 10
     @queue = false
   get_type: () ->
-    "gather"
+    0
   collide: () ->
     true
