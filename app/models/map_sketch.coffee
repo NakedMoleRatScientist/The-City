@@ -10,9 +10,6 @@ class MapSketch
         result.push(object)
       return true
     false
-  create_wall: (x, y) ->
-    wall = new Wall(x,y)
-    this.push_to_map(x,y,wall)
   create_log: (x, y) ->
     log = new Log(x,y)
     if this.push_to_map(x,y,log) == true
