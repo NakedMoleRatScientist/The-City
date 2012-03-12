@@ -18,6 +18,7 @@ class Human extends Unit
         this.set_move(choice.x,choice.y)
       when "move_to_source"
         object = @job.nearest
+        console.log("BEEP")
         if object == null
           @job = null
           @queue = []
@@ -49,7 +50,7 @@ class Human extends Unit
   set_action: (map) ->
     return if this.act_on_queue()
     return if @body.hand == 2
-    switch (@job.type)
+    switch (@job.get_type())
       when "gather"
         this.gather_action(map)
       when "cut"
