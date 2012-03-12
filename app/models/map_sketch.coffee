@@ -41,10 +41,10 @@ class MapSketch
       when "crystal"
         this.create_crystal(location.x,location.y)
       when "floor"
-        @last = this.create_floor(location.x,location.y)
+        this.create("floor",location.x,location.y,false)
         if thicken == true
-          this.create_floor(@last.x - 1,@last.y)
-          this.create_floor(@last.x,@last.y - 1)
+          this.create("floor",location.x - 1,location.y,false)
+          this.create("floor",location.x,location.y - 1,false)
   draw: (point_a,point_b,type,thicken) ->
     results = this.pathing(point_a,point_b)
     for location in results
