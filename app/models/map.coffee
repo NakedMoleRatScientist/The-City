@@ -8,7 +8,7 @@ class Map
     @crystals = []
     @timbers = []
     @logs = []
-    @crystal_trees = []
+    @crystalTrees = []
     @trees = []
     @collision = new Collision(this)
     @sketch = new MapSketch(this)
