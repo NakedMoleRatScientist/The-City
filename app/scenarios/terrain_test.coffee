@@ -1,6 +1,6 @@
 terrainTest = (units,map) ->
   map.generate.create_building(10,10,3)
-  map.sketch.create_crystal(11,11)
+  map.sketch.create("crystal",11,11)
   #This building won't be generated
   map.generate.create_building(9,9,1)
   #This building is below the first generated building
