@@ -91,14 +91,14 @@ class MapSketch
       object = tree
     this.delete(x,y,object.name)
     this.delete_type(x,y,object.name)
-    x += d.x
-    y += d.y
+    if object.name == "log"
+      this.create_wood(x,y)
+      @map.new_object(x,y)
     if object.name == "tree"
+      x += d.x
+      y += d.y
       for i in [0..4]
         if this.create_log(x,y) == true
           @map.new_object(x,y)
         x += d.x
         y += d.y
-    if object.name == "log"
-      this.create_wood(x,y)
-      @map.new_object(x,y)
