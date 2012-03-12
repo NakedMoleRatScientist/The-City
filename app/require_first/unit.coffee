@@ -23,7 +23,7 @@ class Unit
       @target = list[random_number(list.length)]
   set_job: (job) ->
     @job = job
-    @queue = job.orders
+    @queue = job.jobs[job.get_type()]
   set_move: (x,y) ->
     @goal_x = x
     @goal_y = y
