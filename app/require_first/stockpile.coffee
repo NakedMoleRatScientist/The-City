@@ -18,9 +18,10 @@ class Stockpile
     switch(@store)
       when "crystal"
         map.sketch.create("crystal",location.x,location.y)
+        @drop = map.select_by_name('crystal',location.x,location.y)
       when "timber"
         map.sketch.create("timber",location.x,location.y)
-    @drop = location
+        @drop = map.select_by_name('timber',location.x,location.y)
   get_drop_location: (map) ->
     if @drop == null
       if this.create_drop(map) == false
