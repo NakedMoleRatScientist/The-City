@@ -10,12 +10,6 @@ class MapSketch
         result.push(object)
       return true
     false
-  create_tree: (x, y) ->
-    tree = new Tree(x,y)
-    if this.push_to_map(x,y,tree) == true
-      @map.trees.push(tree)
-      return true
-    false
   create_crystal_tree: (x, y) ->
     tree = new CrystalTree(x,y)
     if this.push_to_map(x,y,tree) == true
