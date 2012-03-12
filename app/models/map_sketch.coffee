@@ -28,12 +28,6 @@ class MapSketch
       @map.crystal_trees.push(tree)
       return true
     false
-  create_wood: (x,y) ->
-    timber = new Timber(x,y)
-    timber.stack = @map.map[y][x].length
-    if this.push_to_map(x,y,timber) == true
-      @map.timbers.push(timber)
-    return timber
   create_crystal: (x,y) ->
     crystal = new Crystal(x,y)
     crystal.stack = @map.map[y][x].length
