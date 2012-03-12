@@ -9,7 +9,7 @@ class timberStock extends Stockpile
     @queue = false
     @times = 24
     @target = null
-    @orders = ["find", "cut_down"]
+    @jobs.push(["find", "cut_down"])
   get_type: () ->
     "cut"
   find_nearest_cut: (map) ->
