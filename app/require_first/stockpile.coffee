@@ -5,7 +5,7 @@ class Stockpile
     @drop = null
     @finish = false
     @jobs = []
-    @jobs.push(["move_to_source","gather_item","move_to_drop","drop_item"])
+    @jobs.push(new Job(["move_to_source","gather_item","move_to_drop","drop_item"]))
   check_assign: () ->
     if @persons.length == 0
       return false
