@@ -97,7 +97,7 @@ class MapSketch
     this.delete(x,y,object.name)
     this.delete_type(x,y,object.name)
     if object.name == "log"
-      this.create_wood(x,y)
+      this.create("timber",x,y)
       @map.new_object(x,y)
     if object.name == "tree"
       x += d.x
