@@ -18,7 +18,6 @@ class Human extends Unit
         this.set_move(choice.x,choice.y)
       when "move_to_source"
         object = @job.nearest
-        console.log("BEEP")
         if object == null
           @job = null
           @queue = []
