@@ -2,12 +2,12 @@ class MapSketch
   constructor: (@map) ->
     @finder = new Pathfinder(@map)
     @last = null
-  create: (object,x,y,list = true) ->
-    object = eval("new " + object.captialize() + "(x,y)")
+  create: (name,x,y,list = true) ->
+    object = eval("new " + name.capitalize() + "(x,y)")
     if this.push_to_map(object.x,object.y,object) == true
       if list == true
-        list = eval ("@map." + object + "s")
-        list.push(object)
+        result = eval("this.map." + name + "s")
+        result.push(object)
       return true
     false
   create_wall: (x, y) ->
