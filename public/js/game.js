@@ -2278,7 +2278,7 @@
       for (i = 0; i <= 9; i++) {
         x = random_number(this.map.width);
         y = random_number(this.map.height);
-        _results.push(this.sketch.create_tree(x, y));
+        _results.push(this.sketch.create("tree", x, y));
       }
       return _results;
     };
@@ -2290,7 +2290,7 @@
       while (true) {
         x = random_number(this.map.width);
         y = random_number(this.map.height);
-        if (this.sketch.create_crystal_tree(x, y) === true) success += 1;
+        if (this.sketch.create("crystalTree", x, y) === true) success += 1;
         if (success === 10) {
           break;
         } else {
@@ -2303,7 +2303,7 @@
     GenerateMap.prototype.generate_paths = function() {
       var free, i, locations, m, _i, _len, _ref, _ref2, _results;
       locations = [];
-      _ref = this.map.crystal_trees;
+      _ref = this.map.crystalTrees;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         m = _ref[_i];
         free = this.map.free_locations(m.x, m.y, 1);
@@ -2548,49 +2548,12 @@
       return false;
     };
 
-    MapSketch.prototype.create_tree = function(x, y) {
-      var tree;
-      tree = new Tree(x, y);
-      if (this.push_to_map(x, y, tree) === true) {
-        this.map.trees.push(tree);
-        return true;
-      }
-      return false;
-    };
-
-    MapSketch.prototype.create_crystal_tree = function(x, y) {
-      var tree;
-      tree = new CrystalTree(x, y);
-      if (this.push_to_map(x, y, tree) === true) {
-        this.map.crystal_trees.push(tree);
-        return true;
-      }
-      return false;
-    };
-
-    MapSketch.prototype.create_crystal = function(x, y) {
-      var crystal;
-      crystal = new Crystal(x, y);
-      crystal.stack = this.map.map[y][x].length;
-      if (this.push_to_map(x, y, crystal) === true) {
-        this.map.crystals.push(crystal);
-      }
-      return crystal;
-    };
-
     MapSketch.prototype.push_to_map = function(x, y, item) {
       if (this.map.collision.create_check(x, y, item) === true) {
         this.map.map[y][x].push(item);
         return true;
       }
       return false;
-    };
-
-    MapSketch.prototype.create_floor = function(x, y) {
-      var floor;
-      floor = new Floor(x, y);
-      this.push_to_map(x, y, floor);
-      return floor;
     };
 
     MapSketch.prototype.rect_draw = function(begin, end, type) {
@@ -2625,12 +2588,12 @@
         case "wall":
           return this.create("wall", location.x, location.y, false);
         case "crystal":
-          return this.create_crystal(location.x, location.y);
+          return this.create("crystal", location.x, location.y);
         case "floor":
-          this.last = this.create_floor(location.x, location.y);
+          this.create("floor", location.x, location.y, false);
           if (thicken === true) {
-            this.create_floor(this.last.x - 1, this.last.y);
-            return this.create_floor(this.last.x, this.last.y - 1);
+            this.create("floor", location.x - 1, location.y, false);
+            return this.create("floor", location.x, location.y - 1, false);
           }
       }
     };
@@ -3055,7 +3018,7 @@
       this.crystals = [];
       this.timbers = [];
       this.logs = [];
-      this.crystal_trees = [];
+      this.crystalTrees = [];
       this.trees = [];
       this.collision = new Collision(this);
       this.sketch = new MapSketch(this);
