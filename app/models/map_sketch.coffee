@@ -64,7 +64,7 @@ class MapSketch
   draw_location: (location,type,thicken = false) ->
     switch(type)
       when "wall"
-        this.create_wall(location.x,location.y)
+        this.create("wall",location.x,location.y,false)
       when "crystal"
         this.create_crystal(location.x,location.y)
       when "floor"
