@@ -1,4 +1,3 @@
 class Job
-  constructor: () ->
-    @orders = []
+  constructor: (@orders) ->
     @assigned = []
