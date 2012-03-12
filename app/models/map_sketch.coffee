@@ -2,7 +2,7 @@ class MapSketch
   constructor: (@map) ->
     @finder = new Pathfinder(@map)
     @last = null
-  create: (object,list = false,x,y) ->
+  create: (object,x,y,list = true) ->
     object = eval("new " + object.captialize() + "(x,y)")
     if this.push_to_map(object.x,object.y,object) == true
       if list == true
