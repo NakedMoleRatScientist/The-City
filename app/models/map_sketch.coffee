@@ -21,10 +21,6 @@ class MapSketch
       @map.map[y][x].push(item)
       return true
     false
-  create_floor: (x,y) ->
-    floor = new Floor(x,y)
-    this.push_to_map(x,y,floor)
-    floor
   rect_draw: (begin,end,type) ->
     for x in [begin.x..end.x]
       for y in [begin.y..end.y]
