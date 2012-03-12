@@ -39,6 +39,7 @@ class Human extends Unit
           @job = null
           @queue = []
           @perform = null
+          return
         choices = map.free_locations(object.x,object.y,1)
         choice = choices[random_number(choices.length)]
         this.set_move(choice.x,choice.y)
