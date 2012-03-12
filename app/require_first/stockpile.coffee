@@ -17,9 +17,10 @@ class Stockpile
     location = nearest_object(this,locations)
     switch(@store)
       when "crystal"
-        @drop = map.sketch.create("crystal",location.x,location.y)
+        map.sketch.create("crystal",location.x,location.y)
       when "timber"
-        @drop = map.sketch.create("timber",location.x,location.y)
+        map.sketch.create("timber",location.x,location.y)
+    @drop = location
   get_drop_location: (map) ->
     if @drop == null
       if this.create_drop(map) == false
