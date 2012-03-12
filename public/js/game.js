@@ -188,6 +188,10 @@
     return _results;
   };
 
+  String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+  };
+
   random_number = function(size) {
     return Math.floor(Math.random() * size);
   };
@@ -837,7 +841,7 @@
         if (item !== false) {
           this.p5.noStroke();
           this.p5.fill(255, 0, 0);
-          if (item.name === "crystal" || item.name === "wood") {
+          if (item.name === "crystal" || item.name === "timber") {
             msg = item.name + " : " + item.items;
           }
           msg += " (" + cam_x + "," + cam_y + ")";
@@ -2530,17 +2534,15 @@
       this.last = null;
     }
 
-    MapSketch.prototype.create_wall = function(x, y) {
-      var wall;
-      wall = new Wall(x, y);
-      return this.push_to_map(x, y, wall);
-    };
-
-    MapSketch.prototype.create_log = function(x, y) {
-      var log;
-      log = new Log(x, y);
-      if (this.push_to_map(x, y, log) === true) {
-        this.map.logs.push(log);
+    MapSketch.prototype.create = function(name, x, y, list) {
+      var object, result;
+      if (list == null) list = true;
+      object = eval("new " + name.capitalize() + "(x,y)");
+      if (this.push_to_map(object.x, object.y, object) === true) {
+        if (list === true) {
+          result = eval("this.map." + name + "s");
+          result.push(object);
+        }
         return true;
       }
       return false;
@@ -2564,14 +2566,6 @@
         return true;
       }
       return false;
-    };
-
-    MapSketch.prototype.create_wood = function(x, y) {
-      var timber;
-      timber = new Timber(x, y);
-      timber.stack = this.map.map[y][x].length;
-      if (this.push_to_map(x, y, timber) === true) this.map.timbers.push(timber);
-      return timber;
     };
 
     MapSketch.prototype.create_crystal = function(x, y) {
@@ -2629,7 +2623,7 @@
       if (thicken == null) thicken = false;
       switch (type) {
         case "wall":
-          return this.create_wall(location.x, location.y);
+          return this.create("wall", location.x, location.y, false);
         case "crystal":
           return this.create_crystal(location.x, location.y);
         case "floor":
@@ -2676,7 +2670,7 @@
     };
 
     MapSketch.prototype.cut_down = function(x, y, d) {
-      var i, object, tree;
+      var i, object, tree, _results;
       tree = this.map.select_by_name("tree", x, y);
       if (tree === false) {
         object = this.map.select_by_name("log", x, y);
@@ -2685,18 +2679,20 @@
       }
       this["delete"](x, y, object.name);
       this.delete_type(x, y, object.name);
-      x += d.x;
-      y += d.y;
-      if (object.name === "tree") {
-        for (i = 0; i <= 4; i++) {
-          if (this.create_log(x, y) === true) this.map.new_object(x, y);
-          x += d.x;
-          y += d.y;
-        }
-      }
       if (object.name === "log") {
-        this.create_wood(x, y);
-        return this.map.new_object(x, y);
+        this.create("timber", x, y);
+        this.map.new_object(x, y);
+      }
+      if (object.name === "tree") {
+        x += d.x;
+        y += d.y;
+        _results = [];
+        for (i = 0; i <= 4; i++) {
+          if (this.create("log", x, y) === true) this.map.new_object(x, y);
+          x += d.x;
+          _results.push(y += d.y);
+        }
+        return _results;
       }
     };
 
@@ -2906,6 +2902,7 @@
             this.job = null;
             this.queue = [];
             this.perform = null;
+            return;
           }
           choices = map.free_locations(object.x, object.y, 1);
           choice = choices[random_number(choices.length)];
@@ -3596,7 +3593,7 @@
   };
 
   cuttingDown = function(units, map) {
-    map.sketch.create_tree(10, 10);
+    map.sketch.create("tree", 10, 10);
     units.create(new Human(20, 10, "logger", 1));
     return map.dest.add_stockpile({
       x: 400,
@@ -3643,7 +3640,7 @@
 
   terrainTest = function(units, map) {
     map.generate.create_building(10, 10, 3);
-    map.sketch.create_crystal(11, 11);
+    map.sketch.create("crystal", 11, 11);
     map.generate.create_building(9, 9, 1);
     map.generate.create_building(13, 14, 3);
     map.sketch.create_crystal(10, 10);
