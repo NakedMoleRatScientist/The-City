@@ -39,7 +39,7 @@ class MapSketch
       when "wall"
         this.create("wall",location.x,location.y,false)
       when "crystal"
-        this.create_crystal(location.x,location.y)
+        this.create("crystal",location.x,location.y)
       when "floor"
         this.create("floor",location.x,location.y,false)
         if thicken == true
