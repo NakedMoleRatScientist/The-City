@@ -50,8 +50,8 @@ class Human extends Unit
     return if this.act_on_queue()
     return if @body.hand == 2
     switch (@job.get_type())
-      when "gather"
+      when 0
         this.gather_action(map)
-      when "cut"
+      when 1
         this.cut_action(map)
     @perform = @order
