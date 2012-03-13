@@ -39,7 +39,6 @@ class unitCombat
         @target.target = @unit
       action = this.counteraction(@target)
       if action == false
-#        @target.target = this if @target.target == null
         return [@target.combat.damage(@unit)]
       else if action.ability == false
         return [action,@target.combat.damage(@unit)]
@@ -72,7 +71,7 @@ class unitCombat
     return false if @target == null
     data = (actors: [@unit.name,@target.name], action: null)
     if @target.body.check_death() == true
-      @kills.push(@target.name)
+      @unit.kills.push(@target.name)
       @target = null
       data.action = "killed"
       return data
