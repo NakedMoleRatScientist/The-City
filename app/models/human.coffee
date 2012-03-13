@@ -17,7 +17,7 @@ class Human extends Unit
         choice = choices[random_number(choices.length)]
         this.set_move(choice.x,choice.y)
       when "move_to_source"
-        object = @job.nearest
+        object = @job.find_nearest(map)
         if object == null
           @job = null
           @queue = []
