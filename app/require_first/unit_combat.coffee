@@ -8,14 +8,14 @@ class unitCombat
         return
       @target = list[random_number(list.length)]
   damage: (unit) ->
-    part = random_number(@body.parts.length)
-    damage = @body.parts[part].interact()
+    part = random_number(@unit.body.parts.length)
+    damage = @unit.body.parts[part].interact()
     object = (actors: [unit.name,this.name], part: damage.part, type: damage.type, cause: damage.cause, special: null, action: "strike", protect: damage.protect)
     switch(damage.type)
       when 1
-        @body.death = 1
+        @unit.body.death = 1
       when 2
-        switch @body.update_ability(damage.damage)
+        switch @unit.body.update_ability(damage.damage)
           when "hand"
             object.special = 0
           when "hand_destroy"
