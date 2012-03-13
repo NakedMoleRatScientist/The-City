@@ -1,0 +1,2 @@
+class unitCombat
+  constructor: () ->
