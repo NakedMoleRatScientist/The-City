@@ -1,2 +1,2 @@
 class unitCombat
-  constructor: () ->
+  constructor: (@unit) ->
