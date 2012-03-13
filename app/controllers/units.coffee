@@ -15,12 +15,12 @@ class Units
       if @frame % unit.agility == 0
         unit.set_action(@map,this)
         unit.combat.detect(this)
-        @msg_manager.determine_combat_msg(unit.attack())
+        @msg_manager.determine_combat_msg(unit.combat.attack())
         unit.move(@finder)
     if @frame % 1000 == 0
       if @map.items_total() > 50 && random_number(5) == 0
         this.generate_boars()
-    @msg_manager.combat_death(unit.nullify_target()) for unit in @units
+    @msg_manager.combat_death(unit.combat.nullify_target()) for unit in @units
     @frame += 1
   clean: () ->
     for unit in @units
