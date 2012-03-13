@@ -11,7 +11,11 @@ class timberStock extends Stockpile
     @target = null
     @jobs.push(new Job(["find", "cut_down"]))
   get_type: () ->
-    1
+    i = 0
+    for j in @jobs
+      if j.assigned == 0
+        return i
+      i += 1
   find_nearest_cut: (map) ->
     @targets = map.trees.concat(map.logs)
     unless @targets.length == 0
