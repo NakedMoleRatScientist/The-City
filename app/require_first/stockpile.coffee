@@ -7,9 +7,13 @@ class Stockpile
     @jobs = []
     @jobs.push(new Job(["move_to_source","gather_item","move_to_drop","drop_item"]))
   check_assign: () ->
-    if @persons.length == 0
-      return false
-    return true
+    n = 0
+    for j in @jobs
+      if j.assigned.length > 0
+        n += 1
+    if n == @jobs.length
+      return true
+    false
   create_drop: (map) ->
     locations = map.free_locations(@x,@y,2)
     if locations.length == 0
