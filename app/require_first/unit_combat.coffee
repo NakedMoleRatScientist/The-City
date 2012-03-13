@@ -34,7 +34,7 @@ class unitCombat
 
   attack: () ->
     return -1 if @target == null
-    if this.is_next_to_target() && @body.hand != 2
+    if this.is_next_to_target() && @unit.body.hand != 2
       if @target.stance == 1
         @target.target = this
       action = this.counteraction(@target)
@@ -67,6 +67,7 @@ class unitCombat
     return false
   determine_direction: () ->
     goal = nearest_object(@unit,approachesList(@target))
+    console.log("SET DIRECTION")
     @unit.set_move(goal.x,goal.y)
   nullify_target: () ->
     return false if @target == null
