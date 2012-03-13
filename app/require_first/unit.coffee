@@ -63,9 +63,6 @@ class Unit
       @order += 1
     if @order == @queue.length
       @order = 0
-  determine_direction: () ->
-    goal = nearest_object(this,approachesList(@target))
-    this.set_move(goal.x,goal.y)
   nullify_target: () ->
     return false if @target == null
     data = (actors: [this.name,@target.name], action: null)

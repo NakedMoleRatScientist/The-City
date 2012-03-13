@@ -65,3 +65,6 @@ class unitCombat
     if distance_between_two_points(this,@target) == 1
       return true
     return false
+  determine_direction: () ->
+    goal = nearest_object(@unit,approachesList(@target))
+    @unit.set_move(goal.x,goal.y)
