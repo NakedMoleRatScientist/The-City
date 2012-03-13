@@ -29,7 +29,7 @@ class unitCombat
     act = random_number(6)
     for i in [0..2]
       if act == i
-        return @target.dodge(this)
+        return @target.dodge(@unit)
     return false
 
   attack: () ->
