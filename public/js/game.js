@@ -1934,6 +1934,7 @@
       this.kills = [];
       this.inventory = [];
       this.job = null;
+      this.queue_type = null;
       this.queue = [];
       this.order = null;
       this.perform = null;
@@ -1946,8 +1947,9 @@
 
     Unit.prototype.set_job = function(job) {
       this.job = job;
-      this.queue = job.jobs[job.get_type()].orders;
-      return this.job.jobs[job.get_type()].assigned.push(this);
+      this.queue_type = job.get_type();
+      this.queue = job.jobs[this.queue_type].orders;
+      return this.job.jobs[this.queue_type].assigned.push(this);
     };
 
     Unit.prototype.set_move = function(x, y) {
@@ -2062,6 +2064,11 @@
           map.sketch.create("timber", location.x, location.y);
           return this.drop = map.select_by_name('timber', location.x, location.y);
       }
+    };
+
+    Stockpile.prototype.find_nearest = function(map, name) {
+      this.nearest = nearest_object(newpoint, map.decide_list(name));
+      return this.nearest;
     };
 
     Stockpile.prototype.get_drop_location = function(map) {
@@ -2719,7 +2726,6 @@
       newpoint = this.decide_stock(mouse, x, y);
       if (!(this.map.stockpoints_collision_detect(newpoint) === true || this.map.collide_check(x, y) === true)) {
         this.map.map[y][x].push(newpoint);
-        newpoint.nearest = nearest_object(newpoint, this.map.decide_list(mouse.build));
         return this.map.stockpoints.push(newpoint);
       }
     };
@@ -2870,7 +2876,7 @@
           choice = choices[random_number(choices.length)];
           return this.set_move(choice.x, choice.y);
         case "move_to_source":
-          object = this.job.nearest;
+          object = this.job.find_nearest(map);
           if (object === null) {
             this.job = null;
             this.queue = [];
@@ -2914,7 +2920,7 @@
     Human.prototype.set_action = function(map) {
       if (this.act_on_queue()) return;
       if (this.body.hand === 2) return;
-      switch (this.job.get_type()) {
+      switch (this.queue_type) {
         case 0:
           this.gather_action(map);
           break;
@@ -2936,6 +2942,7 @@
       CrystalStock.__super__.constructor.call(this, x, y);
       this.name = "crystal_stockpile";
       this.store = "crystal";
+      this.jobs[0].find = this.store;
       this.priority = 4;
       this.diameter = 5;
       this.size = 10;
@@ -3377,6 +3384,7 @@
     function Job(orders) {
       this.orders = orders;
       this.assigned = [];
+      this.find = null;
     }
 
     return Job;
