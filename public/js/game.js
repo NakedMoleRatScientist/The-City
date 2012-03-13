@@ -1803,7 +1803,7 @@
       part = random_number(this.unit.body.parts.length);
       damage = this.unit.body.parts[part].interact();
       object = {
-        actors: [unit.name, this.name],
+        actors: [unit.name, this.unit.name],
         part: damage.part,
         type: damage.type,
         cause: damage.cause,
@@ -1838,7 +1838,7 @@
       this.target = target;
       act = random_number(6);
       for (i = 0; i <= 2; i++) {
-        if (act === i) return this.target.dodge(this.unit);
+        if (act === i) return this.target.combat.dodge(this.unit);
       }
       return false;
     };
@@ -1847,12 +1847,12 @@
       var action;
       if (this.target === null) return -1;
       if (this.is_next_to_target() && this.unit.body.hand !== 2) {
-        if (this.target.stance === 1) this.target.target = this;
+        if (this.target.stance === 1) this.target.combat.target = this.unit;
         action = this.counteraction(this.target);
         if (action === false) {
-          return [this.target.damage(this)];
+          return [this.target.combat.damage(this.unit)];
         } else if (action.ability === false) {
-          return [action, this.target.damage(this)];
+          return [action, this.target.combat.damage(this.unit)];
         }
         return [action];
       } else {
@@ -1886,14 +1886,13 @@
     };
 
     unitCombat.prototype.is_next_to_target = function() {
-      if (distance_between_two_points(this, this.target) === 1) return true;
+      if (distance_between_two_points(this.unit, this.target) === 1) return true;
       return false;
     };
 
     unitCombat.prototype.determine_direction = function() {
       var goal;
       goal = nearest_object(this.unit, approachesList(this.target));
-      console.log("SET DIRECTION");
       return this.unit.set_move(goal.x, goal.y);
     };
 
@@ -1905,7 +1904,7 @@
         action: null
       };
       if (this.target.body.check_death() === true) {
-        this.kills.push(this.target.name);
+        this.unit.kills.push(this.target.name);
         this.target = null;
         data.action = "killed";
         return data;
@@ -3512,7 +3511,7 @@
   combat = function(units, map) {
     units.create(new Human(10, 10, "Miya", 1));
     units.create(new Human(10, 20, "John", 0));
-    units.units[0].target = units.units[1];
+    units.units[0].combat.target = units.units[1];
     return units.units[1].stance = 1;
   };
 
