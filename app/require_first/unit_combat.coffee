@@ -61,3 +61,7 @@ class unitCombat
           @unit.y = choice.y
           break
     return (actors: [@unit.name,target.name], action: "dodge", ability: ability)
+  is_next_to_target: () ->
+    if distance_between_two_points(this,@target) == 1
+      return true
+    return false
