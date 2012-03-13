@@ -24,7 +24,7 @@ class Unit
   set_job: (job) ->
     @job = job
     @queue = job.jobs[job.get_type()].orders
-    job.assigned.push(this)
+    @job.jobs[job.get_type()].assigned.push(this)
   set_move: (x,y) ->
     @goal_x = x
     @goal_y = y
