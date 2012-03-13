@@ -16,12 +16,6 @@ class Unit
     @stance = 0 #1 for assualt. 0 for ignore. 2 for dodging.
     @move_list = []
     @combat = new unitCombat(this)
-  auto_detect_target: (units) ->
-    if @target == null && @hostility == 0
-      list = units.hostile_filter(1)
-      if list.length == 0
-        return
-      @target = list[random_number(list.length)]
   set_job: (job) ->
     @job = job
     @queue = job.jobs[job.get_type()].orders
