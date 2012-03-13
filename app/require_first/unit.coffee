@@ -15,7 +15,7 @@ class Unit
     @advance = false
     @stance = 0 #1 for assualt. 0 for ignore. 2 for dodging.
     @move_list = []
-    @combat = new unitCombat()
+    @combat = new unitCombat(this)
   auto_detect_target: (units) ->
     if @target == null && @hostility == 0
       list = units.hostile_filter(1)
