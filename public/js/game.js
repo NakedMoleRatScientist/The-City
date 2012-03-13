@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, Collision, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, Item, Job, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Log, Map, MapDestinate, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timber, Timer, Torso, Tree, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, build_rect, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, cuttingDown, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, logDraw, mapDraw, mapViewer, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, timberDraw, timberStock, timberStockpileDraw, titleDraw, translateIntoDrawCoord, treeDraw, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw,
+  var Arm, Body, Camera, Collision, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, Item, Job, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Log, Map, MapDestinate, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timber, Timer, Torso, Tree, Unit, Units, Wall, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, build_rect, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, cuttingDown, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, logDraw, mapDraw, mapViewer, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, timberDraw, timberStock, timberStockpileDraw, titleDraw, translateIntoDrawCoord, treeDraw, unitCombat, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -1782,6 +1782,89 @@
 
   })();
 
+  unitCombat = (function() {
+
+    function unitCombat(unit) {
+      this.unit = unit;
+      this.target = null;
+    }
+
+    unitCombat.prototype.detect = function(units) {
+      var list;
+      if (this.target === null && this.unit.hostility === 0) {
+        list = units.hostile_filter(1);
+        if (list.length === 0) return;
+        return this.target = list[random_number(list.length)];
+      }
+    };
+
+    unitCombat.prototype.damage = function(unit) {
+      var damage, object, part;
+      part = random_number(this.unit.body.parts.length);
+      damage = this.unit.body.parts[part].interact();
+      object = {
+        actors: [unit.name, this.name],
+        part: damage.part,
+        type: damage.type,
+        cause: damage.cause,
+        special: null,
+        action: "strike",
+        protect: damage.protect
+      };
+      switch (damage.type) {
+        case 1:
+          this.unit.body.death = 1;
+          break;
+        case 2:
+          switch (this.unit.body.update_ability(damage.damage)) {
+            case "hand":
+              object.special = 0;
+              break;
+            case "hand_destroy":
+              object.special = 1;
+              break;
+            case "leg":
+              object.special = 2;
+              break;
+            case "leg_destroy":
+              object.special = 3;
+          }
+      }
+      return object;
+    };
+
+    unitCombat.prototype.counteraction = function(target) {
+      var act, i;
+      this.target = target;
+      act = random_number(6);
+      for (i = 0; i <= 2; i++) {
+        if (act === i) return this.target.dodge(this);
+      }
+      return false;
+    };
+
+    unitCombat.prototype.attack = function() {
+      var action;
+      if (this.target === null) return -1;
+      if (this.is_next_to_target() && this.body.hand !== 2) {
+        if (this.target.stance === 1) this.target.target = this;
+        action = this.counteraction(this.target);
+        if (action === false) {
+          return [this.target.damage(this)];
+        } else if (action.ability === false) {
+          return [action, this.target.damage(this)];
+        }
+        return [action];
+      } else {
+        this.determine_direction();
+      }
+      return -1;
+    };
+
+    return unitCombat;
+
+  })();
+
   Unit = (function() {
 
     function Unit(x, y, type, name, gender) {
@@ -1793,7 +1876,6 @@
       this.body = new Body(this.type);
       this.goal_x = this.x;
       this.goal_y = this.y;
-      this.target = null;
       this.kills = [];
       this.inventory = [];
       this.job = null;
@@ -1804,20 +1886,13 @@
       this.advance = false;
       this.stance = 0;
       this.move_list = [];
+      this.combat = new unitCombat(this);
     }
-
-    Unit.prototype.auto_detect_target = function(units) {
-      var list;
-      if (this.target === null && this.hostility === 0) {
-        list = units.hostile_filter(1);
-        if (list.length === 0) return;
-        return this.target = list[random_number(list.length)];
-      }
-    };
 
     Unit.prototype.set_job = function(job) {
       this.job = job;
-      return this.queue = job.jobs[job.get_type()].orders;
+      this.queue = job.jobs[job.get_type()].orders;
+      return this.job.jobs[job.get_type()].assigned.push(this);
     };
 
     Unit.prototype.set_move = function(x, y) {
@@ -1898,24 +1973,6 @@
       return this.set_move(goal.x, goal.y);
     };
 
-    Unit.prototype.attack = function() {
-      var action;
-      if (this.target === null) return -1;
-      if (this.is_next_to_target() && this.body.hand !== 2) {
-        if (this.target.stance === 1) this.target.target = this;
-        action = this.counteraction(this.target);
-        if (action === false) {
-          return [this.target.damage(this)];
-        } else if (action.ability === false) {
-          return [action, this.target.damage(this)];
-        }
-        return [action];
-      } else {
-        this.determine_direction();
-      }
-      return -1;
-    };
-
     Unit.prototype.nullify_target = function() {
       var data;
       if (this.target === null) return false;
@@ -1932,16 +1989,6 @@
         this.target = null;
         data.action = "escaped";
         return data;
-      }
-      return false;
-    };
-
-    Unit.prototype.counteraction = function(target) {
-      var act, i;
-      this.target = target;
-      act = random_number(6);
-      for (i = 0; i <= 2; i++) {
-        if (act === i) return this.target.dodge(this);
       }
       return false;
     };
@@ -1970,41 +2017,6 @@
       };
     };
 
-    Unit.prototype.damage = function(unit) {
-      var damage, object, part;
-      part = random_number(this.body.parts.length);
-      damage = this.body.parts[part].interact();
-      object = {
-        actors: [unit.name, this.name],
-        part: damage.part,
-        type: damage.type,
-        cause: damage.cause,
-        special: null,
-        action: "strike",
-        protect: damage.protect
-      };
-      switch (damage.type) {
-        case 1:
-          this.body.death = 1;
-          break;
-        case 2:
-          switch (this.body.update_ability(damage.damage)) {
-            case "hand":
-              object.special = 0;
-              break;
-            case "hand_destroy":
-              object.special = 1;
-              break;
-            case "leg":
-              object.special = 2;
-              break;
-            case "leg_destroy":
-              object.special = 3;
-          }
-      }
-      return object;
-    };
-
     return Unit;
 
   })();
@@ -2023,8 +2035,15 @@
     }
 
     Stockpile.prototype.check_assign = function() {
-      if (this.persons.length === 0) return false;
-      return true;
+      var j, n, _i, _len, _ref;
+      n = 0;
+      _ref = this.jobs;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        j = _ref[_i];
+        if (j.assigned.length > 0) n += 1;
+      }
+      if (n === this.jobs.length) return true;
+      return false;
     };
 
     Stockpile.prototype.create_drop = function(map) {
@@ -2251,7 +2270,14 @@
     }
 
     timberStock.prototype.get_type = function() {
-      return 1;
+      var i, j, _i, _len, _ref;
+      i = 0;
+      _ref = this.jobs;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        j = _ref[_i];
+        if (j.assigned.length === 0) return i;
+        i += 1;
+      }
     };
 
     timberStock.prototype.find_nearest_cut = function(map) {
@@ -3942,7 +3968,7 @@
         unit = _ref[_i];
         if (this.frame % unit.agility === 0) {
           unit.set_action(this.map, this);
-          unit.auto_detect_target(this);
+          unit.combat.detect(this);
           this.msg_manager.determine_combat_msg(unit.attack());
           unit.move(this.finder);
         }
