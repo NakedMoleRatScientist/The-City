@@ -1838,7 +1838,7 @@
       this.target = target;
       act = random_number(6);
       for (i = 0; i <= 2; i++) {
-        if (act === i) return this.target.dodge(this);
+        if (act === i) return this.target.dodge(this.unit);
       }
       return false;
     };
@@ -1846,7 +1846,7 @@
     unitCombat.prototype.attack = function() {
       var action;
       if (this.target === null) return -1;
-      if (this.is_next_to_target() && this.body.hand !== 2) {
+      if (this.is_next_to_target() && this.unit.body.hand !== 2) {
         if (this.target.stance === 1) this.target.target = this;
         action = this.counteraction(this.target);
         if (action === false) {
@@ -1859,6 +1859,62 @@
         this.determine_direction();
       }
       return -1;
+    };
+
+    unitCombat.prototype.dodge = function(target) {
+      var ability, choice, list, result;
+      list = approachesList(target);
+      result = nearest_object(this.unit, list);
+      if (this.unit.body.leg === 2) {
+        ability = false;
+      } else {
+        ability = true;
+        while (true) {
+          choice = list[random_number(list.length)];
+          if (choice.x !== result.x || choice.y !== result.y) {
+            this.unit.x = choice.x;
+            this.unit.y = choice.y;
+            break;
+          }
+        }
+      }
+      return {
+        actors: [this.unit.name, target.name],
+        action: "dodge",
+        ability: ability
+      };
+    };
+
+    unitCombat.prototype.is_next_to_target = function() {
+      if (distance_between_two_points(this, this.target) === 1) return true;
+      return false;
+    };
+
+    unitCombat.prototype.determine_direction = function() {
+      var goal;
+      goal = nearest_object(this.unit, approachesList(this.target));
+      console.log("SET DIRECTION");
+      return this.unit.set_move(goal.x, goal.y);
+    };
+
+    unitCombat.prototype.nullify_target = function() {
+      var data;
+      if (this.target === null) return false;
+      data = {
+        actors: [this.unit.name, this.target.name],
+        action: null
+      };
+      if (this.target.body.check_death() === true) {
+        this.kills.push(this.target.name);
+        this.target = null;
+        data.action = "killed";
+        return data;
+      } else if (this.target.leave === true) {
+        this.target = null;
+        data.action = "escaped";
+        return data;
+      }
+      return false;
     };
 
     return unitCombat;
@@ -1957,64 +2013,9 @@
     };
 
     Unit.prototype.next_order = function() {
-      if (this.advance === false || this.target !== null) return;
+      if (this.advance === false || this.combat.target !== null) return;
       if (this.order !== null) this.order += 1;
       if (this.order === this.queue.length) return this.order = 0;
-    };
-
-    Unit.prototype.is_next_to_target = function() {
-      if (distance_between_two_points(this, this.target) === 1) return true;
-      return false;
-    };
-
-    Unit.prototype.determine_direction = function() {
-      var goal;
-      goal = nearest_object(this, approachesList(this.target));
-      return this.set_move(goal.x, goal.y);
-    };
-
-    Unit.prototype.nullify_target = function() {
-      var data;
-      if (this.target === null) return false;
-      data = {
-        actors: [this.name, this.target.name],
-        action: null
-      };
-      if (this.target.body.check_death() === true) {
-        this.kills.push(this.target.name);
-        this.target = null;
-        data.action = "killed";
-        return data;
-      } else if (this.target.leave === true) {
-        this.target = null;
-        data.action = "escaped";
-        return data;
-      }
-      return false;
-    };
-
-    Unit.prototype.dodge = function(target) {
-      var ability, choice, list, result;
-      list = approachesList(target);
-      result = nearest_object(this, list);
-      if (this.body.leg === 2) {
-        ability = false;
-      } else {
-        ability = true;
-        while (true) {
-          choice = list[random_number(list.length)];
-          if (choice.x !== result.x || choice.y !== result.y) {
-            this.x = choice.x;
-            this.y = choice.y;
-            break;
-          }
-        }
-      }
-      return {
-        actors: [this.name, target.name],
-        action: "dodge",
-        ability: ability
-      };
     };
 
     return Unit;
@@ -3969,7 +3970,7 @@
         if (this.frame % unit.agility === 0) {
           unit.set_action(this.map, this);
           unit.combat.detect(this);
-          this.msg_manager.determine_combat_msg(unit.attack());
+          this.msg_manager.determine_combat_msg(unit.combat.attack());
           unit.move(this.finder);
         }
       }
@@ -3981,7 +3982,7 @@
       _ref2 = this.units;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
         unit = _ref2[_j];
-        this.msg_manager.combat_death(unit.nullify_target());
+        this.msg_manager.combat_death(unit.combat.nullify_target());
       }
       return this.frame += 1;
     };
