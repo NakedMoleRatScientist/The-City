@@ -14,7 +14,7 @@ class Units
     for unit in @units
       if @frame % unit.agility == 0
         unit.set_action(@map,this)
-        unit.auto_detect_target(this)
+        unit.combat.detect(this)
         @msg_manager.determine_combat_msg(unit.attack())
         unit.move(@finder)
     if @frame % 1000 == 0
