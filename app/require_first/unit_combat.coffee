@@ -67,7 +67,6 @@ class unitCombat
     return false
   determine_direction: () ->
     goal = nearest_object(@unit,approachesList(@target))
-    console.log("SET DIRECTION")
     @unit.set_move(goal.x,goal.y)
   nullify_target: () ->
     return false if @target == null
