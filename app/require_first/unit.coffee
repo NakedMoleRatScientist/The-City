@@ -83,17 +83,3 @@ class Unit
       data.action = "escaped"
       return data
     return false
-  dodge: (target) ->
-    list = approachesList(target)
-    result = nearest_object(this,list)
-    if this.body.leg == 2
-      ability = false
-    else
-      ability = true
-      loop
-        choice = list[random_number(list.length)]
-        if choice.x != result.x || choice.y != result.y
-          @x = choice.x
-          @y = choice.y
-          break
-    return (actors: [this.name,target.name], action: "dodge", ability: ability)

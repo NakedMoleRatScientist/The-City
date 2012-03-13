@@ -47,3 +47,17 @@ class unitCombat
     else
       this.determine_direction()
     return -1
+  dodge: (target) ->
+    list = approachesList(target)
+    result = nearest_object(@unit,list)
+    if @unit.body.leg == 2
+      ability = false
+    else
+      ability = true
+      loop
+        choice = list[random_number(list.length)]
+        if choice.x != result.x || choice.y != result.y
+          @unit.x = choice.x
+          @unit.y = choice.y
+          break
+    return (actors: [@unit.name,target.name], action: "dodge", ability: ability)
