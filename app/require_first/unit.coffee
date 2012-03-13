@@ -83,12 +83,6 @@ class Unit
       data.action = "escaped"
       return data
     return false
-  counteraction: (@target) ->
-    act = random_number(6)
-    for i in [0..2]
-      if act == i
-        return @target.dodge(this)
-    return false
   dodge: (target) ->
     list = approachesList(target)
     result = nearest_object(this,list)

@@ -25,6 +25,13 @@ class unitCombat
           when "leg_destroy"
             object.special = 3
     return object
+  counteraction: (@target) ->
+    act = random_number(6)
+    for i in [0..2]
+      if act == i
+        return @target.dodge(this)
+    return false
+
   attack: () ->
     return -1 if @target == null
     if this.is_next_to_target() && @body.hand != 2
