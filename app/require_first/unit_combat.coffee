@@ -40,9 +40,9 @@ class unitCombat
       action = this.counteraction(@target)
       if action == false
 #        @target.target = this if @target.target == null
-        return [@target.damage(this)]
+        return [@target.combat.damage(@unit)]
       else if action.ability == false
-        return [action,@target.damage(this)]
+        return [action,@target.combat.damage(@unit)]
       return [action]
     else
       this.determine_direction()
