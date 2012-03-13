@@ -36,7 +36,7 @@ class unitCombat
     return -1 if @target == null
     if this.is_next_to_target() && @unit.body.hand != 2
       if @target.stance == 1
-        @target.target = @unit
+        @target.combat.target = @unit
       action = this.counteraction(@target)
       if action == false
         return [@target.combat.damage(@unit)]
