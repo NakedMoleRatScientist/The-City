@@ -13,7 +13,7 @@ class timberStock extends Stockpile
   get_type: () ->
     i = 0
     for j in @jobs
-      if j.assigned == 0
+      if j.assigned.length == 0
         return i
       i += 1
   find_nearest_cut: (map) ->
