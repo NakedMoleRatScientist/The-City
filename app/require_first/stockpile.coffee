@@ -28,6 +28,7 @@ class Stockpile
         map.sketch.create("timber",location.x,location.y)
         @drop = map.select_by_name('timber',location.x,location.y)
   find_nearest: (map,name) ->
+    @nearest = nearest_object(newpoint,map.decide_list(name))
     return @nearest
 
   get_drop_location: (map) ->
