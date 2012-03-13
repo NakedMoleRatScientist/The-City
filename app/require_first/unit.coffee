@@ -7,6 +7,7 @@ class Unit
     @kills = []
     @inventory = []
     @job = null
+    @queue_type = null
     @queue = []
     @order = null
     @perform = null
@@ -17,8 +18,9 @@ class Unit
     @combat = new unitCombat(this)
   set_job: (job) ->
     @job = job
-    @queue = job.jobs[job.get_type()].orders
-    @job.jobs[job.get_type()].assigned.push(this)
+    @queue_type = job.get_type()
+    @queue = job.jobs[@queue_type].orders
+    @job.jobs[@queue_type].assigned.push(this)
   set_move: (x,y) ->
     @goal_x = x
     @goal_y = y
