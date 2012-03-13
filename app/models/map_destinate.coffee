@@ -14,5 +14,4 @@ class MapDestinate
     newpoint = this.decide_stock(mouse,x,y)
     unless @map.stockpoints_collision_detect(newpoint) == true || @map.collide_check(x,y) == true
       @map.map[y][x].push(newpoint)
-      newpoint.nearest = nearest_object(newpoint,@map.decide_list(mouse.build))
       @map.stockpoints.push(newpoint)
