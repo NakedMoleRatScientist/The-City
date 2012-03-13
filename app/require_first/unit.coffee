@@ -57,7 +57,7 @@ class Unit
       @move_list.pop()
 
   next_order: () ->
-    if @advance == false || @target != null
+    if @advance == false || @combat.target != null
       return
     if @order != null
       @order += 1
