@@ -25,3 +25,18 @@ class unitCombat
           when "leg_destroy"
             object.special = 3
     return object
+  attack: () ->
+    return -1 if @target == null
+    if this.is_next_to_target() && @body.hand != 2
+      if @target.stance == 1
+        @target.target = this
+      action = this.counteraction(@target)
+      if action == false
+#        @target.target = this if @target.target == null
+        return [@target.damage(this)]
+      else if action.ability == false
+        return [action,@target.damage(this)]
+      return [action]
+    else
+      this.determine_direction()
+    return -1
