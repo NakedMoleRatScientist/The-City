@@ -68,3 +68,16 @@ class unitCombat
   determine_direction: () ->
     goal = nearest_object(@unit,approachesList(@target))
     @unit.set_move(goal.x,goal.y)
+  nullify_target: () ->
+    return false if @target == null
+    data = (actors: [this.name,@target.name], action: null)
+    if @target.body.check_death() == true
+      @kills.push(@target.name)
+      @target = null
+      data.action = "killed"
+      return data
+    else if @target.leave == true
+      @target = null
+      data.action = "escaped"
+      return data
+    return false
