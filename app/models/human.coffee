@@ -58,6 +58,6 @@ class Human extends Unit
       when 0
         status = this.gather_action(map)
       when 1
-        status =this.cut_action(map)
+        status = this.cut_action(map)
     if status == true
       @perform = @order
