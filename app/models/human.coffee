@@ -12,7 +12,7 @@ class Human extends Unit
           @job = null
           @queue = []
           @perform = null
-          return
+          return false
         choices = map.free_locations(object.x,object.y,1)
         choice = choices[random_number(choices.length)]
         this.set_move(choice.x,choice.y)
@@ -20,12 +20,12 @@ class Human extends Unit
         object = @job.find_nearest(map,"timber")
         if object == null
           if map.trees.length != 0
-            return
+            return false
           else
             @job = null
             @queue = []
             @perform = null
-          return
+          return false
         choices = map.free_locations(object.x,object.y,1)
         choice = choices[random_number(choices.length)]
         this.set_move(choice.x,choice.y)
