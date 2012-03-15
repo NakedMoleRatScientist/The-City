@@ -53,10 +53,6 @@ class Map
       if m.name == name
         return m
     false
-  propose_drop: (x,y) ->
-    if @collision.check_length(x,y) || (!@collision.inbound(x,y) && !@collision.check_occupancy(x,y))
-      return true
-    false
   free_locations: (x,y,size) ->
     end_x = x + size
     begin_x = x - size
