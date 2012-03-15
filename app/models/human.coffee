@@ -20,7 +20,7 @@ class Human extends Unit
         @advance = true
         object = @job.find_nearest(map,"timber")
         if object == null
-          if map.trees.length != 0
+          if map.trees.length != 0 || map.logs.length != 0
             @advance = false
             return false
           else
