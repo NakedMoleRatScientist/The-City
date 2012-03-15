@@ -20,7 +20,7 @@ class Collision
     return true if rect_to_many_rect_collision(individual,@collide) == true
     false
   check_occupancy: (x,y) ->
-    for m in @map[y][x]
+    for m in @map.map[y][x]
       return true if m.collide() == true
     false
   check_length: (x,y) ->
