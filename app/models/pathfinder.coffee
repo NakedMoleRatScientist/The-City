@@ -5,7 +5,7 @@ class Pathfinder
     for x  in [(location.x - 1)..(location.x + 1)]
       for y in [(location.y - 1)..(location.y + 1)]
         if !(x == location.x && y == location.y)
-          if !@map.collision.propose_drop(x,y) #check if point is suitable
+          if @map.collision.propose_drop(x,y) #check if point is suitable
             now = (x: x, y: y, parent: null, g: 0, f: 0, h: 0 )
             results.push(now)
     results
