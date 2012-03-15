@@ -76,9 +76,8 @@ class Map
         y += 1
         if y > end_y
           break
-      if @collision.inbound(x,y) == true
-        if this.propose_drop(x,y) != false
-          locations.push((x: x,y: y))
+      if @collision.inbound(x,y) == true && this.propose_drop(x,y) != false
+        locations.push((x: x,y: y))
       x += 1
     return locations
   acquire: (x,y) ->
