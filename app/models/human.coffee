@@ -19,9 +19,12 @@ class Human extends Unit
       when "move_to_source"
         object = @job.find_nearest(map,"timber")
         if object == null
-          @job = null
-          @queue = []
-          @perform = null
+          if map.trees.length != 0
+            return
+          else
+            @job = null
+            @queue = []
+            @perform = null
           return
         choices = map.free_locations(object.x,object.y,1)
         choice = choices[random_number(choices.length)]
