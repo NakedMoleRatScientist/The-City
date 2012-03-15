@@ -12,6 +12,6 @@ class MapDestinate
     return if x < 2 || x > 97
     return if y < 2 || y > 97
     newpoint = this.decide_stock(mouse,x,y)
-    unless @map.stockpoints_collision_detect(newpoint) == true || @map.collision.propose_drop(x,y) == true
+    unless @map.stockpoints_collision_detect(newpoint) == true || @map.collision.propose_drop(x,y) == false
       @map.map[y][x].push(newpoint)
       @map.stockpoints.push(newpoint)
