@@ -19,8 +19,8 @@ class Pathfinder
       i += 1
     false
   calculate_path: (start,goal) ->
-    if @map.collision.propose_drop(goal.x,goal.y)
-      console.log("Location is unwalkable!")
+    unless @map.collision.propose_drop(goal.x,goal.y)
+b      console.log("Location is unwalkable!")
       return false
     start.g = 0
     start.h = distance_between_two_points(start,goal)
