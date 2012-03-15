@@ -17,9 +17,11 @@ class Human extends Unit
         choice = choices[random_number(choices.length)]
         this.set_move(choice.x,choice.y)
       when "move_to_source"
+        @advance = true
         object = @job.find_nearest(map,"timber")
         if object == null
           if map.trees.length != 0
+            @advance = false
             return false
           else
             @job = null
