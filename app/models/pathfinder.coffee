@@ -19,7 +19,7 @@ class Pathfinder
       i += 1
     false
   calculate_path: (start,goal) ->
-    if @map.collide_check(goal.x,goal.y)
+    if @map.collision.propose_drop(goal.x,goal.y)
       console.log("Location is unwalkable!")
       return false
     start.g = 0
