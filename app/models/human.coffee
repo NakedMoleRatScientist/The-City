@@ -34,6 +34,7 @@ class Human extends Unit
       when "drop_item"
         this.drop_item(@job.store)
         map.drop_item(@job.drop.x,@job.drop.y,@job.store)
+    true
   cut_action: (map) ->
     switch(@queue[@order])
       when "find"
@@ -54,7 +55,7 @@ class Human extends Unit
     return if @body.hand == 2
     switch (@queue_type)
       when 0
-        this.gather_action(map)
+        status = this.gather_action(map)
       when 1
-        this.cut_action(map)
+        status =this.cut_action(map)
     @perform = @order
