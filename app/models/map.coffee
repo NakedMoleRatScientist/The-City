@@ -41,12 +41,6 @@ class Map
     return false if !@collision.inbound(rect.x + rect.width,rect.y)
     return false if !@collision.inbound(rect.x,rect.y + rect.y + rect.height)
     true
-  collide_check: (x,y) ->
-    if @collision.inbound(x,y) == false
-      return true
-    for m in @map[y][x]
-      return true if m.collide() == true
-    false
 
   stockpoints_collision_detect: (newpoint) ->
     return false if @stockpoints.length == 0
