@@ -61,8 +61,8 @@ class Map
     false
   propose_drop: (x,y) ->
     if @collision.check_length(x,y) || (!@collision.inbound(x,y) && !@collision.check_occupancy(x,y))
-      return (x: x, y: y)
-    return false
+      return true
+    false
   free_locations: (x,y,size) ->
     end_x = x + size
     begin_x = x - size
@@ -76,7 +76,7 @@ class Map
         y += 1
         if y > end_y
           break
-      if @collision.inbound(x,y) == true && this.propose_drop(x,y) != false
+      if this.propose_drop(x,y) != false
         locations.push((x: x,y: y))
       x += 1
     return locations
