@@ -60,7 +60,7 @@ class Map
         return m
     false
   propose_drop: (x,y) ->
-    if @map[y][x].length == 0 || this.collide_check(x,y) == false
+    if @collision.check_length(x,y) || (!@collision.inbound(x,y) && !@collision.check_occupancy(x,y))
       return (x: x, y: y)
     return false
   free_locations: (x,y,size) ->
