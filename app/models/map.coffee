@@ -98,3 +98,5 @@ class Map
         return @crystalTrees
       when "log"
         return @logs
+      when "timber"
+        return @timbers
