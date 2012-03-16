@@ -1,6 +1,6 @@
 class Item
   constructor: (@x,@y) ->
-    @items = 0
+    @items = 1
     @background = null
     @stack = 0
   collide: () ->
