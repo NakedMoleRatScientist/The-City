@@ -168,10 +168,12 @@
     return _results;
   };
 
-  pointToRectCollision = function(rect_one, rect_two) {
-    var x, y;
-    x = rect_one.x >= rect_two.x && rect_one.x <= rect_two.x + rect_two.width;
-    y = rect_one.y >= rect_two.y && rect_one.y <= rect_two.y + rect_two.height;
+  pointToRectCollision = function(compare, against) {
+    var height, width, x, y;
+    width = against.x + against.width;
+    height = against.y + against.height;
+    x = compare.x >= against.x && compare.x <= width;
+    y = compare.y >= against.y && compare.y <= height;
     if (x && y) return true;
     return false;
   };
@@ -2032,6 +2034,8 @@
       this.nearest = null;
       this.drop = null;
       this.finish = false;
+      this.width = 4;
+      this.height = 4;
       this.jobs = [];
       this.jobs.push(new Job(["move_to_source", "gather_item", "move_to_drop", "drop_item"]));
     }
@@ -2046,6 +2050,15 @@
       }
       if (n === this.jobs.length) return true;
       return false;
+    };
+
+    Stockpile.prototype.rect = function() {
+      return {
+        x: this.x - 2,
+        y: this.y,
+        width: this.width,
+        height: this.hieght
+      };
     };
 
     Stockpile.prototype.create_drop = function(map) {
@@ -2068,7 +2081,7 @@
 
     Stockpile.prototype.find_nearest = function(map, name) {
       var list;
-      list = map.dest.exclude(map.decide_list(name));
+      list = map.dest.exclude(map.decide_list(name), this);
       this.nearest = nearest_object(this, list);
       return this.nearest;
     };
@@ -2272,8 +2285,6 @@
       this.priority = 4;
       this.diameter = 5;
       this.size = 10;
-      this.width = 4;
-      this.height = 4;
       this.queue = false;
       this.times = 24;
       this.target = null;
@@ -2734,13 +2745,13 @@
       }
     };
 
-    MapDestinate.prototype.exclude = function(list) {
+    MapDestinate.prototype.exclude = function(list, stockpile) {
       var l, new_list, _i, _len;
       new_list = [];
       console.log("original " + list.length);
       for (_i = 0, _len = list.length; _i < _len; _i++) {
         l = list[_i];
-        if (pointToRectCollision(l, this)) new_list.push(l);
+        if (pointToRectCollision(l, stockpile.rect()) === false) new_list.push(l);
       }
       console.log("now " + new_list.length);
       return new_list;
