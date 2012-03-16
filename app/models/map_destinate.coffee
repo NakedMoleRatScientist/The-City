@@ -19,7 +19,7 @@ class MapDestinate
     new_list = []
     console.log("original " + list.length)
     for l in list
-      if pointToRectCollision(l,stockpile.rect())
+      if pointToRectCollision(l,stockpile.rect()) == false
         new_list.push(l)
     console.log("now " + new_list.length)
     new_list
