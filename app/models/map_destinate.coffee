@@ -15,9 +15,11 @@ class MapDestinate
     unless @map.stockpoints_collision_detect(newpoint) == true || @map.collision.propose_drop(x,y) == false
       @map.map[y][x].push(newpoint)
       @map.stockpoints.push(newpoint)
-  exclude: (list) ->
+  exclude: (list,stockpile) ->
     new_list = []
+    console.log("original " + list.length)
     for l in list
-      if !(pointToRectCollision(l,this))
+      if pointToRectCollision(l,stockpile)
         new_list.push(l)
+    console.log("now " + new_list.length)
     new_list
