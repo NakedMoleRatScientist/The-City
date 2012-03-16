@@ -2078,10 +2078,17 @@
       return this.nearest;
     };
 
+    Stockpile.prototype.delete_nearest_if_empty = function(map) {
+      if (this.nearest.items === 0) {
+        map.sketch["delete"](this.nearest.x, this.nearest.y, this.nearest.name);
+        return map.sketch.delete_type(this.nearest.x, this.nearest.y, this.nearest.name);
+      }
+    };
+
     Stockpile.prototype.get_drop_location = function(map) {
       if (this.drop === null) {
         if (this.create_drop(map) === false) return false;
-      } else if (this.drop.fullness() === true) {
+      } else if (map.select_by_name(this.store, this.drop.x, this.drop.y).fullness() === true) {
         if (this.create_drop(map) === false) return false;
       }
       return this.drop;
@@ -2913,6 +2920,7 @@
           break;
         case "gather_item":
           this.acquire_item(this.job.nearest.acquire());
+          this.job.delete_nearest_if_empty(map);
           break;
         case "drop_item":
           this.drop_item(this.job.store);
@@ -3143,7 +3151,11 @@
           return true;
         }
       }
-      this.sketch.create(this.store, x, y);
+      this.redraw.push({
+        x: x,
+        y: y
+      });
+      this.sketch.create(item, x, y);
       return true;
     };
 
