@@ -17,7 +17,7 @@ class Stockpile
       return true
     false
   rect: () ->
-    return (x: @x - 2,y: @y, width: @width, height: @hieght)
+    return (x: @x - 2,y: @y - 2, width: @width, height: @height)
   create_drop: (map) ->
     locations = map.free_locations(@x,@y,2)
     if locations.length == 0
