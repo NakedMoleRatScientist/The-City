@@ -2,6 +2,8 @@ class FloatingMsgs
   constructor: () ->
     @msgs = []
   create: (msg,time,x,y) ->
+    x *= 20
+    y *= 20
     @msgs.push new FloatText(msg,time,x,y)
   draw: (p5) ->
     for m in @msgs
