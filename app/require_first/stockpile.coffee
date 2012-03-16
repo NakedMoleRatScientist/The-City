@@ -28,7 +28,10 @@ class Stockpile
     list = map.dest.exclude(map.decide_list(name),this)
     @nearest = nearest_object(this,list)
     return @nearest
-
+  delete_nearest_if_empty: () ->
+    if @nearest.items == 0
+      @map.sketch.delete(@nearest.x,@nearest.y,@nearest.name)
+      @map.sketch.delete_type(@nearest.x,@nearest.y,@nearest.name)
   get_drop_location: (map) ->
     if @drop == null
       if this.create_drop(map) == false
