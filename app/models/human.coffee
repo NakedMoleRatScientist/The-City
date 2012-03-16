@@ -52,7 +52,7 @@ class Human extends Unit
         this.set_move(choice.x,choice.y)
       when "cut_down"
         @advance = false
-        if @target.cut() == true
+        if @job.target.cut() == true
           @advance = true
           direction = (x: -1, y: 0)
           map.sketch.cut_down(@job.target.x,@job.target.y,direction)
