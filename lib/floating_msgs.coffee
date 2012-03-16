@@ -6,6 +6,7 @@ class FloatingMsgs
     y *= 20
     @msgs.push new FloatText(msg,time,x,y)
   draw: (p5) ->
+    dirty = []
     for m in @msgs
       p5.text(m,m.x,m.y)
       m.x += m.dir.x * 20
