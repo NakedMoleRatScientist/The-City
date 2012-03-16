@@ -17,9 +17,7 @@ class MapDestinate
       @map.stockpoints.push(newpoint)
   exclude: (list,stockpile) ->
     new_list = []
-    console.log("original " + list.length)
     for l in list
       if pointToRectCollision(l,stockpile.rect()) == false
         new_list.push(l)
-    console.log("now " + new_list.length)
     new_list
