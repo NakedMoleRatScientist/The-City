@@ -1,2 +1,2 @@
 class floatText
-  constructor: (@msg,@time,@x,@y)
+  constructor: (@msg,@time,@x,@y,@dir) ->
