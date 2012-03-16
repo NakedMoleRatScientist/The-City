@@ -34,6 +34,7 @@ class Map
         if m.increase() == false
           return false
         return true
+    @redraw.push(x: x, y: y)
     @sketch.create(item,x,y)
     true
   new_object: (x,y) ->
