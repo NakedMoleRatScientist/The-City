@@ -14,6 +14,8 @@ class Stockpile
     if n == @jobs.length
       return true
     false
+  rect: () ->
+    return (x: @x - 2,y: @y, width: @width, height: @hieght)
   create_drop: (map) ->
     locations = map.free_locations(@x,@y,2)
     if locations.length == 0
