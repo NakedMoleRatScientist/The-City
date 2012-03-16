@@ -35,6 +35,7 @@ class Map
           return false
         return true
     map.sketch.create(@store,x,y)
+    true
   new_object: (x,y) ->
     @redraw.push(x: x, y: y)
   rect_inbound: (rect) ->
