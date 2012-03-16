@@ -28,7 +28,7 @@ class Stockpile
         map.sketch.create("timber",location.x,location.y)
         @drop = map.select_by_name('timber',location.x,location.y)
   find_nearest: (map,name) ->
-    list = map.dest.exclude(map.decide_list(name))
+    list = map.dest.exclude(map.decide_list(name),this)
     @nearest = nearest_object(this,list)
     return @nearest
 
