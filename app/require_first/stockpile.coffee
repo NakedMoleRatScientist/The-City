@@ -23,12 +23,7 @@ class Stockpile
     if locations.length == 0
       @finish = true
       return false
-    location = nearest_object(this,locations)
-    switch(@store)
-      when "crystal"
-        @drop = location
-      when "timber"
-        @drop = location
+    @drop = nearest_object(this,locations)
   find_nearest: (map,name) ->
     list = map.dest.exclude(map.decide_list(name),this)
     @nearest = nearest_object(this,list)
