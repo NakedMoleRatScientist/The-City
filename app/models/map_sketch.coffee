@@ -60,6 +60,7 @@ class MapSketch
       object = @map.select_by_name("log",x,y)
     else
       object = tree
+    map.redraw.push(x: x, y: y)
     this.delete(x,y,object.name)
     this.delete_type(x,y,object.name)
     if object.name == "log"
