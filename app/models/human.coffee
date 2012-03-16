@@ -33,7 +33,7 @@ class Human extends Unit
         this.set_move(choice.x,choice.y)
       when "gather_item"
         this.acquire_item(@job.nearest.acquire())
-        @job.delete_nearest_if_empty()
+        @job.delete_nearest_if_empty(map)
       when "drop_item"
         this.drop_item(@job.store)
         map.drop_item(@job.drop.x,@job.drop.y,@job.store)
