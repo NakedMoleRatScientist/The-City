@@ -2029,6 +2029,10 @@
 
     function Wood() {}
 
+    Wood.prototype.collide = function() {
+      return true;
+    };
+
     Wood.prototype.cut = function() {
       this.cuts_needed -= 1;
       if (this.cuts_needed === 0) return true;
@@ -2158,14 +2162,6 @@
       this.name = "log";
       this.cuts_needed = 2;
     }
-
-    Log.prototype.collide = function() {
-      return true;
-    };
-
-    Log.prototype.action = function() {
-      return "cut_down";
-    };
 
     return Log;
 
@@ -2966,11 +2962,15 @@
           this.set_move(choice.x, choice.y);
           break;
         case "cut_down":
-          direction = {
-            x: -1,
-            y: 0
-          };
-          map.sketch.cut_down(this.job.target.x, this.job.target.y, direction);
+          this.advance = false;
+          if (this.job.target.cut() === true) {
+            this.advance = true;
+            direction = {
+              x: -1,
+              y: 0
+            };
+            map.sketch.cut_down(this.job.target.x, this.job.target.y, direction);
+          }
       }
       return true;
     };
@@ -3286,14 +3286,6 @@
       this.name = "tree";
       this.cuts_needed = 10;
     }
-
-    Tree.prototype.collide = function() {
-      return true;
-    };
-
-    Tree.prototype.action = function() {
-      return "cut_down";
-    };
 
     return Tree;
 
