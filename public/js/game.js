@@ -2055,28 +2055,20 @@
     Stockpile.prototype.rect = function() {
       return {
         x: this.x - 2,
-        y: this.y,
+        y: this.y - 2,
         width: this.width,
-        height: this.hieght
+        height: this.height
       };
     };
 
     Stockpile.prototype.create_drop = function(map) {
-      var location, locations;
+      var locations;
       locations = map.free_locations(this.x, this.y, 2);
       if (locations.length === 0) {
         this.finish = true;
         return false;
       }
-      location = nearest_object(this, locations);
-      switch (this.store) {
-        case "crystal":
-          map.sketch.create("crystal", location.x, location.y);
-          return this.drop = map.select_by_name('crystal', location.x, location.y);
-        case "timber":
-          map.sketch.create("timber", location.x, location.y);
-          return this.drop = map.select_by_name('timber', location.x, location.y);
-      }
+      return this.drop = nearest_object(this, locations);
     };
 
     Stockpile.prototype.find_nearest = function(map, name) {
@@ -2104,7 +2096,7 @@
     function Item(x, y) {
       this.x = x;
       this.y = y;
-      this.items = 0;
+      this.items = 1;
       this.background = null;
       this.stack = 0;
     }
@@ -2748,12 +2740,10 @@
     MapDestinate.prototype.exclude = function(list, stockpile) {
       var l, new_list, _i, _len;
       new_list = [];
-      console.log("original " + list.length);
       for (_i = 0, _len = list.length; _i < _len; _i++) {
         l = list[_i];
         if (pointToRectCollision(l, stockpile.rect()) === false) new_list.push(l);
       }
-      console.log("now " + new_list.length);
       return new_list;
     };
 
@@ -3153,6 +3143,8 @@
           return true;
         }
       }
+      this.sketch.create(this.store, x, y);
+      return true;
     };
 
     Map.prototype.new_object = function(x, y) {
