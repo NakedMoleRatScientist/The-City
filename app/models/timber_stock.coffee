@@ -6,6 +6,8 @@ class timberStock extends Stockpile
     @priority = 4
     @diameter = 5
     @size = 10
+    @width = 4
+    @height = 4
     @queue = false
     @times = 24
     @target = null
