@@ -33,7 +33,7 @@ class Stockpile
     if @drop == null
       if this.create_drop(map) == false
         return false
-    else if @drop.fullness() == true
+    else if map.select_by_name(@store,@drop.x,@drop.y).fullness() == true
       if this.create_drop(map) == false
         return false
     return @drop
