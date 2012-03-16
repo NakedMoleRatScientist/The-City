@@ -4,6 +4,8 @@ class Stockpile
     @nearest = null
     @drop = null
     @finish = false
+    @width = 4
+    @height = 4
     @jobs = []
     @jobs.push(new Job(["move_to_source","gather_item","move_to_drop","drop_item"]))
   check_assign: () ->
