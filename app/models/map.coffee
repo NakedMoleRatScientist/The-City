@@ -34,6 +34,7 @@ class Map
         if m.increase() == false
           return false
         return true
+    map.sketch.create(@store,x,y)
   new_object: (x,y) ->
     @redraw.push(x: x, y: y)
   rect_inbound: (rect) ->
