@@ -2067,7 +2067,9 @@
     };
 
     Stockpile.prototype.find_nearest = function(map, name) {
-      this.nearest = nearest_object(newpoint, map.decide_list(name));
+      var list;
+      list = map.dest.exclude(map.decide_list(name));
+      this.nearest = nearest_object(this, list);
       return this.nearest;
     };
 
@@ -2152,7 +2154,7 @@
       for (x = _ref = location.x - 1, _ref2 = location.x + 1; _ref <= _ref2 ? x <= _ref2 : x >= _ref2; _ref <= _ref2 ? x++ : x--) {
         for (y = _ref3 = location.y - 1, _ref4 = location.y + 1; _ref3 <= _ref4 ? y <= _ref4 : y >= _ref4; _ref3 <= _ref4 ? y++ : y--) {
           if (!(x === location.x && y === location.y)) {
-            if (!this.map.collide_check(x, y)) {
+            if (this.map.collision.propose_drop(x, y)) {
               now = {
                 x: x,
                 y: y,
@@ -2186,7 +2188,7 @@
 
     Pathfinder.prototype.calculate_path = function(start, goal) {
       var best_g_score, close, current, end, g_score, neighbor, now, open, results, _i, _len, _ref;
-      if (this.map.collide_check(goal.x, goal.y)) {
+      if (!this.map.collision.propose_drop(goal.x, goal.y)) {
         console.log("Location is unwalkable!");
         return false;
       }
@@ -2270,6 +2272,8 @@
       this.priority = 4;
       this.diameter = 5;
       this.size = 10;
+      this.width = 4;
+      this.height = 4;
       this.queue = false;
       this.times = 24;
       this.target = null;
@@ -2724,10 +2728,22 @@
       if (x < 2 || x > 97) return;
       if (y < 2 || y > 97) return;
       newpoint = this.decide_stock(mouse, x, y);
-      if (!(this.map.stockpoints_collision_detect(newpoint) === true || this.map.collide_check(x, y) === true)) {
+      if (!(this.map.stockpoints_collision_detect(newpoint) === true || this.map.collision.propose_drop(x, y) === false)) {
         this.map.map[y][x].push(newpoint);
         return this.map.stockpoints.push(newpoint);
       }
+    };
+
+    MapDestinate.prototype.exclude = function(list) {
+      var l, new_list, _i, _len;
+      new_list = [];
+      console.log("original " + list.length);
+      for (_i = 0, _len = list.length; _i < _len; _i++) {
+        l = list[_i];
+        if (pointToRectCollision(l, this)) new_list.push(l);
+      }
+      console.log("now " + new_list.length);
+      return new_list;
     };
 
     return MapDestinate;
@@ -2870,28 +2886,38 @@
             this.job = null;
             this.queue = [];
             this.perform = null;
-            return;
+            return false;
           }
           choices = map.free_locations(object.x, object.y, 1);
           choice = choices[random_number(choices.length)];
-          return this.set_move(choice.x, choice.y);
+          this.set_move(choice.x, choice.y);
+          break;
         case "move_to_source":
-          object = this.job.find_nearest(map);
+          this.advance = true;
+          object = this.job.find_nearest(map, "timber");
           if (object === null) {
-            this.job = null;
-            this.queue = [];
-            this.perform = null;
-            return;
+            if (map.trees.length !== 0 || map.logs.length !== 0) {
+              this.advance = false;
+              return false;
+            } else {
+              this.job = null;
+              this.queue = [];
+              this.perform = null;
+            }
+            return false;
           }
           choices = map.free_locations(object.x, object.y, 1);
           choice = choices[random_number(choices.length)];
-          return this.set_move(choice.x, choice.y);
+          this.set_move(choice.x, choice.y);
+          break;
         case "gather_item":
-          return this.acquire_item(this.job.nearest.acquire());
+          this.acquire_item(this.job.nearest.acquire());
+          break;
         case "drop_item":
           this.drop_item(this.job.store);
-          return map.drop_item(this.job.drop.x, this.job.drop.y, this.job.store);
+          map.drop_item(this.job.drop.x, this.job.drop.y, this.job.store);
       }
+      return true;
     };
 
     Human.prototype.cut_action = function(map) {
@@ -2903,31 +2929,34 @@
             this.job = null;
             this.queue = [];
             this.perform = null;
-            return;
+            return false;
           }
           choices = map.free_locations(object.x, object.y, 1);
           choice = choices[random_number(choices.length)];
-          return this.set_move(choice.x, choice.y);
+          this.set_move(choice.x, choice.y);
+          break;
         case "cut_down":
           direction = {
             x: -1,
             y: 0
           };
-          return map.sketch.cut_down(this.job.target.x, this.job.target.y, direction);
+          map.sketch.cut_down(this.job.target.x, this.job.target.y, direction);
       }
+      return true;
     };
 
     Human.prototype.set_action = function(map) {
+      var status;
       if (this.act_on_queue()) return;
       if (this.body.hand === 2) return;
       switch (this.queue_type) {
         case 0:
-          this.gather_action(map);
+          status = this.gather_action(map);
           break;
         case 1:
-          this.cut_action(map);
+          status = this.cut_action(map);
       }
-      return this.perform = this.order;
+      if (status === true) return this.perform = this.order;
     };
 
     return Human;
@@ -3131,17 +3160,6 @@
       return true;
     };
 
-    Map.prototype.collide_check = function(x, y) {
-      var m, _i, _len, _ref;
-      if (this.collision.inbound(x, y) === false) return true;
-      _ref = this.map[y][x];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        m = _ref[_i];
-        if (m.collide() === true) return true;
-      }
-      return false;
-    };
-
     Map.prototype.stockpoints_collision_detect = function(newpoint) {
       var point, _i, _len, _ref;
       if (this.stockpoints.length === 0) return false;
@@ -3163,16 +3181,6 @@
       return false;
     };
 
-    Map.prototype.propose_drop = function(x, y) {
-      if (this.map[y][x].length === 0 || this.collide_check(x, y) === false) {
-        return {
-          x: x,
-          y: y
-        };
-      }
-      return false;
-    };
-
     Map.prototype.free_locations = function(x, y, size) {
       var begin_x, end_x, end_y, locations;
       end_x = x + size;
@@ -3187,13 +3195,11 @@
           y += 1;
           if (y > end_y) break;
         }
-        if (this.collision.inbound(x, y) === true) {
-          if (this.propose_drop(x, y) !== false) {
-            locations.push({
-              x: x,
-              y: y
-            });
-          }
+        if (this.collision.propose_drop(x, y) === true) {
+          locations.push({
+            x: x,
+            y: y
+          });
         }
         x += 1;
       }
@@ -3225,6 +3231,8 @@
           return this.crystalTrees;
         case "log":
           return this.logs;
+        case "timber":
+          return this.timbers;
       }
     };
 
@@ -3246,10 +3254,6 @@
 
     Tree.prototype.action = function() {
       return "cut_down";
-    };
-
-    Tree.prototype.acquire = function() {
-      return "tree";
     };
 
     return Tree;
@@ -3328,6 +3332,16 @@
       return false;
     };
 
+    Collision.prototype.check_occupancy = function(x, y) {
+      var m, _i, _len, _ref;
+      _ref = this.map.map[y][x];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        m = _ref[_i];
+        if (m.collide() === true) return true;
+      }
+      return false;
+    };
+
     Collision.prototype.check_length = function(x, y) {
       if (this.map.map[y][x].length === 0) return true;
       return false;
@@ -3335,6 +3349,13 @@
 
     Collision.prototype.create_check = function(x, y, item) {
       return this.inbound(x, y) && (this.check_compatibility(item, x, y) || this.check_length(x, y));
+    };
+
+    Collision.prototype.propose_drop = function(x, y) {
+      if (this.check_length(x, y) || (this.inbound(x, y) && !this.check_occupancy(x, y))) {
+        return true;
+      }
+      return false;
     };
 
     return Collision;
