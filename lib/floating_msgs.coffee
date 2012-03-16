@@ -8,4 +8,6 @@ class FloatingMsgs
   draw: (p5) ->
     for m in @msgs
       p5.text(m,m.x,m.y)
+      m.x += m.dir.x * 20
+      m.y += m.dir.y * 20
       m.time -= 1
