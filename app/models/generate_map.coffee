@@ -15,6 +15,10 @@ class GenerateMap
         success += 1
       if success == 10
         break
+  range: (x,y) ->
+    list = [x..y]
+    list.pop()
+    list.shift()
   generate_paths: () ->
     locations = []
     for m in @map.crystalTrees
