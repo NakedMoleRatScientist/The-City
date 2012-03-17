@@ -30,6 +30,7 @@ class Collision
   create_check: (x,y,item) ->
     this.inbound(x,y) && (this.check_compatibility(item,x,y) || this.check_length(x,y))
   propose_drop: (x,y) ->
-    if (this.inbound(x,y) && !this.check_occupancy(x,y)) || this.check_length(x,y)
-      return true
+    if this.inbound(x,y)
+      if !this.check_occupancy(x,y) || this.check_length(x,y)
+        return true
     false
