@@ -32,7 +32,7 @@ class MsgManager
         msg = object.actors[0] + " " + object.action + " " + object.actors[1]
       when "escaped"
         msg = object.actors[1] + " " + object.action + " from the grasp of " + object.actors[0]
-    this.msg(object.actors[0],object.actors[1],msg)
+    this.combat_msg(object.actors[0],object.actors[1],msg)
   dodge: (object) ->
     if object.ability == false
       msg = object.actors[0] + " can't dodge!"
