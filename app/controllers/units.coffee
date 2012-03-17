@@ -3,7 +3,6 @@ class Units
     this.setup()
   setup: () ->
     @units = []
-    @msgs = new MsgManager()
     @fatalities = 0
     @advance = true
     @frame = 0
