@@ -68,9 +68,7 @@ class GenerateMap
         x = choices[random_number(choices.length)]
       when 3
         y = end.y + 1
-        choices = [(begin.x - 1)..(end.x + 1)]
-        choices.pop()
-        choices.shift()
+        choices = this.range(begin.x - 1,end.x + 1)
         x = choices[random_number(choices.length)]
 
     @sketch.delete(x,y,"wall")
