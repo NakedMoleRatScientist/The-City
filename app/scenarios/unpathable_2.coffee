@@ -9,7 +9,7 @@ unpathable2 = (units,map) ->
   begin.y = 11
   end.y = 11
   map.sketch.draw(begin,end,"wall")
-  map.sketch.create_wall(19,10)
-  map.sketch.create_wall(21,10)
+  map.sketch.create("wall",19,10,false)
+  map.sketch.create("wall",21,10,false)
   units.units[0].set_move(20,10)
   units.units[0].agility = 25
