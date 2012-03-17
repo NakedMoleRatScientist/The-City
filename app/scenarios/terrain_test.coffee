@@ -22,3 +22,8 @@ terrainTest = (units,map) ->
   map.generate.create_building(14,23,5)
   #place tree near a building
   map.generate.create_tree(9,11)
+  #create closing walls
+  map.sketch.create("wall",3,3)
+  map.sketch.create("wall",5,3)
+  map.sketch.create("wall",4,2)
+  map.sketch.create("wall",4,4)
