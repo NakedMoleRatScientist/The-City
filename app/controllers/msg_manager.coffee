@@ -74,4 +74,4 @@ class MsgManager
         msgs.push(object.actors[1] + " losts all leg functionality")
 
     for m in msgs
-      this.msg(object.actors[0],object.actors[1],m)
+      this.combat_msg(object.actors[0],object.actors[1],m)
