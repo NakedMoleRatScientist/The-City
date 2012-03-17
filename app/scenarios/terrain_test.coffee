@@ -20,3 +20,5 @@ terrainTest = (units,map) ->
   map.generate.create_building(10,23,2)
   #generate a building this size: 5
   map.generate.create_building(14,23,5)
+  #place tree near a building
+  map.generate.create_tree(10,11)
