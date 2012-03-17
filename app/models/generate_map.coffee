@@ -70,7 +70,6 @@ class GenerateMap
         y = end.y + 1
         choices = this.range(begin.x - 1,end.x + 1)
         x = choices[random_number(choices.length)]
-
     @sketch.delete(x,y,"wall")
   create_tree: (x,y) ->
     left = true
