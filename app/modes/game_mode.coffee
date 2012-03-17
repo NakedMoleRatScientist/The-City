@@ -67,5 +67,5 @@ class GameMode extends Mode
       if @mouse.mode == 1
         @map.dest.add_stockpile(@mouse)
   update_draw: () ->
-    return (units: @units.units, map: @map, msg: @units.msg_manager.get_last_update(), state: -1, menu: @menu, mouse: @mouse) if @state == -1
+    return (units: @units.units, map: @map, msg: @msgs.get_last_update(), state: -1, menu: @menu, mouse: @mouse) if @state == -1
     super()
