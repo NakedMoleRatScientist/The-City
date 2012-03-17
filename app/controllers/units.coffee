@@ -1,5 +1,5 @@
 class Units
-  constructor: (@map) ->
+  constructor: (@map,@msgs) ->
     this.setup()
   setup: () ->
     @units = []
