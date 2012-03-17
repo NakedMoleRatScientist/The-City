@@ -82,8 +82,8 @@ class GenerateMap
         right = false
         return
       right = true
-    for [x - 1..x - 5]
-      unless @map.collision.propose_drop(x,y)
+    for left_x in [x - 1..x - 5]
+      unless @map.collision.propose_drop(left_x,y)
         left = false
         return
       left = true
