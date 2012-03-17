@@ -83,6 +83,11 @@ class GenerateMap
         left = false
         return
       left = true
+    for down_y in [y + 1..y + 5]
+      unless @map.collision.propose_drop(x,down_y)
+        down = false
+        return
+      down = true
     if right || left
       @sketch.create("tree",x,y)
 
