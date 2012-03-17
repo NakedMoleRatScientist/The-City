@@ -76,7 +76,15 @@ class GenerateMap
 
     @sketch.delete(x,y,"wall")
   create_tree: (x,y) ->
-    @sketch.create("tree",x,y)
+    left = true
+    for [x + 1..x + 5]
+      unless @map.collision.propose_drop(x,y)
+        right = false
+        return
+      right = true
+    if right || left
+      @sketch.create("tree",x,y)
+
   generate_buildings: () ->
     for i in [0..15]
       x = random_number(100)
