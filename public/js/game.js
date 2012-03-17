@@ -2413,6 +2413,18 @@
       return _results;
     };
 
+    GenerateMap.prototype.range = function(x, y) {
+      var list, _i, _results;
+      list = (function() {
+        _results = [];
+        for (var _i = x; x <= y ? _i <= y : _i >= y; x <= y ? _i++ : _i--){ _results.push(_i); }
+        return _results;
+      }).apply(this);
+      list.pop();
+      list.shift();
+      return list;
+    };
+
     GenerateMap.prototype.generate_paths = function() {
       var free, i, locations, m, _i, _len, _ref, _ref2, _results;
       locations = [];
@@ -2430,7 +2442,7 @@
     };
 
     GenerateMap.prototype.create_building = function(x, y, size) {
-      var begin, choices, direction, end, rect, wall_a, wall_b, _i, _j, _k, _l, _ref, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _results, _results2, _results3, _results4;
+      var begin, choices, direction, end, rect, wall_a, wall_b;
       rect = new Rect(x, y, size, size);
       if (this.map.collision.collide_check(rect) === true || this.map.rect_inbound(rect) === false || size < 2) {
         return;
@@ -2485,49 +2497,52 @@
       switch (direction) {
         case 0:
           x = begin.x - 1;
-          choices = (function() {
-            _results = [];
-            for (var _i = _ref = begin.y - 1, _ref2 = end.y + 1; _ref <= _ref2 ? _i <= _ref2 : _i >= _ref2; _ref <= _ref2 ? _i++ : _i--){ _results.push(_i); }
-            return _results;
-          }).apply(this);
-          choices.pop();
-          choices.shift();
+          choices = this.range(begin.y - 1, end.y + 1);
           y = choices[random_number(choices.length)];
           break;
         case 1:
           x = end.x + 1;
-          choices = (function() {
-            _results2 = [];
-            for (var _j = _ref3 = begin.y - 1, _ref4 = end.y + 1; _ref3 <= _ref4 ? _j <= _ref4 : _j >= _ref4; _ref3 <= _ref4 ? _j++ : _j--){ _results2.push(_j); }
-            return _results2;
-          }).apply(this);
-          choices.pop();
-          choices.shift();
+          choices = this.range(begin.y - 1, end.y + 1);
           y = choices[random_number(choices.length)];
           break;
         case 2:
           y = begin.y - 1;
-          choices = (function() {
-            _results3 = [];
-            for (var _k = _ref5 = begin.x - 1, _ref6 = end.x + 1; _ref5 <= _ref6 ? _k <= _ref6 : _k >= _ref6; _ref5 <= _ref6 ? _k++ : _k--){ _results3.push(_k); }
-            return _results3;
-          }).apply(this);
-          choices.pop();
-          choices.shift();
+          choices = this.range(begin.x - 1, end.x + 1);
           x = choices[random_number(choices.length)];
           break;
         case 3:
           y = end.y + 1;
-          choices = (function() {
-            _results4 = [];
-            for (var _l = _ref7 = begin.x - 1, _ref8 = end.x + 1; _ref7 <= _ref8 ? _l <= _ref8 : _l >= _ref8; _ref7 <= _ref8 ? _l++ : _l--){ _results4.push(_l); }
-            return _results4;
-          }).apply(this);
-          choices.pop();
-          choices.shift();
+          choices = this.range(begin.x - 1, end.x + 1);
           x = choices[random_number(choices.length)];
       }
       return this.sketch["delete"](x, y, "wall");
+    };
+
+    GenerateMap.prototype.create_tree = function(x, y) {
+      var down, down_y, left, left_x, right, right_x, _ref, _ref2, _ref3, _ref4, _ref5, _ref6;
+      left = true;
+      for (right_x = _ref = x + 1, _ref2 = x + 5; _ref <= _ref2 ? right_x <= _ref2 : right_x >= _ref2; _ref <= _ref2 ? right_x++ : right_x--) {
+        if (!this.map.collision.propose_drop(right_x, y)) {
+          right = false;
+          return;
+        }
+        right = true;
+      }
+      for (left_x = _ref3 = x - 1, _ref4 = x - 5; _ref3 <= _ref4 ? left_x <= _ref4 : left_x >= _ref4; _ref3 <= _ref4 ? left_x++ : left_x--) {
+        if (!this.map.collision.propose_drop(left_x, y)) {
+          left = false;
+          return;
+        }
+        left = true;
+      }
+      for (down_y = _ref5 = y + 1, _ref6 = y + 5; _ref5 <= _ref6 ? down_y <= _ref6 : down_y >= _ref6; _ref5 <= _ref6 ? down_y++ : down_y--) {
+        if (!this.map.collision.propose_drop(x, down_y)) {
+          down = false;
+          return;
+        }
+        down = true;
+      }
+      if (right || left || down) return this.sketch.create("tree", x, y);
     };
 
     GenerateMap.prototype.generate_buildings = function() {
@@ -3645,7 +3660,8 @@
     units.units[0].body.hand = 2;
     location = {
       x: 300,
-      y: 300
+      y: 300,
+      build: "crystal"
     };
     return map.dest.add_stockpile(location);
   };
@@ -3714,8 +3730,8 @@
     begin.y = 11;
     end.y = 11;
     map.sketch.draw(begin, end, "wall");
-    map.sketch.create_wall(19, 10);
-    map.sketch.create_wall(21, 10);
+    map.sketch.create("wall", 19, 10, false);
+    map.sketch.create("wall", 21, 10, false);
     units.units[0].set_move(20, 10);
     return units.units[0].agility = 25;
   };
@@ -3749,7 +3765,7 @@
   };
 
   fullTestBoars = function(units, map) {
-    map.sketch.create_crystal(20, 20);
+    map.sketch.create("crystal", 20, 20);
     map.map[20][20].items = 50;
     units.generate_boars();
     return units.create(new Human(10, 10, "grumpy_killer", 0));
@@ -3777,19 +3793,25 @@
     map.sketch.create("crystal", 11, 11);
     map.generate.create_building(9, 9, 1);
     map.generate.create_building(13, 14, 3);
-    map.sketch.create_crystal(10, 10);
+    map.sketch.create("crystal", 10, 10);
     map.collision.forbid(new Rect(20, 20, 0, 0));
     map.generate.create_building(20, 20, 2);
     map.generate.create_building(-1, 0, 2);
     map.generate.create_building(99, 0, 2);
     map.generate.create_building(23, 23, 1);
     map.generate.create_building(10, 23, 2);
-    return map.generate.create_building(14, 23, 5);
+    map.generate.create_building(14, 23, 5);
+    map.generate.create_tree(9, 11);
+    map.sketch.create("wall", 3, 3, false);
+    map.sketch.create("wall", 5, 3, false);
+    map.sketch.create("wall", 4, 2, false);
+    map.sketch.create("wall", 4, 4, false);
+    return map.generate.create_tree(4, 3);
   };
 
   unpathable1 = function(units, map) {
     units.create(new Human(10, 10, "pathfinder_one", 0));
-    map.sketch.create_wall(20, 10);
+    map.sketch.create("wall", 20, 10, false);
     units.units[0].set_move(20, 10);
     return units.units[0].agility = 25;
   };
