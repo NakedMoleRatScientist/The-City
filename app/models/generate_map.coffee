@@ -88,7 +88,7 @@ class GenerateMap
         down = false
         return
       down = true
-    if right || left
+    if right || left || down
       @sketch.create("tree",x,y)
 
   generate_buildings: () ->
