@@ -7,10 +7,10 @@ class CombatReportMinorMode
     @options.clean()
     switch(@state)
       when -1
-        for r in @parent.units.msg_manager.relations
+        for r in @parent.units.msgs.relations
           @options.add_text([r.summary])
       when 0
-        @options.add_text(@parent.units.msg_manager.relations[@unit].msgs)
+        @options.add_text(@parent.msgs.relations[@unit].msgs)
       when 1
         @options.add_text(@parent.units.killers())
       when 2
