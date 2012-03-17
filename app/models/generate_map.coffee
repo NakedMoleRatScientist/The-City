@@ -55,9 +55,7 @@ class GenerateMap
     switch(direction)
       when 0
         x = begin.x - 1
-        choices = [(begin.y - 1)..(end.y + 1)]
-        choices.pop()
-        choices.shift()
+        choices = this.range(begin.y - 1, end.y + 1)
         y = choices[random_number(choices.length)]
       when 1
         x = end.x + 1
