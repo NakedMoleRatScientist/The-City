@@ -75,6 +75,8 @@ class GenerateMap
         x = choices[random_number(choices.length)]
 
     @sketch.delete(x,y,"wall")
+  create_tree: (x,y) ->
+    @sketch.create("tree",x,y)
   generate_buildings: () ->
     for i in [0..15]
       x = random_number(100)
