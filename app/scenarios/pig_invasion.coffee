@@ -6,5 +6,5 @@ pigInvasion = (units,map) ->
   units.units[1].order = null
   units.units[2].order = null
   units.units[3].order = null
-  map.sketch.create_crystal(5,5)
+  map.sketch.create("crystal",5,5)
   map.drop_crystal(5,5)
