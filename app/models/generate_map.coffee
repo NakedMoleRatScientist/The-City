@@ -19,6 +19,7 @@ class GenerateMap
     list = [x..y]
     list.pop()
     list.shift()
+    list
   generate_paths: () ->
     locations = []
     for m in @map.crystalTrees
