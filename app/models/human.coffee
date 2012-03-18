@@ -53,8 +53,7 @@ class Human extends Unit
       when "cut_down"
         if @job.target.cut() == true
           @advance = true
-          direction = (x: -1, y: 0)
-          map.sketch.cut_down(@job.target.x,@job.target.y,direction)
+          map.sketch.cut_down(@job.target.x,@job.target.y)
         else
           @advance = false
           return false
