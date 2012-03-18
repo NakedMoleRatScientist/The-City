@@ -84,11 +84,7 @@ class GenerateMap
     left = true
     right = this.collide_range(x + 1, x + 5,y,0)
     left = this.collide_range(x -1,x - 5,y,0)
-    for down_y in [y + 1..y + 5]
-      unless @map.collision.propose_drop(x,down_y)
-        down = false
-        return
-      down = true
+    down = this.collide_range(y + 1..y + 5,x,1)
     if right || left || down
       @sketch.create("tree",x,y)
 
