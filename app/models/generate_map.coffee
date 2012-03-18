@@ -7,12 +7,12 @@ class GenerateMap
     success = 0
     loop
       r = this.random_positions()
-      if act.call(r) == true
+      if act(r,this) == true
         success += 1
       if success == 10
         break
-  generate_trees: (r) ->
-    this.create_tree(r.x,r.y) == true
+  generate_trees: (r,gen) ->
+    gen.create_tree(r.x,r.y)
   generate_crystal_trees: () ->
     success = 0
     loop
