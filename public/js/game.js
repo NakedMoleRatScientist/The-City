@@ -2518,26 +2518,33 @@
       return this.sketch["delete"](x, y, "wall");
     };
 
-    GenerateMap.prototype.collide_range = function(begin, end, constant, dir) {
-      var change;
-      for (change = begin; begin <= end ? change <= end : change >= end; begin <= end ? change++ : change--) {
-        if (dir === 0) {
-          if (!this.map.collision.propose_drop(change, constant)) return false;
-        } else {
-          if (!this.map.collision.propose_drop(constant, change)) return false;
+    GenerateMap.prototype.create_tree = function(x, y) {
+      var d, dir, _i, _len;
+      dir = [];
+      dir.push({
+        status: this.map.collision.collide_range_check(x + 1, x + 5, y, 0),
+        dir: "right"
+      });
+      dir.push({
+        status: this.map.collision.collide_range_check(x - 1, x - 5, y, 0),
+        dir: "left"
+      });
+      dir.push({
+        status: this.map.collision.collide_range_check(y + 1, y + 5, x, 1),
+        dir: "down"
+      });
+      dir.push({
+        status: this.map.collision.collide_range_check(y - 1, y - 5, x, 1),
+        dir: "up"
+      });
+      for (_i = 0, _len = dir.length; _i < _len; _i++) {
+        d = dir[_i];
+        if (d.status === true) {
+          this.sketch.create("tree", x, y);
+          this.map.select_last(x, y).dir = d.dir;
+          return;
         }
       }
-      return true;
-    };
-
-    GenerateMap.prototype.create_tree = function(x, y) {
-      var down, left, right, up;
-      left = true;
-      right = this.collide_range(x + 1, x + 5, y, 0);
-      left = this.collide_range(x(-1, x - 5, y, 0));
-      down = this.collide_range(y + 1, y + 5, x, 1);
-      up = this.collide_range(y - 1, y - 5, x, 1);
-      if (right || left || down || up) return this.sketch.create("tree", x, y);
     };
 
     GenerateMap.prototype.generate_buildings = function() {
@@ -2759,8 +2766,8 @@
       return this.map.decide_list(type).splice(n, 1);
     };
 
-    MapSketch.prototype.cut_down = function(x, y, d) {
-      var i, object, tree, _results;
+    MapSketch.prototype.cut_down = function(x, y) {
+      var d, i, object, tree, _results;
       tree = this.map.select_by_name("tree", x, y);
       if (tree === false) {
         object = this.map.select_by_name("log", x, y);
@@ -2774,6 +2781,7 @@
         this.map.new_object(x, y);
       }
       if (object.name === "tree") {
+        d = object.dir_output();
         x += d.x;
         y += d.y;
         _results = [];
@@ -3359,7 +3367,33 @@
       this.y = y;
       this.name = "tree";
       this.cuts_needed = 10;
+      this.dir = "none";
     }
+
+    Tree.prototype.dir_output = function() {
+      var x, y;
+      switch (this.dir) {
+        case "left":
+          x = -1;
+          y = 0;
+          break;
+        case "right":
+          x = 1;
+          y = 0;
+          break;
+        case "down":
+          x = 0;
+          y = 1;
+          break;
+        case "up":
+          x = 0;
+          y = -1;
+      }
+      return {
+        x: x,
+        y: y
+      };
+    };
 
     return Tree;
 
@@ -3450,6 +3484,18 @@
     Collision.prototype.check_length = function(x, y) {
       if (this.map.map[y][x].length === 0) return true;
       return false;
+    };
+
+    Collision.prototype.collide_range_check = function(begin, end, constant, dir) {
+      var change;
+      for (change = begin; begin <= end ? change <= end : change >= end; begin <= end ? change++ : change--) {
+        if (dir === 0) {
+          if (!this.map.collision.propose_drop(change, constant)) return false;
+        } else {
+          if (!this.map.collision.propose_drop(constant, change)) return false;
+        }
+      }
+      return true;
     };
 
     Collision.prototype.create_check = function(x, y, item) {
