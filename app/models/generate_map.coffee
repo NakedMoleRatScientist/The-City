@@ -13,14 +13,8 @@ class GenerateMap
         break
   generate_trees: (r,gen) ->
     gen.create_tree(r.x,r.y)
-  generate_crystal_trees: () ->
-    success = 0
-    loop
-      r = this.random_positions()
-      if @sketch.create("crystalTree",r.x,r.y) == true
-        success += 1
-      if success == 10
-        break
+  generate_crystal_trees: (r,gen) ->
+    gen.sketch.create("crystalTree",r.x,r.y) == true
   range: (x,y) ->
     list = [x..y]
     list.pop()
@@ -99,5 +93,5 @@ class GenerateMap
   generate: () ->
     this.generate_buildings()
     this.try_ten_until_success(this.generate_trees)
-    this.generate_crystal_trees()
+    this.try_ten_until_success(this.generate_crystal_trees
     this.generate_paths()
