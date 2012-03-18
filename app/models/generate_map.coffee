@@ -14,9 +14,8 @@ class GenerateMap
   generate_crystal_trees: () ->
     success = 0
     loop
-      x = random_number(@map.width)
-      y = random_number(@map.height)
-      if @sketch.create("crystalTree",x,y) == true
+      r = this.random_positions()
+      if @sketch.create("crystalTree",r.x,r.y) == true
         success += 1
       if success == 10
         break
