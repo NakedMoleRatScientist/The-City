@@ -6,9 +6,8 @@ class GenerateMap
   generate_trees: () ->
     success = 0
     loop
-      x = random_number(@map.width)
-      y = random_number(@map.height)
-      if this.create_tree(x,y) == true
+      r = this.random_positions()
+      if this.create_tree(r.x,r.y) == true
         success += 1
       if success == 10
         break
