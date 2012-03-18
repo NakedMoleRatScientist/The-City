@@ -55,7 +55,7 @@ class MapSketch
         break
       n += 1
     @map.decide_list(type).splice(n,1)
-  cut_down: (x,y,d) ->
+  cut_down: (x,y) ->
     tree = @map.select_by_name("tree",x,y)
     if tree == false
       object = @map.select_by_name("log",x,y)
@@ -67,6 +67,7 @@ class MapSketch
       this.create("timber",x,y)
       @map.new_object(x,y)
     if object.name == "tree"
+      d = object.dir_output()
       x += d.x
       y += d.y
       for i in [0..4]
