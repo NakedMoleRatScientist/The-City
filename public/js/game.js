@@ -2136,9 +2136,9 @@
       return this.drop = nearest_object(this, locations);
     };
 
-    Stockpile.prototype.find_nearest = function(map, name) {
+    Stockpile.prototype.find_nearest = function(map) {
       var list;
-      list = map.dest.exclude(map.decide_list(name), this);
+      list = map.dest.exclude(map.decide_list(this.store), this);
       this.nearest = nearest_object(this, list);
       return this.nearest;
     };
@@ -2398,7 +2398,7 @@
       _results = [];
       while (true) {
         r = this.random_positions();
-        if (act.call(r) === true) success += 1;
+        if (act(r, this) === true) success += 1;
         if (success === 10) {
           break;
         } else {
@@ -2408,24 +2408,12 @@
       return _results;
     };
 
-    GenerateMap.prototype.generate_trees = function(r) {
-      return this.create_tree(r.x, r.y) === true;
+    GenerateMap.prototype.generate_trees = function(r, gen) {
+      return gen.create_tree(r.x, r.y);
     };
 
-    GenerateMap.prototype.generate_crystal_trees = function() {
-      var r, success, _results;
-      success = 0;
-      _results = [];
-      while (true) {
-        r = this.random_positions();
-        if (this.sketch.create("crystalTree", r.x, r.y) === true) success += 1;
-        if (success === 10) {
-          break;
-        } else {
-          _results.push(void 0);
-        }
-      }
-      return _results;
+    GenerateMap.prototype.generate_crystal_trees = function(r, gen) {
+      return gen.sketch.create("crystalTree", r.x, r.y);
     };
 
     GenerateMap.prototype.range = function(x, y) {
@@ -2577,8 +2565,8 @@
 
     GenerateMap.prototype.generate = function() {
       this.generate_buildings();
-      this.generate_trees();
-      this.generate_crystal_trees();
+      this.try_ten_until_success(this.generate_crystal_trees);
+      this.try_ten_until_success(this.generate_trees);
       return this.generate_paths();
     };
 
@@ -3015,7 +3003,7 @@
           break;
         case "move_to_source":
           this.advance = true;
-          object = this.job.find_nearest(map, "timber");
+          object = this.job.find_nearest(map);
           if (object === null) {
             if (map.trees.length !== 0 || map.logs.length !== 0) {
               this.advance = false;
