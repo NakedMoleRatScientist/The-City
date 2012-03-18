@@ -31,3 +31,7 @@ terrainTest = (units,map) ->
   map.generate.create_tree(4,3)
   #should be at this distance
   map.generate.create_tree(11,3)
+  #create wall surrounding the tree
+  map.sketch.create("wall",11,2,false)
+  map.sketch.create("wall",11,4,false)
+  map.sketch.create("wall",12,3,false)
