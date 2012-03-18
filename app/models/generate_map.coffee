@@ -85,7 +85,8 @@ class GenerateMap
       if d.status == true
         @sketch.create("tree",x,y)
         @map.select_last(x,y).dir = d.dir
-        return
+        return true
+    false
 
   generate_buildings: () ->
     for i in [0..15]
