@@ -82,8 +82,8 @@ class GenerateMap
     true
   create_tree: (x,y) ->
     left = true
-    right = this.collide_range(x + 1, x + 5,y)
-    left = this.collide_range(x -1,x - 5,y)
+    right = this.collide_range(x + 1, x + 5,y,0)
+    left = this.collide_range(x -1,x - 5,y,0)
     for down_y in [y + 1..y + 5]
       unless @map.collision.propose_drop(x,down_y)
         down = false
