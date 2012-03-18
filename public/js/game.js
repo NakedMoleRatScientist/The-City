@@ -2518,31 +2518,26 @@
       return this.sketch["delete"](x, y, "wall");
     };
 
+    GenerateMap.prototype.collide_range = function(begin, end, constant, dir) {
+      var change;
+      for (change = begin; begin <= end ? change <= end : change >= end; begin <= end ? change++ : change--) {
+        if (dir === 0) {
+          if (!this.map.collision.propose_drop(change, constant)) return false;
+        } else {
+          if (!this.map.collision.propose_drop(constant, change)) return false;
+        }
+      }
+      return true;
+    };
+
     GenerateMap.prototype.create_tree = function(x, y) {
-      var down, down_y, left, left_x, right, right_x, _ref, _ref2, _ref3, _ref4, _ref5, _ref6;
+      var down, left, right, up;
       left = true;
-      for (right_x = _ref = x + 1, _ref2 = x + 5; _ref <= _ref2 ? right_x <= _ref2 : right_x >= _ref2; _ref <= _ref2 ? right_x++ : right_x--) {
-        if (!this.map.collision.propose_drop(right_x, y)) {
-          right = false;
-          return;
-        }
-        right = true;
-      }
-      for (left_x = _ref3 = x - 1, _ref4 = x - 5; _ref3 <= _ref4 ? left_x <= _ref4 : left_x >= _ref4; _ref3 <= _ref4 ? left_x++ : left_x--) {
-        if (!this.map.collision.propose_drop(left_x, y)) {
-          left = false;
-          return;
-        }
-        left = true;
-      }
-      for (down_y = _ref5 = y + 1, _ref6 = y + 5; _ref5 <= _ref6 ? down_y <= _ref6 : down_y >= _ref6; _ref5 <= _ref6 ? down_y++ : down_y--) {
-        if (!this.map.collision.propose_drop(x, down_y)) {
-          down = false;
-          return;
-        }
-        down = true;
-      }
-      if (right || left || down) return this.sketch.create("tree", x, y);
+      right = this.collide_range(x + 1, x + 5, y, 0);
+      left = this.collide_range(x(-1, x - 5, y, 0));
+      down = this.collide_range(y + 1, y + 5, x, 1);
+      up = this.collide_range(y - 1, y - 5, x, 1);
+      if (right || left || down || up) return this.sketch.create("tree", x, y);
     };
 
     GenerateMap.prototype.generate_buildings = function() {
