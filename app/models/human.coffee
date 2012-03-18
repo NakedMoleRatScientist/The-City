@@ -18,7 +18,7 @@ class Human extends Unit
         this.set_move(choice.x,choice.y)
       when "move_to_source"
         @advance = true
-        object = @job.find_nearest(map,"timber")
+        object = @job.find_nearest(map)
         if object == null
           if map.trees.length != 0 || map.logs.length != 0
             @advance = false
