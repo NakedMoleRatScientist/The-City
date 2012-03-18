@@ -71,8 +71,14 @@ class GenerateMap
         choices = this.range(begin.x - 1,end.x + 1)
         x = choices[random_number(choices.length)]
     @sketch.delete(x,y,"wall")
+  collide_range: (x_one,x_two,y) ->
+    for x in [x_one..x_two]
+      unless @map.collision.propose_drop(x,y)
+        return false
+    true
   create_tree: (x,y) ->
     left = true
+    right = this.collide_range(x + 1, x + 5)
     for right_x in [x + 1..x + 5]
       unless @map.collision.propose_drop(right_x,y)
         right = false
