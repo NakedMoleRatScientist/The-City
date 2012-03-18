@@ -1,6 +1,8 @@
 class GenerateMap
   constructor: (@map) ->
     @sketch = @map.sketch
+  random_positions: () ->
+    (x: random_number(@map.width), y: random_number(@map.height))
   generate_trees: () ->
     success = 0
     loop
