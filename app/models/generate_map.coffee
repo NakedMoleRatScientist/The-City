@@ -86,7 +86,7 @@ class GenerateMap
     left = this.collide_range(x -1,x - 5,y,0)
     down = this.collide_range(y + 1,y + 5,x,1)
     up = this.collide_range(y - 1, y - 5,x,1)
-    if right || left || down
+    if right || left || down || up
       @sketch.create("tree",x,y)
 
   generate_buildings: () ->
