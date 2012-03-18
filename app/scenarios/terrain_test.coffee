@@ -37,5 +37,5 @@ terrainTest = (units,map) ->
   map.sketch.create("wall",12,3,false)
   #Can't create a tree
   map.generate.create_tree(10,3)
-  debugger
+  map.sketch.create("wall",10,6,false)
   map.generate.create_tree(11,7)
