@@ -27,6 +27,16 @@ class Collision
     if @map.map[y][x].length == 0
       return true
     false
+  collide_range_check: (begin,end,constant,dir) ->
+    for change in [begin..end]
+      if dir == 0
+        unless @map.collision.propose_drop(change,constant)
+          return false
+      else
+        unless @map.collision.propose_drop(constant,change)
+          return false
+    true
+
   create_check: (x,y,item) ->
     this.inbound(x,y) && (this.check_compatibility(item,x,y) || this.check_length(x,y))
   propose_drop: (x,y) ->
