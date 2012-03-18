@@ -2,10 +2,14 @@ class GenerateMap
   constructor: (@map) ->
     @sketch = @map.sketch
   generate_trees: () ->
-    for i in [0..9]
+    success = 0
+    loop
       x = random_number(@map.width)
       y = random_number(@map.height)
-      this.create_tree(x,y)
+      if this.create_tree(x,y) == true
+        success += 1
+      if success == 10
+        break
   generate_crystal_trees: () ->
     success = 0
     loop
