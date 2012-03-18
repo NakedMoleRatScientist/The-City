@@ -72,12 +72,16 @@ class GenerateMap
         x = choices[random_number(choices.length)]
     @sketch.delete(x,y,"wall")
   create_tree: (x,y) ->
-    right = @map.collision.collide_range_check(x + 1, x + 5,y,0)
-    left = @map.collision.collide_range_check(x - 1,x - 5,y,0)
-    down = @map.collision.collide_range_check(y + 1,y + 5,x,1)
-    up = @map.collision.collide_range_check(y - 1, y - 5,x,1)
-    if right || left || down || up
-      @sketch.create("tree",x,y)
+    dir = []
+    dir.push (status: @map.collision.collide_range_check(x + 1, x + 5,y,0), dir: "right")
+    dir.push (status: @map.collision.collide_range_check(x - 1,x - 5,y,0), dir: "left")
+    dir.push (status: @map.collision.collide_range_check(y + 1,y + 5,x,1), dir: "down")
+    dir.push (status: @map.collision.collide_range_check(y - 1, y - 5,x,1), dir: "up")
+    for d in dir
+      if d.status == true
+        @sketch.create("tree",x,y)
+        @map.select_last(x,y).dir = d.dir
+        return
 
   generate_buildings: () ->
     for i in [0..15]
