@@ -18,6 +18,6 @@ class MapDestinate
   exclude: (list,stockpile) ->
     new_list = []
     for l in list
-      if pointToRectCollision(l,stockpile.rect()) == false
+      if pointToRectCollision(l,stockpile.rect()) == false && l.name != "crystal_tree"
         new_list.push(l)
     new_list
