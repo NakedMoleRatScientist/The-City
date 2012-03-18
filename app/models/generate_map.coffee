@@ -73,10 +73,10 @@ class GenerateMap
     @sketch.delete(x,y,"wall")
   create_tree: (x,y) ->
     left = true
-    right = this.collide_range(x + 1, x + 5,y,0)
-    left = this.collide_range(x -1,x - 5,y,0)
-    down = this.collide_range(y + 1,y + 5,x,1)
-    up = this.collide_range(y - 1, y - 5,x,1)
+    right = @map.collision.collide_range_check(x + 1, x + 5,y,0)
+    left = @map.collision.collide_range_check(x -1,x - 5,y,0)
+    down = @map.collision.collide_range_check(y + 1,y + 5,x,1)
+    up = @map.collision.collide_range_check(y - 1, y - 5,x,1)
     if right || left || down || up
       @sketch.create("tree",x,y)
 
