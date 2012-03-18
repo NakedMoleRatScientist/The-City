@@ -3,3 +3,4 @@ cuttingDown = (units,map) ->
   units.create new Human(20,10, "logger", 1)
   units.create new Human(25,10, "gatherer",0)
   map.dest.add_stockpile(x: 400, y: 100, build: "tree")
+  map.select_last(10,10).output = "left"
