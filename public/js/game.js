@@ -3027,7 +3027,7 @@
     };
 
     Human.prototype.cut_action = function(map) {
-      var choice, choices, direction, object;
+      var choice, choices, object;
       switch (this.queue[this.order]) {
         case "find":
           object = this.job.find_nearest_cut(map);
@@ -3044,11 +3044,7 @@
         case "cut_down":
           if (this.job.target.cut() === true) {
             this.advance = true;
-            direction = {
-              x: -1,
-              y: 0
-            };
-            map.sketch.cut_down(this.job.target.x, this.job.target.y, direction);
+            map.sketch.cut_down(this.job.target.x, this.job.target.y);
           } else {
             this.advance = false;
             return false;
@@ -3787,11 +3783,12 @@
     map.sketch.create("tree", 10, 10);
     units.create(new Human(20, 10, "logger", 1));
     units.create(new Human(25, 10, "gatherer", 0));
-    return map.dest.add_stockpile({
+    map.dest.add_stockpile({
       x: 400,
       y: 100,
       build: "tree"
     });
+    return map.select_last(10, 10).dir = "left";
   };
 
   pigInvasion = function(units, map) {
@@ -3847,7 +3844,14 @@
     map.sketch.create("wall", 5, 3, false);
     map.sketch.create("wall", 4, 2, false);
     map.sketch.create("wall", 4, 4, false);
-    return map.generate.create_tree(4, 3);
+    map.generate.create_tree(4, 3);
+    map.generate.create_tree(11, 3);
+    map.sketch.create("wall", 11, 2, false);
+    map.sketch.create("wall", 11, 4, false);
+    map.sketch.create("wall", 12, 3, false);
+    map.generate.create_tree(10, 3);
+    map.sketch.create("wall", 10, 6, false);
+    return map.generate.create_tree(11, 7);
   };
 
   unpathable1 = function(units, map) {
