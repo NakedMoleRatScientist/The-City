@@ -24,8 +24,8 @@ class Stockpile
       @finish = true
       return false
     @drop = nearest_object(this,locations)
-  find_nearest: (map,name) ->
-    list = map.dest.exclude(map.decide_list(name),this)
+  find_nearest: (map) ->
+    list = map.dest.exclude(map.decide_list(@store),this)
     @nearest = nearest_object(this,list)
     return @nearest
   delete_nearest_if_empty: (map) ->
