@@ -3,6 +3,14 @@ class GenerateMap
     @sketch = @map.sketch
   random_positions: () ->
     (x: random_number(@map.width), y: random_number(@map.height))
+  try_ten_until_success: (act) ->
+    success = 0
+    loop
+      r = this.random_positions()
+      if act.call(r) == true
+        success += 1
+      if success == 10
+        break
   generate_trees: () ->
     success = 0
     loop
