@@ -93,5 +93,5 @@ class GenerateMap
   generate: () ->
     this.generate_buildings()
     this.try_ten_until_success(this.generate_trees)
-    this.try_ten_until_success(this.generate_crystal_trees
+    this.try_ten_until_success(this.generate_crystal_trees)
     this.generate_paths()
