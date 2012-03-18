@@ -29,3 +29,4 @@ terrainTest = (units,map) ->
   map.sketch.create("wall",4,4,false)
   #will not create a tree inside of the walls
   map.generate.create_tree(4,3)
+  map.generate.create_tree(9,3)
