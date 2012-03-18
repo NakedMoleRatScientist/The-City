@@ -2385,25 +2385,40 @@
       this.sketch = this.map.sketch;
     }
 
-    GenerateMap.prototype.generate_trees = function() {
-      var i, x, y, _results;
+    GenerateMap.prototype.random_positions = function() {
+      return {
+        x: random_number(this.map.width),
+        y: random_number(this.map.height)
+      };
+    };
+
+    GenerateMap.prototype.try_ten_until_success = function(act) {
+      var r, success, _results;
+      success = 0;
       _results = [];
-      for (i = 0; i <= 9; i++) {
-        x = random_number(this.map.width);
-        y = random_number(this.map.height);
-        _results.push(this.sketch.create("tree", x, y));
+      while (true) {
+        r = this.random_positions();
+        if (act.call(r) === true) success += 1;
+        if (success === 10) {
+          break;
+        } else {
+          _results.push(void 0);
+        }
       }
       return _results;
     };
 
+    GenerateMap.prototype.generate_trees = function(r) {
+      return this.create_tree(r.x, r.y) === true;
+    };
+
     GenerateMap.prototype.generate_crystal_trees = function() {
-      var success, x, y, _results;
+      var r, success, _results;
       success = 0;
       _results = [];
       while (true) {
-        x = random_number(this.map.width);
-        y = random_number(this.map.height);
-        if (this.sketch.create("crystalTree", x, y) === true) success += 1;
+        r = this.random_positions();
+        if (this.sketch.create("crystalTree", r.x, r.y) === true) success += 1;
         if (success === 10) {
           break;
         } else {
@@ -2542,9 +2557,10 @@
         if (d.status === true) {
           this.sketch.create("tree", x, y);
           this.map.select_last(x, y).dir = d.dir;
-          return;
+          return true;
         }
       }
+      return false;
     };
 
     GenerateMap.prototype.generate_buildings = function() {
@@ -3849,8 +3865,8 @@
     map.sketch.create("wall", 11, 2, false);
     map.sketch.create("wall", 11, 4, false);
     map.sketch.create("wall", 12, 3, false);
-    map.generate.create_tree(10, 3);
     map.sketch.create("wall", 10, 6, false);
+    map.generate.create_tree(10, 3);
     return map.generate.create_tree(11, 7);
   };
 
