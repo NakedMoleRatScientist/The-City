@@ -14,7 +14,7 @@ class GenerateMap
   generate_trees: (r,gen) ->
     gen.create_tree(r.x,r.y)
   generate_crystal_trees: (r,gen) ->
-    gen.sketch.create("crystalTree",r.x,r.y) == true
+    gen.sketch.create("crystalTree",r.x,r.y)
   range: (x,y) ->
     list = [x..y]
     list.pop()
