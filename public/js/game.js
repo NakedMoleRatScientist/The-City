@@ -711,7 +711,7 @@
         timberDraw(p5, x, y);
         break;
       case "log":
-        logDraw(p5, x, y);
+        logDraw(p5, x, y, location.dir);
     }
     return true;
   };
@@ -961,10 +961,15 @@
     return this.p5.text(name, 715, 115);
   };
 
-  logDraw = function(p5, x, y) {
+  logDraw = function(p5, x, y, dir) {
     p5.stroke(0, 100, 0);
     p5.fill(0);
-    return p5.rect(x + 5, y, 10, 20);
+    if (dir === "left" || dir === "right") {
+      p5.line(x, y, x + 19, y);
+      p5.line(x, y, x + 19, y + 10);
+    }
+    p5.line(x, y, x, y + 19);
+    return p5.line(x + 5, y, x + 5, y + 19);
   };
 
   frameRateDraw = function(p5) {
@@ -2203,9 +2208,10 @@
 
     __extends(Log, _super);
 
-    function Log(x, y) {
+    function Log(x, y, dir) {
       this.x = x;
       this.y = y;
+      this.dir = dir;
       this.name = "log";
       this.cuts_needed = 2;
     }
@@ -2835,7 +2841,9 @@
       new_list = [];
       for (_i = 0, _len = list.length; _i < _len; _i++) {
         l = list[_i];
-        if (pointToRectCollision(l, stockpile.rect()) === false) new_list.push(l);
+        if (pointToRectCollision(l, stockpile.rect()) === false && l.name !== "crystal_tree") {
+          new_list.push(l);
+        }
       }
       return new_list;
     };
