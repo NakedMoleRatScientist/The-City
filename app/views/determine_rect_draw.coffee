@@ -19,5 +19,5 @@ determineRectDraw = (location,x,y,p5) ->
     when "timber"
       timberDraw(p5,x,y)
     when "log"
-      logDraw(p5,x,y)
+      logDraw(p5,x,y,location.dir)
   return true
