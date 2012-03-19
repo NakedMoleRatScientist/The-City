@@ -72,7 +72,12 @@ class MapSketch
       y += d.y
       for i in [0..4]
         if this.create("log",x,y) == true
-          @map.select_last(x,y).dir = object.dir
+          log = @map.select_last(x,y)
+          log.dir = object.dir
+          if i == 0
+            log.part = "begin"
+          else if i == 4
+            log.part = "end"
           @map.new_object(x,y)
         x += d.x
         y += d.y
