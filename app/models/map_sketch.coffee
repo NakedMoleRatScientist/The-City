@@ -71,7 +71,7 @@ class MapSketch
       x += d.x
       y += d.y
       for i in [0..4]
-        if this.create("log",x,y,object.dir) == true
+        if this.create("log",x,y) == true
           @map.new_object(x,y)
         x += d.x
         y += d.y
