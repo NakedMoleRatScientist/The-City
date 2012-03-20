@@ -5,6 +5,13 @@ class MsgManager
   create_combat_relation: (unit_one,unit_two) ->
     @relations.push new CombatRelation([unit_one,unit_two])
     return (@relations.length - 1)
+  find_resource_relation: (person, resource) ->
+    n = 0
+    for r in @relations
+      if person in r.person && resource in r.resource
+        return n
+      n += 1
+    false
   find_relation: (unit_one,unit_two) ->
     n = 0
     for r in @relations
