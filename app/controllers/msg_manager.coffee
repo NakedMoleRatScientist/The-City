@@ -2,6 +2,9 @@ class MsgManager
   constructor: () ->
     @relations = []
     @last_status = -1
+  create_resource_relation: (person, part) ->
+    @relations.push new ResourceRelation(person,part)
+    return (@relations.length -1)
   create_combat_relation: (unit_one,unit_two) ->
     @relations.push new CombatRelation([unit_one,unit_two])
     return (@relations.length - 1)
