@@ -47,6 +47,10 @@ class MsgManager
           this.strike(o)
         when "dodge"
           this.dodge(o)
+  cut: (object) ->
+    msg = object.person.name + " saws " + object.resource.name
+
+
   determine_resource_msg: (objects) ->
     return if objects == -1
     switch(o.action)
