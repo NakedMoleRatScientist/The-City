@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, Collision, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, FloatingMsgs, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, Item, Job, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Log, Map, MapDestinate, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ResourceRelation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timber, Timer, Torso, Tree, Unit, Units, Wall, Wood, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, build_rect, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, cuttingDown, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floatText, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, logDraw, mapDraw, mapViewer, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, timberDraw, timberStock, timberStockpileDraw, titleDraw, translateIntoDrawCoord, treeDraw, unitCombat, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw,
+  var Arm, Body, Camera, Collision, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, Item, Job, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Log, Map, MapDestinate, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ResourceRelation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Subpart, TextOptions, TextOptionsDraw, Timber, Timer, Torso, Tree, Unit, Units, Wall, Wood, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, build_rect, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, cuttingDown, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floatText, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, logDraw, mapDraw, mapViewer, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, terrainTest, timberDraw, timberStock, timberStockpileDraw, titleDraw, translateIntoDrawCoord, treeDraw, unitCombat, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -445,37 +445,6 @@
     };
 
     return DrawModeManager;
-
-  })();
-
-  FloatingMsgs = (function() {
-
-    function FloatingMsgs() {
-      this.msgs = [];
-    }
-
-    FloatingMsgs.prototype.create = function(msg, time, x, y) {
-      x *= 20;
-      y *= 20;
-      return this.msgs.push(new FloatText(msg, time, x, y));
-    };
-
-    FloatingMsgs.prototype.draw = function(p5) {
-      var dirty, m, _i, _len, _ref, _results;
-      dirty = [];
-      _ref = this.msgs;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        m = _ref[_i];
-        p5.text(m, m.x, m.y);
-        m.x += m.dir.x * 20;
-        m.y += m.dir.y * 20;
-        _results.push(m.time -= 1);
-      }
-      return _results;
-    };
-
-    return FloatingMsgs;
 
   })();
 
@@ -974,11 +943,11 @@
       }
     } else {
       p5.line(x, y, x, y + 19);
-      p5.line(x + 5, y, x + 5, y + 19);
+      p5.line(x + 10, y, x + 10, y + 19);
       if (part === "begin") {
         return p5.line(x, y, x + 10, y);
       } else if (part === "end") {
-        return p5.line(x, y, x + 10, y);
+        return p5.line(x, y + 19, x + 10, y + 19);
       }
     }
   };
@@ -2880,6 +2849,7 @@
     function ResourceRelation(person, resource) {
       this.person = person;
       this.resource = resource;
+      this.type = "resource";
       this.summary = this.person + " 's acts on resource " + this.resource;
       ResourceRelation.__super__.constructor.call(this);
     }
@@ -2992,6 +2962,7 @@
 
     function CombatRelation(actors) {
       this.actors = actors;
+      this.type = "combat";
       this.summary = this.actors[0] + " and " + this.actors[1] + " are engaged in mortal combat!";
       CombatRelation.__super__.constructor.call(this);
     }
@@ -3822,8 +3793,8 @@
       build: "tree"
     });
     map.select_last(10, 10).dir = "left";
-    map.sketch.create("tree", 20, 20);
-    return map.select_last(20, 20).dir = "down";
+    map.sketch.create("tree", 10, 2);
+    return map.select_last(10, 2).dir = "down";
   };
 
   pigInvasion = function(units, map) {
@@ -4038,12 +4009,49 @@
       this.last_status = -1;
     }
 
+    MsgManager.prototype.create_relation = function(type, identifier) {
+      if (type === "tree") {
+        return this.relations.push(new ResourceRelation(identifer));
+      }
+    };
+
+    MsgManager.prototype.create_resource_relation = function(person, part) {
+      this.relations.push(new ResourceRelation(person, part));
+      return this.relations.length(-1);
+    };
+
     MsgManager.prototype.create_combat_relation = function(unit_one, unit_two) {
       this.relations.push(new CombatRelation([unit_one, unit_two]));
       return this.relations.length - 1;
     };
 
-    MsgManager.prototype.find_relation = function(unit_one, unit_two) {
+    MsgManager.prototype.find_resource_relation = function(person, resource) {
+      var n, r, _i, _len, _ref;
+      n = 0;
+      _ref = this.relations;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        r = _ref[_i];
+        if (__indexOf.call(r.person, person) >= 0 && __indexOf.call(r.resource, resource) >= 0) {
+          return n;
+        }
+        n += 1;
+      }
+      return false;
+    };
+
+    MsgManager.prototype.find_relation = function(identifer, type) {
+      var n, r, _i, _len, _ref;
+      n = 0;
+      _ref = this.relations;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        r = _ref[_i];
+        if (r.type === type && r.verify(identifier)) return n;
+        n += 1;
+      }
+      return false;
+    };
+
+    MsgManager.prototype.find_combat_relation = function(unit_one, unit_two) {
       var n, r, _i, _len, _ref;
       n = 0;
       _ref = this.relations;
@@ -4059,8 +4067,23 @@
 
     MsgManager.prototype.find_or_create_combat_relation = function(unit_one, unit_two) {
       var n;
-      n = this.find_relation(unit_one, unit_two);
+      n = this.find_combat_relation(unit_one, unit_two);
       if (n === false) return this.create_combat_relation(unit_one, unit_two);
+      return n;
+    };
+
+    MsgManager.prototype.find_or_create_resource_relation = function(person, resource) {
+      var n;
+      n = this.find_resource_relation(person, resource);
+      if (n === false) return this.create_resource_relation(person, resource);
+      return n;
+    };
+
+    MsgManager.prototype.resource_msg = function(msg, person, resource) {
+      var n;
+      n = this.find_or_create_resource_relation(person, resourc);
+      this.relations[n].add_msg(msg);
+      this.last_status = n;
       return n;
     };
 
@@ -4118,6 +4141,20 @@
         }
       }
       return _results;
+    };
+
+    MsgManager.prototype.cut = function(object) {
+      var msg;
+      msg = object.person.name + " saws " + object.resource.name;
+      return this.resource_msg(msg, object.person, object.resource);
+    };
+
+    MsgManager.prototype.determine_resource_msg = function(objects) {
+      if (objects === -1) return;
+      switch (o.action) {
+        case "cut":
+          return this.cut(o);
+      }
     };
 
     MsgManager.prototype.strike = function(object) {
