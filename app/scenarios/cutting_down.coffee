@@ -5,4 +5,4 @@ cuttingDown = (units,map) ->
   map.dest.add_stockpile(x: 400, y: 100, build: "tree")
   map.select_last(10,10).dir = "left"
   map.dest.create("tree",20,20)
-  map.select_last(10,10).dir = "down"
+  map.select_last(20,20).dir = "down"
