@@ -4,5 +4,5 @@ cuttingDown = (units,map) ->
   units.create new Human(25,10, "gatherer",0)
   map.dest.add_stockpile(x: 400, y: 100, build: "tree")
   map.select_last(10,10).dir = "left"
-  map.sketch.create("tree",20,20)
-  map.select_last(20,20).dir = "down"
+  map.sketch.create("tree",10,5)
+  map.select_last(10,5).dir = "down"
