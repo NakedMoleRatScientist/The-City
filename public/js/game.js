@@ -711,7 +711,7 @@
         timberDraw(p5, x, y);
         break;
       case "log":
-        logDraw(p5, x, y, location.dir);
+        logDraw(p5, x, y, location.dir, location.part);
     }
     return true;
   };
@@ -961,15 +961,26 @@
     return this.p5.text(name, 715, 115);
   };
 
-  logDraw = function(p5, x, y, dir) {
+  logDraw = function(p5, x, y, dir, part) {
     p5.stroke(0, 100, 0);
     p5.fill(0);
     if (dir === "left" || dir === "right") {
       p5.line(x, y, x + 19, y);
-      p5.line(x, y, x + 19, y + 10);
+      p5.line(x, y + 10, x + 19, y + 10);
+      if (part === "begin") {
+        return p5.line(x + 19, y, x + 19, y + 10);
+      } else if (part === "end") {
+        return p5.line(x, y, x, y + 10);
+      }
+    } else {
+      p5.line(x, y, x, y + 19);
+      p5.line(x + 5, y, x + 5, y + 19);
+      if (part === "begin") {
+        return p5.line(x, y, x + 10, y);
+      } else if (part === "end") {
+        return p5.line(x, y, x + 10, y);
+      }
     }
-    p5.line(x, y, x, y + 19);
-    return p5.line(x + 5, y, x + 5, y + 19);
   };
 
   frameRateDraw = function(p5) {
@@ -2214,6 +2225,7 @@
       this.dir = dir;
       this.name = "log";
       this.cuts_needed = 2;
+      this.part = "middle";
     }
 
     return Log;
@@ -2777,7 +2789,7 @@
     };
 
     MapSketch.prototype.cut_down = function(x, y) {
-      var d, i, object, tree, _results;
+      var d, i, log, object, tree, _results;
       tree = this.map.select_by_name("tree", x, y);
       if (tree === false) {
         object = this.map.select_by_name("log", x, y);
@@ -2796,7 +2808,16 @@
         y += d.y;
         _results = [];
         for (i = 0; i <= 4; i++) {
-          if (this.create("log", x, y) === true) this.map.new_object(x, y);
+          if (this.create("log", x, y) === true) {
+            log = this.map.select_last(x, y);
+            log.dir = object.dir;
+            if (i === 0) {
+              log.part = "begin";
+            } else if (i === 4) {
+              log.part = "end";
+            }
+            this.map.new_object(x, y);
+          }
           x += d.x;
           _results.push(y += d.y);
         }
@@ -3800,7 +3821,9 @@
       y: 100,
       build: "tree"
     });
-    return map.select_last(10, 10).dir = "left";
+    map.select_last(10, 10).dir = "left";
+    map.sketch.create("tree", 20, 20);
+    return map.select_last(20, 20).dir = "down";
   };
 
   pigInvasion = function(units, map) {
