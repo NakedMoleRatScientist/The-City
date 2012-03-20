@@ -47,6 +47,11 @@ class MsgManager
           this.strike(o)
         when "dodge"
           this.dodge(o)
+  determine_resource_msg: (objects) ->
+    return if objects == -1
+    switch(o.action)
+      when "cut"
+        this.cut(o)
   strike: (object) ->
     part = object.part
     msgs = []
