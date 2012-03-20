@@ -49,7 +49,7 @@ class MsgManager
           this.dodge(o)
   cut: (object) ->
     msg = object.person.name + " saws " + object.resource.name
-
+    this.resource_msg(msg,object.person,object.resource)
 
   determine_resource_msg: (objects) ->
     return if objects == -1
