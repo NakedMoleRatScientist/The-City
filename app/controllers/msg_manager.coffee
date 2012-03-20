@@ -15,6 +15,13 @@ class MsgManager
         return n
       n += 1
     false
+  find_relation: (identifer,type) ->
+    n = 0
+    for r in @relations
+      if r.type == type && r.verify(identifier)
+        return n
+      n += 1
+    false
   find_combat_relation: (unit_one,unit_two) ->
     n = 0
     for r in @relations
