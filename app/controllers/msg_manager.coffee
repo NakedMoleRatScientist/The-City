@@ -17,6 +17,11 @@ class MsgManager
     if n == false
       return this.create_combat_relation(unit_one,unit_two)
     return n
+  find_or_create_resource_relation: (person,resource) ->
+    n = this.find_resource_relation(person,resourc)
+    if n == false
+      return this.create_resource_relation(person,resource)
+    n
   resource_msg: (msg,person,resource) ->
     n = this.find_or_create_resource_relation(person,resourc)
     @relations[n].add_msg(msg)
