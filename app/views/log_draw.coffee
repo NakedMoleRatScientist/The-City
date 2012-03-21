@@ -17,7 +17,13 @@ logDraw = (p5,x,y,dir,part) ->
   else
     p5.line(x,y,x,y + 19)
     p5.line(x + 10,y,x + 10,y + 19)
-    if part == "begin"
-      p5.line(x,y,x + 10,y)
-    else if part == "end"
-      p5.line(x,y + 19,x + 10,y + 19)
+    if dir == "down"
+      if part == "begin"
+        p5.line(x,y,x + 10,y)
+      else if part == "end"
+        p5.line(x,y + 19,x + 10,y + 19)
+    else
+      if part == "begin"
+        p5.line(x,y + 19,x + 10,y + 19)
+      else
+        p5.line(x,y,x + 10,y)
