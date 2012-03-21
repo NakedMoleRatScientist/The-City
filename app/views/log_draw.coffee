@@ -25,5 +25,5 @@ logDraw = (p5,x,y,dir,part) ->
     else
       if part == "begin"
         p5.line(x,y + 19,x + 10,y + 19)
-      else
+      else if part == "end"
         p5.line(x,y,x + 10,y)
