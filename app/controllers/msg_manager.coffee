@@ -47,7 +47,7 @@ class MsgManager
     n = this.find_or_create_relation(ident,"combat")
     @relations[n].add_msg(msg)
     @last_status = n
-    return n
+    n
   get_last_update: () ->
     return -1 if @last_status == -1
     @relations[@last_status].last()
