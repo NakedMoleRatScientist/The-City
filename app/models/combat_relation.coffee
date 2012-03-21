@@ -1,5 +1,7 @@
 class CombatRelation extends Relation
-  constructor: (@actors) ->
+  constructor: (ident) ->
+    @one = ident.one
+    @two = ident.two
     @type = "combat"
     @summary = @actors[0] + " and " + @actors[1] + " are engaged in mortal combat!"
     super()
