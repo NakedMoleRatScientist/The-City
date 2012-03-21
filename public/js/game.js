@@ -2897,9 +2897,9 @@
 
     __extends(ResourceRelation, _super);
 
-    function ResourceRelation(person, resource) {
-      this.person = person;
-      this.resource = resource;
+    function ResourceRelation(ident) {
+      this.person = ident.person;
+      this.resource = ident.resource;
       this.type = "resource";
       this.summary = this.person + " 's acts on resource " + this.resource;
       ResourceRelation.__super__.constructor.call(this);
@@ -4104,28 +4104,9 @@
       }
     };
 
-    MsgManager.prototype.create_resource_relation = function(person, part) {
-      this.relations.push(new ResourceRelation(person, part));
-      return this.relations.length(-1);
-    };
-
     MsgManager.prototype.create_combat_relation = function(unit_one, unit_two) {
       this.relations.push(new CombatRelation([unit_one, unit_two]));
       return this.relations.length - 1;
-    };
-
-    MsgManager.prototype.find_resource_relation = function(person, resource) {
-      var n, r, _i, _len, _ref;
-      n = 0;
-      _ref = this.relations;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        r = _ref[_i];
-        if (__indexOf.call(r.person, person) >= 0 && __indexOf.call(r.resource, resource) >= 0) {
-          return n;
-        }
-        n += 1;
-      }
-      return false;
     };
 
     MsgManager.prototype.find_relation = function(identifer, type) {
@@ -4161,13 +4142,6 @@
       return n;
     };
 
-    MsgManager.prototype.find_or_create_resource_relation = function(person, resource) {
-      var n;
-      n = this.find_resource_relation(person, resource);
-      if (n === false) return this.create_resource_relation(person, resource);
-      return n;
-    };
-
     MsgManager.prototype.find_or_create_relation = function(ident, type) {
       var n;
       n = this.find_relation(ident, type);
@@ -4176,8 +4150,12 @@
     };
 
     MsgManager.prototype.resource_msg = function(msg, person, resource) {
-      var n;
-      n = this.find_or_create_resource_relation(person, resourc);
+      var ident, n;
+      ident = {
+        person: person,
+        resource: resource
+      };
+      n = this.find_or_create_relation("tree", ident);
       this.relations[n].add_msg(msg);
       this.last_status = n;
       return n;
@@ -4189,7 +4167,7 @@
         one: unit_one,
         two: unit_two
       };
-      n = this.find_or_create_relation(ident, "combat");
+      n = this.find_or_create_relation("combat", ident);
       n = this.find_or_create_combat_relation(unit_one, unit_two);
       this.relations[n].add_msg(msg);
       this.last_status = n;
