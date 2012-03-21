@@ -40,11 +40,6 @@ class MsgManager
     if n == false
       return this.create_combat_relation(unit_one,unit_two)
     return n
-  find_or_create_resource_relation: (person,resource) ->
-    n = this.find_resource_relation(person,resource)
-    if n == false
-      return this.create_resource_relation(person,resource)
-    n
   find_or_create_relation: (ident,type) ->
     n = this.find_relation(ident,type)
     if n == false
