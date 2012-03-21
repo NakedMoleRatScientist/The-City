@@ -1,0 +1,1 @@
+stoneDraw = (p5,x,y) ->
