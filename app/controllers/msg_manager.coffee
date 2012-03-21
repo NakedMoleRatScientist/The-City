@@ -12,7 +12,7 @@ class MsgManager
   create_combat_relation: (unit_one,unit_two) ->
     @relations.push new CombatRelation([unit_one,unit_two])
     return (@relations.length - 1)
-  find_relation: (identifer,type) ->
+  find_relation: (identifier,type) ->
     n = 0
     for r in @relations
       if r.type == type && r.verify(identifier)
