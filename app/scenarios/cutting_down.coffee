@@ -6,3 +6,5 @@ cuttingDown = (units,map) ->
   map.select_last(10,10).dir = "left"
   map.sketch.create("tree",10,2)
   map.select_last(10,2).dir = "down"
+  map.sketch.create("tree",20,14)
+  map.select_last(20,14).dir = "right"
