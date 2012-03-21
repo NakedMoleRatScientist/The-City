@@ -5,6 +5,8 @@ class MsgManager
   create_relation: (type,identifier) ->
     if type == "tree"
       @relations.push new ResourceRelation(identifer)
+    if type == "combat"
+      @relations.push new CombatRelation(identifier)
   create_resource_relation: (person, part) ->
     @relations.push new ResourceRelation(person,part)
     return (@relations.length -1)
