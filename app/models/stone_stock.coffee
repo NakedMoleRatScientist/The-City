@@ -9,3 +9,4 @@ class StoneStock extends Stockpile
     @queue = false
     @target = null
     @jobs.push(new Job(["find", "quarry"]))
+  collide: () -> true
