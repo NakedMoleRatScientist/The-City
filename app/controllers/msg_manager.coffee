@@ -3,10 +3,11 @@ class MsgManager
     @relations = []
     @last_status = -1
   create_relation: (type,identifier) ->
-    if type == "tree"
-      @relations.push new ResourceRelation(identifer)
-    if type == "combat"
-      @relations.push new CombatRelation(identifier)
+    switch(type)
+      when "tree"
+        @relations.push new ResourceRelation(identifer)
+      when "combat"
+        @relations.push new CombatRelation(identifier)
   create_resource_relation: (person, part) ->
     @relations.push new ResourceRelation(person,part)
     return (@relations.length -1)
