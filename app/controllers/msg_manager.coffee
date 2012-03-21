@@ -51,7 +51,7 @@ class MsgManager
       return this.create_relation(ident,type)
     n
   resource_msg: (msg,person,resource) ->
-    n = this.find_or_create_resource_relation(person,resourc)
+    n = this.find_or_create_resource_relation(person,resource)
     @relations[n].add_msg(msg)
     @last_status = n
     n
