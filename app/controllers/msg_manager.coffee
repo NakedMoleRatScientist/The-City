@@ -16,13 +16,6 @@ class MsgManager
         return n
       n += 1
     false
-  find_combat_relation: (unit_one,unit_two) ->
-    n = 0
-    for r in @relations
-      if unit_one in r.actors && unit_two in r.actors
-        return n
-      n += 1
-    return false
   find_or_create_relation: (ident,type) ->
     n = this.find_relation(ident,type)
     if n == false
