@@ -23,11 +23,6 @@ class MsgManager
         return n
       n += 1
     return false
-  find_or_create_combat_relation: (unit_one,unit_two) ->
-    n = this.find_combat_relation(unit_one,unit_two)
-    if n == false
-      return this.create_combat_relation(unit_one,unit_two)
-    return n
   find_or_create_relation: (ident,type) ->
     n = this.find_relation(ident,type)
     if n == false
