@@ -5,7 +5,8 @@ determineCollisionRedraw = (p5,dirty,map) ->
       location = translateIntoDrawCoord(s,map)
       rect = (x: location.x - 40, y: location.y - 40, width: 100, height: 100)
       if pointToRectCollision(coord,rect) == true
-        if s.name == "crystal_stockpile"
-          crystalStockpileDraw(p5,location.x,location.y)
-        else
-          timberStockpileDraw(p5,location.x,location.y)
+        switch(s.name)
+          when"crystal_stockpile"
+            crystalStockpileDraw(p5,location.x,location.y)
+          when "timber_stockpile"
+            timberStockpileDraw(p5,location.x,location.y)
