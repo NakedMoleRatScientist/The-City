@@ -7,6 +7,5 @@ class CombatRelation extends Relation
     super()
   verify: (ident) ->
     if ident.one == @one && ident.two == @two || ident.one == @two && ident.two == @one
-      console.log("BOB")
       return true
     false
