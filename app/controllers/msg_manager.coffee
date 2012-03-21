@@ -2,7 +2,7 @@ class MsgManager
   constructor: () ->
     @relations = []
     @last_status = -1
-  create_relation: (type,identifier) ->
+  create_relation: (identifier,type) ->
     switch(type)
       when "tree"
         @relations.push new ResourceRelation(identifer)
