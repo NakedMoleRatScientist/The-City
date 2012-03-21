@@ -42,6 +42,11 @@ class MsgManager
     if n == false
       return this.create_resource_relation(person,resource)
     n
+  find_or_create_relation: (ident,type) ->
+    n = this.find_relation(ident,type)
+    if n == false
+      return this.create_relation(ident,type)
+    n
   resource_msg: (msg,person,resource) ->
     n = this.find_or_create_resource_relation(person,resourc)
     @relations[n].add_msg(msg)
@@ -49,6 +54,7 @@ class MsgManager
     n
   combat_msg: (unit_one,unit_two,msg) ->
     ident = (one: unit_one, two: unit_two)
+    n = this.find_or_create_relation(ident,"combat")
     n = this.find_or_create_combat_relation(unit_one,unit_two)
     @relations[n].add_msg(msg)
     @last_status = n
