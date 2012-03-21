@@ -44,7 +44,6 @@ class MsgManager
   combat_msg: (unit_one,unit_two,msg) ->
     ident = (one: unit_one, two: unit_two)
     n = this.find_or_create_relation("combat",ident)
-    n = this.find_or_create_combat_relation(unit_one,unit_two)
     @relations[n].add_msg(msg)
     @last_status = n
     return n
