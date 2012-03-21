@@ -3011,15 +3011,17 @@
 
     __extends(CombatRelation, _super);
 
-    function CombatRelation(actors) {
-      this.actors = actors;
+    function CombatRelation(ident) {
+      this.one = ident.one;
+      this.two = ident.two;
       this.type = "combat";
-      this.summary = this.actors[0] + " and " + this.actors[1] + " are engaged in mortal combat!";
+      this.summary = this.one + " and " + this.two + " are engaged in mortal combat!";
       CombatRelation.__super__.constructor.call(this);
     }
 
     CombatRelation.prototype.verify = function(ident) {
-      if (ident.one === this.actors[0] && ident.two === this.actors[1]) {
+      if (ident.one === this.one && ident.two === this.two || ident.one === this.two && ident.two === this.one) {
+        console.log("BOB");
         return true;
       }
       return false;
@@ -4095,13 +4097,15 @@
       this.last_status = -1;
     }
 
-    MsgManager.prototype.create_relation = function(type, identifier) {
+    MsgManager.prototype.create_relation = function(identifier, type) {
       switch (type) {
         case "tree":
-          return this.relations.push(new ResourceRelation(identifer));
+          this.relations.push(new ResourceRelation(identifer));
+          break;
         case "combat":
-          return this.relations.push(new CombatRelation(identifier));
+          this.relations.push(new CombatRelation(identifier));
       }
+      return this.relations.length - 1;
     };
 
     MsgManager.prototype.create_combat_relation = function(unit_one, unit_two) {
@@ -4109,7 +4113,7 @@
       return this.relations.length - 1;
     };
 
-    MsgManager.prototype.find_relation = function(identifer, type) {
+    MsgManager.prototype.find_relation = function(identifier, type) {
       var n, r, _i, _len, _ref;
       n = 0;
       _ref = this.relations;
@@ -4167,8 +4171,8 @@
         one: unit_one,
         two: unit_two
       };
-      n = this.find_or_create_relation("combat", ident);
-      n = this.find_or_create_combat_relation(unit_one, unit_two);
+      n = this.find_or_create_relation(ident, "combat");
+      console.log(this.relations[n]);
       this.relations[n].add_msg(msg);
       this.last_status = n;
       return n;
