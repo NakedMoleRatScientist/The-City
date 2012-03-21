@@ -9,9 +9,6 @@ class MsgManager
       when "combat"
         @relations.push new CombatRelation(identifier)
     @relations.length - 1
-  create_combat_relation: (unit_one,unit_two) ->
-    @relations.push new CombatRelation([unit_one,unit_two])
-    return (@relations.length - 1)
   find_relation: (identifier,type) ->
     n = 0
     for r in @relations
