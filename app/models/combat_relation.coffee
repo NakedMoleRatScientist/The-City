@@ -6,6 +6,6 @@ class CombatRelation extends Relation
     @summary = @one + " and " + @two + " are engaged in mortal combat!"
     super()
   verify: (ident) ->
-    if ident.one == @actors[0] && ident.two == @actors[1]
+    if ident.one == @one && ident.two == @two
       return true
     false
