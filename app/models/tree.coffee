@@ -1,6 +1,7 @@
 class Tree extends Wood
   constructor: (@x,@y) ->
     @name = "tree"
+    @ident = random_number(1000)
     @cuts_needed = 10
     @dir = "none"
   dir_output: () ->
