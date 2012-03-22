@@ -4,6 +4,8 @@ class Tree extends Wood
     @ident = random_number(1000)
     @cuts_needed = 10
     @dir = "none"
+  identify: () ->
+    @name + @ident
   dir_output: () ->
     switch(@dir)
       when "left"
