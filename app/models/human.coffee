@@ -50,6 +50,7 @@ class Human extends Unit
         choices = map.free_locations(object.x,object.y,1)
         choice = choices[random_number(choices.length)]
         this.set_move(choice.x,choice.y)
+        return (action: "find", person: this.name, resource: @job.target.identify())
       when "cut_down"
         if @job.target.cut() == true
           @advance = true
