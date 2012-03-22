@@ -35,6 +35,7 @@ class Lightboar extends Unit
         controller.tells("escape",1)
         @leave = true
     @perform = @order
+    return false
   receive_msg: (msg) ->
     switch(msg)
       when "escape"
