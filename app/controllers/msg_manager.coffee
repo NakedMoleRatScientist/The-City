@@ -59,7 +59,7 @@ class MsgManager
         when "dodge"
           this.dodge(o)
   cut: (object) ->
-    msg = object.person.name + " saws " + object.resource.name
+    msg = object.person + " cuts " + object.resource
     this.resource_msg(msg,object.person,object.resource)
 
   determine_resource_msg: (objects) ->
