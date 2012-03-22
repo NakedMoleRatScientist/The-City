@@ -3107,11 +3107,20 @@
           choices = map.free_locations(object.x, object.y, 1);
           choice = choices[random_number(choices.length)];
           this.set_move(choice.x, choice.y);
-          break;
+          return {
+            action: "find",
+            person: this.name,
+            resource: this.job.target.identify()
+          };
         case "cut_down":
           if (this.job.target.cut() === true) {
             this.advance = true;
             map.sketch.cut_down(this.job.target.x, this.job.target.y);
+            return {
+              action: "cut",
+              person: this.name,
+              resource: this.job.target.identify()
+            };
           } else {
             this.advance = false;
             return false;
@@ -3131,7 +3140,11 @@
         case 1:
           status = this.cut_action(map);
       }
-      if (status === true) return this.perform = this.order;
+      if (status !== false) {
+        this.perform = this.order;
+        return status;
+      }
+      return false;
     };
 
     return Human;
@@ -3458,6 +3471,10 @@
       this.dir = "none";
     }
 
+    Tree.prototype.identify = function() {
+      return this.name + this.ident;
+    };
+
     Tree.prototype.dir_output = function() {
       var x, y;
       switch (this.dir) {
@@ -3707,7 +3724,8 @@
           controller.tells("escape", 1);
           this.leave = true;
       }
-      return this.perform = this.order;
+      this.perform = this.order;
+      return false;
     };
 
     Lightboar.prototype.receive_msg = function(msg) {
@@ -4141,7 +4159,7 @@
         person: person,
         resource: resource
       };
-      n = this.find_or_create_relation("tree", ident);
+      n = this.find_or_create_relation(ident, "tree");
       this.relations[n].add_msg(msg);
       this.last_status = n;
       return n;
@@ -4209,7 +4227,7 @@
 
     MsgManager.prototype.cut = function(object) {
       var msg;
-      msg = object.person.name + " saws " + object.resource.name;
+      msg = object.person + " cuts " + object.resource;
       return this.resource_msg(msg, object.person, object.resource);
     };
 
