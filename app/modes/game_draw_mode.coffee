@@ -5,7 +5,7 @@ class GameDrawMode extends DrawMode
     @redraw = false
     @camera = (x: null, y: null)
     @mouse_width = 0
-    @floats = new FloatsTracker()
+    @floats = new floatsTracker()
     super("game",@p5)
   draw: (object) ->
     switch (object.state)
