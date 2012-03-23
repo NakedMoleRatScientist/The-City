@@ -3,6 +3,7 @@ class Tree extends Wood
     @name = "tree"
     @cuts_needed = 10
     @dir = "none"
+    super()
   dir_output: () ->
     switch(@dir)
       when "left"
