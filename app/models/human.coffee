@@ -61,8 +61,8 @@ class Human extends Unit
           return false
     true
   set_action: (map) ->
-    return if this.act_on_queue()
-    return if @body.hand == 2
+    return -1 if this.act_on_queue()
+    return -1 if @body.hand == 2
     switch (@queue_type)
       when 0
         status = this.gather_action(map)
