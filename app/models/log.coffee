@@ -3,3 +3,4 @@ class Log extends Wood
     @name = "log"
     @cuts_needed = 2
     @part = "middle"
+    super()
