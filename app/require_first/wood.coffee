@@ -1,4 +1,6 @@
 class Wood
+  constructor: () ->
+    @ident = random_number(1000)
   collide: () ->
     true
   identify: () ->
