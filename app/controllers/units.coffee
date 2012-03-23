@@ -12,7 +12,7 @@ class Units
   move: () ->
     for unit in @units
       if @frame % unit.agility == 0
-        unit.set_action(@map,this)
+        @msgs.determine_resource_msg(unit.set_action(@map,this))
         unit.combat.detect(this)
         @msgs.determine_combat_msg(unit.combat.attack())
         unit.move(@finder)
