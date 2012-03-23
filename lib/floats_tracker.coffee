@@ -1,0 +1,3 @@
+class floatsTracker
+  constructor: () ->
+    @msgs = []
