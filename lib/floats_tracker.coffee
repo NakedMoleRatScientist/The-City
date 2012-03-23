@@ -2,4 +2,5 @@ class floatsTracker
   constructor: () ->
     @msgs = []
   process: (msg) ->
-    debugger
+    if msg.action == "cut"
+      debugger
