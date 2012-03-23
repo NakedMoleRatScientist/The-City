@@ -4,7 +4,7 @@ class Wood
   collide: () ->
     true
   identify: () ->
-    @name + @identl
+    @name + @ident
   cut: () ->
     @cuts_needed -= 1
     if @cuts_needed == 0
