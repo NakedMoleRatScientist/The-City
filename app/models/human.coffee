@@ -37,7 +37,7 @@ class Human extends Unit
       when "drop_item"
         this.drop_item(@job.store)
         map.drop_item(@job.drop.x,@job.drop.y,@job.store)
-    true
+    -1
   cut_action: (map) ->
     switch(@queue[@order])
       when "find"
@@ -59,7 +59,7 @@ class Human extends Unit
         else
           @advance = false
           return false
-    true
+    -1
   set_action: (map) ->
     return -1 if this.act_on_queue()
     return -1 if @body.hand == 2
