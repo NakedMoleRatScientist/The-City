@@ -71,4 +71,4 @@ class Human extends Unit
     if status != false
       @perform = @order
       return status
-    false
+    -1
