@@ -64,9 +64,10 @@ class MsgManager
 
   determine_resource_msg: (objects) ->
     return if objects == -1
-    switch(o.action)
-      when "cut"
-        this.cut(o)
+    for o in objects
+      switch(o.action)
+        when "cut"
+          this.cut(o)
   strike: (object) ->
     part = object.part
     msgs = []
