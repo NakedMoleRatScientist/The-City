@@ -8,3 +8,5 @@ class Relation
     @actions[@actions.length - 1]
   add_msg: (msg) ->
     @msgs.push(msg)
+  push_action: (action) ->
+    @actions.push(action)
