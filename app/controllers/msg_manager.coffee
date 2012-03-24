@@ -62,12 +62,11 @@ class MsgManager
     msg = object.person + " cuts " + object.resource
     this.resource_msg(msg,object.person,object.resource)
 
-  determine_resource_msg: (objects) ->
-    return if objects == -1
-    for o in objects
-      switch(o.action)
-        when "cut"
-          this.cut(o)
+  determine_resource_msg: (object) ->
+    return if object == -1
+    switch object.action
+      when "cut"
+        this.cut(o)
   strike: (object) ->
     part = object.part
     msgs = []
