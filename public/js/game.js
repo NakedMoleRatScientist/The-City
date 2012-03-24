@@ -4144,7 +4144,7 @@
     MsgManager.prototype.create_relation = function(identifier, type) {
       switch (type) {
         case "tree":
-          this.relations.push(new ResourceRelation(identifer));
+          this.relations.push(new ResourceRelation(identifier));
           break;
         case "combat":
           this.relations.push(new CombatRelation(identifier));
@@ -4249,11 +4249,11 @@
       return this.resource_msg(msg, object.person, object.resource);
     };
 
-    MsgManager.prototype.determine_resource_msg = function(objects) {
-      if (objects === -1) return;
-      switch (o.action) {
+    MsgManager.prototype.determine_resource_msg = function(object) {
+      if (object === -1) return;
+      switch (object.action) {
         case "cut":
-          return this.cut(o);
+          return this.cut(object);
       }
     };
 
