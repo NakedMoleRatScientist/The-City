@@ -69,7 +69,7 @@ class MsgManager
           this.dodge(o)
   cut: (object) ->
     msg = object.person + " cuts " + object.resource
-    this.resource_msg(msg,object,"cut")
+    this.resource_msg(msg,object,"chop")
   determine_resource_msg: (object) ->
     return if object == -1
     switch object.action
