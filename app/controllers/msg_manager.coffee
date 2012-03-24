@@ -2,6 +2,12 @@ class MsgManager
   constructor: () ->
     @relations = []
     @last_status = -1
+  get_list: (type) ->
+    list = []
+    for r in @relations
+      if r.type == type
+        list.push(r)
+    list
   create_relation: (identifier,type) ->
     switch(type)
       when "tree"
