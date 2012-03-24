@@ -35,12 +35,10 @@ class MsgManager
   append_action: (ident,type,action)
     n = this.find_or_create_relation(ident,type)
     @relations[n].actions.push(action)
-    @last_status = n
     n
   create_msg: (ident,type,msg) ->
     n = this.find_or_create_relation(ident,type)
     @relations[n].add_msg(msg)
-    @last_status = n
     n
   combat_msg: (unit_one,unit_two,msg) ->
     ident = (one: unit_one, two: unit_two)
