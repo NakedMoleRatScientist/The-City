@@ -550,8 +550,8 @@
       this.msgs = [];
     }
 
-    floatsTracker.prototype.process = function(msg) {
-      if (msg.action === "cut") debugger;
+    floatsTracker.prototype.process = function(msgs) {
+      if (msgs !== false) return console.log(msgs[0]);
     };
 
     return floatsTracker;
@@ -1373,6 +1373,7 @@
           this.dirty_menu = object.menu;
           this.mouse_width = mouseDraw(this.p5, object.mouse, units, map);
           frameRateDraw(this.p5);
+          this.floats.process(object.resource_msgs);
           if (msg !== -1) messageDraw(this.p5, msg);
           break;
         default:
@@ -1499,7 +1500,8 @@
           msg: this.msgs.get_last_update(),
           state: -1,
           menu: this.menu,
-          mouse: this.mouse
+          mouse: this.mouse,
+          resource_msgs: this.msgs.get_list("resource")
         };
       }
       return GameMode.__super__.update_draw.call(this);
@@ -1840,14 +1842,23 @@
 
     function Relation() {
       this.msgs = [];
+      this.actions = [];
     }
 
     Relation.prototype.last = function() {
       return this.msgs[this.msgs.length - 1];
     };
 
+    Relation.prototype.last_action = function() {
+      return this.actions[this.actions.length - 1];
+    };
+
     Relation.prototype.add_msg = function(msg) {
       return this.msgs.push(msg);
+    };
+
+    Relation.prototype.push_action = function(action) {
+      return this.actions.push(action);
     };
 
     return Relation;
@@ -4141,6 +4152,18 @@
       this.last_status = -1;
     }
 
+    MsgManager.prototype.get_list = function(type) {
+      var list, r, _i, _len, _ref;
+      list = [];
+      _ref = this.relations;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        r = _ref[_i];
+        if (r.type === type) list.push(r);
+      }
+      if (list.length === 0) return false;
+      return list;
+    };
+
     MsgManager.prototype.create_relation = function(identifier, type) {
       switch (type) {
         case "tree":
@@ -4167,32 +4190,37 @@
     MsgManager.prototype.find_or_create_relation = function(ident, type) {
       var n;
       n = this.find_relation(ident, type);
-      if (n === false) return this.create_relation(ident, type);
+      if (n === false) return this.last_status = this.create_relation(ident, type);
+      this.last_status = n;
       return n;
     };
 
-    MsgManager.prototype.resource_msg = function(msg, person, resource) {
-      var ident, n;
-      ident = {
-        person: person,
-        resource: resource
-      };
-      n = this.find_or_create_relation(ident, "tree");
+    MsgManager.prototype.resource_msg = function(msg, ident, action) {
+      this.create_msg(ident, "tree", msg);
+      return this.append_action(ident, "tree", action);
+    };
+
+    MsgManager.prototype.append_action = function(ident, type, action) {
+      var n;
+      n = this.find_or_create_relation(ident, type);
+      this.relations[n].actions.push(action);
+      return n;
+    };
+
+    MsgManager.prototype.create_msg = function(ident, type, msg) {
+      var n;
+      n = this.find_or_create_relation(ident, type);
       this.relations[n].add_msg(msg);
-      this.last_status = n;
       return n;
     };
 
     MsgManager.prototype.combat_msg = function(unit_one, unit_two, msg) {
-      var ident, n;
+      var ident;
       ident = {
         one: unit_one,
         two: unit_two
       };
-      n = this.find_or_create_relation(ident, "combat");
-      this.relations[n].add_msg(msg);
-      this.last_status = n;
-      return n;
+      return this.create_msg(ident, "combat", msg);
     };
 
     MsgManager.prototype.get_last_update = function() {
@@ -4246,7 +4274,7 @@
     MsgManager.prototype.cut = function(object) {
       var msg;
       msg = object.person + " cuts " + object.resource;
-      return this.resource_msg(msg, object.person, object.resource);
+      return this.resource_msg(msg, object, "chops");
     };
 
     MsgManager.prototype.determine_resource_msg = function(object) {
