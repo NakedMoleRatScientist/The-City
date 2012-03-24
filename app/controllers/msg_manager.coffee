@@ -66,7 +66,7 @@ class MsgManager
     return if object == -1
     switch object.action
       when "cut"
-        this.cut(o)
+        this.cut(object)
   strike: (object) ->
     part = object.part
     msgs = []
