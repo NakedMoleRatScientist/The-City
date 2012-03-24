@@ -1,6 +1,6 @@
 class floatsTracker
   constructor: () ->
     @msgs = []
-  process: (msg) ->
-    if msg.action == "cut"
-      debugger
+  process: (msgs) ->
+    if msgs != false
+      console.log(msgs[0].last_action())
