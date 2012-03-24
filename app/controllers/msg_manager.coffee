@@ -31,7 +31,7 @@ class MsgManager
   resource_msg: (msg,ident,action) ->
     this.create_msg(ident,"tree",msg)
     this.append_action(ident,"tree",action)
-  append_action: (ident,type,action)
+  append_action: (ident,type,action) ->
     n = this.find_or_create_relation(ident,type)
     @relations[n].actions.push(action)
     n
