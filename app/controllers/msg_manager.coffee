@@ -29,10 +29,7 @@ class MsgManager
     n
   resource_msg: (msg,person,resource) ->
     ident = (person: person, resource: resource)
-    n = this.find_or_create_relation(ident,"tree")
-    @relations[n].add_msg(msg)
-    @last_status = n
-    n
+    this.create_msg(ident,"tree")
   create_msg: (ident,type) ->
     n = this.find_or_create_relation(ident,type)
     @relations[n].add_msg(msg)
