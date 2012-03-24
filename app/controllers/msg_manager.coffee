@@ -29,15 +29,15 @@ class MsgManager
     n
   resource_msg: (msg,person,resource) ->
     ident = (person: person, resource: resource)
-    this.create_msg(ident,"tree")
-  create_msg: (ident,type) ->
+    this.create_msg(ident,"tree",msg)
+  create_msg: (ident,type,msg) ->
     n = this.find_or_create_relation(ident,type)
     @relations[n].add_msg(msg)
     @last_status = n
     n
   combat_msg: (unit_one,unit_two,msg) ->
     ident = (one: unit_one, two: unit_two)
-    this.create_msg(ident,"combat")
+    this.create_msg(ident,"combat",msg)
   get_last_update: () ->
     return -1 if @last_status == -1
     @relations[@last_status].last()
