@@ -28,8 +28,7 @@ class MsgManager
       return @last_status = this.create_relation(ident,type)
     @last_status = n
     n
-  resource_msg: (msg,person,resource,action) ->
-    ident = (person: person, resource: resource)
+  resource_msg: (msg,ident,action) ->
     this.create_msg(ident,"tree",msg)
     this.append_action(ident,"tree",action)
   append_action: (ident,type,action)
