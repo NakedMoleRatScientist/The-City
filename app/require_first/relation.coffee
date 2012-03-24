@@ -1,7 +1,7 @@
 class Relation
   constructor: () ->
     @msgs = []
-    @actions[]
+    @actions = []
   last: () ->
     @msgs[@msgs.length - 1]
   last_action: () ->
