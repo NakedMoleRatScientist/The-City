@@ -26,6 +26,7 @@ class MsgManager
     n = this.find_relation(ident,type)
     if n == false
       return this.create_relation(ident,type)
+    @last_status = n
     n
   resource_msg: (msg,person,resource,action) ->
     ident = (person: person, resource: resource)
