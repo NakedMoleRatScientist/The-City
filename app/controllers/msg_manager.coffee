@@ -25,6 +25,7 @@ class MsgManager
   find_or_create_relation: (ident,type) ->
     n = this.find_relation(ident,type)
     if n == false
+      @last_status = n
       return this.create_relation(ident,type)
     @last_status = n
     n
