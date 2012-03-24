@@ -27,7 +27,7 @@ class MsgManager
     if n == false
       return this.create_relation(ident,type)
     n
-  resource_msg: (msg,person,resource) ->
+  resource_msg: (msg,person,resource,action) ->
     ident = (person: person, resource: resource)
     this.create_msg(ident,"tree",msg)
   create_msg: (ident,type,msg) ->
