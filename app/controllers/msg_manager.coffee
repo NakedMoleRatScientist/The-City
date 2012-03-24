@@ -7,6 +7,8 @@ class MsgManager
     for r in @relations
       if r.type == type
         list.push(r)
+    if list.length == 0
+      return false
     list
   create_relation: (identifier,type) ->
     switch(type)
