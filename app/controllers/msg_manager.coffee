@@ -17,10 +17,10 @@ class MsgManager
       when "combat"
         @relations.push new CombatRelation(identifier)
     @relations.length - 1
-  find_relation: (identifier,type) ->
+  find_relation: (ident,type) ->
     n = 0
     for r in @relations
-      if r.type == type && r.verify(identifier)
+      if r.type == type && r.verify(ident)
         return n
       n += 1
     false
