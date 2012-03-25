@@ -551,7 +551,7 @@
     }
 
     floatsTracker.prototype.process = function(msgs) {
-      if (msgs !== false) return console.log(msgs[0]);
+      if (msgs !== false) return console.log(msgs[0].last_action());
     };
 
     return floatsTracker;
@@ -4203,7 +4203,7 @@
     MsgManager.prototype.append_action = function(ident, type, action) {
       var n;
       n = this.find_or_create_relation(ident, type);
-      this.relations[n].actions.push(action);
+      this.relations[n].push_action(action);
       return n;
     };
 
