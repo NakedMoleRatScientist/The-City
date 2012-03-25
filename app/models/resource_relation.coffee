@@ -6,4 +6,5 @@ class ResourceRelation extends Relation
     @summary = @person + " 's acts on resource " + @resource
     super()
   verify: (ident) ->
-    if ident.person = @person && ident.resource == @resource
+    return true if ident.person = @person && ident.resource == @resource
+    false
