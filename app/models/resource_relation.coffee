@@ -5,3 +5,5 @@ class ResourceRelation extends Relation
     @type = "resource"
     @summary = @person + " 's acts on resource " + @resource
     super()
+  verify: (ident) ->
+    if ident.person = @person && ident.resource == @resource
