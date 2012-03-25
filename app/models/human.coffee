@@ -58,7 +58,7 @@ class Human extends Unit
           return (action: "cut", person: this.name, resource: @job.target.identify())
         else
           @advance = false
-          return (action: "cut", person: this.name, resource: @job.target.identify())
+          return (action: "cut", person: this.name, resource: @job.target.identify()))
     -1
   set_action: (map) ->
     return -1 if this.act_on_queue()
@@ -68,7 +68,7 @@ class Human extends Unit
         status = this.gather_action(map)
       when 1
         status = this.cut_action(map)
-    if status != false
+    if @advance == true
       @perform = @order
       return status
     -1
