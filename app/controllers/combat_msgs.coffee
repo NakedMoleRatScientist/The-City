@@ -32,4 +32,4 @@ class CombatMsgs
       msg = object.actors[0] + " can't dodge!"
     else
       msg = object.actors[0] + " dodges " + object.actors[1] + "'s strike"
-    this.combat_msg(object.actors[0],object.actors[1],msg)
+    @manager.combat_msg(object.actors[0],object.actors[1],msg)
