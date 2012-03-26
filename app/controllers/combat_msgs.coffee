@@ -44,3 +44,11 @@ class CombatMsgs
       when "escaped"
         msg = object.actors[1] + " " + object.action + " from the grasp of " + object.actors[0]
     this.combat_msg(object.actors[0],object.actors[1],msg)
+  determine_combat_msg: (objects) ->
+    return if objects == -1
+    for o in objects
+      switch(o.action)
+        when "strike"
+          @combat.strike(o)
+        when "dodge"
+          @combat.dodge(o)

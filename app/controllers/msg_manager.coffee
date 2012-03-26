@@ -45,14 +45,6 @@ class MsgManager
   get_last_update: () ->
     return -1 if @last_status == -1
     @relations[@last_status].last()
-  determine_combat_msg: (objects) ->
-    return if objects == -1
-    for o in objects
-      switch(o.action)
-        when "strike"
-          @combat.strike(o)
-        when "dodge"
-          @combat.dodge(o)
   cut: (object) ->
     msg = object.person + " cuts " + object.resource
     this.resource_msg(msg,object,"chops")
