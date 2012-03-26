@@ -4131,7 +4131,59 @@
       _results = [];
       for (_i = 0, _len = msgs.length; _i < _len; _i++) {
         m = msgs[_i];
-        _results.push(this.manager.combat_msg(object.actors[0], object.actors[1], m));
+        _results.push(this.combat_msg(object.actors[0], object.actors[1], m));
+      }
+      return _results;
+    };
+
+    CombatMsgs.prototype.dodge = function(object) {
+      var msg;
+      if (object.ability === false) {
+        msg = object.actors[0] + " can't dodge!";
+      } else {
+        msg = object.actors[0] + " dodges " + object.actors[1] + "'s strike";
+      }
+      return this.combat_msg(object.actors[0], object.actors[1], msg);
+    };
+
+    CombatMsgs.prototype.combat_msg = function(unit_one, unit_two, msg) {
+      var ident;
+      ident = {
+        one: unit_one,
+        two: unit_two
+      };
+      return this.manager.create_msg(ident, "combat", msg);
+    };
+
+    CombatMsgs.prototype.combat_death = function(object) {
+      var msg;
+      if (object === false) return;
+      switch (object.action) {
+        case "killed":
+          msg = object.actors[0] + " " + object.action + " " + object.actors[1];
+          break;
+        case "escaped":
+          msg = object.actors[1] + " " + object.action + " from the grasp of " + object.actors[0];
+      }
+      return this.combat_msg(object.actors[0], object.actors[1], msg);
+    };
+
+    CombatMsgs.prototype.determine_combat_msg = function(objects) {
+      var o, _i, _len, _results;
+      if (objects === -1) return;
+      _results = [];
+      for (_i = 0, _len = objects.length; _i < _len; _i++) {
+        o = objects[_i];
+        switch (o.action) {
+          case "strike":
+            _results.push(this.combat.strike(o));
+            break;
+          case "dodge":
+            _results.push(this.combat.dodge(o));
+            break;
+          default:
+            _results.push(void 0);
+        }
       }
       return _results;
     };
@@ -4215,7 +4267,7 @@
     function MsgManager() {
       this.relations = [];
       this.last_status = -1;
-      this.combat_msgs = new CombatMsgs(this);
+      this.combat = new CombatMsgs(this);
     }
 
     MsgManager.prototype.get_list = function(type) {
@@ -4280,61 +4332,9 @@
       return n;
     };
 
-    MsgManager.prototype.combat_msg = function(unit_one, unit_two, msg) {
-      var ident;
-      ident = {
-        one: unit_one,
-        two: unit_two
-      };
-      return this.create_msg(ident, "combat", msg);
-    };
-
     MsgManager.prototype.get_last_update = function() {
       if (this.last_status === -1) return -1;
       return this.relations[this.last_status].last();
-    };
-
-    MsgManager.prototype.combat_death = function(object) {
-      var msg;
-      if (object === false) return;
-      switch (object.action) {
-        case "killed":
-          msg = object.actors[0] + " " + object.action + " " + object.actors[1];
-          break;
-        case "escaped":
-          msg = object.actors[1] + " " + object.action + " from the grasp of " + object.actors[0];
-      }
-      return this.combat_msg(object.actors[0], object.actors[1], msg);
-    };
-
-    MsgManager.prototype.dodge = function(object) {
-      var msg;
-      if (object.ability === false) {
-        msg = object.actors[0] + " can't dodge!";
-      } else {
-        msg = object.actors[0] + " dodges " + object.actors[1] + "'s strike";
-      }
-      return this.combat_msg(object.actors[0], object.actors[1], msg);
-    };
-
-    MsgManager.prototype.determine_combat_msg = function(objects) {
-      var o, _i, _len, _results;
-      if (objects === -1) return;
-      _results = [];
-      for (_i = 0, _len = objects.length; _i < _len; _i++) {
-        o = objects[_i];
-        switch (o.action) {
-          case "strike":
-            _results.push(this.strike(o));
-            break;
-          case "dodge":
-            _results.push(this.dodge(o));
-            break;
-          default:
-            _results.push(void 0);
-        }
-      }
-      return _results;
     };
 
     MsgManager.prototype.cut = function(object) {
