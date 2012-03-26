@@ -1,5 +1,5 @@
 (function() {
-  var Arm, Body, Camera, Collision, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, Item, Job, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Log, Map, MapDestinate, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ResourceRelation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Stone, StoneStock, Subpart, TextOptions, TextOptionsDraw, Timber, Timer, Torso, Tree, Unit, Units, Wall, Wood, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, build_rect, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, cuttingDown, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floatText, floatsTracker, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, logDraw, mapDraw, mapViewer, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, stoneDraw, stoneQuarry, stoneStockpileDraw, terrainTest, timberDraw, timberStock, timberStockpileDraw, titleDraw, translateIntoDrawCoord, treeDraw, unitCombat, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw,
+  var Arm, Body, Camera, Collision, CombatMsgs, CombatRelation, CombatReportDrawMinorMode, CombatReportKeyMinorMode, CombatReportMinorMode, Crystal, CrystalStock, CrystalTree, DebugTile, DrawMinorModeManager, DrawMode, DrawModeManager, Floor, GameDrawMode, GameKeyMode, GameMode, GenerateMap, Head, HelpDrawMinorMode, HelpKeyMinorMode, HelpMinorMode, Human, Item, Job, JobsManager, KeyMinorModeManager, KeyMode, KeyModeManager, Leg, Lightboar, Log, Map, MapDestinate, MapSketch, MenuDrawMode, MenuKeyMode, MenuMode, MinorModeManager, Mode, ModeManager, Mouse, MsgManager, Part, Pathfinder, RadioButton, Rect, Relation, ResourceRelation, ScenarioDrawMode, ScenarioInitialize, ScenarioKeyMode, ScenarioMode, ScenarioTester, Stockpile, Stone, StoneStock, Subpart, TextOptions, TextOptionsDraw, Timber, Timer, Torso, Tree, Unit, Units, Wall, Wood, approachesList, backgroundMenuDraw, boar_body, boxedText, buildMenuDraw, build_rect, circle_to_circle_collision, combat, combatLogMenuDraw, combatMainMenuDraw, crystalDraw, crystalStockpileDraw, crystalTreeDraw, cuttingDown, debug_draw, determineCameraRedraw, determineCollisionRedraw, determineRectDraw, distance_between_two_points, drawDirtyRects, floatText, floatsTracker, floorDraw, frameRateDraw, fullTestBoars, gameMenuDraw, gameMinorModeList, handDisabilityCombat, handDisabilityGathering, helpMenuDraw, human_body, initializeDrawMinorModes, initializeDrawModes, initializeKeyMinorModes, initializeKeyModes, initializeMinorModes, initializeModes, instructionDraw, killsDraw, legDisability, logDraw, mapDraw, mapViewer, menu, menuDraw, menuMinorModeList, menuTitleText, messageDraw, modeList, mouseDraw, nearest_edge, nearest_object, normalScenario, pathfinding, pigInvasion, pointToRectCollision, point_circle_collision, random_number, rect_to_many_rect_collision, rect_to_rect_collision, scenarioList, scrollDraw, stoneDraw, stoneQuarry, stoneStockpileDraw, terrainTest, timberDraw, timberStock, timberStockpileDraw, titleDraw, translateIntoDrawCoord, treeDraw, unitCombat, unitDraw, unitsDraw, unpathable1, unpathable2, wallDraw,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
@@ -4088,6 +4088,58 @@
 
   })();
 
+  CombatMsgs = (function() {
+
+    function CombatMsgs(manager) {
+      this.manager = manager;
+    }
+
+    CombatMsgs.prototype.strike = function(object) {
+      var attack_msg, damage_msg, m, msgs, part, _i, _len, _results;
+      part = object.part;
+      msgs = [];
+      attack_msg = object.actors[0] + " strikes!";
+      msgs.push(attack_msg);
+      damage_msg = object.actors[1] + "'s " + part + " suffers damage!";
+      switch (object.type) {
+        case 0:
+          msgs.push(damage_msg);
+          break;
+        case 1:
+          msgs.push(damage_msg);
+          msgs.push(object.actors[1] + " dies of " + object.cause);
+          break;
+        case 2:
+          msgs.push(damage_msg);
+          break;
+        case 3:
+          msgs.push(object.actors[1] + "'s " + part + " was protected by his " + object.protect);
+      }
+      switch (object.special) {
+        case 0:
+          msgs.push(object.actors[1] + " losts some hand functionality");
+          break;
+        case 1:
+          msgs.push(object.actors[1] + " suffers hand disability");
+          break;
+        case 2:
+          msgs.push(object.actors[1] + " losts some leg functionality");
+          break;
+        case 3:
+          msgs.push(object.actors[1] + " losts all leg functionality");
+      }
+      _results = [];
+      for (_i = 0, _len = msgs.length; _i < _len; _i++) {
+        m = msgs[_i];
+        _results.push(this.manager.combat_msg(object.actors[0], object.actors[1], m));
+      }
+      return _results;
+    };
+
+    return CombatMsgs;
+
+  })();
+
   JobsManager = (function() {
 
     function JobsManager(map, units) {
@@ -4163,6 +4215,7 @@
     function MsgManager() {
       this.relations = [];
       this.last_status = -1;
+      this.combat_msgs = new CombatMsgs(this);
     }
 
     MsgManager.prototype.get_list = function(type) {
@@ -4179,7 +4232,7 @@
 
     MsgManager.prototype.create_relation = function(identifier, type) {
       switch (type) {
-        case "tree":
+        case "resource":
           this.relations.push(new ResourceRelation(identifier));
           break;
         case "combat":
@@ -4209,8 +4262,8 @@
     };
 
     MsgManager.prototype.resource_msg = function(msg, ident, action) {
-      this.create_msg(ident, "tree", msg);
-      return this.append_action(ident, "tree", action);
+      this.create_msg(ident, "resource", msg);
+      return this.append_action(ident, "resource", action);
     };
 
     MsgManager.prototype.append_action = function(ident, type, action) {
@@ -4296,48 +4349,6 @@
         case "cut":
           return this.cut(object);
       }
-    };
-
-    MsgManager.prototype.strike = function(object) {
-      var attack_msg, damage_msg, m, msgs, part, _i, _len, _results;
-      part = object.part;
-      msgs = [];
-      attack_msg = object.actors[0] + " strikes!";
-      msgs.push(attack_msg);
-      damage_msg = object.actors[1] + "'s " + part + " suffers damage!";
-      switch (object.type) {
-        case 0:
-          msgs.push(damage_msg);
-          break;
-        case 1:
-          msgs.push(damage_msg);
-          msgs.push(object.actors[1] + " dies of " + object.cause);
-          break;
-        case 2:
-          msgs.push(damage_msg);
-          break;
-        case 3:
-          msgs.push(object.actors[1] + "'s " + part + " was protected by his " + object.protect);
-      }
-      switch (object.special) {
-        case 0:
-          msgs.push(object.actors[1] + " losts some hand functionality");
-          break;
-        case 1:
-          msgs.push(object.actors[1] + " suffers hand disability");
-          break;
-        case 2:
-          msgs.push(object.actors[1] + " losts some leg functionality");
-          break;
-        case 3:
-          msgs.push(object.actors[1] + " losts all leg functionality");
-      }
-      _results = [];
-      for (_i = 0, _len = msgs.length; _i < _len; _i++) {
-        m = msgs[_i];
-        _results.push(this.combat_msg(object.actors[0], object.actors[1], m));
-      }
-      return _results;
     };
 
     return MsgManager;
