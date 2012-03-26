@@ -2942,6 +2942,13 @@
       ResourceRelation.__super__.constructor.call(this);
     }
 
+    ResourceRelation.prototype.verify = function(ident) {
+      if (ident.person === this.person && ident.resource === this.resource) {
+        return true;
+      }
+      return false;
+    };
+
     return ResourceRelation;
 
   })(Relation);
@@ -3156,7 +3163,11 @@
             };
           } else {
             this.advance = false;
-            return false;
+            return {
+              action: "cut",
+              person: this.name,
+              resource: this.job.target.identify()
+            };
           }
       }
       return -1;
@@ -3173,8 +3184,10 @@
         case 1:
           status = this.cut_action(map);
       }
-      if (status !== false) {
+      if (this.advance === true) {
         this.perform = this.order;
+        return status;
+      } else if (status !== -1) {
         return status;
       }
       return -1;
@@ -4175,13 +4188,13 @@
       return this.relations.length - 1;
     };
 
-    MsgManager.prototype.find_relation = function(identifier, type) {
+    MsgManager.prototype.find_relation = function(ident, type) {
       var n, r, _i, _len, _ref;
       n = 0;
       _ref = this.relations;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         r = _ref[_i];
-        if (r.type === type && r.verify(identifier)) return n;
+        if (r.type === type && r.verify(ident)) return n;
         n += 1;
       }
       return false;
