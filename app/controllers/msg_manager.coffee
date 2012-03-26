@@ -45,14 +45,6 @@ class MsgManager
   get_last_update: () ->
     return -1 if @last_status == -1
     @relations[@last_status].last()
-  combat_death: (object) ->
-    return if object == false
-    switch(object.action)
-      when "killed"
-        msg = object.actors[0] + " " + object.action + " " + object.actors[1]
-      when "escaped"
-        msg = object.actors[1] + " " + object.action + " from the grasp of " + object.actors[0]
-    this.combat_msg(object.actors[0],object.actors[1],msg)
   determine_combat_msg: (objects) ->
     return if objects == -1
     for o in objects
