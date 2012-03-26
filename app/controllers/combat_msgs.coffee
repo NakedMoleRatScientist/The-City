@@ -33,3 +33,6 @@ class CombatMsgs
     else
       msg = object.actors[0] + " dodges " + object.actors[1] + "'s strike"
     @manager.combat_msg(object.actors[0],object.actors[1],msg)
+  combat_msg: (unit_one,unit_two,msg) ->
+    ident = (one: unit_one, two: unit_two)
+    this.create_msg(ident,"combat",msg)
