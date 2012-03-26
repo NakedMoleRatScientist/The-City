@@ -31,8 +31,8 @@ class MsgManager
     @last_status = n
     n
   resource_msg: (msg,ident,action) ->
-    this.create_msg(ident,"tree",msg)
-    this.append_action(ident,"tree",action)
+    this.create_msg(ident,"resource",msg)
+    this.append_action(ident,"resource",action)
   append_action: (ident,type,action) ->
     n = this.find_or_create_relation(ident,type)
     @relations[n].push_action(action)
