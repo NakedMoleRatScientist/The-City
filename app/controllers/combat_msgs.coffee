@@ -1,5 +1,5 @@
 class CombatMsgs
-  constructor: () ->
+  constructor: (@manager) ->
   strike: (object) ->
     part = object.part
     msgs = []
