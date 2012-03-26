@@ -63,7 +63,7 @@ class MsgManager
         when "strike"
           @combat.strike(o)
         when "dodge"
-          this.dodge(o)
+          @combat.dodge(o)
   cut: (object) ->
     msg = object.person + " cuts " + object.resource
     this.resource_msg(msg,object,"chops")
