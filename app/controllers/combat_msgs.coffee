@@ -26,4 +26,4 @@ class CombatMsgs
       when 3
         msgs.push(object.actors[1] + " losts all leg functionality")
     for m in msgs
-      this.combat_msg(object.actors[0],object.actors[1],m)
+      @manager.combat_msg(object.actors[0],object.actors[1],m)
