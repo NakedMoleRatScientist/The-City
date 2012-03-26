@@ -12,7 +12,7 @@ class MsgManager
     list
   create_relation: (identifier,type) ->
     switch(type)
-      when "tree"
+      when "resource"
         @relations.push new ResourceRelation(identifier)
       when "combat"
         @relations.push new CombatRelation(identifier)
