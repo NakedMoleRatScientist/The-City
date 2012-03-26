@@ -26,13 +26,13 @@ class CombatMsgs
       when 3
         msgs.push(object.actors[1] + " losts all leg functionality")
     for m in msgs
-      @manager.combat_msg(object.actors[0],object.actors[1],m)
+      this.combat_msg(object.actors[0],object.actors[1],m)
   dodge: (object) ->
     if object.ability == false
       msg = object.actors[0] + " can't dodge!"
     else
       msg = object.actors[0] + " dodges " + object.actors[1] + "'s strike"
-    @manager.combat_msg(object.actors[0],object.actors[1],msg)
+    this.combat_msg(object.actors[0],object.actors[1],msg)
   combat_msg: (unit_one,unit_two,msg) ->
     ident = (one: unit_one, two: unit_two)
     @manager.create_msg(ident,"combat",msg)
