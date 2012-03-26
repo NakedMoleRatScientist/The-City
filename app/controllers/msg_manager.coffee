@@ -2,7 +2,7 @@ class MsgManager
   constructor: () ->
     @relations = []
     @last_status = -1
-    @combat_msgs = new CombatMsgs(self)
+    @combat_msgs = new CombatMsgs(this)
   get_list: (type) ->
     list = []
     for r in @relations
