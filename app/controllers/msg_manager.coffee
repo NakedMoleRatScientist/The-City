@@ -67,7 +67,7 @@ class MsgManager
     for o in objects
       switch(o.action)
         when "strike"
-          this.strike(o)
+          @combat.strike(o)
         when "dodge"
           this.dodge(o)
   cut: (object) ->
