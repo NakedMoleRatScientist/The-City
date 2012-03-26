@@ -35,4 +35,4 @@ class CombatMsgs
     @manager.combat_msg(object.actors[0],object.actors[1],msg)
   combat_msg: (unit_one,unit_two,msg) ->
     ident = (one: unit_one, two: unit_two)
-    this.create_msg(ident,"combat",msg)
+    @manager.create_msg(ident,"combat",msg)
