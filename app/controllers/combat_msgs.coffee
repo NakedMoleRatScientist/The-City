@@ -36,7 +36,7 @@ class CombatMsgs
   combat_msg: (unit_one,unit_two,msg) ->
     ident = (one: unit_one, two: unit_two)
     @manager.create_msg(ident,"combat",msg)
-  combat_death: (object) ->
+  death: (object) ->
     return if object == false
     switch(object.action)
       when "killed"
