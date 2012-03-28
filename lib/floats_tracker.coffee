@@ -4,5 +4,5 @@ class floatsTracker
     @last = 0
     @size = 0
   process: (msgs) ->
-    if msgs.length > @last
-      @last = msgs.length
+    if msgs.length - 1> @last
+      @last = msgs.length - 1
