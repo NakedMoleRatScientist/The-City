@@ -1,7 +1,7 @@
 class floatsTracker
   constructor: () ->
     @msgs = []
-    @length = 0
+    @last = 0
   process: (msgs) ->
-    if msgs.length > @length
-      @length = msgs.length
+    if msgs.length > @last
+      @last = msgs.length
