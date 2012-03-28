@@ -46,6 +46,8 @@ class GameDrawMode extends DrawMode
         @mouse_width = mouseDraw(@p5,object.mouse,units,map)
         frameRateDraw(@p5)
         @floats.process(object.resource_msgs)
+        for m  in @floats.msgs
+          drawFloatText(m,@p5)
         if msg != -1
           messageDraw(@p5,msg)
       else
