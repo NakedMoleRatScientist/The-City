@@ -3,4 +3,4 @@ drawFloatText = (text,p5) ->
     text.decrease()
     text.change_pos()
   if text.time > 0
-    p5.text(text.msg,text.x,text.y)
+    boxedText(p5,text.x,text.y,text.msg)
