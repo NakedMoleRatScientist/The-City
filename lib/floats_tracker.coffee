@@ -1,6 +1,7 @@
 class floatsTracker
   constructor: () ->
     @msgs = []
+    @length = 0
   process: (msgs) ->
-    if msgs != false
-      console.log(msgs[0].last_action())
+    if msgs.length > @length
+      @length = msgs.length
