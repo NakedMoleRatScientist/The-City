@@ -12,4 +12,4 @@ class floatsTracker
       if msgs[@last].actions.length - 1 > @size
         @size = msgs[@last].actions.length - 1
         object = msgs[@last].actions[@size]
-        @msgs.push new floatText(object.msg,30,object.x,object.y, @dir)
+        @msgs.push new floatText(object.msg,30,object.x * 20,object.y * 20, @dir)
