@@ -168,11 +168,8 @@
   };
 
   drawFloatText = function(text, p5) {
-    if (p5.__frameRate % 100) {
-      text.decrease();
-      text.change_pos();
-    }
-    if (text.time > 0) return p5.text(text.msg, text.x, text.y);
+    if (p5.__frameRate % 500) text.decrease();
+    if (text.time > 0) return p5.text(text.msg, text.x * 20, text.y * 20);
   };
 
   pointToRectCollision = function(compare, against) {
@@ -565,6 +562,7 @@
     }
 
     floatsTracker.prototype.process = function(msgs) {
+      var object;
       if (msgs !== false) {
         if (msgs.length - 1 > this.last) {
           this.last = msgs.length - 1;
@@ -572,7 +570,8 @@
         }
         if (msgs[this.last].actions.length - 1 > this.size) {
           this.size = msgs[this.last].actions.length - 1;
-          return this.msgs.push(new floatText(msgs[this.last].actions[this.size].msg, 30, 100, 100, this.dir));
+          object = msgs[this.last].actions[this.size];
+          return this.msgs.push(new floatText(object.msg, 30, object.x, object.y, this.dir));
         }
       }
     };
@@ -753,7 +752,7 @@
     var t;
     t = p5.text(text, x, y);
     p5.noFill();
-    p5.stroke();
+    p5.stroke(255);
     return p5.rect(x - 3, y - p5.textAscent() - 3, p5.textWidth(text) + 3, p5.textAscent() + 3);
   };
 
