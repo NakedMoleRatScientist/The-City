@@ -55,10 +55,10 @@ class Human extends Unit
         if @job.target.cut() == true
           @advance = true
           map.sketch.cut_down(@job.target.x,@job.target.y)
-          return (action: "cut", person: this.name, resource: @job.target.identify())
+          return (action: "cut", person: this.name, resource: @job.target.identify(), x: @x, y: @y)
         else
           @advance = false
-          return (action: "cut", person: this.name, resource: @job.target.identify())
+          return (action: "cut", person: this.name, resource: @job.target.identify(), x: @x, y: @y)
     -1
   set_action: (map) ->
     return -1 if this.act_on_queue()
