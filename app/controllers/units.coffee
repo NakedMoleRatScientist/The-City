@@ -19,7 +19,7 @@ class Units
     if @frame % 1000 == 0
       if @map.items_total() > 50 && random_number(5) == 0
         this.generate_boars()
-    @msgs.combat_death(unit.combat.nullify_target()) for unit in @units
+    @msgs.combat.death(unit.combat.nullify_target()) for unit in @units
     @frame += 1
   clean: () ->
     for unit in @units
