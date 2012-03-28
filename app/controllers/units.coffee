@@ -14,7 +14,7 @@ class Units
       if @frame % unit.agility == 0
         @msgs.determine_resource_msg(unit.set_action(@map,this))
         unit.combat.detect(this)
-        @msgs.determine_combat_msg(unit.combat.attack())
+        @msgs.combat.determine_msg(unit.combat.attack())
         unit.move(@finder)
     if @frame % 1000 == 0
       if @map.items_total() > 50 && random_number(5) == 0
