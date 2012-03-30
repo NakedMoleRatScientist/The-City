@@ -7,3 +7,4 @@ boxedText = (p5,x,y,text) ->
   width = p5.textWidth(text) + 3
   height = p5.textAscent() + 3
   p5.rect(x,y,width,height)
+  (x: x, y: y, width: width, height: height)
