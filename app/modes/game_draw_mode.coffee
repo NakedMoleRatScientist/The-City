@@ -49,7 +49,6 @@ class GameDrawMode extends DrawMode
         for m in @floats.msgs
           @p5.textFont("monospace",13)
           dirty = drawFloatText(m,@p5)
-          console.log(dirty)
           dirty.x = dirty.x / 20
           dirty.y = dirty.y / 20
 #          @dirty_rects.push(x: dirty.x, y: dirty.y)
