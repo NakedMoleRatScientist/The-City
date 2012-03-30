@@ -50,9 +50,7 @@ class GameDrawMode extends DrawMode
           @p5.textFont("monospace",13)
           dirty = drawFloatText(m,@p5)
           if dirty != false
-            dirty.x = dirty.x / 20
-            dirty.y = dirty.y / 20
-            @dirty_rects.push(x: dirty.x, y: dirty.y)
+            @dirty_rects.push(x: dirty.x / 20, y: dirty.y / 20)
         if msg != -1
           messageDraw(@p5,msg)
       else
