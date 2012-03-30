@@ -170,6 +170,7 @@
   drawFloatText = function(text, p5) {
     if (p5.__frameRate % 500) text.decrease();
     if (text.time > 0) return boxedText(p5, text.x * 20, text.y * 20, text.msg);
+    return false;
   };
 
   pointToRectCollision = function(compare, against) {
@@ -1363,7 +1364,7 @@
     }
 
     GameDrawMode.prototype.draw = function(object) {
-      var dirty, i, m, map, mouse, msg, unit, units, x, y, _i, _j, _len, _len2, _ref;
+      var dirty, i, m, map, mouse, msg, times, unit, units, x, y, _i, _j, _k, _len, _len2, _len3, _ref;
       switch (object.state) {
         case -1:
           map = object.map;
@@ -1420,9 +1421,21 @@
             m = _ref[_j];
             this.p5.textFont("monospace", 13);
             dirty = drawFloatText(m, this.p5);
-            console.log(dirty);
-            dirty.x = dirty.x / 20;
-            dirty.y = dirty.y / 20;
+            if (dirty !== false) {
+              times = Math.floor(dirty.width / 2);
+              x = Math.floor(dirty.x / 20);
+              y = Math.floor(dirty.y / 20);
+              this.dirty_rects.push({
+                x: x,
+                y: y
+              });
+              for (_k = 0, _len3 = times.length; _k < _len3; _k++) {
+                i = times[_k];
+                this.dirty_rects.push({
+                  x: x + i
+                }, y);
+              }
+            }
           }
           if (msg !== -1) messageDraw(this.p5, msg);
           break;
