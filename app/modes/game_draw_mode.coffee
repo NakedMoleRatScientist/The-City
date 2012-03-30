@@ -50,7 +50,7 @@ class GameDrawMode extends DrawMode
           @p5.textFont("monospace",13)
           dirty = drawFloatText(m,@p5)
           if dirty != false
-            times = Math.floor(dirty.width / 2)
+            times = Math.floor(dirty.width / 20)
             x = Math.floor(dirty.x / 20)
             y = Math.floor(dirty.y / 20)
             @dirty_rects.push(x: x, y: y)
