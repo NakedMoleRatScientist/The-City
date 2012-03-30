@@ -47,7 +47,10 @@ class GameDrawMode extends DrawMode
         frameRateDraw(@p5)
         @floats.process(object.resource_msgs)
         for m in @floats.msgs
-          drawFloatText(m,@p5)
+          dirty = drawFloatText(m,@p5)
+          dirty.x = dirty.x / 20
+          dirty.y = dirty.y / 20
+          @dirty_rects.push(dirty)
         if msg != -1
           messageDraw(@p5,msg)
       else
