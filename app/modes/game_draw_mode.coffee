@@ -57,6 +57,8 @@ class GameDrawMode extends DrawMode
             @dirty_rects.push(x: x, y: y)
             for w in [1..width]
               @dirty_rects.push(x: x + w,y: y)
+              for h in [1..height]
+                @dirty_rects.push(x: x + w, y + h)
         if msg != -1
           messageDraw(@p5,msg)
       else
