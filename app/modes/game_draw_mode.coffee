@@ -47,10 +47,12 @@ class GameDrawMode extends DrawMode
         frameRateDraw(@p5)
         @floats.process(object.resource_msgs)
         for m in @floats.msgs
+          @p5.textFont("monospace",13)
           dirty = drawFloatText(m,@p5)
+          console.log(dirty)
           dirty.x = dirty.x / 20
           dirty.y = dirty.y / 20
-          @dirty_rects.push(dirty)
+#          @dirty_rects.push(x: dirty.x, y: dirty.y)
         if msg != -1
           messageDraw(@p5,msg)
       else
