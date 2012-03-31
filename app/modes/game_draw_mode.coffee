@@ -54,7 +54,6 @@ class GameDrawMode extends DrawMode
             height = Math.round(dirty.height / 20)
             x = Math.floor(dirty.x / 20)
             y = Math.floor(dirty.y / 20)
-            console.log(width)
             for w in [0..width]
               @dirty_rects.push(x: x + w,y: y)
               for h in [1..height]
