@@ -47,7 +47,10 @@ class MsgManager
     @relations[@last_status].last()
   cut: (object) ->
     msg = object.person + " cuts " + object.resource
-    this.resource_msg(msg,object,"chops")
+    if object.type == "tree"
+      this.resource_msg(msg,object,"TIMBER!")
+    else
+      this.resource_msg(msg,object,"chops")
   determine_resource_msg: (object) ->
     return if object == -1
     switch object.action
