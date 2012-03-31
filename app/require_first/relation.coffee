@@ -2,6 +2,7 @@ class Relation
   constructor: () ->
     @msgs = []
     @actions = []
+    @prority = []
   last: () ->
     @msgs[@msgs.length - 1]
   last_action: () ->
