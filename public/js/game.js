@@ -1923,7 +1923,7 @@
     function Relation() {
       this.msgs = [];
       this.actions = [];
-      this.prority = [];
+      this.priority = [];
     }
 
     Relation.prototype.last = function() {
@@ -1936,7 +1936,7 @@
 
     Relation.prototype.add_msg = function(msg) {
       this.msgs.push(msg);
-      return this.prority.push(0);
+      return this.priority.push(0);
     };
 
     Relation.prototype.push_action = function(action, x, y) {
@@ -1945,6 +1945,10 @@
         x: x,
         y: y
       });
+    };
+
+    Relation.prototype.change_priority = function(i) {
+      return this.priority[this.priority.length - 1] = i;
     };
 
     return Relation;
@@ -4407,9 +4411,17 @@
       return n;
     };
 
-    MsgManager.prototype.resource_msg = function(msg, ident, action) {
+    MsgManager.prototype.change_priority = function(ident, type, i) {
+      var n;
+      n = this.find_or_create_relation(ident, type);
+      return this.relations[n].change_priority(i);
+    };
+
+    MsgManager.prototype.resource_msg = function(msg, ident, action, i) {
+      if (i == null) i = 0;
       this.create_msg(ident, "resource", msg);
-      return this.append_action(ident, "resource", action);
+      this.append_action(ident, "resource", action);
+      if (i !== 0) return this.change_priority(ident, "resource", i);
     };
 
     MsgManager.prototype.append_action = function(ident, type, action) {
@@ -4435,7 +4447,7 @@
       var msg;
       msg = object.person + " cuts " + object.resource;
       if (object.type === "tree") {
-        return this.resource_msg(msg, object, "TIMBER!");
+        return this.resource_msg(msg, object, "TIMBER!", 1);
       } else {
         return this.resource_msg(msg, object, "chops");
       }
