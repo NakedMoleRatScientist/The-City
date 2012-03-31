@@ -38,7 +38,7 @@ class MsgManager
     this.create_msg(ident,"resource",msg)
     this.append_action(ident,"resource",action)
     if i != 0
-      this.change_prority(ident,"resource",i)
+      this.change_priority(ident,"resource",i)
   append_action: (ident,type,action) ->
     n = this.find_or_create_relation(ident,type)
     @relations[n].push_action(action,ident.x,ident.y)
