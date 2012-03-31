@@ -1364,7 +1364,7 @@
     }
 
     GameDrawMode.prototype.draw = function(object) {
-      var dirty, i, m, map, mouse, msg, times, unit, units, x, y, _i, _j, _k, _len, _len2, _len3, _ref;
+      var dirty, h, height, i, m, map, mouse, msg, unit, units, w, width, x, y, _i, _j, _len, _len2, _ref;
       switch (object.state) {
         case -1:
           map = object.map;
@@ -1422,18 +1422,21 @@
             this.p5.textFont("monospace", 13);
             dirty = drawFloatText(m, this.p5);
             if (dirty !== false) {
-              times = Math.floor(dirty.width / 2);
+              width = Math.floor(dirty.width / 20);
+              height = Math.round(dirty.height / 20);
               x = Math.floor(dirty.x / 20);
               y = Math.floor(dirty.y / 20);
-              this.dirty_rects.push({
-                x: x,
-                y: y
-              });
-              for (_k = 0, _len3 = times.length; _k < _len3; _k++) {
-                i = times[_k];
+              for (w = 0; 0 <= width ? w <= width : w >= width; 0 <= width ? w++ : w--) {
                 this.dirty_rects.push({
-                  x: x + i
-                }, y);
+                  x: x + w,
+                  y: y
+                });
+                for (h = 1; 1 <= height ? h <= height : h >= height; 1 <= height ? h++ : h--) {
+                  this.dirty_rects.push({
+                    x: x + w,
+                    y: y + h
+                  });
+                }
               }
             }
           }
