@@ -49,6 +49,6 @@ class CombatMsgs
     for o in objects
       switch(o.action)
         when "strike"
-          @combat.strike(o)
+          this.strike(o)
         when "dodge"
-          @combat.dodge(o)
+          this.dodge(o)
