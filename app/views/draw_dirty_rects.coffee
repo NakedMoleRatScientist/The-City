@@ -1,7 +1,7 @@
 drawDirtyRects = (dirty,map,p5) ->
   delay = []
   for d in dirty
-    continue unless (d.y < @height && d.y > -1) && (d.x < @width && d.x > - 1)
+    continue unless (d.y < map.height && d.y > -1) && (d.x < map.width && d.x > - 1)
     location = map.map[d.y][d.x]
     coord = translateIntoDrawCoord(d,map)
     p5.noStroke()
