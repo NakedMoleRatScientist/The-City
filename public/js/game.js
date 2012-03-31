@@ -1439,8 +1439,8 @@
             this.p5.textFont("monospace", 13);
             dirty = drawFloatText(m, this.p5);
             if (dirty !== false) {
-              width = Math.round(dirty.width / 20);
-              height = Math.round(dirty.height / 20);
+              width = Math.round(dirty.width / 20) + 1;
+              height = Math.round(dirty.height / 20) + 1;
               x = Math.floor(dirty.x / 20);
               y = Math.floor(dirty.y / 20);
               for (w = 0; 0 <= width ? w <= width : w >= width; 0 <= width ? w++ : w--) {
@@ -4273,10 +4273,10 @@
         o = objects[_i];
         switch (o.action) {
           case "strike":
-            _results.push(this.combat.strike(o));
+            _results.push(this.strike(o));
             break;
           case "dodge":
-            _results.push(this.combat.dodge(o));
+            _results.push(this.dodge(o));
             break;
           default:
             _results.push(void 0);
