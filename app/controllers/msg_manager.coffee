@@ -31,7 +31,7 @@ class MsgManager
       return @last_status = this.create_relation(ident,type)
     @last_status = n
     n
-  change_prority: (ident,type,i) ->
+  change_priority: (ident,type,i) ->
     n = this.find_or_create_relation(ident,type)
     @relations[n].change_priority(i)
   resource_msg: (msg,ident,action,i = 0) ->
