@@ -12,3 +12,5 @@ class Relation
     @prority.push(0)
   push_action: (action,x,y) ->
     @actions.push(msg: action, x: x, y: y)
+  change_priority: (i) ->
+   @priority[@priority.length - 1] = i
