@@ -48,7 +48,7 @@ class MsgManager
   cut: (object) ->
     msg = object.person + " cuts " + object.resource
     if object.type == "tree"
-      this.resource_msg(msg,object,"TIMBER!")
+      this.resource_msg(msg,object,"TIMBER!",1)
     else
       this.resource_msg(msg,object,"chops")
   determine_resource_msg: (object) ->
