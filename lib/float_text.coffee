@@ -5,5 +5,5 @@ class floatText
   decrease: () ->
     @time -= 1
   change_pos: () ->
-    @x += @dir.x
-    @y += @dir.y
+    @pos_x += @dir.x
+    @pos_y += @dir.y
