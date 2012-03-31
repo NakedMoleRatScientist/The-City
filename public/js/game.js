@@ -168,7 +168,7 @@
   };
 
   drawFloatText = function(text, p5) {
-    if (p5.frameCount % 50 === 0) text.decrease();
+    if (p5.frameCount % 2 === 0) text.decrease();
     text.change_pos();
     if (text.time > 0) {
       return boxedText(p5, text.x * 20 + text.pos_x, text.y * 20 + text.pos_y, text.msg);
@@ -581,7 +581,7 @@
         if (msgs[this.last].actions.length - 1 > this.size) {
           this.size = msgs[this.last].actions.length - 1;
           object = msgs[this.last].actions[this.size];
-          return this.msgs.push(new floatText(object.msg, 30, object.x, object.y, this.random_dir()));
+          return this.msgs.push(new floatText(object.msg, 15, object.x, object.y, this.random_dir()));
         }
       }
     };
@@ -1923,6 +1923,7 @@
     function Relation() {
       this.msgs = [];
       this.actions = [];
+      this.prority = [];
     }
 
     Relation.prototype.last = function() {
@@ -1934,7 +1935,8 @@
     };
 
     Relation.prototype.add_msg = function(msg) {
-      return this.msgs.push(msg);
+      this.msgs.push(msg);
+      return this.prority.push(0);
     };
 
     Relation.prototype.push_action = function(action, x, y) {
@@ -3218,7 +3220,7 @@
     };
 
     Human.prototype.cut_action = function(map) {
-      var choice, choices, object;
+      var choice, choices, object, type;
       switch (this.queue[this.order]) {
         case "find":
           object = this.job.find_nearest_cut(map);
@@ -3237,15 +3239,18 @@
             resource: this.job.target.identify()
           };
         case "cut_down":
+          type = "log";
           if (this.job.target.cut() === true) {
             this.advance = true;
             map.sketch.cut_down(this.job.target.x, this.job.target.y);
+            if (this.job.target.name === "tree") type = "tree";
             return {
               action: "cut",
               person: this.name,
               resource: this.job.target.identify(),
               x: this.x,
-              y: this.y
+              y: this.y,
+              type: type
             };
           } else {
             this.advance = false;
@@ -3254,7 +3259,8 @@
               person: this.name,
               resource: this.job.target.identify(),
               x: this.x,
-              y: this.y
+              y: this.y,
+              type: type
             };
           }
       }
@@ -4428,7 +4434,11 @@
     MsgManager.prototype.cut = function(object) {
       var msg;
       msg = object.person + " cuts " + object.resource;
-      return this.resource_msg(msg, object, "chops");
+      if (object.type === "tree") {
+        return this.resource_msg(msg, object, "TIMBER!");
+      } else {
+        return this.resource_msg(msg, object, "chops");
+      }
     };
 
     MsgManager.prototype.determine_resource_msg = function(object) {
