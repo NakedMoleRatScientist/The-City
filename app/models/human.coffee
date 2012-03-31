@@ -52,15 +52,15 @@ class Human extends Unit
         this.set_move(choice.x,choice.y)
         return (action: "find", person: this.name, resource: @job.target.identify())
       when "cut_down"
+        type = "log"
         if @job.target.cut() == true
           @advance = true
           map.sketch.cut_down(@job.target.x,@job.target.y)
-          type = "log"
           type = "tree" if @job.target.name == "tree"
           return (action: "cut", person: this.name, resource: @job.target.identify(), x: @x, y: @y, type: type)
         else
           @advance = false
-          return (action: "cut", person: this.name, resource: @job.target.identify(), x: @x, y: @y)
+          return (action: "cut", person: this.name, resource: @job.target.identify(), x: @x, y: @y, type: type)
     -1
   set_action: (map) ->
     return -1 if this.act_on_queue()
