@@ -33,7 +33,7 @@ class MsgManager
     n
   change_prority: (ident,type,i) ->
     n = this.find_or_create_relation(ident,type)
-    @relations[n].change_prority(i)
+    @relations[n].change_priority(i)
   resource_msg: (msg,ident,action,i = 0) ->
     this.create_msg(ident,"resource",msg)
     this.append_action(ident,"resource",action)
