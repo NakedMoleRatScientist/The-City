@@ -168,11 +168,11 @@
   };
 
   drawFloatText = function(text, p5) {
-    if (p5.frameCount % 50 === 0) {
-      text.decrease();
-      text.change_pos();
+    if (p5.frameCount % 50 === 0) text.decrease();
+    text.change_pos();
+    if (text.time > 0) {
+      return boxedText(p5, text.x * 20 + text.pos_x, text.y * 20 + text.pos_y, text.msg);
     }
-    if (text.time > 0) return boxedText(p5, text.x * 20, text.y * 20, text.msg);
     return false;
   };
 
@@ -559,11 +559,17 @@
       this.msgs = [];
       this.last = 0;
       this.size = 0;
-      this.dir = {
-        x: 1,
-        y: 1
-      };
     }
+
+    floatsTracker.prototype.random_dir = function() {
+      var x, y;
+      x = random_number(3) - 1;
+      y = random_number(3) - 1;
+      return {
+        x: x,
+        y: y
+      };
+    };
 
     floatsTracker.prototype.process = function(msgs) {
       var object;
@@ -575,7 +581,7 @@
         if (msgs[this.last].actions.length - 1 > this.size) {
           this.size = msgs[this.last].actions.length - 1;
           object = msgs[this.last].actions[this.size];
-          return this.msgs.push(new floatText(object.msg, 30, object.x, object.y, this.dir));
+          return this.msgs.push(new floatText(object.msg, 30, object.x, object.y, this.random_dir()));
         }
       }
     };
@@ -633,6 +639,8 @@
       this.x = x;
       this.y = y;
       this.dir = dir;
+      this.pos_x = 0;
+      this.pos_y = 0;
     }
 
     floatText.prototype.decrease = function() {
@@ -640,8 +648,8 @@
     };
 
     floatText.prototype.change_pos = function() {
-      this.x += this.dir.x;
-      return this.y += this.dir.y;
+      this.pos_x += this.dir.x;
+      return this.pos_y += this.dir.y;
     };
 
     return floatText;
@@ -962,6 +970,9 @@
     delay = [];
     for (_i = 0, _len = dirty.length; _i < _len; _i++) {
       d = dirty[_i];
+      if (!((d.y < map.height && d.y > -1) && (d.x < map.width && d.x > -1))) {
+        continue;
+      }
       location = map.map[d.y][d.x];
       coord = translateIntoDrawCoord(d, map);
       p5.noStroke();
