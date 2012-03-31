@@ -1,5 +1,5 @@
 drawFloatText = (text,p5) ->
-  if p5.__frameCount % 50 == 0
+  if p5.frameCount % 50 == 0
     text.decrease()
     text.change_pos()
   if text.time > 0
