@@ -9,7 +9,7 @@ class Relation
     @actions[@actions.length - 1]
   add_msg: (msg) ->
     @msgs.push(msg)
-    @prority.push(0)
+    @priority.push(0)
   push_action: (action,x,y) ->
     @actions.push(msg: action, x: x, y: y)
   change_priority: (i) ->
