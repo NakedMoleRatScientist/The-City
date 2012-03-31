@@ -50,7 +50,7 @@ class GameDrawMode extends DrawMode
           @p5.textFont("monospace",13)
           dirty = drawFloatText(m,@p5)
           if dirty != false
-            width = Math.round(dirty.width / 20) + 1 #ugly hack
+            width = Math.round(dirty.width / 20) + 1 #ugly hack. need to figure out a solution that doesn't require fudging
             height = Math.round(dirty.height / 20) + 1
             x = Math.floor(dirty.x / 20)
             y = Math.floor(dirty.y / 20)
