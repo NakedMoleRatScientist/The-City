@@ -16,6 +16,7 @@ class floatsTracker
         @size = msgs[@last].actions.length - 1
         object = msgs[@last].actions[@size]
         priority = msgs[@last].priority[@size]
+        time = 15
         if priority == 1
           time = 30
         @msgs.push new floatText(object.msg,15,object.x,object.y, this.random_dir())
