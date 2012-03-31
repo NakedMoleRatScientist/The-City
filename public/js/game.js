@@ -168,7 +168,10 @@
   };
 
   drawFloatText = function(text, p5) {
-    if (p5.__frameRate % 500) text.decrease();
+    if (p5.frameCount % 50 === 0) {
+      text.decrease();
+      text.change_pos();
+    }
     if (text.time > 0) return boxedText(p5, text.x * 20, text.y * 20, text.msg);
     return false;
   };
