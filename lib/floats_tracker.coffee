@@ -3,9 +3,10 @@ class floatsTracker
     @msgs = []
     @last = 0
     @size = 0
+  random_dir: () ->
     x = random_number(3) - 1
     y = random_number(3) - 1
-    @dir = (x: x, y: y)
+    (x: x, y: y)
   process: (msgs) ->
     if msgs != false
       if msgs.length - 1> @last
