@@ -19,4 +19,4 @@ class floatsTracker
         time = 15
         if priority == 1
           time = 30
-        @msgs.push new floatText(object.msg,15,object.x,object.y, this.random_dir())
+        @msgs.push new floatText(object.msg,time,object.x,object.y, this.random_dir())
