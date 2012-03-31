@@ -55,7 +55,6 @@ class GameDrawMode extends DrawMode
             x = Math.floor(dirty.x / 20)
             y = Math.floor(dirty.y / 20)
             for w in [0..width]
-              @dirty_rects.push(x: x + w,y: y)
               for h in [0..height]
                 @dirty_rects.push(x: x + w,y: y + h)
         if msg != -1
