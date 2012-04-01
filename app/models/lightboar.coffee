@@ -7,7 +7,7 @@ class Lightboar extends Unit
     @agility = 6
     @read = 0
   set_action: (map,controller) ->
-    return if this.act_on_queue()
+    return -1 if this.act_on_queue()
     switch(@queue[@order])
       when "decide"
         crystal = nearest_object(this,map.crystals)
