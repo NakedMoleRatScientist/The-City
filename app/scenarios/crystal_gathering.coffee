@@ -2,4 +2,4 @@ crystal_gathering = (units,map) ->
   units.create new Human(10,10,"gatherer",0)
   location = (x: 300, y: 300, build: "crystal")
   map.dest.add_stockpile(location)
-  map.generate.create_crystal(20,20)
+  map.generate.create("crystal",20,20)
