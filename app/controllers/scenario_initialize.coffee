@@ -27,5 +27,7 @@ class ScenarioInitialize
         terrainTest(@units,@map)
       when "cuttingDown"
         cuttingDown(@units,@map)
+      when "crystal_gathering"
+        crystal_gathering(@units,@map)
       else
         normalScenario(@units,@map)
